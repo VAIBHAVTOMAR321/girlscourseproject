@@ -4,6 +4,7 @@ import AdminLeftNav from './AdminLeftNav'
 import AdminTopNav from './AdminTopNav'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import '../../assets/css/AdminDashboard.css' // Import specific CSS
 
 const AdminDashboard = () => {
   const [enrollmentCount, setEnrollmentCount] = useState(0)
@@ -32,11 +33,11 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="d-flex flex-column min-vh-100">
+    <div className="admin-dashboard d-flex flex-column min-vh-100">
       <AdminTopNav />
       <div className="d-flex flex-1">
         <AdminLeftNav />
-        <div className="flex-1 p-4 pt-lg-4 pt-16"> {/* Add padding for mobile fixed button */}
+        <div className="flex-1 p-4 pt-lg-4 pt-16">
           <Container fluid>
             <Row className="justify-content-center">
               <Col xs={12} md={10} lg={8}>
@@ -44,28 +45,24 @@ const AdminDashboard = () => {
                   <Row>
                     <Col xs={12}>
                       <Card 
-                        className="text-center cursor-pointer" 
+                        className="stat-card text-center cursor-pointer" 
                         onClick={handleEnrollmentsClick}
-                        style={{ transition: 'transform 0.2s, box-shadow 0.2s' }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.transform = 'translateY(-5px)'
-                          e.currentTarget.style.boxShadow = '0 10px 20px rgba(0,0,0,0.1)'
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.transform = 'translateY(0)'
-                          e.currentTarget.style.boxShadow = 'none'
-                        }}
                       >
                         <Card.Body>
-                          <div className="bg-warning text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style={{ width: '80px', height: '80px' }}>
-                            <span className="fs-3">📅</span>
+                          <div className="stat-icon yellow d-flex align-items-center justify-content-center mx-auto mb-3">
+                            <i className="bi bi-people-fill"></i>
                           </div>
-                          <Card.Title>Enrollments</Card.Title>
+                          <Card.Title className="stat-label">Total Enrollments</Card.Title>
                           {loading ? (
-                            <Spinner animation="border" variant="warning" style={{ width: '40px', height: '40px' }} />
+                            <div className="d-flex justify-content-center">
+                              <Spinner animation="border" variant="primary" />
+                            </div>
                           ) : (
-                            <Card.Text className="fs-4 fw-bold">{enrollmentCount}</Card.Text>
+                            <Card.Text className="stat-value">{enrollmentCount}</Card.Text>
                           )}
+                          <Card.Text className="stat-change text-muted small">
+                            Click to view details
+                          </Card.Text>
                         </Card.Body>
                       </Card>
                     </Col>

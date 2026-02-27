@@ -3,6 +3,7 @@ import { Container, Row, Col, Card, Table, Button, Spinner, Modal, Form } from '
 import AdminLeftNav from './AdminLeftNav'
 import AdminTopNav from './AdminTopNav'
 import axios from 'axios'
+import '../../assets/css/Enrollments.css' // Import specific CSS
 
 const Enrollments = () => {
   const [enrollments, setEnrollments] = useState([])
@@ -52,8 +53,14 @@ const Enrollments = () => {
       return
     }
     try {
-      // Implement change password API call here
-      console.log('Changing password for:', selectedEnrollment.student_id)
+      // API Logic for password update
+      const payload = {
+        student_id: selectedEnrollment.student_id,
+        password: newPassword
+      }
+      
+      const response = await axios.put('https://brjobsedu.com/girls_course/girls_course_backend/api/all-registration/', payload)
+      
       setShowChangePasswordModal(false)
       setNewPassword('')
       setConfirmPassword('')
@@ -66,10 +73,17 @@ const Enrollments = () => {
 
   const confirmDelete = async () => {
     try {
-      // Implement delete API call here
-      console.log('Deleting enrollment:', selectedEnrollment.student_id)
+      // API Logic for user deletion
+      const payload = {
+        student_id: selectedEnrollment.student_id
+      }
+      
+      const response = await axios.delete('https://brjobsedu.com/girls_course/girls_course_backend/api/all-registration/', {
+        data: payload
+      })
+      
       setShowDeleteModal(false)
-      fetchEnrollments() // Refresh the list
+      fetchEnrollments()
       alert('Enrollment deleted successfully!')
     } catch (error) {
       console.error('Error deleting enrollment:', error)
@@ -79,12 +93,12 @@ const Enrollments = () => {
 
   if (loading) {
     return (
-      <div className="d-flex flex-column min-vh-100">
+      <div className="enrollments-page d-flex flex-column min-vh-100">
         <AdminTopNav />
         <div className="d-flex flex-1">
           <AdminLeftNav />
-          <div className="flex-1 d-flex align-items-center justify-content-center">
-            <Spinner animation="border" variant="primary" style={{ width: '50px', height: '50px' }} />
+          <div className="flex-1 d-flex align-items-center justify-content-center loading-center">
+            <Spinner animation="border" variant="primary" style={{ width: '3rem', height: '3rem' }} />
           </div>
         </div>
       </div>
@@ -92,69 +106,68 @@ const Enrollments = () => {
   }
 
   return (
-    <div className="d-flex flex-column min-vh-100">
+    <div className="enrollments-page d-flex flex-column min-vh-100">
       <AdminTopNav />
       <div className="d-flex flex-1">
         <AdminLeftNav />
-        <div className="flex-1 p-4 pt-lg-4 pt-16"> {/* Add padding for mobile fixed button */}
+        <div className="flex-1 p-4 pt-lg-4 pt-16">
           <Container fluid>
             <Row className="justify-content-center">
-              <Col xs={12} md={12} lg={10}>
-                <Card>
-                  <Card.Header className="bg-primary text-white">
-                    <h3 className="mb-0">Enrollments Management</h3>
-                  </Card.Header>
-                  <Card.Body>
-                    <h4 className="mb-3">All Enrollments</h4>
-                    
-                    <div className="table-responsive">
-                      <Table striped bordered hover size="sm">
-                        <thead className="table-primary">
+              <Col xs={12} lg={12}>
+                <Card className="enrollments-table">
+                  <div className="page-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <h4 className="mb-0 fw-bold text-secondary">All Enrollments</h4>
+                  </div>
+                  <Card.Body className="p-0">
+                    <div className="table-wrapper">
+                      <Table hover className="custom-table mb-0">
+                        <thead>
                           <tr>
                             <th>Student ID</th>
                             <th>Full Name</th>
                             <th>Phone</th>
                             <th>Email</th>
                             <th>Status</th>
-                            <th>Actions</th>
+                            <th className="text-end">Actions</th>
                           </tr>
                         </thead>
                         <tbody>
                           {enrollments.map((enrollment) => (
                             <tr key={enrollment.id}>
-                              <td><small>{enrollment.student_id}</small></td>
-                              <td>{enrollment.full_name}</td>
-                              <td><small>{enrollment.phone}</small></td>
+                              <td><span className="text-muted small">{enrollment.student_id}</span></td>
+                              <td className="fw-semibold">{enrollment.full_name}</td>
+                              <td>{enrollment.phone}</td>
                               <td><small>{enrollment.email}</small></td>
                               <td>
-                                <span className={`badge ${
-                                  enrollment.status === 'active' ? 'bg-success' : 'bg-warning'
-                                }`}>
+                                <span className={`status-badge ${enrollment.status === 'active' ? 'active' : 'inactive'}`}>
                                   {enrollment.status}
                                 </span>
                               </td>
-                              <td>
-                                <div className="d-flex flex-wrap gap-1">
+                              <td className="text-end">
+                                <div className="action-buttons justify-content-end">
                                   <Button 
                                     variant="outline-primary" 
                                     size="sm"
+                                    className="action-btn view"
                                     onClick={() => handleView(enrollment)}
                                   >
-                                    View
+                                    <i className="bi bi-eye me-1"></i> View
                                   </Button>
                                   <Button 
                                     variant="outline-warning" 
                                     size="sm"
+                                    className="action-btn edit"
                                     onClick={() => handleChangePassword(enrollment)}
                                   >
-                                    Change Password
+                                    <i className="bi bi-key me-1"></i> Pass
                                   </Button>
                                   <Button 
                                     variant="outline-danger" 
                                     size="sm"
+                                    className="action-btn delete"
                                     onClick={() => handleDelete(enrollment)}
                                   >
-                                    Delete
+                                    <i className="bi bi-trash me-1"></i> Del
                                   </Button>
                                 </div>
                               </td>
@@ -172,46 +185,67 @@ const Enrollments = () => {
       </div>
 
       {/* View Modal */}
-      <Modal show={showViewModal} onHide={() => setShowViewModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Student Details</Modal.Title>
+      <Modal show={showViewModal} onHide={() => setShowViewModal(false)} centered>
+        <Modal.Header closeButton className="modal-header-custom">
+          <Modal.Title className="modal-title-custom">Student Details</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body className="modal-body-custom">
           {selectedEnrollment && (
             <div>
-              <p><strong>Student ID:</strong> {selectedEnrollment.student_id}</p>
-              <p><strong>Full Name:</strong> {selectedEnrollment.full_name}</p>
-              <p><strong>Aadhaar Number:</strong> {selectedEnrollment.aadhaar_no}</p>
-              <p><strong>Phone:</strong> {selectedEnrollment.phone}</p>
-              <p><strong>Email:</strong> {selectedEnrollment.email}</p>
-              <p><strong>District:</strong> {selectedEnrollment.district}</p>
-              <p><strong>Block:</strong> {selectedEnrollment.block}</p>
-              <p><strong>State:</strong> {selectedEnrollment.state}</p>
-              <p><strong>Associate Wings:</strong> {selectedEnrollment.associate_wings}</p>
-              <p><strong>Status:</strong> {selectedEnrollment.status}</p>
-              <p><strong>Created At:</strong> {new Date(selectedEnrollment.created_at).toLocaleDateString()}</p>
+              <div className="detail-row">
+                <span className="detail-label">Student ID:</span>
+                <span className="detail-value">{selectedEnrollment.student_id}</span>
+              </div>
+              <div className="detail-row">
+                <span className="detail-label">Full Name:</span>
+                <span className="detail-value">{selectedEnrollment.full_name}</span>
+              </div>
+              <div className="detail-row">
+                <span className="detail-label">Aadhaar No:</span>
+                <span className="detail-value">{selectedEnrollment.aadhaar_no}</span>
+              </div>
+              <div className="detail-row">
+                <span className="detail-label">Phone:</span>
+                <span className="detail-value">{selectedEnrollment.phone}</span>
+              </div>
+              <div className="detail-row">
+                <span className="detail-label">Email:</span>
+                <span className="detail-value">{selectedEnrollment.email}</span>
+              </div>
+              <div className="detail-row">
+                <span className="detail-label">District:</span>
+                <span className="detail-value">{selectedEnrollment.district}</span>
+              </div>
+              <div className="detail-row">
+                <span className="detail-label">Status:</span>
+                <span className="detail-value">
+                   <span className={`status-badge ${selectedEnrollment.status === 'active' ? 'status-active' : 'status-inactive'}`}>
+                    {selectedEnrollment.status}
+                  </span>
+                </span>
+              </div>
             </div>
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowViewModal(false)}>
+          <Button variant="light" onClick={() => setShowViewModal(false)} className="border">
             Close
           </Button>
         </Modal.Footer>
       </Modal>
 
       {/* Change Password Modal */}
-      <Modal show={showChangePasswordModal} onHide={() => setShowChangePasswordModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Change Password</Modal.Title>
+      <Modal show={showChangePasswordModal} onHide={() => setShowChangePasswordModal(false)} centered>
+        <Modal.Header closeButton className="modal-header-custom">
+          <Modal.Title className="modal-title-custom">Change Password</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body className="modal-body-custom">
           {selectedEnrollment && (
             <div>
-              <p>Change password for <strong>{selectedEnrollment.full_name}</strong> ({selectedEnrollment.student_id})</p>
+              <p className="mb-4">Reset password for <strong>{selectedEnrollment.full_name}</strong></p>
               <Form>
                 <Form.Group controlId="newPassword" className="mb-3">
-                  <Form.Label>New Password</Form.Label>
+                  <Form.Label className="fw-bold small">New Password</Form.Label>
                   <Form.Control 
                     type="password" 
                     value={newPassword}
@@ -220,7 +254,7 @@ const Enrollments = () => {
                   />
                 </Form.Group>
                 <Form.Group controlId="confirmPassword" className="mb-3">
-                  <Form.Label>Confirm Password</Form.Label>
+                  <Form.Label className="fw-bold small">Confirm Password</Form.Label>
                   <Form.Control 
                     type="password" 
                     value={confirmPassword}
@@ -233,29 +267,30 @@ const Enrollments = () => {
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowChangePasswordModal(false)}>
+          <Button variant="light" onClick={() => setShowChangePasswordModal(false)} className="border">
             Cancel
           </Button>
           <Button variant="primary" onClick={confirmChangePassword}>
-            Change Password
+            Update Password
           </Button>
         </Modal.Footer>
       </Modal>
 
       {/* Delete Modal */}
-      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Delete Enrollment</Modal.Title>
+      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)} centered>
+        <Modal.Header closeButton className="modal-header-custom">
+          <Modal.Title className="modal-title-custom text-danger">Delete Enrollment</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body className="modal-body-custom">
           {selectedEnrollment && (
             <p>
-              Are you sure you want to delete the enrollment for <strong>{selectedEnrollment.full_name}</strong> ({selectedEnrollment.student_id})?
+              Are you sure you want to delete <strong>{selectedEnrollment.full_name}</strong>?<br/>
+              <span className="text-muted small">This action cannot be undone.</span>
             </p>
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
+          <Button variant="light" onClick={() => setShowDeleteModal(false)} className="border">
             Cancel
           </Button>
           <Button variant="danger" onClick={confirmDelete}>

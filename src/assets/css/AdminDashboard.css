@@ -1,0 +1,299 @@
+/* Admin Dashboard */
+.admin-dashboard {
+  background: #f8f9fa;
+  min-height: 100vh;
+  padding: 0;
+}
+
+.admin-dashboard .dashboard-content {
+  padding: 2rem;
+  padding-top: calc(2rem + 70px); /* Account for fixed top nav */
+}
+
+.admin-dashboard .dashboard-header {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.admin-dashboard .dashboard-header h1 {
+  color: #212529;
+  font-weight: 700;
+  font-size: 2.5rem;
+  margin: 0;
+}
+
+.admin-dashboard .dashboard-header .subtitle {
+  color: #6c757d;
+  font-size: 1rem;
+  margin-top: 0.5rem;
+}
+
+/* Stats Cards */
+.admin-dashboard .stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.admin-dashboard .stat-card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  border: 1px solid #f0f0f0;
+}
+
+.admin-dashboard .stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+  border-color: #e0e0e0;
+}
+
+.admin-dashboard .stat-card .stat-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  color: white;
+}
+
+.admin-dashboard .stat-card .stat-icon.blue {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.admin-dashboard .stat-card .stat-icon.green {
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+}
+
+.admin-dashboard .stat-card .stat-icon.orange {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.admin-dashboard .stat-card .stat-icon.yellow {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.admin-dashboard .stat-card .stat-label {
+  color: #6c757d;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.admin-dashboard .stat-card .stat-value {
+  color: #212529;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.admin-dashboard .stat-card .stat-change {
+  color: #198754;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.admin-dashboard .stat-card .stat-change.negative {
+  color: #dc3545;
+}
+
+/* Recent Activity Section */
+.admin-dashboard .recent-activity {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f0f0f0;
+  margin-bottom: 2rem;
+}
+
+.admin-dashboard .recent-activity h2 {
+  color: #212529;
+  font-weight: 600;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.admin-dashboard .activity-list {
+  list-style: none;
+  padding: 0;
+}
+
+.admin-dashboard .activity-item {
+  padding: 1rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.admin-dashboard .activity-item:last-child {
+  border-bottom: none;
+}
+
+.admin-dashboard .activity-item:hover {
+  background: #f8f9fa;
+  transform: translateX(5px);
+}
+
+.admin-dashboard .activity-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+  flex-shrink: 0;
+}
+
+.admin-dashboard .activity-icon.user {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.admin-dashboard .activity-icon.course {
+  background: #e8f5e9;
+  color: #388e3c;
+}
+
+.admin-dashboard .activity-icon.enrollment {
+  background: #fff3e0;
+  color: #f57c00;
+}
+
+.admin-dashboard .activity-content {
+  flex: 1;
+}
+
+.admin-dashboard .activity-text {
+  color: #212529;
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+}
+
+.admin-dashboard .activity-time {
+  color: #6c757d;
+  font-size: 0.8rem;
+}
+
+/* Quick Actions */
+.admin-dashboard .quick-actions {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f0f0f0;
+}
+
+.admin-dashboard .quick-actions h2 {
+  color: #212529;
+  font-weight: 600;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.admin-dashboard .quick-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.admin-dashboard .quick-action {
+  padding: 1rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  background: #f8f9fa;
+}
+
+.admin-dashboard .quick-action:hover {
+  background: white;
+  border-color: #667eea;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 16px rgba(102, 126, 234, 0.15);
+}
+
+.admin-dashboard .quick-action .action-icon {
+  font-size: 1.5rem;
+  color: #667eea;
+  margin-bottom: 0.5rem;
+}
+
+.admin-dashboard .quick-action .action-text {
+  color: #212529;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+/* Responsive styles */
+@media (max-width: 767px) {
+  .admin-dashboard {
+    padding: 0;
+  }
+  
+  .admin-dashboard .dashboard-content {
+    padding: 1rem;
+    padding-top: calc(1rem + 70px); /* Account for fixed top nav */
+    margin-left: 0;
+  }
+
+  .admin-dashboard .dashboard-header h1 {
+    font-size: 1.75rem;
+  }
+
+  .admin-dashboard .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .admin-dashboard .stat-card {
+    padding: 1.25rem;
+  }
+
+  .admin-dashboard .stat-card .stat-value {
+    font-size: 1.75rem;
+  }
+
+  .admin-dashboard .quick-actions-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  .admin-dashboard .quick-action {
+    padding: 0.75rem;
+  }
+
+  .admin-dashboard .quick-action .action-text {
+    font-size: 0.8rem;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .admin-dashboard .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .admin-dashboard .quick-actions-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .admin-dashboard .stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .admin-dashboard .quick-actions-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

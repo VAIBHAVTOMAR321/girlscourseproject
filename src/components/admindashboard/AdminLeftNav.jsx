@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Nav, Button, Offcanvas } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
+import '../../assets/css/AdminLeftNav.css' // Import specific CSS
 
 const AdminLeftNav = () => {
   const [show, setShow] = useState(true)
@@ -9,12 +10,12 @@ const AdminLeftNav = () => {
 
   useEffect(() => {
     const checkMobile = () => {
-      const mobile = window.innerWidth < 768
+      const mobile = window.innerWidth < 768 // Standard mobile breakpoint
       setIsMobile(mobile)
       if (mobile) {
-        setShow(false) // Hide sidebar on mobile by default
+        setShow(false)
       } else {
-        setShow(true) // Show sidebar on desktop by default
+        setShow(true)
       }
     }
 
@@ -33,97 +34,61 @@ const AdminLeftNav = () => {
 
   return (
     <>
-      {/* Desktop sidebar */}
-      {!isMobile && (
-        <>
-          {show ? (
-            <div className="d-flex flex-column bg-primary text-white vh-100" style={{ width: '250px', transition: 'width 0.3s ease' }}>
-              <div className="p-3 border-bottom border-light">
-                <Button 
-                  variant="outline-light" 
-                  onClick={handleToggle} 
-                  className="w-100"
-                >
-                  <span className="me-2">←</span> Hide
-                </Button>
-              </div>
-              <Nav className="flex-column p-3">
-                <Nav.Link as={Link} to="/AdminDashboard" className="text-white">
-                  <span className="me-2">📊</span> Dashboard
-                </Nav.Link>
-                <Nav.Link as={Link} to="/Enrollments" className="text-white">
-                  <span className="me-2">📅</span> Enrollments
-                </Nav.Link>
-              </Nav>
-              
-            </div>
-          ) : (
-            <div className="d-flex flex-column bg-primary text-white vh-100 " style={{ width: '60px', transition: 'width 0.3s ease' }}>
-                <div className='show-btn'>
-                <Button 
-                  variant="outline-light" 
-                  onClick={handleToggle} 
-                  
-                >
-                  <span className="me-2">→ Show</span> 
-                </Button>
-                </div>
-              <Nav className="flex-column p-3 align-items-center">
-                <Nav.Link as={Link} to="/AdminDashboard" className="text-white">
-                  <span className="fs-5">📊</span>
-                </Nav.Link>
-                <Nav.Link as={Link} to="/Enrollments" className="text-white">
-                  <span className="fs-5">📅</span>
-                </Nav.Link>
-              </Nav>
-              <div className="mt-auto p-3 border-top border-light">
-                <Button 
-                  variant="outline-light" 
-                  onClick={handleToggle} 
-                  className="w-100"
-                >
-                  <span>→</span>
-                </Button>
-              </div>
-            </div>
-          )}
-        </>
-      )}
-
-      {/* Mobile offcanvas sidebar */}
+      {/* Mobile Toggle Button */}
       {isMobile && (
-        <>
-          <Button 
-            variant="primary" 
-            onClick={() => setShowOffcanvas(true)} 
-            className="d-lg-none fixed-top m-3"
-            style={{ zIndex: 1050 }}
-          >
-            <span>☰</span> Menu
-          </Button>
-
-          <Offcanvas 
-            show={showOffcanvas} 
-            onHide={() => setShowOffcanvas(false)} 
-            placement="start"
-            className="bg-primary text-white"
-          >
-            <Offcanvas.Header closeButton>
-              <Offcanvas.Title className="text-white">Admin Dashboard</Offcanvas.Title>
-            </Offcanvas.Header>
-            <Offcanvas.Body>
-              <Nav className="flex-column">
-                <Nav.Link as={Link} to="/AdminDashboard" className="text-white" onClick={() => setShowOffcanvas(false)}>
-                  <span className="me-2">📊</span> Dashboard
-                </Nav.Link>
-                <Nav.Link as={Link} to="/Enrollments" className="text-white" onClick={() => setShowOffcanvas(false)}>
-                  <span className="me-2">📅</span> Enrollments
-                </Nav.Link>
-              </Nav>
-            </Offcanvas.Body>
-          </Offcanvas>
-        </>
+        <Button 
+          variant="primary" 
+          onClick={() => setShowOffcanvas(true)} 
+          className="mobile-menu-btn"
+          style={{ position: 'fixed', top: '1rem', left: '1rem', zIndex: 1050 }}
+        >
+          <i className="bi bi-list"></i>
+        </Button>
       )}
+
+      {/* Desktop Sidebar */}
+      {!isMobile && (
+        <div className={`admin-left-nav ${show ? '' : 'compact'} d-flex flex-column vh-100`}>
+          <div className="nav-header">
+            <button className="sidebar-toggle-btn" onClick={handleToggle}>
+              <i className={`bi ${show ? 'bi-arrow-left' : 'bi-arrow-right'}`}></i>
+            </button>
+          </div>
+          
+          <Nav className="nav-menu flex-column">
+            <Nav.Link as={Link} to="/AdminDashboard" className="nav-link-custom active">
+              <i className="bi bi-grid-fill nav-icon"></i>
+              <span className="nav-text">Dashboard</span>
+            </Nav.Link>
+            <Nav.Link as={Link} to="/Enrollments" className="nav-link-custom">
+              <i className="bi bi-person-lines-fill nav-icon"></i>
+              <span className="nav-text">Enrollments</span>
+            </Nav.Link>
+          </Nav>
+        </div>
+      )}
+
+      {/* Mobile Offcanvas Sidebar */}
+      <Offcanvas 
+        show={showOffcanvas} 
+        onHide={() => setShowOffcanvas(false)} 
+        placement="start"
+        className="admin-left-nav mobile"
+      >
+        <Offcanvas.Header closeButton closeVariant="white">
+          <Offcanvas.Title className="fw-bold">AdminPanel</Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body>
+          <Nav className="nav-menu mobile-menu flex-column">
+            <Nav.Link as={Link} to="/AdminDashboard" className="nav-link-custom" onClick={() => setShowOffcanvas(false)}>
+              <i className="bi bi-grid-fill nav-icon me-2"></i> Dashboard
+            </Nav.Link>
+            <Nav.Link as={Link} to="/Enrollments" className="nav-link-custom" onClick={() => setShowOffcanvas(false)}>
+              <i className="bi bi-person-lines-fill nav-icon me-2"></i> Enrollments
+            </Nav.Link>
+          </Nav>
+        </Offcanvas.Body>
+      </Offcanvas>
     </>
   )
 }
