@@ -5,8 +5,10 @@ import regBanner from "../../assets/reg-banner.jpg";
 import { Link } from "react-router-dom";
 import "../../custom/style.css";
 const Login = () => {
-  const [role, setRole] = useState("admin"); // default role
+  const [role, setRole] = useState("admin");
   const [errorMessage, setErrorMessage] = useState("");
+  const [fieldErrors, setFieldErrors] = useState({}); // ✅ ADD THIS
+
   const [formData, setFormData] = useState({
     email_or_phone: "",
     aadhaar_no: "",
@@ -22,6 +24,32 @@ const Login = () => {
 
 const handleSubmit = async (e) => {
   e.preventDefault();
+
+  let errors = {};
+
+  if (role === "admin") {
+    if (!formData.email_or_phone.trim()) {
+      errors.email_or_phone = "Email or Phone is required";
+    }
+  }
+
+  if (role === "student") {
+    if (!formData.aadhaar_no.trim()) {
+      errors.aadhaar_no = "Aadhaar number is required";
+    }
+  }
+
+  if (!formData.password.trim()) {
+    errors.password = "Password is required";
+  }
+
+  // If errors exist → stop submit
+  if (Object.keys(errors).length > 0) {
+    setFieldErrors(errors);
+    return;
+  }
+
+  setFieldErrors({});
   setErrorMessage("");
 
   let payload =
@@ -41,29 +69,17 @@ const handleSubmit = async (e) => {
       payload,
     );
 
-    console.log("Full Response:", response.data);
-
-    // ✅ If backend sends error inside 200 response
-    if (response.data.error) {
-      setErrorMessage(response.data.error);
+    if (response.data.error || response.data.detail) {
+      setErrorMessage(response.data.error || response.data.detail);
       return;
     }
 
-    if (response.data.detail) {
-      setErrorMessage(response.data.detail);
-      return;
-    }
-
-    // ✅ If everything is correct
     alert("Login Successful");
   } catch (error) {
-    console.log("Catch Block Error:", error);
-
     const message =
       error.response?.data?.error ||
       error.response?.data?.detail ||
-      error.message ||
-      "Login Failed. Please try again.";
+      "Login Failed";
 
     setErrorMessage(message);
   }
@@ -78,7 +94,7 @@ const handleSubmit = async (e) => {
 
         <Col lg={6} md={6} sm={12}>
           <div className="p-4">
-            <h2 className="text-center mb-4">HealthHub Login</h2>
+            <h2 className="text-center mb-4">Course Login</h2>
 
             {/* Role Selection */}
             <Form.Group className="mb-3">
@@ -100,11 +116,15 @@ const handleSubmit = async (e) => {
                   <Form.Control
                     type="text"
                     name="email_or_phone"
-                    placeholder="Enter email or phone"
                     value={formData.email_or_phone}
                     onChange={handleChange}
-                    required
+                    placeholder="Enter Email Or Phone"
                   />
+                  {fieldErrors.email_or_phone && (
+                    <small className="text-danger">
+                      {fieldErrors.email_or_phone}
+                    </small>
+                  )}
                 </Form.Group>
               )}
 
@@ -115,12 +135,16 @@ const handleSubmit = async (e) => {
                   <Form.Control
                     type="text"
                     name="aadhaar_no"
-                    placeholder="Enter Aadhaar number"
                     value={formData.aadhaar_no}
                     onChange={handleChange}
                     maxLength={12}
-                    required
+                    placeholder="Enter Aadhaar Number"
                   />
+                  {fieldErrors.aadhaar_no && (
+                    <small className="text-danger">
+                      {fieldErrors.aadhaar_no}
+                    </small>
+                  )}
                 </Form.Group>
               )}
 
@@ -130,11 +154,13 @@ const handleSubmit = async (e) => {
                 <Form.Control
                   type="password"
                   name="password"
-                  placeholder="Enter password"
                   value={formData.password}
                   onChange={handleChange}
-                  required
+                  placeholder="Enter Password"
                 />
+                {fieldErrors.password && (
+                  <small className="text-danger">{fieldErrors.password}</small>
+                )}
               </Form.Group>
               {errorMessage && (
                 <div className="alert alert-danger error-box">
