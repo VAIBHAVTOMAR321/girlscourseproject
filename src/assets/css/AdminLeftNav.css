@@ -46,9 +46,17 @@
   border-left: 3px solid white;
 }
 
+.admin-left-nav .nav-menu .nav-link.active .nav-icon {
+  color: white;
+}
+
 .admin-left-nav .nav-menu .nav-link .nav-icon {
   margin-right: 0.5rem;
   font-size: 1.1rem;
+  color: white;
+  display: inline-block;
+  width: 24px;
+  text-align: center;
 }
 
 .admin-left-nav .toggle-btn {
@@ -109,6 +117,7 @@
   margin-right: 0;
   font-size: 1.25rem;
   display: block;
+  color: white;
 }
 
 .admin-left-nav.compact .sidebar-toggle-btn {

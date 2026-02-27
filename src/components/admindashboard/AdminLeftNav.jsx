@@ -48,7 +48,7 @@ const AdminLeftNav = () => {
 
       {/* Desktop Sidebar */}
       {!isMobile && (
-        <div className={`admin-left-nav ${show ? '' : 'compact'} d-flex flex-column vh-100`}>
+        <div className={`admin-left-nav ${show ? '' : 'compact'} d-flex flex-column`}>
           <div className="nav-header">
             <button className="sidebar-toggle-btn" onClick={handleToggle}>
               <i className={`bi ${show ? 'bi-arrow-left' : 'bi-arrow-right'}`}></i>
