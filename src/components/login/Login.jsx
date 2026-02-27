@@ -2,12 +2,15 @@ import React, { useState } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import axios from "axios";
 import regBanner from "../../assets/reg-banner.jpg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../../custom/style.css";
+import { useAuth } from "../../contexts/AuthContext";
 const Login = () => {
   const [role, setRole] = useState("admin");
   const [errorMessage, setErrorMessage] = useState("");
   const [fieldErrors, setFieldErrors] = useState({}); // ✅ ADD THIS
+  const navigate = useNavigate();
+  const { login } = useAuth();
 
   const [formData, setFormData] = useState({
     email_or_phone: "",
@@ -74,7 +77,15 @@ const handleSubmit = async (e) => {
       return;
     }
 
-    alert("Login Successful");
+     // Store authentication data with actual response
+     login(response.data);
+     alert("Login Successful");
+     
+     // Redirect to appropriate dashboard based on role
+     const dashboardRoute = response.data.role === "admin" 
+       ? "/AdminDashboard" 
+       : "/UserDashboard";
+     navigate(dashboardRoute);
   } catch (error) {
     const message =
       error.response?.data?.error ||

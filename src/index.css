@@ -1,0 +1,95 @@
+/* Global styles for better responsiveness */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Ensure bootstrap components are properly responsive */
+.container-fluid {
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+/* Responsive table styling */
+.table-responsive {
+  overflow-x: auto;
+}
+
+/* Mobile specific styles */
+@media (max-width: 767px) {
+  .pt-16 {
+    padding-top: 4rem !important; /* For mobile fixed button */
+  }
+  
+  .d-flex.flex-wrap {
+    flex-direction: column;
+    gap: 0.5rem !important;
+  }
+  
+  .table {
+    font-size: 0.875rem;
+  }
+  
+  .btn-sm {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+  }
+  
+  .card {
+    margin-bottom: 1rem;
+  }
+}
+
+/* Tablet specific styles */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .pt-16 {
+    padding-top: 4rem !important; /* For mobile fixed button */
+  }
+  
+  .card {
+    margin-bottom: 1rem;
+  }
+}
+
+/* Large screen styles */
+@media (min-width: 1024px) {
+  .pt-lg-4 {
+    padding-top: 1.5rem !important;
+  }
+}
+
+/* Loading spinner center */
+.loading-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+}
+
+/* Animation for smooth transitions */
+.fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
