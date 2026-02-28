@@ -19,13 +19,8 @@ const AdminDashboard = () => {
   const navigate = useNavigate()
   const isMounted = useRef(true) // Prevents double fetch in React 18 Strict Mode
   
-  let authToken = null;
-  try {
-    const authData = useAuth();
-    authToken = authData?.token || authData?.user?.token || authData?.state?.token;
-  } catch (e) {
-    console.warn("AuthContext not found");
-  }
+  const authData = useAuth();
+  const authToken = authData?.accessToken;
   
   // State for Data
   const [enrollmentCount, setEnrollmentCount] = useState(0)
@@ -54,7 +49,7 @@ const AdminDashboard = () => {
       fetchData()
     }
     return () => { isMounted.current = false }
-  }, [])
+  }, [authToken, currentView])
 
   const getAuthConfig = () => {
     const headers = {}
@@ -67,22 +62,42 @@ const AdminDashboard = () => {
   }
 
   const fetchData = async () => {
+    if (!authToken) {
+      console.warn('Auth token not available, skipping data fetch')
+      setLoading(false)
+      return
+    }
+    
     setLoading(true)
     try {
       const config = getAuthConfig()
+      console.log('Fetching dashboard data with token:', authToken.substring(0, 10) + '...')
+      
       const [enrollRes, courseRes] = await Promise.all([
         axios.get('https://brjobsedu.com/girls_course/girls_course_backend/api/all-registration/', config),
         axios.get('https://brjobsedu.com/girls_course/girls_course_backend/api/course-module/', config)
       ])
 
+      console.log('Enrollments response:', enrollRes.data)
+      console.log('Courses response:', courseRes.data)
+
       if (enrollRes.data && enrollRes.data.success) {
         setEnrollmentCount(enrollRes.data.data.length)
+        console.log('Set enrollment count to:', enrollRes.data.data.length)
       }
       if (courseRes.data && courseRes.data.success) {
         setCourses(courseRes.data.data)
+        console.log('Set courses to:', courseRes.data.data.length, 'courses')
       }
     } catch (error) {
       console.error('Error fetching dashboard data:', error)
+      if (error.response) {
+        console.error('Response status:', error.response.status)
+        console.error('Response data:', error.response.data)
+      }
+      // Fallback data in case of error
+      setEnrollmentCount(0)
+      setCourses([])
     } finally {
       setLoading(false)
     }
@@ -91,7 +106,10 @@ const AdminDashboard = () => {
   // --- Navigation Handlers ---
   const handleEnrollmentsClick = () => navigate('/Enrollments')
   const handleCoursesClick = () => setCurrentView('list')
-  const handleBackToDashboard = () => setCurrentView('dashboard')
+  const handleBackToDashboard = () => {
+    setCurrentView('dashboard')
+    fetchData() // Refresh data when returning to dashboard
+  }
   const handleAddCourseClick = () => {
     setFormData({ course_id: '', course_name: '', modules: [] })
     setCurrentView('form')
