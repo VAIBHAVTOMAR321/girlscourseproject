@@ -120,21 +120,30 @@ const AdminDashboard = () => {
   }
 
   const handleEditCourse = (course) => {
-    setCurrentView('form')
-    // Populate form with course data
+    setCurrentView('form');
+    // Populate form with course data, including IDs for update
     setFormData({
+      id: course.id,
       course_id: course.course_id,
       course_name: course.course_name,
       modules: course.modules.map(mod => ({
+        id: mod.id,
+        module_id: mod.module_id,
         mod_title: mod.mod_title,
         order: mod.order,
+        course: mod.course,
         sub_modules: mod.sub_modules.map(sub => ({
+          id: sub.id,
+          sub_module_id: sub.sub_module_id,
           sub_modu_title: sub.sub_modu_title,
           sub_modu_description: sub.sub_modu_description,
-          sub_mod: sub.sub_mod
+          image: sub.image, // Preserve image if it exists
+          sub_mod: sub.sub_mod,
+          order: sub.order,
+          module: sub.module,
         }))
       }))
-    })
+    });
   }
 
   const handleDeleteCourse = async (course) => {
@@ -249,30 +258,41 @@ const AdminDashboard = () => {
     setSubmitting(true)
 
     try {
-      // Prepare the data in the exact format expected by the backend
+      const isUpdate = !!formData.id;
+
+      // Prepare the data in the exact format expected by the backend.
+      // We build the payload from formData, which now contains all necessary IDs for an update.
       const dataToSend = {
+        id: formData.id,
         course_id: formData.course_id,
         course_name: formData.course_name,
         modules: formData.modules.map(mod => ({
+          id: mod.id,
+          module_id: mod.module_id,
           mod_title: mod.mod_title,
           order: mod.order,
+          course: mod.course,
           sub_modules: mod.sub_modules.map(sub => ({
+            id: sub.id,
+            sub_module_id: sub.sub_module_id,
             sub_modu_title: sub.sub_modu_title,
             sub_modu_description: sub.sub_modu_description,
-            sub_mod: sub.sub_mod.filter(pair => pair[0].trim() !== "" || pair[1].trim() !== "")
-            // Do not include image field at all to avoid backend validation errors
-          })).filter(sub => sub.sub_modu_title.trim() !== "")
-        })).filter(mod => mod.mod_title.trim() !== "")
-      }
+            sub_mod: sub.sub_mod.filter(pair => (pair[0] && pair[0].trim() !== "") || (pair[1] && pair[1].trim() !== "")),
+            order: sub.order,
+            module: sub.module,
+            // image is intentionally omitted as per pre-existing comment and logic
+          })).filter(sub => sub.sub_modu_title && sub.sub_modu_title.trim() !== "")
+        })).filter(mod => mod.mod_title && mod.mod_title.trim() !== "")
+      };
 
       const config = getAuthConfig()
       
-      if (formData.course_id) {
+      if (isUpdate) {
         // Update existing course
         await axios.put('https://brjobsedu.com/girls_course/girls_course_backend/api/course-module/', dataToSend, config)
         alert('Course updated successfully!')
       } else {
-        // Create new course
+        // Create new course - backend should ignore IDs.
         await axios.post('https://brjobsedu.com/girls_course/girls_course_backend/api/course-module/', dataToSend, config)
         alert('Course created successfully!')
       }
@@ -530,7 +550,7 @@ const AdminDashboard = () => {
 
             <div className="d-flex justify-content-end mt-4">
               <Button variant="primary" type="submit" size="lg" disabled={submitting}>
-                {submitting ? <Spinner as="span" animation="border" size="sm" /> : 'Create Course'}
+                {submitting ? <Spinner as="span" animation="border" size="sm" /> : (formData.course_id ? 'Update Course' : 'Create Course')}
               </Button>
             </div>
           </Form>
