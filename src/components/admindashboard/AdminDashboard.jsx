@@ -150,8 +150,17 @@ const AdminDashboard = () => {
     setCourseFormData({ course_name: '' })
     setCurrentView('form')
   }
-  const handleViewCourse = (course) => {
-    setSelectedCourse(course)
+  const handleViewCourse = async (course) => {
+    try {
+      const config = getAuthConfig()
+      const response = await axios.get(`https://brjobsedu.com/girls_course/girls_course_backend/api/course-module/?course_id=${course.course_id}`, config)
+      if (response.data && response.data.success) {
+        setSelectedCourse(response.data.data)
+      }
+    } catch (error) {
+      console.error('Error fetching course details:', error)
+      alert('Failed to fetch course details. Please check the console for details.')
+    }
     setShowModal(true)
   }
 
@@ -1197,9 +1206,17 @@ const AdminDashboard = () => {
       </div>
 
       {/* Course Details Modal */}
-      <Modal show={showModal} onHide={() => setShowModal(false)} size="xl" centered className="course-modal">
-        <Modal.Header closeButton className="border-bottom pb-3">
-          <Modal.Title className="fw-bold fs-4">{selectedCourse?.course_name}</Modal.Title>
+<Modal
+  show={showModal}
+  onHide={() => setShowModal(false)}
+  fullscreen
+  style={{
+    padding: 0
+  }}
+  contentClassName="border-0"
+  dialogClassName="m-0"
+>        <Modal.Header closeButton className="border-bottom py-2">
+          <Modal.Title className="fw-bold fs-5">{selectedCourse?.course_name}</Modal.Title>
         </Modal.Header>
         <Modal.Body className="p-4">
           {selectedCourse && (
@@ -1209,25 +1226,78 @@ const AdminDashboard = () => {
               {selectedCourse.modules && selectedCourse.modules.length > 0 && (
                 <div className="mt-4">
                   <h5>Modules ({selectedCourse.modules.length})</h5>
-                  <ul className="list-group">
+                  <div className="modules-list">
                     {selectedCourse.modules.map((mod, index) => (
-                      <li key={index} className="list-group-item">
-                        {mod.mod_title}
+                      <div key={index} className="module-item mb-4 p-3 border rounded">
+                        <h6 className="fw-bold mb-2">
+                          Module {mod.order}: {mod.mod_title}
+                          <Badge bg="secondary" className="ms-2">ID: {mod.module_id}</Badge>
+                        </h6>
+                        
                         {mod.sub_modules && mod.sub_modules.length > 0 && (
-                          <div className="mt-2">
-                            <small className="text-muted">Sub-modules ({mod.sub_modules.length})</small>
-                            <ul className="list-group mt-1">
+                          <div className="mt-3">
+                            <h7 className="fw-bold text-muted">Sub-modules ({mod.sub_modules.length})</h7>
+                            <div className="submodules-list mt-2">
                               {mod.sub_modules.map((subMod, subIndex) => (
-                                <li key={subIndex} className="list-group-item list-group-item-sm">
-                                  {subMod.sub_modu_title}
-                                </li>
+                                <div key={subIndex} className="submodule-item mb-3 p-2 border rounded bg-light">
+                                  <h7 className="fw-bold">
+                                    Submodule {subMod.order}: {subMod.sub_modu_title}
+                                    <Badge bg="secondary" className="ms-2">ID: {subMod.sub_module_id}</Badge>
+                                  </h7>
+                                  
+                                  {subMod.sub_modu_description && (
+                                    <p className="small mt-1">{subMod.sub_modu_description}</p>
+                                  )}
+                                  
+                                  {subMod.image && (
+                                    <div className="mt-2">
+                                      <Image 
+                                        src={`https://brjobsedu.com/girls_course/girls_course_backend${subMod.image}`} 
+                                        alt={subMod.sub_modu_title} 
+                                        thumbnail 
+                                        className="img-fluid"
+                                        style={{ maxWidth: '200px' }}
+                                      />
+                                    </div>
+                                  )}
+                                  
+                                  {subMod.sub_mod && subMod.sub_mod.length > 0 && (
+                                    <div className="mt-2">
+                                      <h8 className="fw-bold text-muted small">Sections:</h8>
+                                      <div className="sections-list mt-1">
+                                        {subMod.sub_mod.map((section, sectionIndex) => (
+                                          <div key={sectionIndex} className="section-item mb-2 p-1 border rounded">
+                                            <h8 className="fw-bold small">
+                                              Section {sectionIndex + 1}: {section.title || 'Untitled Section'}
+                                            </h8>
+                                            {section.description && (
+                                              <p className="small mt-1">{section.description}</p>
+                                            )}
+                                            {section.topics && section.topics.length > 0 && (
+                                              <div className="mt-1">
+                                                <small className="text-muted">Topics:</small>
+                                                <ul className="list-inline small mt-1">
+                                                  {section.topics.map((topic, topicIndex) => (
+                                                    <li key={topicIndex} className="list-inline-item">
+                                                      <Badge bg="info">{topic}</Badge>
+                                                    </li>
+                                                  ))}
+                                                </ul>
+                                              </div>
+                                            )}
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
                               ))}
-                            </ul>
+                            </div>
                           </div>
                         )}
-                      </li>
+                      </div>
                     ))}
-                  </ul>
+                  </div>
                 </div>
               )}
             </div>

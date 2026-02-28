@@ -37,10 +37,11 @@ const AdminLeftNav = () => {
       {/* Mobile Toggle Button */}
       {isMobile && (
         <Button 
-          variant="primary" 
+          variant="light" 
           onClick={() => setShowOffcanvas(true)} 
           className="mobile-menu-btn"
-          style={{ position: 'fixed', top: '1rem', left: '1rem', zIndex: 1050 }}
+          style={{ position: 'fixed', top: '1rem', left: '1rem', zIndex: 1050, border: '1px solid #dee2e6' }}
+          size="sm"
         >
           <i className="bi bi-list"></i>
         </Button>
@@ -56,11 +57,11 @@ const AdminLeftNav = () => {
           </div>
           
           <Nav className="nav-menu flex-column">
-            <Nav.Link as={Link} to="/AdminDashboard" className="nav-link-custom active">
+            <Nav.Link as={Link} to="/AdminDashboard" className="nav-link-custom ">
               <i className="bi bi-grid-fill nav-icon"></i>
               <span className="nav-text">Dashboard</span>
             </Nav.Link>
-            <Nav.Link as={Link} to="/Enrollments" className="nav-link-custom">
+            <Nav.Link as={Link} to="/Enrollments" className="nav-link-custom ">
               <i className="bi bi-person-lines-fill nav-icon"></i>
               <span className="nav-text">Enrollments</span>
             </Nav.Link>
@@ -75,8 +76,8 @@ const AdminLeftNav = () => {
         placement="start"
         className="admin-left-nav mobile"
       >
-        <Offcanvas.Header closeButton closeVariant="white">
-          <Offcanvas.Title className="fw-bold">AdminPanel</Offcanvas.Title>
+        <Offcanvas.Header closeButton>
+          <Offcanvas.Title className="fw-semibold fs-6">Admin Panel</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
           <Nav className="nav-menu mobile-menu flex-column">

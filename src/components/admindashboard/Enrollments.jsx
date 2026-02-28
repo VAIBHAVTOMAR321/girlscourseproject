@@ -10,14 +10,12 @@ const Enrollments = () => {
   const [filteredEnrollments, setFilteredEnrollments] = useState([])
   const [loading, setLoading] = useState(true)
   const [showViewModal, setShowViewModal] = useState(false)
-  const [showChangePasswordModal, setShowChangePasswordModal] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [selectedEnrollment, setSelectedEnrollment] = useState(null)
-  const [newPassword, setNewPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
   const [searchTerm, setSearchTerm] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
   const [recordsPerPage] = useState(50)
+  const [selectedEnrollments, setSelectedEnrollments] = useState([])
 
   useEffect(() => {
     fetchEnrollments()
@@ -81,9 +79,10 @@ const Enrollments = () => {
     setShowViewModal(true)
   }
 
-  const handleChangePassword = (enrollment) => {
-    setSelectedEnrollment(enrollment)
-    setShowChangePasswordModal(true)
+  const handleResetPassword = (enrollment) => {
+    if (window.confirm(`Are you sure you want to reset password for ${enrollment.full_name} to Test@123?`)) {
+      resetPassword([enrollment.student_id])
+    }
   }
 
   const handleDelete = (enrollment) => {
@@ -91,24 +90,46 @@ const Enrollments = () => {
     setShowDeleteModal(true)
   }
 
-  const confirmChangePassword = async () => {
-    if (newPassword !== confirmPassword) {
-      alert('Passwords do not match!')
+  const handleSelectEnrollment = (studentId) => {
+    setSelectedEnrollments(prev => {
+      if (prev.includes(studentId)) {
+        return prev.filter(id => id !== studentId)
+      } else {
+        return [...prev, studentId]
+      }
+    })
+  }
+
+  const handleSelectAll = () => {
+    if (selectedEnrollments.length === currentRecords.length) {
+      setSelectedEnrollments([])
+    } else {
+      setSelectedEnrollments(currentRecords.map(enrollment => enrollment.student_id))
+    }
+  }
+
+  const handleBulkResetPassword = () => {
+    if (selectedEnrollments.length === 0) {
+      alert('Please select at least one student to reset password')
       return
     }
+    if (window.confirm(`Are you sure you want to reset password for ${selectedEnrollments.length} selected student(s) to Test@123?`)) {
+      resetPassword(selectedEnrollments)
+    }
+  }
+
+  const resetPassword = async (uniqueIds) => {
     try {
       const payload = {
-        student_id: selectedEnrollment.student_id,
-        password: newPassword
+        unique_ids: uniqueIds,
+        new_password: 'Test@123'
       }
-      const response = await axios.put('https://brjobsedu.com/girls_course/girls_course_backend/api/all-registration/', payload)
-      setShowChangePasswordModal(false)
-      setNewPassword('')
-      setConfirmPassword('')
-      alert('Password changed successfully!')
+      const response = await axios.post('https://brjobsedu.com/girls_course/girls_course_backend/api/bulk-password-reset/', payload)
+      alert(`Password reset successfully for ${uniqueIds.length} student(s)!`)
+      setSelectedEnrollments([])
     } catch (error) {
-      console.error('Error changing password:', error)
-      alert('Failed to change password')
+      console.error('Error resetting password:', error)
+      alert('Failed to reset password')
     }
   }
 
@@ -153,24 +174,35 @@ const Enrollments = () => {
           <Container fluid>
             <Row>
               <Col xs={12}>
-                {/* Search and Filter Section */}
-                <Card className="filter-card shadow-sm border-0 mb-3">
-                  <Card.Body className="p-4">
-                    <Form.Group controlId="searchTerm">
-                      <Form.Control 
-                        type="text" 
-                        placeholder="Search by student name, ID, phone, or email..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="search-input"
-                      />
-                    </Form.Group>
-                  </Card.Body>
-                </Card>
+                 {/* Search and Filter Section */}
+                 <div className="search-section mb-2">
+                   <Form.Group controlId="searchTerm">
+                     <Form.Control 
+                       type="text" 
+                       placeholder="Search by student name, ID, phone, or email..."
+                       value={searchTerm}
+                       onChange={(e) => setSearchTerm(e.target.value)}
+                       className="search-input"
+                       size="sm"
+                     />
+                   </Form.Group>
+                 </div>
 
-                <Card className="enrollments-table-card shadow-sm border-0">
-                  <Card.Header className="bg-white border-bottom py-3 px-4 d-flex justify-content-between align-items-center">
-                    <h4 className="mb-0 fw-bold text-secondary">All Enrollments</h4>
+                <Card className="enrollments-table-card border">
+                  <Card.Header className="bg-light border-bottom py-2 px-3 d-flex justify-content-between align-items-center">
+                    <div className="d-flex align-items-center gap-2">
+                      <h5 className="mb-0 fw-semibold text-secondary">All Enrollments</h5>
+                      {selectedEnrollments.length > 0 && (
+                        <Button 
+                          variant="primary" 
+                          size="sm"
+                          className="action-btn"
+                          onClick={handleBulkResetPassword}
+                        >
+                          Reset Selected ({selectedEnrollments.length})
+                        </Button>
+                      )}
+                    </div>
                     <span className="text-muted small">
                       Showing {indexOfFirstRecord + 1} to {Math.min(indexOfLastRecord, filteredEnrollments.length)} of {filteredEnrollments.length} records
                     </span>
@@ -180,28 +212,44 @@ const Enrollments = () => {
                       <Table hover className="custom-table align-middle mb-0">
                         <thead className="table-light">
                           <tr>
-                            <th className="ps-4">Student ID</th>
+                            <th className="ps-3" style={{ width: '40px' }}>
+                              <Form.Check 
+                                type="checkbox"
+                                checked={selectedEnrollments.length === currentRecords.length && currentRecords.length > 0}
+                                onChange={handleSelectAll}
+                                size="sm"
+                              />
+                            </th>
+                            <th className="ps-2">Student ID</th>
                             <th>Full Name</th>
                             <th>Phone</th>
                             <th>Email</th>
                             <th>Status</th>
-                            <th className="text-end pe-4">Actions</th>
+                            <th className="text-end pe-3">Actions</th>
                           </tr>
                         </thead>
                         <tbody>
                           {currentRecords.map((enrollment) => (
                             <tr key={enrollment.id}>
-                              <td className="ps-4"><span className="text-muted small fw-bold">{enrollment.student_id}</span></td>
-                              <td className="fw-semibold text-dark">{enrollment.full_name}</td>
-                              <td>{enrollment.phone}</td>
-                              <td><small className="text-muted">{enrollment.email}</small></td>
+                              <td className="ps-3">
+                                <Form.Check 
+                                  type="checkbox"
+                                  checked={selectedEnrollments.includes(enrollment.student_id)}
+                                  onChange={() => handleSelectEnrollment(enrollment.student_id)}
+                                  size="sm"
+                                />
+                              </td>
+                              <td className="ps-2"><span className="text-muted small fw-medium">{enrollment.student_id}</span></td>
+                              <td className="fw-medium text-dark">{enrollment.full_name}</td>
+                              <td className="small">{enrollment.phone}</td>
+                              <td className="small text-muted">{enrollment.email}</td>
                               <td>
                                 <span className={`status-badge ${enrollment.status === 'active' ? 'bg-success' : 'bg-warning text-dark'}`}>
                                   {enrollment.status}
                                 </span>
                               </td>
-                              <td className="text-end pe-4">
-                                <div className="action-buttons justify-content-end gap-2">
+                              <td className="text-end pe-3">
+                                <div className="action-buttons justify-content-end gap-1">
                                   <Button 
                                     variant="primary" 
                                     size="sm"
@@ -214,9 +262,9 @@ const Enrollments = () => {
                                     variant="warning" 
                                     size="sm"
                                     className="action-btn"
-                                    onClick={() => handleChangePassword(enrollment)}
+                                    onClick={() => handleResetPassword(enrollment)}
                                   >
-                                    Edit
+                                    Reset Password
                                   </Button>
                                   <Button 
                                     variant="danger" 
@@ -234,63 +282,63 @@ const Enrollments = () => {
                       </Table>
                     </div>
                   </Card.Body>
-                  {/* Pagination */}
-                  {totalPages > 1 && (
-                    <Card.Footer className="bg-white border-top py-3 px-4">
-                      <nav aria-label="Enrollments pagination">
-                        <ul className="pagination justify-content-center pagination-sm mb-0">
-                          <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                            <button className="page-link" onClick={handlePreviousPage}>
-                              <i className="fas fa-chevron-left"></i>
-                            </button>
-                          </li>
-                          
-                          {/* Previous pages */}
-                          {currentPage > 2 && (
-                            <li className="page-item">
-                              <button className="page-link" onClick={() => handlePageChange(1)}>1</button>
-                            </li>
-                          )}
-                          {currentPage > 3 && (
-                            <li className="page-item disabled">
-                              <span className="page-link">...</span>
-                            </li>
-                          )}
-                          
-                          {/* Current and surrounding pages */}
-                          {Array.from({ length: totalPages }, (_, i) => i + 1).filter(page => {
-                            return page >= currentPage - 1 && page <= currentPage + 1 && page <= totalPages && page >= 1
-                          }).map(page => (
-                            <li key={page} className={`page-item ${page === currentPage ? 'active' : ''}`}>
-                              <button className="page-link" onClick={() => handlePageChange(page)}>
-                                {page}
-                              </button>
-                            </li>
-                          ))}
-                          
-                          {/* Next pages */}
-                          {currentPage < totalPages - 2 && (
-                            <li className="page-item disabled">
-                              <span className="page-link">...</span>
-                            </li>
-                          )}
-                          {currentPage < totalPages - 1 && (
-                            <li className="page-item">
-                              <button className="page-link" onClick={() => handlePageChange(totalPages)}>
-                                {totalPages}
-                              </button>
-                            </li>
-                          )}
-                          
-                          <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-                            <button className="page-link" onClick={handleNextPage}>
-                              <i className="fas fa-chevron-right"></i>
-                            </button>
-                          </li>
-                        </ul>
-                      </nav>
-                    </Card.Footer>
-                  )}
+                   {/* Pagination */}
+                   {totalPages > 1 && (
+                     <Card.Footer className="bg-light border-top py-2 px-3">
+                       <nav aria-label="Enrollments pagination">
+                         <ul className="pagination justify-content-center pagination-sm mb-0">
+                           <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+                             <button className="page-link" onClick={handlePreviousPage}>
+                               <i className="fas fa-chevron-left"></i>
+                             </button>
+                           </li>
+                           
+                           {/* Previous pages */}
+                           {currentPage > 2 && (
+                             <li className="page-item">
+                               <button className="page-link" onClick={() => handlePageChange(1)}>1</button>
+                             </li>
+                           )}
+                           {currentPage > 3 && (
+                             <li className="page-item disabled">
+                               <span className="page-link">...</span>
+                             </li>
+                           )}
+                           
+                           {/* Current and surrounding pages */}
+                           {Array.from({ length: totalPages }, (_, i) => i + 1).filter(page => {
+                             return page >= currentPage - 1 && page <= currentPage + 1 && page <= totalPages && page >= 1
+                           }).map(page => (
+                             <li key={page} className={`page-item ${page === currentPage ? 'active' : ''}`}>
+                               <button className="page-link" onClick={() => handlePageChange(page)}>
+                                 {page}
+                               </button>
+                             </li>
+                           ))}
+                           
+                           {/* Next pages */}
+                           {currentPage < totalPages - 2 && (
+                             <li className="page-item disabled">
+                               <span className="page-link">...</span>
+                             </li>
+                           )}
+                           {currentPage < totalPages - 1 && (
+                             <li className="page-item">
+                               <button className="page-link" onClick={() => handlePageChange(totalPages)}>
+                                 {totalPages}
+                               </button>
+                             </li>
+                           )}
+                           
+                           <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+                             <button className="page-link" onClick={handleNextPage}>
+                               <i className="fas fa-chevron-right"></i>
+                             </button>
+                           </li>
+                         </ul>
+                       </nav>
+                     </Card.Footer>
+                   )}
                 </Card>
               </Col>
             </Row>
@@ -299,11 +347,11 @@ const Enrollments = () => {
       </div>
 
       {/* View Modal */}
-      <Modal show={showViewModal} onHide={() => setShowViewModal(false)} centered>
-        <Modal.Header closeButton className="border-bottom pb-3">
-          <Modal.Title className="fw-bold fs-5">Student Details</Modal.Title>
+      <Modal show={showViewModal} onHide={() => setShowViewModal(false)} centered size="sm">
+        <Modal.Header closeButton className="border-bottom py-2 px-3">
+          <Modal.Title className="fw-semibold fs-6">Student Details</Modal.Title>
         </Modal.Header>
-        <Modal.Body className="pt-3">
+        <Modal.Body className="pt-2 px-3">
           {selectedEnrollment && (
             <div className="student-details-list">
               <div className="detail-item">
@@ -320,7 +368,6 @@ const Enrollments = () => {
               </div>
               <div className="detail-item">
                 <span className="detail-label">Phone</span>
-                {/* FIX: Changed enrollment.phone to selectedEnrollment.phone */}
                 <span className="detail-value">{selectedEnrollment.phone}</span>
               </div>
               <div className="detail-item">
@@ -342,73 +389,33 @@ const Enrollments = () => {
             </div>
           )}
         </Modal.Body>
-        <Modal.Footer className="border-top pt-3">
-          <Button variant="light" onClick={() => setShowViewModal(false)} className="border">
+        <Modal.Footer className="border-top py-2 px-3">
+          <Button variant="light" onClick={() => setShowViewModal(false)} className="border small">
             Close
           </Button>
         </Modal.Footer>
       </Modal>
 
-      {/* Change Password Modal (Labeled as Edit in table) */}
-      <Modal show={showChangePasswordModal} onHide={() => setShowChangePasswordModal(false)} centered>
-        <Modal.Header closeButton className="border-bottom pb-3">
-          <Modal.Title className="fw-bold fs-5">Edit Credentials</Modal.Title>
-        </Modal.Header>
-        <Modal.Body className="pt-3">
-          {selectedEnrollment && (
-            <div>
-              <p className="text-muted mb-4">Change password for <strong>{selectedEnrollment.full_name}</strong></p>
-              <Form>
-                <Form.Group controlId="newPassword" className="mb-3">
-                  <Form.Label className="fw-bold small text-secondary">New Password</Form.Label>
-                  <Form.Control 
-                    type="password" 
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    placeholder="Enter new password"
-                  />
-                </Form.Group>
-                <Form.Group controlId="confirmPassword" className="mb-3">
-                  <Form.Label className="fw-bold small text-secondary">Confirm Password</Form.Label>
-                  <Form.Control 
-                    type="password" 
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="Confirm new password"
-                  />
-                </Form.Group>
-              </Form>
-            </div>
-          )}
-        </Modal.Body>
-        <Modal.Footer className="border-top pt-3">
-          <Button variant="light" onClick={() => setShowChangePasswordModal(false)} className="border">
-            Cancel
-          </Button>
-          <Button variant="primary" onClick={confirmChangePassword}>
-            Update
-          </Button>
-        </Modal.Footer>
-      </Modal>
+
 
       {/* Delete Modal */}
-      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)} centered>
-        <Modal.Header closeButton className="border-bottom pb-3">
-          <Modal.Title className="fw-bold fs-5 text-danger">Delete Enrollment</Modal.Title>
+      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)} centered size="sm">
+        <Modal.Header closeButton className="border-bottom py-2 px-3">
+          <Modal.Title className="fw-semibold fs-6 text-danger">Delete Enrollment</Modal.Title>
         </Modal.Header>
-        <Modal.Body className="pt-3">
+        <Modal.Body className="pt-2 px-3">
           {selectedEnrollment && (
-            <p>
+            <p className="small">
               Are you sure you want to delete <strong>{selectedEnrollment.full_name}</strong>?<br/>
               <span className="text-muted small">This action cannot be undone.</span>
             </p>
           )}
         </Modal.Body>
-        <Modal.Footer className="border-top pt-3">
-          <Button variant="light" onClick={() => setShowDeleteModal(false)} className="border">
+        <Modal.Footer className="border-top py-2 px-3">
+          <Button variant="light" onClick={() => setShowDeleteModal(false)} className="border small">
             Cancel
           </Button>
-          <Button variant="danger" onClick={confirmDelete}>
+          <Button variant="danger" onClick={confirmDelete} size="sm">
             Delete
           </Button>
         </Modal.Footer>
