@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { Nav, Button, Offcanvas } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
+import '../../assets/css/UserLeftNav.css'
 
-const UserLeftNav = () => {
+const UseLeftNav = ({ showOffcanvas, setShowOffcanvas }) => {
   const [show, setShow] = useState(true)
-  const [showOffcanvas, setShowOffcanvas] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
@@ -13,15 +13,17 @@ const UserLeftNav = () => {
       setIsMobile(mobile)
       if (mobile) {
         setShow(false) // Hide sidebar on mobile by default
+        setShowOffcanvas(false) // Close offcanvas on mobile resize
       } else {
         setShow(true) // Show sidebar on desktop by default
+        setShowOffcanvas(false) // Close offcanvas on desktop resize
       }
     }
 
     checkMobile()
     window.addEventListener('resize', checkMobile)
     return () => window.removeEventListener('resize', checkMobile)
-  }, [])
+  }, [setShowOffcanvas])
 
   const handleToggle = () => {
     if (isMobile) {
@@ -37,118 +39,88 @@ const UserLeftNav = () => {
       {!isMobile && (
         <>
           {show ? (
-            <div className="d-flex flex-column bg-secondary text-white vh-100" style={{ width: '250px', transition: 'width 0.3s ease' }}>
+            <div className="user-left-nav d-flex flex-column ">
               <div className="p-3 border-bottom border-light">
-                <h4 className="mb-0">User Dashboard</h4>
-              </div>
-              <Nav className="flex-column p-3">
-                <Nav.Link as={Link} to="/UserDashboard" className="text-white">
-                  <span className="me-2">📊</span> Dashboard
-                </Nav.Link>
-                <Nav.Link as={Link} to="/my-courses" className="text-white">
-                  <span className="me-2">📚</span> My Courses
-                </Nav.Link>
-                <Nav.Link as={Link} to="/enrollments" className="text-white">
-                  <span className="me-2">📅</span> Enrollments
-                </Nav.Link>
-                <Nav.Link as={Link} to="/profile" className="text-white">
-                  <span className="me-2">👤</span> Profile
-                </Nav.Link>
-                <Nav.Link as={Link} to="/settings" className="text-white">
-                  <span className="me-2">⚙️</span> Settings
-                </Nav.Link>
-              </Nav>
-              <div className="mt-auto p-3 border-top border-light">
                 <Button 
                   variant="outline-light" 
                   onClick={handleToggle} 
                   className="w-100"
                 >
-                  <span className="me-2">←</span> Hide
+                  <i className="bi bi-arrow-left-short me-2"></i> Hide
                 </Button>
               </div>
+               <Nav className="flex-column p-3">
+                 <Nav.Link as={Link} to="/UserDashboard" className="text-white">
+                   <i className="bi bi-grid-3x3-gap me-2"></i> Dashboard
+                 </Nav.Link>
+                 
+                  <Nav.Link as={Link} to="/UserProfile" className="text-white">
+                   <i className="bi bi-person-circle me-2"></i> User Profile
+                 </Nav.Link>
+                 
+                  <Nav.Link as={Link} to="/UserTest" className="text-white">
+                   <i className="bi bi-clipboard-check me-2"></i> Test Dashboard
+                 </Nav.Link>
+               </Nav>
+              
             </div>
           ) : (
-            <div className="d-flex flex-column bg-secondary text-white vh-100" style={{ width: '60px', transition: 'width 0.3s ease' }}>
-              <div className="p-3 border-bottom border-light text-center">
-                <span className="fs-3">📊</span>
-              </div>
-              <Nav className="flex-column p-3 align-items-center">
-                <Nav.Link as={Link} to="/UserDashboard" className="text-white">
-                  <span className="fs-5">📊</span>
-                </Nav.Link>
-                <Nav.Link as={Link} to="/my-courses" className="text-white">
-                  <span className="fs-5">📚</span>
-                </Nav.Link>
-                <Nav.Link as={Link} to="/enrollments" className="text-white">
-                  <span className="fs-5">📅</span>
-                </Nav.Link>
-                <Nav.Link as={Link} to="/profile" className="text-white">
-                  <span className="fs-5">👤</span>
-                </Nav.Link>
-                <Nav.Link as={Link} to="/settings" className="text-white">
-                  <span className="fs-5">⚙️</span>
-                </Nav.Link>
-              </Nav>
-              <div className="mt-auto p-3 border-top border-light">
+            <div className="user-left-nav compact d-flex flex-column vh-100">
+                <div className='show-btn p-3'>
                 <Button 
                   variant="outline-light" 
                   onClick={handleToggle} 
                   className="w-100"
                 >
-                  <span>→</span>
+                  <i className="bi bi-arrow-right-short"></i> 
                 </Button>
-              </div>
+                </div>
+               <Nav className="flex-column p-3 align-items-center">
+                 <Nav.Link as={Link} to="/UserDashboard" className="text-white">
+                   <i className="bi bi-grid-3x3-gap fs-5"></i>
+                 </Nav.Link>
+                 <Nav.Link as={Link} to="/UserProfile" className="text-white">
+                   <i className="bi bi-person-circle fs-5"></i>
+                 </Nav.Link>
+                 <Nav.Link as={Link} to="/UserTest" className="text-white">
+                   <i className="bi bi-clipboard-check fs-5"></i>
+                 </Nav.Link>
+               </Nav>
             </div>
           )}
         </>
       )}
 
+
+
       {/* Mobile offcanvas sidebar */}
       {isMobile && (
-        <>
-          <Button 
-            variant="success" 
-            onClick={() => setShowOffcanvas(true)} 
-            className="d-lg-none fixed-top m-3"
-            style={{ zIndex: 1050 }}
-          >
-            <span>☰</span> Menu
-          </Button>
-
-          <Offcanvas 
-            show={showOffcanvas} 
-            onHide={() => setShowOffcanvas(false)} 
-            placement="start"
-            className="bg-secondary text-white"
-          >
-            <Offcanvas.Header closeButton>
-              <Offcanvas.Title className="text-white">User Dashboard</Offcanvas.Title>
-            </Offcanvas.Header>
-            <Offcanvas.Body>
-              <Nav className="flex-column">
-                <Nav.Link as={Link} to="/UserDashboard" className="text-white" onClick={() => setShowOffcanvas(false)}>
-                  <span className="me-2">📊</span> Dashboard
-                </Nav.Link>
-                <Nav.Link as={Link} to="/my-courses" className="text-white" onClick={() => setShowOffcanvas(false)}>
-                  <span className="me-2">📚</span> My Courses
-                </Nav.Link>
-                <Nav.Link as={Link} to="/enrollments" className="text-white" onClick={() => setShowOffcanvas(false)}>
-                  <span className="me-2">📅</span> Enrollments
-                </Nav.Link>
-                <Nav.Link as={Link} to="/profile" className="text-white" onClick={() => setShowOffcanvas(false)}>
-                  <span className="me-2">👤</span> Profile
-                </Nav.Link>
-                <Nav.Link as={Link} to="/settings" className="text-white" onClick={() => setShowOffcanvas(false)}>
-                  <span className="me-2">⚙️</span> Settings
-                </Nav.Link>
-              </Nav>
-            </Offcanvas.Body>
-          </Offcanvas>
-        </>
+        <Offcanvas 
+          show={showOffcanvas} 
+          onHide={() => setShowOffcanvas(false)} 
+          placement="start"
+          className="user-left-nav mobile"
+        >
+          <Offcanvas.Header closeButton closeVariant="white">
+            <Offcanvas.Title className="text-white">User Menu</Offcanvas.Title>
+          </Offcanvas.Header>
+          <Offcanvas.Body>
+             <Nav className="nav-menu mobile-menu flex-column">
+               <Nav.Link as={Link} to="/UserDashboard" className="text-white" onClick={() => setShowOffcanvas(false)}>
+                 <i className="bi bi-grid-3x3-gap me-2"></i> Dashboard
+               </Nav.Link>
+               <Nav.Link as={Link} to="/UserProfile" className="text-white" onClick={() => setShowOffcanvas(false)}>
+                 <i className="bi bi-person-circle me-2"></i> User Profile
+               </Nav.Link>
+               <Nav.Link as={Link} to="/UserTest" className="text-white" onClick={() => setShowOffcanvas(false)}>
+                 <i className="bi bi-clipboard-check me-2"></i> Test Dashboard
+               </Nav.Link>
+             </Nav>
+          </Offcanvas.Body>
+        </Offcanvas>
       )}
     </>
   )
 }
 
-export default UserLeftNav
+export default UseLeftNav

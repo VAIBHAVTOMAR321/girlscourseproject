@@ -16,6 +16,9 @@ import AdminTopNav from "./components/admindashboard/AdminTopNav.jsx";
 import Enrollments from "./components/admindashboard/Enrollments.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import { AuthProvider } from "./contexts/AuthContext.jsx";
+import UserProfile from "./components/userdashboard/UserProfile.jsx";
+import StudentEntrollment from "./components/userdashboard/StudentEntrollment.jsx";
+import UserTest from "./components/userdashboard/UserTest.jsx";
 
 function App() {
   return (
@@ -35,11 +38,36 @@ function App() {
               </ProtectedRoute>
             }
           />
+           <Route
+            path="/StudentEntrollment"
+            element={
+              <ProtectedRoute>
+                <StudentEntrollment />
+              </ProtectedRoute>
+            }
+          />
+           <Route
+            path="/UserProfile"
+            element={
+              <ProtectedRoute>
+                <UserProfile />
+              </ProtectedRoute>
+            }
+          />
+          
           <Route
             path="/UserDashboard"
             element={
               <ProtectedRoute>
                 <UserDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/UserTest"
+            element={
+              <ProtectedRoute>
+                <UserTest />
               </ProtectedRoute>
             }
           />
