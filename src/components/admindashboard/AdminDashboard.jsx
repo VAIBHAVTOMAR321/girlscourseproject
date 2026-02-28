@@ -221,7 +221,18 @@ const AdminDashboard = () => {
         order: moduleFormData.order
       }
 
-      await axios.post('https://brjobsedu.com/girls_course/girls_course_backend/api/module-items/', dataToSend, config)
+      if (moduleFormData.module_id) {
+        // Update existing module
+        await axios.put('https://brjobsedu.com/girls_course/girls_course_backend/api/module-items/', {
+          ...dataToSend,
+          module_id: moduleFormData.module_id
+        }, config)
+        alert('Module updated successfully!')
+      } else {
+        // Create new module
+        await axios.post('https://brjobsedu.com/girls_course/girls_course_backend/api/module-items/', dataToSend, config)
+        alert('Module added successfully!')
+      }
       
       // Reset form and fetch updated modules
       setModuleFormData({
@@ -229,13 +240,38 @@ const AdminDashboard = () => {
         order: 1
       })
       fetchModules(moduleViewData.course.course_id)
-      alert('Module added successfully!')
     } catch (error) {
-      console.error('Error adding module:', error)
+      console.error('Error saving module:', error)
       if (error.response) {
         alert(`Failed: ${error.response.data.message || error.response.data.detail || 'Check console for details'}`)
       } else {
         alert('Failed: ' + error.message)
+      }
+    }
+  }
+
+  const handleEditModule = (module) => {
+    setModuleFormData({
+      module_id: module.module_id,
+      mod_title: module.mod_title,
+      order: module.order
+    })
+    // Scroll to top of the page
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const handleDeleteModule = async (module) => {
+    if (window.confirm(`Are you sure you want to delete the module "${module.mod_title}"?`)) {
+      try {
+        const config = getAuthConfig()
+        await axios.delete('https://brjobsedu.com/girls_course/girls_course_backend/api/module-items/', {
+          data: { module_id: module.module_id },
+          ...config
+        })
+        fetchModules(moduleViewData.course.course_id)
+      } catch (error) {
+        console.error('Error deleting module:', error)
+        alert('Failed to delete module. Please check the console for details.')
       }
     }
   }
@@ -260,7 +296,11 @@ const AdminDashboard = () => {
       const config = getAuthConfig()
       const response = await axios.get(`https://brjobsedu.com/girls_course/girls_course_backend/api/submodule-items/?course_id=${course_id}&module_id=${module_id}`, config)
       if (response.data && response.data.success) {
-        setSubmodules(response.data.data)
+        const parsedSubmodules = response.data.data.map(submodule => ({
+          ...submodule,
+          sub_mod: typeof submodule.sub_mod === 'string' ? JSON.parse(submodule.sub_mod) : submodule.sub_mod
+        }))
+        setSubmodules(parsedSubmodules)
       }
     } catch (error) {
       console.error('Error fetching submodules:', error)
@@ -291,14 +331,29 @@ const AdminDashboard = () => {
       if (submoduleFormData.image) {
         formData.append('image', submoduleFormData.image)
       }
+      if (submoduleFormData.sub_module_id) {
+        formData.append('sub_module_id', submoduleFormData.sub_module_id)
+      }
 
-      await axios.post('https://brjobsedu.com/girls_course/girls_course_backend/api/submodule-items/', formData, {
-        ...config,
-        headers: {
-          ...config.headers,
-          'Content-Type': 'multipart/form-data'
-        }
-      })
+      if (submoduleFormData.sub_module_id) {
+        // Update existing submodule
+        await axios.put('https://brjobsedu.com/girls_course/girls_course_backend/api/submodule-items/', formData, {
+          ...config,
+          headers: {
+            ...config.headers,
+            'Content-Type': 'multipart/form-data'
+          }
+        })
+      } else {
+        // Create new submodule
+        await axios.post('https://brjobsedu.com/girls_course/girls_course_backend/api/submodule-items/', formData, {
+          ...config,
+          headers: {
+            ...config.headers,
+            'Content-Type': 'multipart/form-data'
+          }
+        })
+      }
       
       // Reset form and fetch updated submodules
       setSubmoduleFormData({
@@ -309,13 +364,42 @@ const AdminDashboard = () => {
         order: 1
       })
       fetchSubmodules(submodulesViewData.course.course_id, submodulesViewData.module.module_id)
-      alert('Submodule added successfully!')
+      alert(submoduleFormData.sub_module_id ? 'Submodule updated successfully!' : 'Submodule added successfully!')
     } catch (error) {
-      console.error('Error adding submodule:', error)
+      console.error('Error saving submodule:', error)
       if (error.response) {
         alert(`Failed: ${error.response.data.message || error.response.data.detail || 'Check console for details'}`)
       } else {
         alert('Failed: ' + error.message)
+      }
+    }
+  }
+
+  const handleEditSubmodule = (submodule) => {
+    setSubmoduleFormData({
+      sub_module_id: submodule.sub_module_id,
+      sub_modu_title: submodule.sub_modu_title,
+      sub_modu_description: submodule.sub_modu_description,
+      sub_mod: submodule.sub_mod || [{ title: '', description: '', topics: [] }],
+      image: null,
+      order: submodule.order
+    })
+    // Scroll to top of the page
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const handleDeleteSubmodule = async (submodule) => {
+    if (window.confirm(`Are you sure you want to delete the submodule "${submodule.sub_modu_title}"?`)) {
+      try {
+        const config = getAuthConfig()
+        await axios.delete('https://brjobsedu.com/girls_course/girls_course_backend/api/submodule-items/', {
+          data: { sub_module_id: submodule.sub_module_id },
+          ...config
+        })
+        fetchSubmodules(submodulesViewData.course.course_id, submodulesViewData.module.module_id)
+      } catch (error) {
+        console.error('Error deleting submodule:', error)
+        alert('Failed to delete submodule. Please check the console for details.')
       }
     }
   }
@@ -595,7 +679,7 @@ const AdminDashboard = () => {
             </Form.Group>
 
             <Button variant="primary" type="submit">
-              <FaPlus className="me-2" /> Add Module
+              <FaPlus className="me-2" /> {moduleFormData.module_id ? 'Update Module' : 'Add Module'}
             </Button>
           </Form>
         </Card.Body>
@@ -643,10 +727,18 @@ const AdminDashboard = () => {
                       >
                         <FaList className="me-1" /> Add Questions
                       </Button>
-                      <Button variant="outline-warning" size="sm">
+                      <Button 
+                        variant="outline-warning" 
+                        size="sm"
+                        onClick={() => handleEditModule(module)}
+                      >
                         <FaEdit className="me-1" /> Edit
                       </Button>
-                      <Button variant="outline-danger" size="sm">
+                      <Button 
+                        variant="outline-danger" 
+                        size="sm"
+                        onClick={() => handleDeleteModule(module)}
+                      >
                         <FaTrash className="me-1" /> Delete
                       </Button>
                     </div>
@@ -831,7 +923,7 @@ const AdminDashboard = () => {
             </Form.Group>
 
             <Button variant="primary" type="submit">
-              <FaPlus className="me-2" /> Add Submodule
+              <FaPlus className="me-2" /> {submoduleFormData.sub_module_id ? 'Update Submodule' : 'Add Submodule'}
             </Button>
           </Form>
         </Card.Body>
@@ -892,10 +984,18 @@ const AdminDashboard = () => {
                       </div>
                     )}
                     <div className="d-flex gap-2">
-                      <Button variant="outline-warning" size="sm">
+                      <Button 
+                        variant="outline-warning" 
+                        size="sm"
+                        onClick={() => handleEditSubmodule(submodule)}
+                      >
                         <FaEdit className="me-1" /> Edit
                       </Button>
-                      <Button variant="outline-danger" size="sm">
+                      <Button 
+                        variant="outline-danger" 
+                        size="sm"
+                        onClick={() => handleDeleteSubmodule(submodule)}
+                      >
                         <FaTrash className="me-1" /> Delete
                       </Button>
                     </div>
