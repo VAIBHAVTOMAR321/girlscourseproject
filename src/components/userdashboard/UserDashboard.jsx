@@ -575,26 +575,59 @@ const UserDashboard = () => {
                                     </div>
                                   )}
                                   
-                                  <div className="mt-4 d-flex justify-content-between align-items-center">
-                                    <div>
-                                      {isCompleted && (
-                                        <div className="d-flex align-items-center text-success">
-                                          <FaCheckCircle className="me-2" />
-                                          <span className="fw-semibold">Module Completed</span>
-                                        </div>
-                                      )}
-                                    </div>
-                                    {isAccessible && !isCompleted && (
-                                      <Button 
-                                        variant="primary" 
-                                        onClick={() => handleTestClick(moduleIndex)}
-                                        className="d-flex align-items-center px-4 py-2"
-                                      >
-                                        <FaQuestionCircle className="me-2" />
-                                        Take Test
-                                      </Button>
-                                    )}
-                                  </div>
+                                   <div className="mt-4 d-flex justify-content-between align-items-center">
+                                     <div>
+                                       {isCompleted && (
+                                         <div className="d-flex align-items-center text-success">
+                                           <FaCheckCircle className="me-2" />
+                                           <span className="fw-semibold">Module Completed</span>
+                                         </div>
+                                       )}
+                                     </div>
+                                     {isAccessible ? (
+                                       <div className="d-flex gap-2">
+                                         {!isCompleted ? (
+                                           <>
+                                             <Button 
+                                               variant="success" 
+                                               onClick={() => markModuleComplete(moduleIndex)}
+                                               className="d-flex align-items-center px-4 py-2"
+                                             >
+                                               <FaCheckCircle className="me-2" />
+                                               Complete Module
+                                             </Button>
+                                             <Button 
+                                               variant="primary" 
+                                               onClick={() => handleTestClick(moduleIndex)}
+                                               className="d-flex align-items-center px-4 py-2"
+                                               disabled={!isCompleted}
+                                             >
+                                               <FaQuestionCircle className="me-2" />
+                                               Take Test
+                                             </Button>
+                                           </>
+                                         ) : (
+                                           <Button 
+                                             variant="success" 
+                                             onClick={() => handleTestClick(moduleIndex)}
+                                             className="d-flex align-items-center px-4 py-2"
+                                           >
+                                             <FaCheckCircle className="me-2" />
+                                             Retake Test
+                                           </Button>
+                                         )}
+                                       </div>
+                                     ) : (
+                                       <Button 
+                                         variant="secondary" 
+                                         disabled
+                                         className="d-flex align-items-center px-4 py-2"
+                                       >
+                                         <FaLock className="me-2" />
+                                         Locked
+                                       </Button>
+                                     )}
+                                   </div>
                                 </Accordion.Body>
                               </Accordion.Item>
                             )
