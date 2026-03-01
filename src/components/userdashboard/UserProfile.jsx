@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { Container, Row, Col, Card, Spinner, Button, Modal, Form, Alert, Badge, Tooltip, OverlayTrigger } from 'react-bootstrap'
 import { useAuth } from '../../contexts/AuthContext'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import UserTopNav from './UserTopNav'
 import UseLeftNav from './UseLeftNav'
 import { FaCopy, FaArrowLeft, FaCheck, FaEnvelope, FaPhone, FaMapMarkerAlt, FaIdCard, FaCalendarAlt, FaBuilding, FaUserShield, FaUser } from 'react-icons/fa'
 
 const UserProfile = () => {
-  const { uniqueId, accessToken } = useAuth()
+  const { uniqueId, accessToken, isAuthenticated } = useAuth()
   const [userData, setUserData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [updateSuccess, setUpdateSuccess] = useState(false)
@@ -15,6 +15,19 @@ const UserProfile = () => {
   const [showOffcanvas, setShowOffcanvas] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const navigate = useNavigate()
+  const location = useLocation()
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate('/login', { state: { from: location } })
+    }
+  }, [isAuthenticated, navigate, location])
+
+  // If not authenticated, don't render anything (will redirect)
+  if (!isAuthenticated) {
+    return null
+  }
 
   // Check mobile view
   useEffect(() => {
@@ -37,7 +50,7 @@ const UserProfile = () => {
     const fetchUserData = async () => {
       try {
         setLoading(true)
-        const response = await fetch(`https://brjobsedu.com/girls_course/girls_course_backend/api/all-registration/?student_id=${uniqueId}`, {
+        const response = await fetch(`https://brjobsedu.com/girls_course/girls_course_backend/api/student-entrollment/?student_id${uniqueId}`, {
           headers: {
             'Authorization': `Bearer ${accessToken}`
           }

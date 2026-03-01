@@ -17,7 +17,7 @@ import Enrollments from "./components/admindashboard/Enrollments.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import { AuthProvider } from "./contexts/AuthContext.jsx";
 import UserProfile from "./components/userdashboard/UserProfile.jsx";
-import StudentEntrollment from "./components/userdashboard/StudentEntrollment.jsx";
+
 import UserTest from "./components/userdashboard/UserTest.jsx";
 
 function App() {
@@ -38,14 +38,7 @@ function App() {
               </ProtectedRoute>
             }
           />
-           <Route
-            path="/StudentEntrollment"
-            element={
-              <ProtectedRoute>
-                <StudentEntrollment />
-              </ProtectedRoute>
-            }
-          />
+         
            <Route
             path="/UserProfile"
             element={
