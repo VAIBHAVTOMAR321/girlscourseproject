@@ -312,11 +312,13 @@ const UserDashboard = () => {
                                             </div>
                                             <div className="book-title flex-grow-1">
                                               <h5 className="mb-1 fw-bold text-primary">
-                                                Sub Module {subModule.order}: {subModule.sub_modu_title}
+                                             {subModule.order}: {subModule.sub_modu_title}
                                               </h5>
-                                              <p className="mb-0 text-muted small">
-                                                {subModule.sub_modu_description}
-                                              </p>
+                                              {subModule.sub_modu_description && (
+                                                <p className="mb-0 text-muted small">
+                                                  {subModule.sub_modu_description}
+                                                </p>
+                                              )}
                                             </div>
                                           </div>
                                           
@@ -329,10 +331,7 @@ const UserDashboard = () => {
                                                   <div className="content-wrapper">
                                                     {subModule.sub_mod && subModule.sub_mod.length > 0 ? (
                                                       <div className="content-section">
-                                                        <div className="section-header d-flex align-items-center mb-3">
-                                                          <FaFileAlt className="me-2 text-primary" />
-                                                          <h6 className="mb-0 fw-semibold">📖 Course Content</h6>
-                                                        </div>
+                                                      
                                                         <div className="content-items">
                                                           {subModule.sub_mod.map((item, itemIndex) => (
                                                             <div key={itemIndex} className="content-item p-3 mb-3 bg-white rounded-3 shadow-sm border-l-4 border-primary">
@@ -701,7 +700,7 @@ const UserDashboard = () => {
                                     {course.is_completed ? (
                                       <>
                                         <FaEye className="me-2" />
-                                        Review
+                                        Start Course
                                       </>
                                     ) : (
                                       <>
