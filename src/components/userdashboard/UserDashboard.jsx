@@ -613,7 +613,7 @@ const UserDashboard = () => {
                                              className="d-flex align-items-center px-4 py-2"
                                            >
                                              <FaCheckCircle className="me-2" />
-                                             Retake Test
+                                             Take Test
                                            </Button>
                                          )}
                                        </div>

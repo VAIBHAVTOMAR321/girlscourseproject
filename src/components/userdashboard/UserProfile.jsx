@@ -118,14 +118,7 @@ const UserProfile = () => {
                           </div>
                           <div>
                             <h2 className="mb-1">{userData.full_name}</h2>
-                            <div className="d-flex align-items-center gap-2 mb-2">
-                              <span className="text-muted">ID: {userData.student_id}</span>
-                              <OverlayTrigger placement="top" overlay={<Tooltip>{copiedId ? "Copied!" : "Copy ID"}</Tooltip>}>
-                                <Button variant="link" className="p-0 text-muted" onClick={() => copyToClipboard(userData.student_id)}>
-                                  {copiedId ? <FaCheck /> : <FaCopy />}
-                                </Button>
-                              </OverlayTrigger>
-                            </div>
+                         
                             <Badge bg="primary" className="px-3 py-1">
                               {userData.status.charAt(0).toUpperCase() + userData.status.slice(1)}
                             </Badge>
