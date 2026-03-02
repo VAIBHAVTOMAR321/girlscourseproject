@@ -348,24 +348,24 @@ const UserTest = () => {
                   </div>
                 ) : questions.length > 0 ? (
                   <div className="max-w-4xl mx-auto">
-                    <Card className="shadow-lg border-0">
-                      <Card.Body className="p-4">
-                        <div className="mb-4">
-                          <h3 className="mb-2">{course.course_name}</h3>
-                          <p className="text-muted">
+                    <Card className="shadow-sm border-0" style={{ borderRadius: '10px' }}>
+                      <Card.Body className="p-2">
+                        <div className="mb-2">
+                          <h6 className="mb-1">{course.course_name}</h6>
+                          <p className="text-muted small">
                             Module {moduleIndex + 1} Test - Question {currentQuestionIndex + 1} of {questions.length}
                           </p>
                           <div className="d-flex align-items-center justify-content-between">
-                            <Badge bg="warning" className="p-2">
-                              <FaClock className="me-2" />
+                            <Badge bg="warning" className="p-1 small">
+                              <FaClock className="me-1" />
                               Time: {Math.floor(timer / 60).toString().padStart(2, '0')}:{(timer % 60).toString().padStart(2, '0')}
                             </Badge>
                           </div>
                         </div>
                         
                         {/* Current Question */}
-                        <div className="mb-6">
-                          <h4 className="mb-3">{questions[currentQuestionIndex].question_text}</h4>
+                        <div className="mb-3">
+                          <h6 className="mb-1">{questions[currentQuestionIndex].question_text}</h6>
                           <div className="space-y-3">
                             {questions[currentQuestionIndex].options.map((option, index) => (
                               <div key={index} className="form-check">

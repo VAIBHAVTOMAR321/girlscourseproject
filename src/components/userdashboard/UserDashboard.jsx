@@ -409,11 +409,11 @@ const UserDashboard = () => {
                       Back to My Courses
                     </Button>
                     
-                    <div className="d-flex justify-content-between align-items-center mb-4">
-                      <h1 className="mb-0">
-                        <FaBook className="me-2 text-primary" />
-                        {selectedCourse.course_name} - Modules
-                      </h1>
+                     <div className="d-flex justify-content-between align-items-center mb-3">
+                       <h4 className="mb-0">
+                         <FaBook className="me-2 text-primary" />
+                         {selectedCourse.course_name} - Modules
+                       </h4>
                       
                       {/* Certificate Button */}
                       {isCertificateGenerated() ? (
@@ -513,23 +513,23 @@ const UserDashboard = () => {
                                   disabled={!isAccessible}
                                   className={isCompleted || isTestPassed ? 'completed-module' : ''}
                                 >
-                                 <Accordion.Header className="fw-bold">
-                                   <div className="d-flex align-items-center w-100">
-                                     {isAccessible ? (
-                                       isCompleted ? (
-                                         <div className="module-icon me-3">
-                                           <FaCertificate className="text-white" style={{ fontSize: '20px' }} />
-                                         </div>
-                                       ) : (
-                                         <div className="module-icon me-3">
-                                           <FaChalkboardTeacher className="text-white" style={{ fontSize: '20px' }} />
-                                         </div>
-                                       )
-                                     ) : (
-                                       <div className="module-icon me-3 opacity-50">
-                                         <FaLock className="text-white" style={{ fontSize: '20px' }} />
-                                       </div>
-                                     )}
+                                  <Accordion.Header className="fw-bold">
+                                    <div className="d-flex align-items-center w-100">
+                                      {isAccessible ? (
+                                        isCompleted ? (
+                                          <div className="module-icon me-1">
+                                            <FaCertificate className="text-white" style={{ fontSize: '12px' }} />
+                                          </div>
+                                        ) : (
+                                          <div className="module-icon me-1">
+                                            <FaChalkboardTeacher className="text-white" style={{ fontSize: '12px' }} />
+                                          </div>
+                                        )
+                                      ) : (
+                                        <div className="module-icon me-1 opacity-50">
+                                          <FaLock className="text-white" style={{ fontSize: '12px' }} />
+                                        </div>
+                                      )}
                                      <span className={!isAccessible ? 'text-gray-300' : 'text-white'}>
                                        Module {module.order}: {module.mod_title}
                                      </span>
@@ -904,7 +904,7 @@ const UserDashboard = () => {
                   </div>
                 ) : (
                   <div>
-                    <h1 className="mb-4">My Courses</h1>
+                    <h4 className="mb-3">My Courses</h4>
                     
                     {loading ? (
                       <div className="text-center py-5">
@@ -915,11 +915,11 @@ const UserDashboard = () => {
                       <Row>
                         {courses.map((course, index) => (
                           <Col md={6} lg={4} key={course.id || index} className="mb-4">
-                            <Card className="shadow-lg border-0 h-100 course-card" style={{ borderRadius: '20px' }}>
+                            <Card className="shadow-sm border-0 h-100 course-card" style={{ borderRadius: '10px' }}>
                               <div className="card-header-gradient" style={{ 
-                                height: '180px', 
-                                borderTopLeftRadius: '20px', 
-                                borderTopRightRadius: '20px',
+                                height: '80px', 
+                                borderTopLeftRadius: '10px', 
+                                borderTopRightRadius: '10px',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
@@ -928,28 +928,28 @@ const UserDashboard = () => {
                               }}>
                                 {/* Check if all modules are completed instead of relying on course.is_completed */}
                                 {isAllModulesCompleted(course) ? (
-                                  <FaCertificate className="text-white" style={{ fontSize: '56px', animation: 'pulse 2s infinite' }} />
+                                  <FaCertificate className="text-white" style={{ fontSize: '24px', animation: 'pulse 2s infinite' }} />
                                 ) : (
-                                  <FaGraduationCap className="text-white" style={{ fontSize: '56px', animation: 'float 3s ease-in-out infinite' }} />
+                                  <FaGraduationCap className="text-white" style={{ fontSize: '24px', animation: 'float 3s ease-in-out infinite' }} />
                                 )}
                                 {isAllModulesCompleted(course) && (
-                                  <div className="position-absolute top-0 end-0 p-2">
-                                    <Badge bg="success" className="p-3 badge-custom">
+                                  <div className="position-absolute top-0 end-0 p-1">
+                                    <Badge bg="success" className="p-1 badge-custom fs-7">
                                       <FaCheckCircle className="me-1" /> Completed
                                     </Badge>
                                   </div>
                                 )}
                                 {!isAllModulesCompleted(course) && (
-                                  <div className="position-absolute top-0 start-0 p-2">
-                                    <Badge bg="warning" className="p-2 badge-custom">
+                                  <div className="position-absolute top-0 start-0 p-1">
+                                    <Badge bg="warning" className="p-1 badge-custom fs-7">
                                       <FaClock className="me-1" /> In Progress
                                     </Badge>
                                   </div>
                                 )}
                               </div>
-                              <Card.Body className="p-4">
-                                <div className="text-center mb-4">
-                                  <h3 className="mb-2 course-title">{course.course_name}</h3>
+                              <Card.Body className="p-2">
+                                <div className="text-center mb-2">
+                                  <h6 className="mb-1 course-title">{course.course_name}</h6>
                                 </div>
                                 
                                 <div className="course-stats mb-4">
