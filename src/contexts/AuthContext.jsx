@@ -157,12 +157,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // API endpoints
-  const apiEndpoints = {
-    studentEnrollment: 'https://brjobsedu.com/girls_course/girls_course_backend/api/student-entrollment/',
-    courseModule: 'https://brjobsedu.com/girls_course/girls_course_backend/api/course-module/'
-  };
-
   return (
     <AuthContext.Provider value={{ 
       isAuthenticated, 
@@ -172,8 +166,7 @@ export const AuthProvider = ({ children }) => {
       uniqueId,
       login, 
       logout,
-      refreshAccessToken,
-      apiEndpoints
+      refreshAccessToken
     }}>
       {children}
     </AuthContext.Provider>
