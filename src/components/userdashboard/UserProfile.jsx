@@ -106,20 +106,20 @@ const UserProfile = () => {
               <Row>
                 <Col lg={12}>
                   {/* Profile Header Card */}
-                  <Card className="shadow-sm mb-4 border-0 profile-header-card">
-                    <Card.Body className="p-4">
-                      <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
-                        <div className="d-flex align-items-center gap-3">
+                   <Card className="shadow-sm mb-4 border-0 profile-header-card" style={{ borderRadius: '10px' }}>
+                    <Card.Body className="p-3">
+                      <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2">
+                        <div className="d-flex align-items-center gap-2">
                           {/* Profile Image */}
                           <div className="profile-image-wrapper">
-                            <div className="profile-image bg-gradient-primary rounded-circle d-flex align-items-center justify-content-center">
-                              <FaUser className="text-white fs-2" />
+                            <div className="profile-image bg-gradient-primary rounded-circle d-flex align-items-center justify-content-center" style={{ width: '60px', height: '60px' }}>
+                              <FaUser className="text-white" style={{ fontSize: '24px' }} />
                             </div>
                           </div>
-                          <div>
-                            <h2 className="mb-1">{userData.full_name}</h2>
-                         
-                            <Badge bg="primary" className="px-3 py-1">
+                           <div>
+                            <h4 className="mb-1">{userData.full_name}</h4>
+                          
+                            <Badge bg="primary" className="px-2 py-1 small">
                               {userData.status.charAt(0).toUpperCase() + userData.status.slice(1)}
                             </Badge>
                           </div>
@@ -138,64 +138,64 @@ const UserProfile = () => {
                         </div>
                       </div>
                     </Card.Body>
-                      <Card className="shadow-lg border-0 profile-details-card">
-                    <Card.Header className="bg-white border-bottom-0 pt-4">
-                      <h4 className="mb-0">Profile Information</h4>
+                      <Card className="shadow-sm border-0 profile-details-card" style={{ borderRadius: '10px' }}>
+                    <Card.Header className="bg-white border-bottom-0 pt-3">
+                      <h6 className="mb-0">Profile Information</h6>
                     </Card.Header>
-                    <Card.Body className="p-4">
+                    <Card.Body className="p-3">
                       <Row>
-                        <Col md={6} className="mb-3">
+                        <Col md={6} className="mb-2">
                           <div className="info-item">
-                            <div className="info-label">
+                            <div className="info-label small">
                               <FaEnvelope className="me-2 text-muted" />
                               Email Address
                             </div>
-                            <div className="info-value">{userData.email}</div>
+                            <div className="info-value small">{userData.email}</div>
                           </div>
                         </Col>
-                        <Col md={6} className="mb-3">
+                        <Col md={6} className="mb-2">
                           <div className="info-item">
-                            <div className="info-label">
+                            <div className="info-label small">
                               <FaPhone className="me-2 text-muted" />
                               Phone Number
                             </div>
-                            <div className="info-value">{userData.phone}</div>
+                            <div className="info-value small">{userData.phone}</div>
                           </div>
                         </Col>
-                        <Col md={6} className="mb-3">
+                        <Col md={6} className="mb-2">
                           <div className="info-item">
-                            <div className="info-label">
+                            <div className="info-label small">
                               <FaIdCard className="me-2 text-muted" />
                               Aadhaar Number
                             </div>
-                            <div className="info-value">{userData.aadhaar_no}</div>
+                            <div className="info-value small">{userData.aadhaar_no}</div>
                           </div>
                         </Col>
-                        <Col md={6} className="mb-3">
+                        <Col md={6} className="mb-2">
                           <div className="info-item">
-                            <div className="info-label">
+                            <div className="info-label small">
                               <FaBuilding className="me-2 text-muted" />
                               Associate Wings
                             </div>
-                            <div className="info-value">{userData.associate_wings}</div>
+                            <div className="info-value small">{userData.associate_wings}</div>
                           </div>
                         </Col>
-                        <Col md={6} className="mb-3">
+                        <Col md={6} className="mb-2">
                           <div className="info-item">
-                            <div className="info-label">
+                            <div className="info-label small">
                               <FaMapMarkerAlt className="me-2 text-muted" />
                               State
                             </div>
-                            <div className="info-value">{userData.state}</div>
+                            <div className="info-value small">{userData.state}</div>
                           </div>
                         </Col>
-                        <Col md={6} className="mb-3">
+                        <Col md={6} className="mb-2">
                           <div className="info-item">
-                            <div className="info-label">
+                            <div className="info-label small">
                               <FaMapMarkerAlt className="me-2 text-muted" />
                               District
                             </div>
-                            <div className="info-value">{userData.district}</div>
+                            <div className="info-value small">{userData.district}</div>
                           </div>
                         </Col>
                         <Col md={6} className="mb-3">
