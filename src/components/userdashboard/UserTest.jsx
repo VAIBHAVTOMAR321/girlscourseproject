@@ -3,26 +3,29 @@ import { Container, Row, Col, Card, Button, Badge, Modal, Spinner, Accordion } f
 import { useAuth } from '../../contexts/AuthContext'
 import UserTopNav from './UserTopNav'
 import UseLeftNav from './UseLeftNav'
-import { FaBook, FaCheckCircle, FaClock, FaEye, FaArrowLeft } from 'react-icons/fa'
+import { FaBook, FaCheckCircle, FaClock, FaEye, FaArrowLeft, FaTimesCircle, FaCertificate } from 'react-icons/fa'
 import { useLocation, useNavigate } from 'react-router-dom'
+import axios from 'axios'
 
 const UserTest = () => {
   const [showOffcanvas, setShowOffcanvas] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
-  const [courses, setCourses] = useState([])
   const [loading, setLoading] = useState(true)
-  const [selectedCourse, setSelectedCourse] = useState(null)
-  const [courseModules, setCourseModules] = useState(null)
-  const [modulesLoading, setModulesLoading] = useState(false)
-  const [showModal, setShowModal] = useState(false)
   const [testCompleted, setTestCompleted] = useState(false)
+  const [questions, setQuestions] = useState([])
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
+  const [timer, setTimer] = useState(30)
+  const [userAnswers, setUserAnswers] = useState([])
+  const [testLoading, setTestLoading] = useState(true)
+  const [testResult, setTestResult] = useState(null)
+  const [showCelebrationModal, setShowCelebrationModal] = useState(false)
 
   const location = useLocation()
   const navigate = useNavigate()
   const { uniqueId, accessToken } = useAuth()
   
   // Get course and module from location state
-  const { course, moduleIndex } = location.state || {}
+  const { course, moduleIndex, isLastModule } = location.state || {}
 
   // Check mobile view
   useEffect(() => {
@@ -35,96 +38,235 @@ const UserTest = () => {
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
-  // Handle test completion
-  const handleTestComplete = () => {
-    setTestCompleted(true)
-    // Here you would typically send test results to backend
-    setTimeout(() => {
-      // Navigate back to user dashboard with completion status
-      navigate('/UserDashboard', { 
-        state: { 
-          courseId: course.course_id, 
-          moduleIndex: moduleIndex, 
-          testCompleted: true 
-        } 
-      })
-    }, 2000) // Show completion message for 2 seconds
+  // Fetch test questions
+  useEffect(() => {
+    const fetchTestQuestions = async () => {
+      try {
+        setTestLoading(true)
+        // Get module ID from location state or from course data
+        let moduleId = null
+        if (location.state && location.state.moduleId) {
+          moduleId = location.state.moduleId
+        } else if (course && course.modules && course.modules[moduleIndex]) {
+          moduleId = course.modules[moduleIndex].module_id
+        }
+
+        if (!moduleId) {
+          console.error('Module ID not found')
+          setLoading(false)
+          setTestLoading(false)
+          return
+        }
+
+        const response = await axios.post(
+          'https://brjobsedu.com/girls_course/girls_course_backend/api/module-test/start/',
+          {
+            module_id: moduleId
+          },
+          {
+            headers: {
+              'Authorization': `Bearer ${accessToken}`,
+              'Content-Type': 'application/json'
+            }
+          }
+        )
+
+        if (response.data.success) {
+          setQuestions(response.data.questions)
+          setUserAnswers(new Array(response.data.questions.length).fill(null))
+          // Set overall timer: 30 seconds per question
+          setTimer(response.data.questions.length * 30)
+        }
+      } catch (error) {
+        console.error('Error fetching test questions:', error)
+      } finally {
+        setTestLoading(false)
+        setLoading(false)
+      }
+    }
+
+    if (course && moduleIndex !== undefined) {
+      fetchTestQuestions()
+    }
+  }, [course, moduleIndex])
+
+  // Overall test timer
+  useEffect(() => {
+    if (timer > 0 && !testCompleted) {
+      const timerInterval = setInterval(() => {
+        setTimer(prev => prev - 1)
+      }, 1000)
+      return () => clearInterval(timerInterval)
+    } else if (timer === 0 && !testCompleted) {
+      // Auto submit when overall timer ends
+      handleTestComplete()
+    }
+  }, [timer, testCompleted])
+
+  // State to track if user has been warned before
+  const [hasBeenWarned, setHasBeenWarned] = useState(false)
+
+  // Auto submit when user closes the window or navigates away
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (!testCompleted) {
+        if (!hasBeenWarned) {
+          // Show warning on first attempt
+          e.preventDefault()
+          e.returnValue = ''
+          // Modern browsers don't allow custom messages, so we'll use the tab switch warning for better UX
+          setHasBeenWarned(true)
+          return ''
+        } else {
+          // Auto submit on subsequent attempts
+          handleTestComplete()
+        }
+      }
+    }
+
+    window.addEventListener('beforeunload', handleBeforeUnload)
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload)
+  }, [testCompleted, hasBeenWarned])
+
+  // Auto submit when user switches to another tab/window
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden && !testCompleted) {
+        if (!hasBeenWarned) {
+          // Show warning on first attempt (works for both tab switch and window close)
+          alert('Are you sure you want to leave? Your test will be submitted automatically if you leave again.')
+          setHasBeenWarned(true)
+        } else {
+          // Auto submit on subsequent attempts
+          handleTestComplete()
+        }
+      }
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange)
+  }, [testCompleted, hasBeenWarned])
+
+  // Handle answer selection
+  const handleAnswerSelect = (answerIndex) => {
+    const newAnswers = [...userAnswers]
+    newAnswers[currentQuestionIndex] = answerIndex
+    setUserAnswers(newAnswers)
+  }
+
+  // Handle next question
+  const handleNextQuestion = () => {
+    if (currentQuestionIndex < questions.length - 1) {
+      setCurrentQuestionIndex(prev => prev + 1)
+    }
+  }
+
+  // Handle previous question
+  const handlePreviousQuestion = () => {
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex(prev => prev - 1)
+    }
+  }
+
+  // Handle test completion (submission)
+  const handleTestComplete = async () => {
+    try {
+      // Prepare submission data
+      const submissionData = {
+        module_id: location.state.moduleId,
+        answers: questions.map((question, index) => ({
+          question_id: question.id,
+          selected: userAnswers[index]
+        }))
+      }
+
+      // Submit test
+      const response = await axios.post(
+        'https://brjobsedu.com/girls_course/girls_course_backend/api/module-test/submit/',
+        submissionData,
+        {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      )
+
+      if (response.data.success) {
+        // Show results
+        setTestCompleted(true)
+        setTestResult(response.data)
+        
+        // Show celebration modal if test passed and it's the last module
+        if (response.data.test_status === 'passed' && isLastModule) {
+          setShowCelebrationModal(true)
+        }
+      }
+    } catch (error) {
+      console.error('Error submitting test:', error)
+      alert('Failed to submit test. Please try again.')
+    }
+  }
+
+  // Generate certificate
+  const generateCertificate = async () => {
+    try {
+      const response = await axios.post(
+        'https://brjobsedu.com/girls_course/girls_course_backend/api/student-entrollment/',
+        {
+          student_id: uniqueId,
+          course_id: course.course_id
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      )
+
+      if (response.data.success) {
+        // Get the certificate file URL from response or fetch courses to get updated data
+        alert('Certificate generated successfully!')
+        
+        // Check if we got certificate file in response
+        if (response.data.data && response.data.data.certificate_file) {
+          // Open certificate in new tab
+          window.open(`https://brjobsedu.com/girls_course/girls_course_backend${response.data.data.certificate_file}`, '_blank')
+        } else {
+          // If not, try to fetch updated course data
+          const coursesResponse = await axios.get(
+            `https://brjobsedu.com/girls_course/girls_course_backend/api/student-entrollment/?student_id=${uniqueId}`,
+            {
+              headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json'
+              }
+            }
+          )
+          
+          if (coursesResponse.data.success) {
+            const updatedCourse = coursesResponse.data.data.find(
+              c => c.course_id === course.course_id
+            )
+            
+            if (updatedCourse && updatedCourse.certificate_file) {
+              window.open(`https://brjobsedu.com/girls_course/girls_course_backend${updatedCourse.certificate_file}`, '_blank')
+            }
+          }
+        }
+      } else {
+        alert('Failed to generate certificate')
+      }
+    } catch (error) {
+      console.error('Error generating certificate:', error)
+      alert('Failed to generate certificate. Please try again.')
+    }
   }
 
   // Go back to dashboard without completing
   const handleGoBack = () => {
     navigate('/UserDashboard')
-  }
-
-  // Fetch course modules (Test data)
-  const fetchCourseModules = async (courseId) => {
-    try {
-      setModulesLoading(true)
-      // Test modules data
-      const testModules = {
-        "success": true,
-        "data": {
-          "course_id": courseId,
-          "modules": [
-            {
-              "id": 1,
-              "order": 1,
-              "mod_title": "Introduction to Testing",
-              "sub_modules": [
-                {
-                  "id": 1,
-                  "order": 1,
-                  "sub_modu_title": "Test Basics",
-                  "sub_modu_description": "Learn the fundamentals of testing",
-                  "sub_mod": ["What is testing?", "Why testing is important"]
-                }
-              ]
-            },
-            {
-              "id": 2,
-              "order": 2,
-              "mod_title": "Test Methods",
-              "sub_modules": [
-                {
-                  "id": 2,
-                  "order": 1,
-                  "sub_modu_title": "Unit Testing",
-                  "sub_modu_description": "Testing individual components",
-                  "sub_mod": ["Jest testing framework", "React testing"]
-                },
-                {
-                  "id": 3,
-                  "order": 2,
-                  "sub_modu_title": "Integration Testing",
-                  "sub_modu_description": "Testing component interactions",
-                  "sub_mod": ["React Testing Library", "End-to-end testing"]
-                }
-              ]
-            }
-          ]
-        }
-      }
-      
-      setCourseModules(testModules.data)
-    } catch (error) {
-      console.error('Error fetching test course modules:', error)
-    } finally {
-      setModulesLoading(false)
-    }
-  }
-
-  // Handle View Course button click
-  const handleViewCourse = async (course) => {
-    setSelectedCourse(course)
-    setShowModal(true)
-    await fetchCourseModules(course.course_id)
-  }
-
-  // Close modal
-  const handleCloseModal = () => {
-    setShowModal(false)
-    setSelectedCourse(null)
-    setCourseModules(null)
   }
 
   const handleMenuToggle = () => {
@@ -156,176 +298,183 @@ const UserTest = () => {
                   <h1 className="mb-0">Module Test</h1>
                 </div>
                 
-                {!course || moduleIndex === undefined ? (
+                {testLoading ? (
+                  <div className="text-center py-5">
+                    <Spinner animation="border" variant="primary" style={{ width: '60px', height: '60px' }} />
+                    <p className="mt-3">Loading test questions...</p>
+                  </div>
+                ) : !course || moduleIndex === undefined ? (
                   <div className="text-center py-5">
                     <p className="text-muted fs-4">No test data available</p>
                     <Button variant="primary" onClick={handleGoBack}>
                       Go Back
                     </Button>
                   </div>
-                ) : testCompleted ? (
+                ) : testCompleted && testResult ? (
                   <div className="text-center py-5">
-                    <div className="success-animation mb-4">
-                      <FaCheckCircle style={{ fontSize: '80px', color: '#28a745' }} />
+                    <div className={`success-animation mb-4 ${testResult.test_status === 'passed' ? 'text-success' : 'text-danger'}`}>
+                      {testResult.test_status === 'passed' ? (
+                        <FaCheckCircle style={{ fontSize: '80px', color: '#28a745' }} />
+                      ) : (
+                        <FaTimesCircle style={{ fontSize: '80px', color: '#dc3545' }} />
+                      )}
                     </div>
-                    <h2 className="mb-2">Test Completed!</h2>
-                    <p className="text-muted mb-4">Congratulations! You've successfully completed the test.</p>
-                    <p className="text-muted mb-4">Redirecting back to course...</p>
+                    <h2 className="mb-2">
+                      {testResult.test_status === 'passed' ? 'Test Passed!' : 'Test Failed!'}
+                    </h2>
+                    <p className="text-muted mb-4">
+                      You scored {testResult.percentage}%
+                    </p>
+                    <div className="d-flex justify-content-center gap-4 mb-4">
+                      <div className="bg-light p-3 rounded">
+                        <p className="mb-0 text-muted small">Attempt Count</p>
+                        <p className="mb-0 fw-bold">{testResult.attempt_count}</p>
+                      </div>
+                      {testResult.locked_until && (
+                        <div className="bg-light p-3 rounded">
+                          <p className="mb-0 text-muted small">Locked Until</p>
+                          <p className="mb-0 fw-bold">{new Date(testResult.locked_until).toLocaleString()}</p>
+                        </div>
+                      )}
+                    </div>
+                    <Button 
+                      variant="primary" 
+                      onClick={handleGoBack}
+                      className="d-flex align-items-center mx-auto"
+                    >
+                      <FaArrowLeft className="me-2" />
+                      Back to Course
+                    </Button>
                   </div>
-                ) : (
+                ) : questions.length > 0 ? (
                   <div className="max-w-4xl mx-auto">
                     <Card className="shadow-lg border-0">
                       <Card.Body className="p-4">
                         <div className="mb-4">
                           <h3 className="mb-2">{course.course_name}</h3>
                           <p className="text-muted">
-                            Module {moduleIndex + 1} Test
+                            Module {moduleIndex + 1} Test - Question {currentQuestionIndex + 1} of {questions.length}
                           </p>
+                          <div className="d-flex align-items-center justify-content-between">
+                            <Badge bg="warning" className="p-2">
+                              <FaClock className="me-2" />
+                              Time: {Math.floor(timer / 60).toString().padStart(2, '0')}:{(timer % 60).toString().padStart(2, '0')}
+                            </Badge>
+                          </div>
                         </div>
                         
-                        {/* Test Content */}
+                        {/* Current Question */}
                         <div className="mb-6">
-                          <h4 className="mb-3">Test Instructions</h4>
-                          <p className="text-muted mb-4">
-                            Please answer all the questions below. You must score at least 70% to proceed to the next module.
-                          </p>
-                          
-                          <div className="bg-light p-4 rounded mb-4">
-                            <h5 className="mb-3">Sample Test Questions:</h5>
-                            <div className="mb-3">
-                              <p><strong>1. What is the capital of France?</strong></p>
-                              <div className="form-check mb-2">
-                                <input type="radio" className="form-check-input" id="q1a" name="q1" />
-                                <label className="form-check-label" for="q1a">London</label>
+                          <h4 className="mb-3">{questions[currentQuestionIndex].question_text}</h4>
+                          <div className="space-y-3">
+                            {questions[currentQuestionIndex].options.map((option, index) => (
+                              <div key={index} className="form-check">
+                                <input 
+                                  type="radio" 
+                                  className="form-check-input" 
+                                  id={`q${currentQuestionIndex}a${index}`} 
+                                  name={`q${currentQuestionIndex}`}
+                                  checked={userAnswers[currentQuestionIndex] === index}
+                                  onChange={() => handleAnswerSelect(index)}
+                                />
+                                <label className="form-check-label" for={`q${currentQuestionIndex}a${index}`}>
+                                  {option}
+                                </label>
                               </div>
-                              <div className="form-check mb-2">
-                                <input type="radio" className="form-check-input" id="q1b" name="q1" />
-                                <label className="form-check-label" for="q1b">Paris</label>
-                              </div>
-                              <div className="form-check mb-2">
-                                <input type="radio" className="form-check-input" id="q1c" name="q1" />
-                                <label className="form-check-label" for="q1c">Berlin</label>
-                              </div>
-                            </div>
-                            
-                            <div className="mb-3">
-                              <p><strong>2. What is 2 + 2?</strong></p>
-                              <div className="form-check mb-2">
-                                <input type="radio" className="form-check-input" id="q2a" name="q2" />
-                                <label className="form-check-label" for="q2a">3</label>
-                              </div>
-                              <div className="form-check mb-2">
-                                <input type="radio" className="form-check-input" id="q2b" name="q2" />
-                                <label className="form-check-label" for="q2b">4</label>
-                              </div>
-                              <div className="form-check mb-2">
-                                <input type="radio" className="form-check-input" id="q2c" name="q2" />
-                                <label className="form-check-label" for="q2c">5</label>
-                              </div>
-                            </div>
+                            ))}
                           </div>
                         </div>
                         
                         <div className="d-flex justify-content-between">
-                          <Button variant="secondary" onClick={handleGoBack}>
-                            Cancel
+                          <Button 
+                            variant="secondary" 
+                            onClick={handlePreviousQuestion}
+                            disabled={currentQuestionIndex === 0}
+                          >
+                            Previous
                           </Button>
-                          <Button variant="primary" onClick={handleTestComplete}>
-                            Submit Test
-                          </Button>
+                          {currentQuestionIndex < questions.length - 1 ? (
+                            <Button 
+                              variant="primary" 
+                              onClick={handleNextQuestion}
+                            >
+                              Next
+                            </Button>
+                          ) : (
+                            <Button 
+                              variant="success" 
+                              onClick={handleTestComplete}
+                            >
+                              Submit Test
+                            </Button>
+                          )}
                         </div>
                       </Card.Body>
                     </Card>
+                  </div>
+                ) : (
+                  <div className="text-center py-5">
+                    <p className="text-muted fs-4">No questions available for this test</p>
+                    <Button variant="primary" onClick={handleGoBack}>
+                      Go Back
+                    </Button>
                   </div>
                 )}
               </div>
             </Col>
           </Row>
+
+          {/* Celebration Modal */}
+          <Modal
+            show={showCelebrationModal}
+            onHide={() => setShowCelebrationModal(false)}
+            centered
+            size="lg"
+          >
+            <Modal.Body className="text-center p-5">
+              <div className="celebration-content">
+                {/* Celebration Animation */}
+                <div className="celebration-animation mb-4">
+                  <FaCheckCircle style={{ fontSize: '100px', color: '#28a745', animation: 'pulse 2s infinite' }} />
+                </div>
+                
+                {/* Congratulations Text */}
+                <h2 className="mb-4 text-success">Congratulations!</h2>
+                <p className="text-muted mb-4 fs-5">
+                  You have successfully completed all modules and passed the final test!
+                </p>
+                
+                {/* Course Completion Badge */}
+                <div className="mb-4">
+                  <Badge bg="success" className="p-2 fs-6">
+                    Course Completed
+                  </Badge>
+                </div>
+                
+                {/* Generate Certificate Button */}
+                <Button 
+                  variant="success" 
+                  onClick={generateCertificate}
+                  className="d-flex align-items-center mx-auto px-3 py-2 fs-6 mt-2"
+                  style={{ borderRadius: '50px' }}
+                >
+                  <FaCertificate className="me-2" />
+                  Generate Certificate
+                </Button>
+                
+                {/* Optional: Close Button */}
+                <Button 
+                  variant="outline-secondary" 
+                  onClick={() => setShowCelebrationModal(false)}
+                  className="mt-3"
+                >
+                  Close
+                </Button>
+              </div>
+            </Modal.Body>
+          </Modal>
         </Container>
       </div>
-
-      {/* Course Modules Modal */}
-      <Modal 
-        show={showModal} 
-        onHide={handleCloseModal} 
-        size="lg"
-        className="course-modules-modal"
-      >
-        <Modal.Header closeButton>
-          <Modal.Title className="fs-2">
-            <FaBook className="me-2 text-primary" />
-            {selectedCourse?.course_name} - Modules
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {modulesLoading ? (
-            <div className="text-center py-5">
-              <Spinner animation="border" variant="primary" style={{ width: '50px', height: '50px' }} />
-              <p className="mt-3">Loading modules...</p>
-            </div>
-          ) : courseModules ? (
-            <div>
-              <div className="mb-4 p-3 bg-light rounded">
-                <p className="mb-0">
-                  <strong>Course ID:</strong> {courseModules.course_id}
-                </p>
-                <p className="mb-0">
-                  <strong>Total Modules:</strong> {courseModules.modules.length}
-                </p>
-              </div>
-              
-              <Accordion defaultActiveKey="0" className="course-accordion">
-                {courseModules.modules.map((module, moduleIndex) => (
-                  <Accordion.Item key={module.id} eventKey={moduleIndex.toString()}>
-                    <Accordion.Header className="fw-bold">
-                      Module {module.order}: {module.mod_title}
-                    </Accordion.Header>
-                    <Accordion.Body>
-                      <Row>
-                        <Col md={12}>
-                          <h5 className="mb-3 text-muted">Sub Modules</h5>
-                          {module.sub_modules.map((subModule, subModuleIndex) => (
-                            <div key={subModule.id} className="mb-4 p-3 border rounded">
-                              <h6 className="mb-2">
-                                Sub Module {subModule.order}: {subModule.sub_modu_title}
-                              </h6>
-                              <p className="text-muted mb-3">{subModule.sub_modu_description}</p>
-                              
-                              <h7 className="mb-2 fw-semibold">Content:</h7>
-                              <div className="mt-2">
-                                {subModule.sub_mod.map((item, itemIndex) => (
-                                  <div key={itemIndex} className="mb-2 p-2 bg-light rounded">
-                                    {Array.isArray(item) ? (
-                                      <div>
-                                        <strong>{item[0]}:</strong> {item[1]}
-                                      </div>
-                                    ) : (
-                                      <div>{item}</div>
-                                    )}
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          ))}
-                        </Col>
-                      </Row>
-                    </Accordion.Body>
-                  </Accordion.Item>
-                ))}
-              </Accordion>
-            </div>
-          ) : (
-            <div className="text-center py-5">
-              <p className="text-muted fs-4">No modules available for this course</p>
-            </div>
-          )}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
     </div>
   )
 }

@@ -60,59 +60,65 @@ const UserDashboard = () => {
   }, [])
 
   // Fetch user's enrolled courses
-  useEffect(() => {
-    const fetchCourses = async () => {
-      if (!uniqueId || !accessToken) {
-        console.log('Missing uniqueId or accessToken:', { uniqueId, accessToken })
-        setLoading(false)
-        return
-      }
-
-      try {
-        setLoading(true)
-        setError(null)
-        console.log('Fetching courses for student ID:', uniqueId)
-        
-        const response = await axios.get(
-          `https://brjobsedu.com/girls_course/girls_course_backend/api/student-entrollment/?student_id=${uniqueId}`,
-          {
-            headers: {
-              'Authorization': `Bearer ${accessToken}`,
-              'Content-Type': 'application/json'
-            }
-          }
-        )
-        
-        console.log('API response status:', response.status)
-        console.log('API response data:', response.data)
-        
-        if (response.data.success && Array.isArray(response.data.data)) {
-          console.log('Received courses data:', response.data.data)
-          response.data.data.forEach(course => {
-            console.log('Course object details:', course)
-          })
-          setCourses(response.data.data)
-        } else {
-          console.error('API response error:', response.data)
-          setError(response.data.message || 'Failed to fetch courses')
-          setCourses([])
-        }
-      } catch (error) {
-        console.error('Error fetching courses:', error)
-        if (error.response) {
-          console.error('Response status:', error.response.status)
-          console.error('Response data:', error.response.data)
-          setError(error.response.data?.message || 'Failed to fetch courses')
-        } else {
-          setError('Network error while fetching courses')
-        }
-        setCourses([])
-      } finally {
-        setLoading(false)
-      }
+  const fetchCourses = async () => {
+    if (!uniqueId || !accessToken) {
+      console.log('Missing uniqueId or accessToken:', { uniqueId, accessToken })
+      setLoading(false)
+      return
     }
 
-    fetchCourses()
+    try {
+      setLoading(true)
+      setError(null)
+      console.log('Fetching courses for student ID:', uniqueId)
+      
+      const response = await axios.get(
+        `https://brjobsedu.com/girls_course/girls_course_backend/api/student-entrollment/?student_id=${uniqueId}`,
+        {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      )
+      
+      console.log('API response status:', response.status)
+      console.log('API response data:', response.data)
+      
+      if (response.data.success && Array.isArray(response.data.data)) {
+        console.log('Received courses data:', response.data.data)
+        response.data.data.forEach(course => {
+          console.log('Course object details:', course)
+        })
+        setCourses(response.data.data)
+      } else {
+        console.error('API response error:', response.data)
+        setError(response.data.message || 'Failed to fetch courses')
+        setCourses([])
+      }
+    } catch (error) {
+      console.error('Error fetching courses:', error)
+      if (error.response) {
+        console.error('Response status:', error.response.status)
+        console.error('Response data:', error.response.data)
+        setError(error.response.data?.message || 'Failed to fetch courses')
+      } else {
+        setError('Network error while fetching courses')
+      }
+      setCourses([])
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Fetch courses and module progress when component mounts or uniqueId/accessToken changes
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetchCourses()
+      await fetchModuleProgress()
+    }
+    
+    fetchData()
   }, [uniqueId, accessToken])
 
   // Fetch course modules
@@ -157,7 +163,7 @@ const UserDashboard = () => {
     }
   }
 
-  // Handle Start Course button click
+   // Handle Start Course button click
   const handleViewCourse = async (course) => {
     console.log('Start Course clicked for:', course)
     console.log('Course ID:', course.course_id)
@@ -173,6 +179,7 @@ const UserDashboard = () => {
     setCompletedModules([])
     setError(null)
     await fetchCourseModules(course.course_id)
+    await fetchModuleProgress()
   }
 
   // Return to course list
@@ -188,24 +195,183 @@ const UserDashboard = () => {
     if (moduleIndex === 0) {
       return true
     }
-    return completedModules.includes(moduleIndex - 1)
+    
+    // Check if previous module is accessible and either:
+    // 1. Completed via complete button
+    // 2. Test is passed
+    const previousModule = courseModules.modules[moduleIndex - 1]
+    const previousModuleProgress = moduleProgress.find(
+      progress => 
+        progress.course_id === selectedCourse.course_id && 
+        progress.module === previousModule.module_id
+    )
+    
+    const isPreviousModuleCompleted = completedModules.includes(moduleIndex - 1)
+    const isPreviousModuleTestPassed = previousModuleProgress?.test_status === 'passed'
+    
+    return isPreviousModuleCompleted || isPreviousModuleTestPassed
   }
 
   // Navigate to module test
   const handleTestClick = (moduleIndex) => {
     console.log('Navigating to test for module index:', moduleIndex)
+    const currentModule = courseModules.modules[moduleIndex]
+    const isLastModule = moduleIndex === courseModules.modules.length - 1
     navigate('/UserTest', {
       state: {
         course: selectedCourse,
-        moduleIndex: moduleIndex
+        moduleIndex: moduleIndex,
+        moduleId: currentModule.module_id,
+        isLastModule: isLastModule
       }
     })
   }
 
+  // Check if all modules are completed for current course
+  const areAllModulesCompleted = () => {
+    if (!courseModules || !courseModules.modules) return false
+    
+    return courseModules.modules.every((module, moduleIndex) => {
+      const moduleProgressData = moduleProgress.find(
+        progress => 
+          progress.course_id === selectedCourse.course_id && 
+          progress.module === module.module_id
+      )
+      
+      const isModuleCompleted = completedModules.includes(moduleIndex)
+      const isTestPassed = moduleProgressData?.test_status === 'passed'
+      
+      return isModuleCompleted || isTestPassed
+    })
+  }
+
+  // Check if certificate exists for current course
+  const isCertificateGenerated = () => {
+    const course = courses.find(c => c.course_id === selectedCourse.course_id)
+    return course && course.certificate_file
+  }
+
+  // Generate certificate
+  const generateCertificate = async () => {
+    try {
+      const response = await axios.post(
+        'https://brjobsedu.com/girls_course/girls_course_backend/api/student-entrollment/',
+        {
+          student_id: uniqueId,
+          course_id: selectedCourse.course_id
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      )
+
+      if (response.data.success) {
+        // Refresh courses data to get the certificate file
+        await fetchCourses()
+        alert('Certificate generated successfully!')
+      } else {
+        alert('Failed to generate certificate')
+      }
+    } catch (error) {
+      console.error('Error generating certificate:', error)
+      alert('Failed to generate certificate. Please try again.')
+    }
+  }
+
+  // Check if all modules of a course are completed
+  const isAllModulesCompleted = (course) => {
+    // Check if we have module progress data for this course
+    const courseModuleProgress = moduleProgress.filter(
+      progress => progress.course_id === course.course_id
+    )
+    
+    // If no progress data available, course is not completed
+    if (courseModuleProgress.length === 0) {
+      return false
+    }
+    
+    // Check if all modules for this course are completed or passed the test
+    const allModulesCompleted = courseModuleProgress.every(progress => {
+      return progress.module_status === 'completed' || progress.test_status === 'passed'
+    })
+    
+    return allModulesCompleted
+  }
+
+  // View certificate
+  const viewCertificate = () => {
+    const course = courses.find(c => c.course_id === selectedCourse.course_id)
+    if (course && course.certificate_file) {
+      window.open(`https://brjobsedu.com/girls_course/girls_course_backend${course.certificate_file}`, '_blank')
+    }
+  }
+
+  // Fetch module progress data
+  const [moduleProgress, setModuleProgress] = useState([])
+  const [progressLoading, setProgressLoading] = useState(false)
+
+  const fetchModuleProgress = async () => {
+    try {
+      setProgressLoading(true)
+      const response = await axios.get(
+        `https://brjobsedu.com/girls_course/girls_course_backend/api/module-progress/?student_id=${uniqueId}`,
+        {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      )
+
+      if (response.data.success && Array.isArray(response.data.data)) {
+        console.log('Module progress data:', response.data.data)
+        setModuleProgress(response.data.data)
+      }
+    } catch (error) {
+      console.error('Error fetching module progress:', error)
+    } finally {
+      setProgressLoading(false)
+    }
+  }
+
   // Mark module as completed
-  const markModuleComplete = (moduleIndex) => {
-    if (!completedModules.includes(moduleIndex)) {
-      setCompletedModules([...completedModules, moduleIndex])
+  const markModuleComplete = async (moduleIndex) => {
+    try {
+      const currentModule = courseModules.modules[moduleIndex]
+      const response = await axios.put(
+        `https://brjobsedu.com/girls_course/girls_course_backend/api/module-progress/`,
+        {
+          module_status: "ongoing",
+          student_id: uniqueId,
+          course_id: selectedCourse.course_id,
+          module: currentModule.module_id
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      )
+
+      if (response.data.success) {
+        // Update module progress state
+        await fetchModuleProgress()
+        // Also update local completed modules state for UI
+        if (!completedModules.includes(moduleIndex)) {
+          setCompletedModules([...completedModules, moduleIndex])
+        }
+        // Show success alert
+        alert('Module marked as complete successfully!')
+      }
+    } catch (error) {
+      console.error('Error marking module complete:', error)
+      // Show failure alert
+      alert('Failed to mark module as complete. Please try again.')
+      setError('Failed to mark module as complete')
     }
   }
 
@@ -243,10 +409,34 @@ const UserDashboard = () => {
                       Back to My Courses
                     </Button>
                     
-                    <h1 className="mb-4">
-                      <FaBook className="me-2 text-primary" />
-                      {selectedCourse.course_name} - Modules
-                    </h1>
+                    <div className="d-flex justify-content-between align-items-center mb-4">
+                      <h1 className="mb-0">
+                        <FaBook className="me-2 text-primary" />
+                        {selectedCourse.course_name} - Modules
+                      </h1>
+                      
+                      {/* Certificate Button */}
+                      {isCertificateGenerated() ? (
+                        <Button 
+                          variant="success" 
+                          onClick={viewCertificate}
+                          className="d-flex align-items-center"
+                        >
+                          <FaCertificate className="me-2" />
+                          View Certificate
+                        </Button>
+                      ) : (
+                        <Button 
+                          variant="primary" 
+                          onClick={generateCertificate}
+                          disabled={!areAllModulesCompleted()}
+                          className="d-flex align-items-center"
+                        >
+                          <FaCertificate className="me-2" />
+                          Generate Certificate
+                        </Button>
+                      )}
+                    </div>
                     
                     {modulesLoading ? (
                       <div className="text-center py-5">
@@ -262,67 +452,122 @@ const UserDashboard = () => {
                             const isAccessible = isModuleAccessible(moduleIndex)
                             const isCompleted = completedModules.includes(moduleIndex)
                             
-                            return (
-                              <Accordion.Item 
-                                key={module.module_id} 
-                                eventKey={moduleIndex.toString()}
-                                disabled={!isAccessible}
-                              >
-                                <Accordion.Header className="fw-bold">
-                                  <div className="d-flex align-items-center w-100">
-                                    {isAccessible ? (
-                                      isCompleted ? (
-                                        <div className="module-icon me-3">
-                                          <FaCertificate className="text-white" style={{ fontSize: '20px' }} />
-                                        </div>
-                                      ) : (
-                                        <div className="module-icon me-3">
-                                          <FaChalkboardTeacher className="text-white" style={{ fontSize: '20px' }} />
-                                        </div>
-                                      )
-                                    ) : (
-                                      <div className="module-icon me-3 opacity-50">
-                                        <FaLock className="text-white" style={{ fontSize: '20px' }} />
-                                      </div>
-                                    )}
-                                    <span className={!isAccessible ? 'text-gray-300' : 'text-white'}>
-                                      Module {module.order}: {module.mod_title}
-                                    </span>
-                                    {!isAccessible && (
-                                      <span className="ms-auto text-sm text-gray-300">
-                                        Complete previous module to unlock
-                                      </span>
-                                    )}
-                                  </div>
-                                </Accordion.Header>
-                                <Accordion.Body>
-                                  {module.sub_modules && module.sub_modules.length > 0 ? (
-                                    <div className="sub-modules-container">
-                                       {module.sub_modules.map((subModule, subModuleIndex) => (
-                                        <div key={subModule.sub_module_id} className="book-card mb-4">
-                                          <div className="book-header d-flex align-items-center mb-3">
-                                            <div className="book-icon me-3">
-                                              {subModuleIndex % 3 === 0 ? (
-                                                <FaBook className="text-primary" style={{ fontSize: '24px' }} />
-                                              ) : subModuleIndex % 3 === 1 ? (
-                                                <FaChalkboardTeacher className="text-primary" style={{ fontSize: '24px' }} />
-                                              ) : (
-                                                <FaGraduationCap className="text-primary" style={{ fontSize: '24px' }} />
-                                              )}
-                                            </div>
-                                            <div className="book-title flex-grow-1">
-                                              <h5 className="mb-1 fw-bold text-primary">
-                                             {subModule.order}: {subModule.sub_modu_title}
-                                              </h5>
-                                              {subModule.sub_modu_description && (
-                                                <p className="mb-0 text-muted small">
-                                                  {subModule.sub_modu_description}
-                                                </p>
-                                              )}
-                                            </div>
-                                          </div>
-                                          
-                                          <Row className="g-4">
+                             // Check if module is in ongoing status
+                             const currentModule = courseModules.modules[moduleIndex]
+                             const isOngoing = moduleProgress.some(
+                               progress => 
+                                 progress.course_id === selectedCourse.course_id && 
+                                 progress.module === currentModule.module_id && 
+                                 progress.module_status === 'ongoing'
+                             )
+
+                             // Get module progress data for current module
+                             const moduleProgressData = moduleProgress.find(
+                               progress => 
+                                 progress.course_id === selectedCourse.course_id && 
+                                 progress.module === currentModule.module_id
+                             )
+
+                             // Determine if test button should be disabled
+                             let isTestDisabled = false
+                             let testButtonText = "Take Test"
+                             let testButtonVariant = "primary"
+                             let isTestPassed = false
+
+                             if (moduleProgressData) {
+                               // Check if test status is passed
+                               if (moduleProgressData.test_status === 'passed') {
+                                 isTestPassed = true
+                               } else {
+                                 // Check if attempt count has reached maximum (3 attempts)
+                                 if (moduleProgressData.attempt_count >= 3) {
+                                   // Check if locked_until has passed
+                                   if (moduleProgressData.locked_until) {
+                                     const lockedUntil = new Date(moduleProgressData.locked_until)
+                                     const currentTime = new Date()
+                                     
+                                     if (currentTime < lockedUntil) {
+                                       // Still locked
+                                       isTestDisabled = true
+                                       testButtonText = "Test Locked"
+                                       testButtonVariant = "secondary"
+                                     }
+                                   } else {
+                                     // No locked_until date, assume permanently locked
+                                     isTestDisabled = true
+                                     testButtonText = "Test Locked"
+                                     testButtonVariant = "secondary"
+                                   }
+                                 } else {
+                                   // Show attempts left
+                                   const attemptsLeft = 3 - moduleProgressData.attempt_count
+                                   testButtonText = `Take Test (${attemptsLeft} attempts left)`
+                                 }
+                               }
+                             }
+
+                              return (
+                                <Accordion.Item 
+                                  key={module.module_id} 
+                                  eventKey={moduleIndex.toString()}
+                                  disabled={!isAccessible}
+                                  className={isCompleted || isTestPassed ? 'completed-module' : ''}
+                                >
+                                 <Accordion.Header className="fw-bold">
+                                   <div className="d-flex align-items-center w-100">
+                                     {isAccessible ? (
+                                       isCompleted ? (
+                                         <div className="module-icon me-3">
+                                           <FaCertificate className="text-white" style={{ fontSize: '20px' }} />
+                                         </div>
+                                       ) : (
+                                         <div className="module-icon me-3">
+                                           <FaChalkboardTeacher className="text-white" style={{ fontSize: '20px' }} />
+                                         </div>
+                                       )
+                                     ) : (
+                                       <div className="module-icon me-3 opacity-50">
+                                         <FaLock className="text-white" style={{ fontSize: '20px' }} />
+                                       </div>
+                                     )}
+                                     <span className={!isAccessible ? 'text-gray-300' : 'text-white'}>
+                                       Module {module.order}: {module.mod_title}
+                                     </span>
+                                     {!isAccessible && (
+                                       <span className="ms-auto text-sm text-gray-300">
+                                         Complete previous module to unlock
+                                       </span>
+                                     )}
+                                   </div>
+                                 </Accordion.Header>
+                                 <Accordion.Body>
+                                   {module.sub_modules && module.sub_modules.length > 0 ? (
+                                     <div className="sub-modules-container">
+                                        {module.sub_modules.map((subModule, subModuleIndex) => (
+                                         <div key={subModule.sub_module_id} className="book-card mb-4">
+                                           <div className="book-header d-flex align-items-center mb-3">
+                                             <div className="book-icon me-3">
+                                               {subModuleIndex % 3 === 0 ? (
+                                                 <FaBook className="text-primary" style={{ fontSize: '24px' }} />
+                                               ) : subModuleIndex % 3 === 1 ? (
+                                                 <FaChalkboardTeacher className="text-primary" style={{ fontSize: '24px' }} />
+                                               ) : (
+                                                 <FaGraduationCap className="text-primary" style={{ fontSize: '24px' }} />
+                                               )}
+                                             </div>
+                                             <div className="book-title flex-grow-1">
+                                               <h5 className="mb-1 fw-bold text-primary">
+                                              {subModule.order}: {subModule.sub_modu_title}
+                                               </h5>
+                                               {subModule.sub_modu_description && (
+                                                 <p className="mb-0 text-muted small">
+                                                   {subModule.sub_modu_description}
+                                                 </p>
+                                               )}
+                                             </div>
+                                           </div>
+                                           
+                                           <Row className="g-4">
                                             {/* Alternating layout: Content and Image swap sides for each sub-module */}
                                             {subModuleIndex % 2 === 0 ? (
                                               <>
@@ -575,59 +820,75 @@ const UserDashboard = () => {
                                     </div>
                                   )}
                                   
-                                   <div className="mt-4 d-flex justify-content-between align-items-center">
-                                     <div>
-                                       {isCompleted && (
-                                         <div className="d-flex align-items-center text-success">
-                                           <FaCheckCircle className="me-2" />
-                                           <span className="fw-semibold">Module Completed</span>
-                                         </div>
-                                       )}
-                                     </div>
-                                     {isAccessible ? (
-                                       <div className="d-flex gap-2">
-                                         {!isCompleted ? (
-                                           <>
-                                             <Button 
-                                               variant="success" 
-                                               onClick={() => markModuleComplete(moduleIndex)}
-                                               className="d-flex align-items-center px-4 py-2"
-                                             >
-                                               <FaCheckCircle className="me-2" />
-                                               Complete Module
-                                             </Button>
-                                             <Button 
-                                               variant="primary" 
-                                               onClick={() => handleTestClick(moduleIndex)}
-                                               className="d-flex align-items-center px-4 py-2"
-                                               disabled={!isCompleted}
-                                             >
-                                               <FaQuestionCircle className="me-2" />
-                                               Take Test
-                                             </Button>
-                                           </>
-                                         ) : (
-                                           <Button 
-                                             variant="success" 
-                                             onClick={() => handleTestClick(moduleIndex)}
-                                             className="d-flex align-items-center px-4 py-2"
-                                           >
+                                      <div className="mt-4 d-flex justify-content-between align-items-center">
+                                       <div>
+                                         {isCompleted || isTestPassed ? (
+                                           <div className="d-flex align-items-center text-success">
                                              <FaCheckCircle className="me-2" />
-                                             Take Test
-                                           </Button>
+                                             <span className="fw-semibold">Module Completed</span>
+                                             {isTestPassed && moduleProgressData?.test_score !== null && moduleProgressData?.test_score !== undefined && (
+                                               <span className="ms-3 text-success">
+                                                 Score: {moduleProgressData.test_score}%
+                                               </span>
+                                             )}
+                                           </div>
+                                         ) : (
+                                           !isCompleted && (
+                                             <div className="d-flex align-items-center text-warning">
+                                               <FaClock className="me-2" />
+                                               <span className="fw-semibold">Module In Progress</span>
+                                             </div>
+                                           )
                                          )}
                                        </div>
-                                     ) : (
-                                       <Button 
-                                         variant="secondary" 
-                                         disabled
-                                         className="d-flex align-items-center px-4 py-2"
-                                       >
-                                         <FaLock className="me-2" />
-                                         Locked
-                                       </Button>
-                                     )}
-                                   </div>
+                                       {isAccessible ? (
+                                         <div className="d-flex gap-2">
+                                           {isTestPassed ? (
+                                             // If test is passed, show nothing (already completed)
+                                             null
+                                           ) : !isCompleted && !isOngoing ? (
+                                             <>
+                                               <Button 
+                                                 variant="success" 
+                                                 onClick={() => markModuleComplete(moduleIndex)}
+                                                 className="d-flex align-items-center px-4 py-2"
+                                               >
+                                                 <FaCheckCircle className="me-2" />
+                                                 Complete Module
+                                               </Button>
+                                               <Button 
+                                                 variant={testButtonVariant} 
+                                                 onClick={() => handleTestClick(moduleIndex)}
+                                                 className="d-flex align-items-center px-4 py-2"
+                                                 disabled={!isCompleted && !isOngoing || isTestDisabled}
+                                               >
+                                                 <FaQuestionCircle className="me-2" />
+                                                 {testButtonText}
+                                               </Button>
+                                             </>
+                                           ) : (
+                                             <Button 
+                                               variant={testButtonVariant} 
+                                               onClick={() => handleTestClick(moduleIndex)}
+                                               className="d-flex align-items-center px-4 py-2"
+                                               disabled={isTestDisabled}
+                                             >
+                                               <FaCheckCircle className="me-2" />
+                                               {testButtonText}
+                                             </Button>
+                                           )}
+                                         </div>
+                                       ) : (
+                                         <Button 
+                                           variant="secondary" 
+                                           disabled
+                                           className="d-flex align-items-center px-4 py-2"
+                                         >
+                                           <FaLock className="me-2" />
+                                           Locked
+                                         </Button>
+                                       )}
+                                     </div>
                                 </Accordion.Body>
                               </Accordion.Item>
                             )
@@ -665,19 +926,20 @@ const UserDashboard = () => {
                                 position: 'relative',
                                 background: 'linear-gradient(135deg, #667eea, #764ba2)'
                               }}>
-                                {course.is_completed ? (
+                                {/* Check if all modules are completed instead of relying on course.is_completed */}
+                                {isAllModulesCompleted(course) ? (
                                   <FaCertificate className="text-white" style={{ fontSize: '56px', animation: 'pulse 2s infinite' }} />
                                 ) : (
                                   <FaGraduationCap className="text-white" style={{ fontSize: '56px', animation: 'float 3s ease-in-out infinite' }} />
                                 )}
-                                {course.is_completed && (
+                                {isAllModulesCompleted(course) && (
                                   <div className="position-absolute top-0 end-0 p-2">
                                     <Badge bg="success" className="p-3 badge-custom">
                                       <FaCheckCircle className="me-1" /> Completed
                                     </Badge>
                                   </div>
                                 )}
-                                {!course.is_completed && (
+                                {!isAllModulesCompleted(course) && (
                                   <div className="position-absolute top-0 start-0 p-2">
                                     <Badge bg="warning" className="p-2 badge-custom">
                                       <FaClock className="me-1" /> In Progress
@@ -699,7 +961,7 @@ const UserDashboard = () => {
                                       {course.enrolled_at ? new Date(course.enrolled_at).toLocaleDateString() : 'N/A'}
                                     </span>
                                   </div>
-                                  {course.is_completed && course.completed_at && (
+                                  {isAllModulesCompleted(course) && course.completed_at && (
                                     <div className="d-flex justify-content-between align-items-center mb-2">
                                       <span className="text-muted small">
                                         <FaAward className="me-1" /> Completed
@@ -722,7 +984,7 @@ const UserDashboard = () => {
                                     </div>
                                   </div>
                                   <Button 
-                                    variant={course.is_completed ? "success" : "primary"} 
+                                    variant={isAllModulesCompleted(course) ? "success" : "primary"} 
                                     onClick={() => handleViewCourse(course)}
                                     className="d-flex align-items-center btn-custom"
                                     style={{
@@ -730,7 +992,7 @@ const UserDashboard = () => {
                                       border: 'none'
                                     }}
                                   >
-                                    {course.is_completed ? (
+                                    {isAllModulesCompleted(course) ? (
                                       <>
                                         <FaEye className="me-2" />
                                         Start Course
