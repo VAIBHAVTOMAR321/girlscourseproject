@@ -26,7 +26,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Navigate to="/login" />} />
-          <Route path="/register" element={<Registration />} />
+          <Route path="/Registration" element={<Registration />} />
           <Route path="/login" element={<Login />} />
           
           {/* User Dashboard Routes - Accessible to all authenticated users */}

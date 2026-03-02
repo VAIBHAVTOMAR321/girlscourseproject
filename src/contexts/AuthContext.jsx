@@ -64,13 +64,8 @@ export const AuthProvider = ({ children }) => {
               });
 
               const newAccessToken = response.data.access;
-              // Also check if a new refresh token is provided
-              const newRefreshToken = response.data.refresh || refreshToken;
-              
               setAccessToken(newAccessToken);
-              setRefreshToken(newRefreshToken);
               sessionStorage.setItem('accessToken', newAccessToken);
-              sessionStorage.setItem('refreshToken', newRefreshToken);
               axios.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
 
               // Resolve all queued requests
@@ -84,12 +79,7 @@ export const AuthProvider = ({ children }) => {
 
             } catch (refreshError) {
               console.error('Refresh token failed:', refreshError);
-              // If refresh token is also expired or invalid, log out
-              if (refreshError.response?.status === 401) {
-                console.log('Refresh token expired, logging out');
-                logout();
-              }
-              setIsRefreshing(false);
+              logout();
               return Promise.reject(refreshError);
             }
           } else {
@@ -113,34 +103,13 @@ export const AuthProvider = ({ children }) => {
     };
   }, [accessToken, refreshToken, isRefreshing, refreshQueue]);
 
-  // Check token expiration proactively
-  const checkTokenExpiration = () => {
-    if (!accessToken) return false;
-    
-    try {
-      // Parse JWT token to get expiration time
-      const tokenPayload = JSON.parse(atob(accessToken.split('.')[1]));
-      const currentTime = Date.now() / 1000;
-      
-      // If token expires in the next 5 minutes, refresh it
-      if (tokenPayload.exp < currentTime + 300) {
-        refreshAccessToken();
-        return true;
-      }
-      return false;
-    } catch (error) {
-      console.error('Error parsing token:', error);
-      return false;
-    }
-  };
-
   const login = (responseData) => {
     const { access, refresh, role, unique_id } = responseData;
     setIsAuthenticated(true);
     setUserRole(role);
     setAccessToken(access);
     setRefreshToken(refresh);
-    setUniqueId(uniqueId);
+    setUniqueId(unique_id);
 
     // Store tokens in session storage
     sessionStorage.setItem('accessToken', access);
@@ -158,7 +127,6 @@ export const AuthProvider = ({ children }) => {
     setAccessToken(null);
     setRefreshToken(null);
     setUniqueId(null);
-    setRefreshQueue([]);
 
     // Remove tokens from session storage
     sessionStorage.removeItem('accessToken');
@@ -171,34 +139,20 @@ export const AuthProvider = ({ children }) => {
   };
 
   const refreshAccessToken = async () => {
-    if (!refreshToken) {
-      logout();
-      return null;
-    }
-
     try {
       const response = await axios.post('https://brjobsedu.com/girls_course/girls_course_backend/api/refresh-token/', {
         refresh: refreshToken
       });
 
       const newAccessToken = response.data.access;
-      // Also check if a new refresh token is provided
-      const newRefreshToken = response.data.refresh || refreshToken;
-      
       setAccessToken(newAccessToken);
-      setRefreshToken(newRefreshToken);
       sessionStorage.setItem('accessToken', newAccessToken);
-      sessionStorage.setItem('refreshToken', newRefreshToken);
       axios.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
       
       return newAccessToken;
     } catch (error) {
       console.error('Refresh token failed:', error);
-      // If refresh token is also expired or invalid, log out
-      if (error.response?.status === 401) {
-        console.log('Refresh token expired, logging out');
-        logout();
-      }
+      logout();
       return null;
     }
   };
@@ -208,17 +162,6 @@ export const AuthProvider = ({ children }) => {
     studentEnrollment: 'https://brjobsedu.com/girls_course/girls_course_backend/api/student-entrollment/',
     courseModule: 'https://brjobsedu.com/girls_course/girls_course_backend/api/course-module/'
   };
-
-  // Check token expiration periodically
-  useEffect(() => {
-    if (!isAuthenticated || !accessToken) return;
-    
-    const interval = setInterval(() => {
-      checkTokenExpiration();
-    }, 60000); // Check every minute
-    
-    return () => clearInterval(interval);
-  }, [isAuthenticated, accessToken]);
 
   return (
     <AuthContext.Provider value={{ 
@@ -230,7 +173,6 @@ export const AuthProvider = ({ children }) => {
       login, 
       logout,
       refreshAccessToken,
-      checkTokenExpiration,
       apiEndpoints
     }}>
       {children}
