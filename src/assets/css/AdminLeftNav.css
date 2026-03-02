@@ -1,9 +1,14 @@
 /* Admin Left Navigation */
 .admin-left-nav {
-  background: #343a40;
-  min-height: 100vh;
-  transition: all 0.3s ease;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 250px;
   z-index: 1000;
+  background: #2c3e50;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
   border-right: 1px solid #dee2e6;
 }
 
@@ -97,7 +102,7 @@
 
 /* Compact sidebar for desktop */
 .admin-left-nav.compact {
-  width: 60px;
+  width: 60px !important;
 }
 
 .admin-left-nav.compact .nav-header {

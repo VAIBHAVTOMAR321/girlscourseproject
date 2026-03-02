@@ -9,6 +9,7 @@ const Enrollments = () => {
   const [enrollments, setEnrollments] = useState([])
   const [filteredEnrollments, setFilteredEnrollments] = useState([])
   const [loading, setLoading] = useState(true)
+  const [showSidebar, setShowSidebar] = useState(true)
   const [showViewModal, setShowViewModal] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [selectedEnrollment, setSelectedEnrollment] = useState(null)
@@ -152,12 +153,18 @@ const Enrollments = () => {
 
   if (loading) {
     return (
-      <div className="enrollments-page d-flex flex-column min-vh-100">
-        <AdminTopNav />
-        <div className="d-flex flex-grow-1 overflow-hidden">
-          <AdminLeftNav />
-          <div className="flex-grow-1 d-flex align-items-center justify-content-center main-content-wrapper">
-            <Spinner animation="border" variant="primary" style={{ width: '3rem', height: '3rem' }} />
+      <div className="admin-layout">
+        <div className="admin-wrapper d-flex">
+          <AdminLeftNav show={showSidebar} setShow={setShowSidebar} />
+          <div className={`admin-main-content flex-grow-1 ${!showSidebar ? 'sidebar-compact' : ''}`}>
+            <AdminTopNav />
+            <div className="content-area p-4">
+              <Container fluid>
+                <div className="d-flex align-items-center justify-content-center h-100">
+                  <Spinner animation="border" variant="primary" style={{ width: '3rem', height: '3rem' }} />
+                </div>
+              </Container>
+            </div>
           </div>
         </div>
       </div>
@@ -165,13 +172,13 @@ const Enrollments = () => {
   }
 
   return (
-    <div className="enrollments-page d-flex flex-column min-vh-100">
-      <AdminTopNav />
-      <div className="d-flex flex-grow-1 overflow-hidden">
-        <AdminLeftNav />
-        
-        <div className="flex-grow-1 main-content-wrapper p-4">
-          <Container fluid>
+    <div className="admin-layout">
+      <div className="admin-wrapper d-flex">
+        <AdminLeftNav show={showSidebar} setShow={setShowSidebar} />
+        <div className={`admin-main-content flex-grow-1 ${!showSidebar ? 'sidebar-compact' : ''}`}>
+          <AdminTopNav />
+          <div className="content-area p-4">
+            <Container fluid>
             <Row>
               <Col xs={12}>
                  {/* Search and Filter Section */}
@@ -338,11 +345,12 @@ const Enrollments = () => {
                          </ul>
                        </nav>
                      </Card.Footer>
-                   )}
-                </Card>
-              </Col>
-            </Row>
-          </Container>
+                    )}
+                 </Card>
+               </Col>
+             </Row>
+            </Container>
+          </div>
         </div>
       </div>
 

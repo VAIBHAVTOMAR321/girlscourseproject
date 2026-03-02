@@ -18,6 +18,8 @@ import { useAuth } from '../../contexts/AuthContext'
 const AdminDashboard = () => {
   const navigate = useNavigate()
   const isMounted = useRef(true) // Prevents double fetch in React 18 Strict Mode
+  // const [showSidebar, setShowSidebar] = useState(true)
+  const [showSidebar, setShowSidebar] = useState(true)
   
   const authData = useAuth();
   const authToken = authData?.accessToken;
@@ -560,34 +562,36 @@ const AdminDashboard = () => {
   // --- Render Helpers ---
 
   const renderDashboardView = () => (
-    <Row className="g-4">
-      <Col xs={12} md={6} lg={4}>
-        <Card className="stat-card h-100" onClick={handleEnrollmentsClick}>
-          <Card.Body className="d-flex align-items-center">
-            <div className="stat-icon-wrapper users me-3">
-              <FaUsers className="stat-icon" />
-            </div>
-            <div>
-              <h6 className="stat-label text-muted mb-1">Total Enrollments</h6>
-              <h2 className="stat-value mb-0">{loading ? <Spinner size="sm" animation="border" /> : enrollmentCount}</h2>
-            </div>
-          </Card.Body>
-        </Card>
-      </Col>
-      <Col xs={12} md={6} lg={4}>
-        <Card className="stat-card h-100" onClick={handleCoursesClick}>
-          <Card.Body className="d-flex align-items-center">
-            <div className="stat-icon-wrapper courses me-3">
-              <FaBook className="stat-icon" />
-            </div>
-            <div>
-              <h6 className="stat-label text-muted mb-1">Total Courses</h6>
-              <h2 className="stat-value mb-0">{loading ? <Spinner size="sm" animation="border" /> : courses.length}</h2>
-            </div>
-          </Card.Body>
-        </Card>
-      </Col>
-    </Row>
+    <div className="fade-in">
+      <Row className="g-4">
+        <Col xs={12} md={6} lg={4}>
+          <Card className="stat-card h-100 shadow-sm border-0" onClick={handleEnrollmentsClick}>
+            <Card.Body className="d-flex align-items-center">
+              <div className="stat-icon-wrapper users me-3">
+                <FaUsers className="stat-icon" />
+              </div>
+              <div>
+                <h6 className="stat-label text-muted mb-1">Total Enrollments</h6>
+                <h2 className="stat-value mb-0">{loading ? <Spinner size="sm" animation="border" /> : enrollmentCount}</h2>
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col xs={12} md={6} lg={4}>
+          <Card className="stat-card h-100 shadow-sm border-0" onClick={handleCoursesClick}>
+            <Card.Body className="d-flex align-items-center">
+              <div className="stat-icon-wrapper courses me-3">
+                <FaBook className="stat-icon" />
+              </div>
+              <div>
+                <h6 className="stat-label text-muted mb-1">Total Courses</h6>
+                <h2 className="stat-value mb-0">{loading ? <Spinner size="sm" animation="border" /> : courses.length}</h2>
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </div>
   )
 
   const renderCoursesListView = () => (
@@ -1188,20 +1192,21 @@ const AdminDashboard = () => {
   )
 
   return (
-    <div className="admin-layout d-flex flex-column min-vh-100">
-      <AdminTopNav />
-      <div className="d-flex flex-grow-1 overflow-hidden">
-        <AdminLeftNav />
-        
-        <div className="flex-grow-1 main-content-wrapper p-4 overflow-auto">
-          <Container fluid className="h-100">
-            {currentView === 'dashboard' && renderDashboardView()}
-            {currentView === 'list' && renderCoursesListView()}
-            {currentView === 'form' && renderCourseForm()}
-            {currentView === 'modules' && renderModulesView()}
-            {currentView === 'submodules' && renderSubmodulesView()}
-            {currentView === 'questions' && renderQuestionsView()}
-          </Container>
+    <div className="admin-layout">
+      <div className="admin-wrapper d-flex">
+        <AdminLeftNav show={showSidebar} setShow={setShowSidebar} />
+        <div className={`admin-main-content flex-grow-1 ${!showSidebar ? 'sidebar-compact' : ''}`}>
+          <AdminTopNav />
+          <div className="content-area p-4">
+            <Container fluid>
+              {currentView === 'dashboard' && renderDashboardView()}
+              {currentView === 'list' && renderCoursesListView()}
+              {currentView === 'form' && renderCourseForm()}
+              {currentView === 'modules' && renderModulesView()}
+              {currentView === 'submodules' && renderSubmodulesView()}
+              {currentView === 'questions' && renderQuestionsView()}
+            </Container>
+          </div>
         </div>
       </div>
 

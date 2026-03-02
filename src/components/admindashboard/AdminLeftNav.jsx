@@ -3,8 +3,7 @@ import { Nav, Button, Offcanvas } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import '../../assets/css/AdminLeftNav.css' // Import specific CSS
 
-const AdminLeftNav = () => {
-  const [show, setShow] = useState(true)
+const AdminLeftNav = ({ show, setShow }) => {
   const [showOffcanvas, setShowOffcanvas] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
 
@@ -40,7 +39,7 @@ const AdminLeftNav = () => {
           variant="light" 
           onClick={() => setShowOffcanvas(true)} 
           className="mobile-menu-btn"
-          style={{ position: 'fixed', top: '1rem', left: '1rem', zIndex: 1050, border: '1px solid #dee2e6' }}
+          style={{ position: 'fixed', top: '1rem', right: '1rem', zIndex: 1050, border: '1px solid #dee2e6' }}
           size="sm"
         >
           <i className="bi bi-list"></i>
