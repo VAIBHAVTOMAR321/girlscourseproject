@@ -142,30 +142,31 @@
   color: #667eea;
   transition: all 0.2s ease;
 }
-
-.logout-btn {
+.logout-btn{
   margin-right: 12px;
   font-size: 12px;
 }
-
 .admin-top-nav .mobile-menu-btn:hover {
   background: rgba(102, 126, 234, 0.2);
   border-color: #667eea;
 }
+/* Mobile-First Approach */
 
-/* Logout button styles */
-.admin-top-nav .logout-btn {
-  padding: 0.5rem 0.75rem !important;
-  font-size: 0.875rem !important;
-  border-radius: 8px !important;
-  display: flex !important;
-  align-items: center !important;
+/* 1. Show the element by default (for mobile) */
+/* --- CSS for your AdminTopNav.css file --- */
+
+/* 1. Hide the element by default (for desktop and larger screens) */
+.mobile-view {
+  display: none;
 }
 
-.admin-top-nav .logout-btn:hover {
-  background-color: #f8f9fa !important;
+/* 2. Create a media query for mobile devices */
+/* This rule will only apply when the browser window is 768px wide or smaller */
+@media (max-width: 767px) {
+  .mobile-view {
+    display: block; /* Or 'inline-block', 'flex', etc., depending on layout needs */
+  }
 }
-
 /* Responsive styles */
 @media (max-width: 767px) {
   .admin-top-nav {
@@ -202,10 +203,17 @@
     margin-right: 0 !important;
   }
 
+  /* Mobile logout button styles */
   .admin-top-nav .logout-btn {
-    padding: 0.4rem 0.6rem !important;
-    font-size: 0.8rem !important;
-    margin-right: 0.5rem !important;
+    padding: 0.5rem 0.75rem !important;
+    font-size: 0.875rem !important;
+    border-radius: 8px !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  .admin-top-nav .logout-btn:hover {
+    background-color: #f8f9fa !important;
   }
 }
 
