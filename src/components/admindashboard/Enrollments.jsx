@@ -47,7 +47,7 @@ const Enrollments = () => {
         setFilteredEnrollments(response.data.data) // Initialize filtered list
       }
     } catch (error) {
-      console.error('Error fetching enrollments:', error)
+      // Handle error silently
     } finally {
       setLoading(false)
     }
@@ -129,7 +129,6 @@ const Enrollments = () => {
       alert(`Password reset successfully for ${uniqueIds.length} student(s)!`)
       setSelectedEnrollments([])
     } catch (error) {
-      console.error('Error resetting password:', error)
       alert('Failed to reset password')
     }
   }
@@ -146,7 +145,6 @@ const Enrollments = () => {
       fetchEnrollments()
       alert('Enrollment deleted successfully!')
     } catch (error) {
-      console.error('Error deleting enrollment:', error)
       alert('Failed to delete enrollment')
     }
   }

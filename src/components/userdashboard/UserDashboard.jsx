@@ -30,16 +30,10 @@ const UserDashboard = () => {
     }
   }, [isAuthenticated, navigate, location])
 
-  // If not authenticated, don't render anything (will redirect)
-  if (!isAuthenticated) {
-    return null
-  }
-
   // Handle test completion from UserTest
   useEffect(() => {
     if (location.state && location.state.testCompleted) {
       const { moduleIndex } = location.state
-      console.log('Test completed for module index:', moduleIndex)
       if (!completedModules.includes(moduleIndex)) {
         setCompletedModules([...completedModules, moduleIndex])
       }
@@ -62,7 +56,6 @@ const UserDashboard = () => {
   // Fetch user's enrolled courses
   const fetchCourses = async () => {
     if (!uniqueId || !accessToken) {
-      console.log('Missing uniqueId or accessToken:', { uniqueId, accessToken })
       setLoading(false)
       return
     }
@@ -70,7 +63,6 @@ const UserDashboard = () => {
     try {
       setLoading(true)
       setError(null)
-      console.log('Fetching courses for student ID:', uniqueId)
       
       const response = await axios.get(
         `https://brjobsedu.com/girls_course/girls_course_backend/api/student-entrollment/?student_id=${uniqueId}`,
@@ -82,29 +74,14 @@ const UserDashboard = () => {
         }
       )
       
-      console.log('API response status:', response.status)
-      console.log('API response data:', response.data)
-      
       if (response.data.success && Array.isArray(response.data.data)) {
-        console.log('Received courses data:', response.data.data)
-        response.data.data.forEach(course => {
-          console.log('Course object details:', course)
-        })
         setCourses(response.data.data)
       } else {
-        console.error('API response error:', response.data)
         setError(response.data.message || 'Failed to fetch courses')
         setCourses([])
       }
     } catch (error) {
-      console.error('Error fetching courses:', error)
-      if (error.response) {
-        console.error('Response status:', error.response.status)
-        console.error('Response data:', error.response.data)
-        setError(error.response.data?.message || 'Failed to fetch courses')
-      } else {
-        setError('Network error while fetching courses')
-      }
+      setError('Network error while fetching courses')
       setCourses([])
     } finally {
       setLoading(false)
@@ -126,7 +103,6 @@ const UserDashboard = () => {
     try {
       setModulesLoading(true)
       setError(null)
-      console.log('Fetching modules for course ID:', courseId)
       
       const response = await axios.get(
         `https://brjobsedu.com/girls_course/girls_course_backend/api/course-module/?course_id=${courseId}`,
@@ -137,26 +113,14 @@ const UserDashboard = () => {
         }
       )
       
-      console.log('Modules API response status:', response.status)
-      console.log('Modules API response data:', response.data)
-      
       if (response.data.success && response.data.data) {
-        console.log('Setting course modules:', response.data.data)
         setCourseModules(response.data.data)
       } else {
-        console.error('API response error:', response.data)
         setError(response.data.message || 'Failed to fetch course modules')
         setCourseModules(null)
       }
     } catch (error) {
-      console.error('Error fetching course modules:', error)
-      if (error.response) {
-        console.error('Response status:', error.response.status)
-        console.error('Response data:', error.response.data)
-        setError(error.response.data?.message || 'Failed to fetch course modules')
-      } else {
-        setError('Network error while fetching modules')
-      }
+      setError('Network error while fetching modules')
       setCourseModules(null)
     } finally {
       setModulesLoading(false)
@@ -165,11 +129,7 @@ const UserDashboard = () => {
 
    // Handle Start Course button click
   const handleViewCourse = async (course) => {
-    console.log('Start Course clicked for:', course)
-    console.log('Course ID:', course.course_id)
-    
     if (!course.course_id) {
-      console.error('Course object missing course_id:', course)
       setError('Course ID not available')
       return
     }
@@ -214,7 +174,6 @@ const UserDashboard = () => {
 
   // Navigate to module test
   const handleTestClick = (moduleIndex) => {
-    console.log('Navigating to test for module index:', moduleIndex)
     const currentModule = courseModules.modules[moduleIndex]
     const isLastModule = moduleIndex === courseModules.modules.length - 1
     navigate('/UserTest', {
@@ -276,7 +235,6 @@ const UserDashboard = () => {
         alert('Failed to generate certificate')
       }
     } catch (error) {
-      console.error('Error generating certificate:', error)
       alert('Failed to generate certificate. Please try again.')
     }
   }
@@ -327,11 +285,10 @@ const UserDashboard = () => {
       )
 
       if (response.data.success && Array.isArray(response.data.data)) {
-        console.log('Module progress data:', response.data.data)
         setModuleProgress(response.data.data)
       }
     } catch (error) {
-      console.error('Error fetching module progress:', error)
+      // Handle error silently
     } finally {
       setProgressLoading(false)
     }
@@ -368,7 +325,6 @@ const UserDashboard = () => {
         alert('Module marked as complete successfully!')
       }
     } catch (error) {
-      console.error('Error marking module complete:', error)
       // Show failure alert
       alert('Failed to mark module as complete. Please try again.')
       setError('Failed to mark module as complete')
@@ -445,8 +401,6 @@ const UserDashboard = () => {
                       </div>
                     ) : courseModules && courseModules.modules ? (
                       <div>
-                        {console.log('Course Modules Data:', courseModules)}
-                       
                         <Accordion defaultActiveKey="0" className="course-accordion">
                           {courseModules.modules.map((module, moduleIndex) => {
                             const isAccessible = isModuleAccessible(moduleIndex)
@@ -657,7 +611,7 @@ const UserDashboard = () => {
                                                           className="book-image w-100 h-100"
                                                           style={{ objectFit: 'cover' }}
                                                           onError={(e) => {
-                                                            console.error('Image loading error:', e.target.src);
+
                                                             e.target.onerror = null;
                                                             e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"%3E%3Crect fill="%23f8f9fa" width="400" height="300"/%3E%3Ctext fill="%236c757d" font-family="Arial" font-size="18" x="50%25" y="50%25" text-anchor="middle" dy=".3em"%3EImage Not Available%3C/text%3E%3C/svg%3E';
                                                           }}
@@ -700,7 +654,6 @@ const UserDashboard = () => {
                                                           className="book-image w-100 h-100"
                                                           style={{ objectFit: 'cover' }}
                                                           onError={(e) => {
-                                                            console.error('Image loading error:', e.target.src);
                                                             e.target.onerror = null;
                                                             e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"%3E%3Crect fill="%23f8f9fa" width="400" height="300"/%3E%3Ctext fill="%236c757d" font-family="Arial" font-size="18" x="50%25" y="50%25" text-anchor="middle" dy=".3em"%3EImage Not Available%3C/text%3E%3C/svg%3E';
                                                           }}

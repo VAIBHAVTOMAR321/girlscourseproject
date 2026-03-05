@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Navbar, Nav, Dropdown, Button } from 'react-bootstrap'
+import axios from 'axios'
 import { useAuth } from '../../contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import '../../assets/css/UserTopNav.css'
@@ -16,18 +17,14 @@ const UserTopNav = ({ onMenuToggle, isMobile }) => {
     const fetchUserData = async () => {
       try {
         setLoading(true)
-        const response = await fetch(`https://brjobsedu.com/girls_course/girls_course_backend/api/all-registration/?student_id=${uniqueId}`, {
-          headers: {
-            'Authorization': `Bearer ${accessToken}`
-          }
-        })
-        const data = await response.json()
+        const response = await axios.get(`https://brjobsedu.com/girls_course/girls_course_backend/api/all-registration/?student_id=${uniqueId}`)
+        const { data } = response
         
         if (data.success) {
           setUserData(data.data)
         }
       } catch (error) {
-        console.error('Error fetching user data:', error)
+        // Handle error silently
       } finally {
         setLoading(false)
       }

@@ -95,7 +95,6 @@ const AdminDashboard = () => {
 
   const fetchData = async () => {
     if (!authToken) {
-      console.warn('Auth token not available, skipping data fetch')
       setLoading(false)
       return
     }
@@ -103,36 +102,28 @@ const AdminDashboard = () => {
     setLoading(true)
     try {
       const config = getAuthConfig()
-      console.log('Fetching dashboard data with token:', authToken.substring(0, 10) + '...')
       
       // Fetch enrollment count
       try {
         const enrollRes = await axios.get('https://brjobsedu.com/girls_course/girls_course_backend/api/all-registration/', config)
-        console.log('Enrollments response:', enrollRes.data)
         if (enrollRes.data && enrollRes.data.success) {
           setEnrollmentCount(enrollRes.data.data.length)
-          console.log('Set enrollment count to:', enrollRes.data.data.length)
         }
       } catch (enrollError) {
-        console.error('Error fetching enrollments:', enrollError)
         setEnrollmentCount(0)
       }
 
       // Fetch courses data from new endpoint
       try {
         const courseRes = await axios.get('https://brjobsedu.com/girls_course/girls_course_backend/api/course-items/', config)
-        console.log('Courses response:', courseRes.data)
         if (courseRes.data && courseRes.data.success) {
           setCourses(courseRes.data.data)
-          console.log('Set courses to:', courseRes.data.data.length, 'courses')
         }
       } catch (courseError) {
-        console.error('Error fetching courses:', courseError)
         setCourses([])
       }
 
     } catch (error) {
-      console.error('Error in fetchData:', error)
       // Fallback data in case of error
       setEnrollmentCount(0)
       setCourses([])
@@ -160,7 +151,6 @@ const AdminDashboard = () => {
         setSelectedCourse(response.data.data)
       }
     } catch (error) {
-      console.error('Error fetching course details:', error)
       alert('Failed to fetch course details. Please check the console for details.')
     }
     setShowModal(true)
@@ -184,7 +174,6 @@ const AdminDashboard = () => {
         })
         fetchData()
       } catch (error) {
-        console.error('Error deleting course:', error)
         alert('Failed to delete course. Please check the console for details.')
       }
     }
@@ -210,7 +199,6 @@ const AdminDashboard = () => {
         setModules(response.data.data)
       }
     } catch (error) {
-      console.error('Error fetching modules:', error)
       alert('Failed to fetch modules. Please check the console for details.')
     } finally {
       setLoadingModules(false)
@@ -252,7 +240,6 @@ const AdminDashboard = () => {
       })
       fetchModules(moduleViewData.course.course_id)
     } catch (error) {
-      console.error('Error saving module:', error)
       if (error.response) {
         alert(`Failed: ${error.response.data.message || error.response.data.detail || 'Check console for details'}`)
       } else {
@@ -281,7 +268,6 @@ const AdminDashboard = () => {
         })
         fetchModules(moduleViewData.course.course_id)
       } catch (error) {
-        console.error('Error deleting module:', error)
         alert('Failed to delete module. Please check the console for details.')
       }
     }
@@ -314,7 +300,6 @@ const AdminDashboard = () => {
         setSubmodules(parsedSubmodules)
       }
     } catch (error) {
-      console.error('Error fetching submodules:', error)
       alert('Failed to fetch submodules. Please check the console for details.')
     } finally {
       setLoadingSubmodules(false)
@@ -377,7 +362,6 @@ const AdminDashboard = () => {
       fetchSubmodules(submodulesViewData.course.course_id, submodulesViewData.module.module_id)
       alert(submoduleFormData.sub_module_id ? 'Submodule updated successfully!' : 'Submodule added successfully!')
     } catch (error) {
-      console.error('Error saving submodule:', error)
       if (error.response) {
         alert(`Failed: ${error.response.data.message || error.response.data.detail || 'Check console for details'}`)
       } else {
@@ -409,7 +393,6 @@ const AdminDashboard = () => {
         })
         fetchSubmodules(submodulesViewData.course.course_id, submodulesViewData.module.module_id)
       } catch (error) {
-        console.error('Error deleting submodule:', error)
         alert('Failed to delete submodule. Please check the console for details.')
       }
     }
@@ -474,7 +457,6 @@ const AdminDashboard = () => {
         setQuestions(response.data.data)
       }
     } catch (error) {
-      console.error('Error fetching questions:', error)
       alert('Failed to fetch questions. Please check the console for details.')
     } finally {
       setLoadingQuestions(false)
@@ -511,7 +493,6 @@ const AdminDashboard = () => {
       fetchQuestions(questionsViewData.course.course_id, questionsViewData.module.module_id)
       alert('Question added successfully!')
     } catch (error) {
-      console.error('Error adding question:', error)
       if (error.response) {
         alert(`Failed: ${error.response.data.message || error.response.data.detail || 'Check console for details'}`)
       } else {
@@ -547,9 +528,7 @@ const AdminDashboard = () => {
       fetchData()
       setCurrentView('list')
     } catch (error) {
-      console.error('Error saving course:', error)
       if (error.response) {
-        console.error("Server Response Data:", error.response.data);
         alert(`Failed: ${error.response.data.message || error.response.data.detail || 'Check console for details'}`);
       } else {
         alert('Failed: ' + error.message);

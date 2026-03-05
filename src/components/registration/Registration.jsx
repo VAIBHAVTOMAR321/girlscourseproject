@@ -56,7 +56,6 @@ const Registration = () => {
             }
           })
           .catch((error) => {
-            console.error("Error fetching blocks:", error);
             setAvailableBlocks([]);
           })
           .finally(() => {
@@ -237,8 +236,6 @@ const Registration = () => {
         }
       });
 
-      console.log("Submitting registration data...");
-
       const response = await axios.post(
         "https://brjobsedu.com/girls_course/girls_course_backend/api/all-registration/",
         data,
@@ -250,8 +247,6 @@ const Registration = () => {
           timeout: 30000 // 30 second timeout
         }
       );
-
-      console.log("Registration response:", response.data);
       
       if (response.data.status) {
         setRegistrationSuccess(true);
@@ -260,14 +255,11 @@ const Registration = () => {
       }
 
     } catch (error) {
-      console.error("Registration error:", error);
-      
       let errorMessage = "An unknown error occurred.";
       
       if (error.response) {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
-        console.error("Error response:", error.response.data);
         
         if (error.response.data.errors) {
           // Handle field-specific validation errors

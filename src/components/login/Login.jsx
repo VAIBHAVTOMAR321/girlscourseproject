@@ -270,7 +270,7 @@ const Login = () => {
         </div>
       </Container>
 
-      <style jsx>{`
+      <style>{`
         .gov-portal-bg {
           background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
           min-height: 100vh;

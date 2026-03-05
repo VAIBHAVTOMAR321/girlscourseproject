@@ -52,7 +52,6 @@ const UserTest = () => {
         }
 
         if (!moduleId) {
-          console.error('Module ID not found')
           setLoading(false)
           setTestLoading(false)
           return
@@ -78,7 +77,7 @@ const UserTest = () => {
           setTimer(response.data.questions.length * 30)
         }
       } catch (error) {
-        console.error('Error fetching test questions:', error)
+        // Handle error silently
       } finally {
         setTestLoading(false)
         setLoading(false)
@@ -203,7 +202,6 @@ const UserTest = () => {
         }
       }
     } catch (error) {
-      console.error('Error submitting test:', error)
       alert('Failed to submit test. Please try again.')
     }
   }
@@ -259,7 +257,6 @@ const UserTest = () => {
         alert('Failed to generate certificate')
       }
     } catch (error) {
-      console.error('Error generating certificate:', error)
       alert('Failed to generate certificate. Please try again.')
     }
   }
