@@ -5,6 +5,8 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
+import 'bootstrap/dist/css/bootstrap.min.css'; // If you use Bootstrap CSS
+import 'bootstrap-icons/font/bootstrap-icons.css'; // <-- ADD THIS LINE
 import Registration from "./components/registration/Registration.jsx";
 import Login from "./components/login/Login.jsx";
 import UserLeftNav from "./components/userdashboard/UseLeftNav.jsx";
@@ -29,6 +31,7 @@ function App() {
           <Route path="/" element={<Navigate to="/login" />} />
           <Route path="/Registration" element={<Registration />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/UserDashboard" element={<UserDashboard />} />
           
           {/* User Dashboard Routes - Accessible to all authenticated users */}
           <Route
@@ -49,14 +52,14 @@ function App() {
             }
           />
           
-          <Route
+          {/* <Route
             path="/UserDashboard"
             element={
               <ProtectedRoute>
                 <UserDashboard />
               </ProtectedRoute>
             }
-          />
+          /> */}
           <Route
             path="/UserTest"
             element={
