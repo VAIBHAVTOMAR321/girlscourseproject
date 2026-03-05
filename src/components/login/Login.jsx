@@ -16,7 +16,7 @@ const Login = () => {
 
   const [formData, setFormData] = useState({
     email_or_phone: "",
-    aadhaar_no: "",
+    phone: "",
     password: "",
   });
 
@@ -39,8 +39,10 @@ const Login = () => {
     }
 
     if (role === "student") {
-      if (!formData.aadhaar_no.trim()) {
-        errors.aadhaar_no = "Aadhaar number is required";
+      if (!formData.phone.trim()) {
+        errors.phone = "Phone number is required";
+      } else if (!/^\d{10}$/.test(formData.phone.trim())) {
+        errors.phone = "Phone number must be exactly 10 digits";
       }
     }
 
@@ -64,7 +66,7 @@ const Login = () => {
             password: formData.password,
           }
         : {
-            aadhaar_no: formData.aadhaar_no,
+            phone: formData.phone,
             password: formData.password,
           };
 
@@ -198,19 +200,19 @@ const Login = () => {
                 {/* Student Field */}
                 {role === "student" && (
                   <Form.Group className="mb-3">
-                    <Form.Label className="form-label-gov">Aadhaar Number</Form.Label>
+                    <Form.Label className="form-label-gov">Phone Number</Form.Label>
                     <Form.Control
                       type="text"
-                      name="aadhaar_no"
-                      value={formData.aadhaar_no}
+                      name="phone"
+                      value={formData.phone}
                       onChange={handleChange}
-                      maxLength={12}
-                      placeholder="Enter 12 Digit Aadhaar Number"
+                      maxLength={10}
+                      placeholder="Enter 10 Digit Phone Number"
                       className="form-control-gov"
                     />
-                    {fieldErrors.aadhaar_no && (
+                    {fieldErrors.phone && (
                       <small className="text-danger">
-                        {fieldErrors.aadhaar_no}
+                        {fieldErrors.phone}
                       </small>
                     )}
                   </Form.Group>
