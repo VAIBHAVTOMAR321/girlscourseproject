@@ -246,11 +246,7 @@ const Login = () => {
                 </div>
               </Form>
 
-              <div className="text-center mt-4">
-                <small className="register-text">
-                  Don't have an account? <Link to="/Registration" className="register-link">Register Here</Link>
-                </small>
-              </div>
+
               
               <div className="security-notice mt-3">
                 <p className="text-center small text-muted">

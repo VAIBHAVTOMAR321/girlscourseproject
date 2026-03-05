@@ -7,7 +7,6 @@ import {
 } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css'; // If you use Bootstrap CSS
 import 'bootstrap-icons/font/bootstrap-icons.css'; // <-- ADD THIS LINE
-import Registration from "./components/registration/Registration.jsx";
 import Login from "./components/login/Login.jsx";
 import UserLeftNav from "./components/userdashboard/UseLeftNav.jsx";
 import UserDashboard from "./components/userdashboard/UserDashboard.jsx";
@@ -29,7 +28,6 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Navigate to="/login" />} />
-          <Route path="/Registration" element={<Registration />} />
           <Route path="/login" element={<Login />} />
           <Route path="/UserDashboard" element={<UserDashboard />} />
           
