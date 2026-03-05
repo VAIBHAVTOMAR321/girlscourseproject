@@ -113,8 +113,7 @@ const Login = () => {
             </div>
             
             <div className="header-center">
-              <h1 className="portal-title">National Education Portal</h1>
-              <p className="portal-subtitle">Department of Education & Training</p>
+              <h1 className="portal-title">National Education & Training Portal</h1>
             </div>
             
             <div className="header-right">
