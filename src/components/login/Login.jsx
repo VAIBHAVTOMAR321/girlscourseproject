@@ -116,21 +116,21 @@ const Login = () => {
     }
   };
 
-  const handleCourseClick = (course) => {
-    if (course.status === "active") {
-      // Navigate to registration page with course information
-      navigate("/Registration", { 
-        state: { 
-          courseName: course.name,
-          courseId: course.id,
-          fromCourse: true 
-        } 
-      });
-    } else {
-      // Show message for disabled courses
-      alert("This course is currently unavailable. Please check back later.");
-    }
-  };
+  // const handleCourseClick = (course) => {
+  //   if (course.status === "active") {
+  //     // Navigate to registration page with course information
+  //     navigate("/Registration", { 
+  //       state: { 
+  //         courseName: course.name,
+  //         courseId: course.id,
+  //         fromCourse: true 
+  //       } 
+  //     });
+  //   } else {
+  //     // Show message for disabled courses
+  //     alert("This course is currently unavailable. Please check back later.");
+  //   }
+  // };
 
   return (
     <div className="gov-portal-bg">
