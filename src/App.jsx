@@ -21,6 +21,7 @@ import UserProfile from "./components/userdashboard/UserProfile.jsx";
 
 
 import UserTest from "./components/userdashboard/UserTest.jsx";
+import Registration from "./components/registration/Registration.jsx";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
           <Route path="/" element={<Navigate to="/login" />} />
           <Route path="/login" element={<Login />} />
           <Route path="/UserDashboard" element={<UserDashboard />} />
+          <Route path="/Registration" element={<Registration />} />
           
           {/* User Dashboard Routes - Accessible to all authenticated users */}
           <Route
