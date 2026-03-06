@@ -8,13 +8,16 @@ import UseLeftNav from './UseLeftNav'
 import { FaCopy, FaArrowLeft, FaCheck, FaEnvelope, FaPhone, FaMapMarkerAlt, FaIdCard, FaCalendarAlt, FaBuilding, FaUserShield, FaUser } from 'react-icons/fa'
 
 const UserProfile = () => {
-  const { uniqueId, accessToken } = useAuth()
+  const { uniqueId, accessToken, updateProfilePhoto } = useAuth()
   const [userData, setUserData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [updateSuccess, setUpdateSuccess] = useState(false)
   const [copiedId, setCopiedId] = useState(false)
   const [showOffcanvas, setShowOffcanvas] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
+  const [selectedFile, setSelectedFile] = useState(null)
+  const [previewImage, setPreviewImage] = useState(null)
+  const [uploading, setUploading] = useState(false)
   const navigate = useNavigate()
 
   // Check mobile view
@@ -60,6 +63,62 @@ const UserProfile = () => {
     navigator.clipboard.writeText(text)
     setCopiedId(true)
     setTimeout(() => setCopiedId(false), 2000)
+  }
+
+  const handleFileChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0]
+      setSelectedFile(file)
+      
+      // Create preview
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        setPreviewImage(e.target.result)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const handleUpload = async () => {
+    if (!selectedFile) return
+
+    setUploading(true)
+    try {
+      const formData = new FormData()
+      formData.append('student_id', uniqueId)
+      formData.append('profile_photo', selectedFile)
+
+      const response = await axios.put(
+        'https://brjobsedu.com/girls_course/girls_course_backend/api/all-registration/',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+      )
+
+      if (response.data.success) {
+        // Refetch user data to ensure profile photo is updated correctly
+        const fetchResponse = await axios.get(`https://brjobsedu.com/girls_course/girls_course_backend/api/all-registration/?student_id=${uniqueId}`)
+        if (fetchResponse.data.success) {
+          setUserData(fetchResponse.data.data)
+          updateProfilePhoto(fetchResponse.data.data.profile_photo) // Update profile photo in context
+        }
+        
+        setUpdateSuccess(true)
+        setSelectedFile(null)
+        setPreviewImage(null)
+        setTimeout(() => setUpdateSuccess(false), 3000)
+      } else {
+        alert('Failed to update profile photo')
+      }
+    } catch (error) {
+      console.error('Error uploading profile photo:', error)
+      alert('Failed to update profile photo')
+    } finally {
+      setUploading(false)
+    }
   }
 
   return (
@@ -109,7 +168,14 @@ const UserProfile = () => {
                          <div className="d-flex align-items-center gap-2">
                            {/* Profile Image */}
                            <div className="profile-image-wrapper">
-                             {userData.profile_photo ? (
+                             {previewImage ? (
+                               <img 
+                                 src={previewImage} 
+                                 alt="Preview" 
+                                 className="profile-image rounded-circle" 
+                                 style={{ width: '60px', height: '60px', objectFit: 'cover' }}
+                               />
+                             ) : userData.profile_photo ? (
                                <img 
                                  src={`https://brjobsedu.com/girls_course/girls_course_backend/${userData.profile_photo}`} 
                                  alt="Profile" 
@@ -129,6 +195,33 @@ const UserProfile = () => {
                                {userData.status.charAt(0).toUpperCase() + userData.status.slice(1)}
                              </Badge>
                            </div>
+                         </div>
+                         <div className="d-flex gap-2">
+                           <input
+                             type="file"
+                             accept="image/*"
+                             onChange={handleFileChange}
+                             className="d-none"
+                             id="profilePhotoInput"
+                           />
+                           <Button 
+                             variant="outline-primary" 
+                             className="d-flex align-items-center"
+                             onClick={() => document.getElementById('profilePhotoInput').click()}
+                           >
+                             <FaUser className="me-2" />
+                             {selectedFile ? 'Change Photo' : 'Update Photo'}
+                           </Button>
+                           {selectedFile && (
+                             <Button 
+                               variant="primary" 
+                               className="d-flex align-items-center"
+                               onClick={handleUpload}
+                               disabled={uploading}
+                             >
+                               {uploading ? 'Uploading...' : 'Upload'}
+                             </Button>
+                           )}
                          </div>
                        </div>
                      </Card.Body>

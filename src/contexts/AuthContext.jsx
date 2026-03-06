@@ -75,6 +75,7 @@ export const AuthProvider = ({ children }) => {
   const [accessToken, setAccessToken] = useState(() => sessionStorage.getItem('accessToken'));
   const [refreshToken, setRefreshToken] = useState(() => sessionStorage.getItem('refreshToken'));
   const [uniqueId, setUniqueId] = useState(() => sessionStorage.getItem('uniqueId'));
+  const [profilePhoto, setProfilePhoto] = useState(null);
   
   // Use refs to manage refresh state (non-state so it works properly in callbacks)
   const isRefreshingRef = useRef(false);
@@ -314,6 +315,10 @@ export const AuthProvider = ({ children }) => {
     return proactiveRefreshToken(refreshTokenRef.current);
   };
 
+  const updateProfilePhoto = (photoUrl) => {
+    setProfilePhoto(photoUrl);
+  };
+
   return (
     <AuthContext.Provider value={{ 
       isAuthenticated, 
@@ -323,7 +328,9 @@ export const AuthProvider = ({ children }) => {
       uniqueId,
       login, 
       logout,
-      refreshAccessToken
+      refreshAccessToken,
+      profilePhoto,
+      updateProfilePhoto
     }}>
       {children}
     </AuthContext.Provider>
