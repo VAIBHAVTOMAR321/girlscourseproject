@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import '../../assets/css/UserTopNav.css'
 
 const UserTopNav = ({ onMenuToggle, isMobile }) => {
-  const { userRole, uniqueId, logout, isAuthenticated, accessToken } = useAuth()
+  const { userRole, uniqueId, logout, isAuthenticated, accessToken, profilePhoto, updateProfilePhoto } = useAuth()
   const navigate = useNavigate()
   const [showDropdown, setShowDropdown] = useState(false)
   const [userData, setUserData] = useState(null)
@@ -22,6 +22,7 @@ const UserTopNav = ({ onMenuToggle, isMobile }) => {
         
         if (data.success) {
           setUserData(data.data)
+          updateProfilePhoto(data.data.profile_photo) // Update profile photo in context
         }
       } catch (error) {
         // Handle error silently
@@ -33,7 +34,7 @@ const UserTopNav = ({ onMenuToggle, isMobile }) => {
     if (uniqueId) {
       fetchUserData()
     }
-  }, [uniqueId])
+  }, [uniqueId, updateProfilePhoto])
 
   const handleLogout = () => {
     logout()
@@ -81,10 +82,19 @@ const UserTopNav = ({ onMenuToggle, isMobile }) => {
             >
               <div className="user-info d-flex align-items-center">
                 <div className="user-avatar">
-                  <i className="bi bi-person-fill"></i>
+                  {!loading && profilePhoto ? (
+                    <img 
+                      src={`https://brjobsedu.com/girls_course/girls_course_backend/${profilePhoto}`} 
+                      alt="Profile" 
+                      className="user-avatar-img rounded-circle"
+                      style={{ width: '32px', height: '32px', objectFit: 'cover' }}
+                    />
+                  ) : (
+                    <i className="bi bi-person-fill"></i>
+                  )}
                 </div>
                 <div className="user-details">
-                  <span className="user-name">{loading ? 'Loading...' : (userData?.full_name || uniqueId)}</span>
+                  <span className="user-name">{loading ? 'Loading...' : (userData?.candidate_name || uniqueId)}</span>
                 </div>
               </div>
               <i className="bi bi-chevron-down ms-2"></i>
