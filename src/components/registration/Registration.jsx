@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Container, Button, Col, Form, Row, Alert, Spinner } from "react-bootstrap";
+import { Container, Button, Col, Form, Row, Alert, Spinner, Badge } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import "../../custom/style.css";
 import regBanner from "../../assets/reg-banner.jpg";
 import axios from "axios";
 import Logo from "../../assets/brainrock_logo.png";
 import "../../assets/css/registration.css"
+import "../../assets/css/login.css"
 
 const Registration = () => {
   // Static list of districts
@@ -24,6 +25,25 @@ const Registration = () => {
     "Bageshwar",
     "Champawat"
   ];
+
+  // Sample courses data
+  const courses = [
+    { id: 1, name: "Web Development", status: "active", enrolled: 245, icon: "💻", color: "#4285F4" },
+    { id: 2, name: "Data Science", status: "disabled", enrolled: 189, icon: "📊", color: "#34A853" },
+    { id: 3, name: "Machine Learning", status: "active", enrolled: 156, icon: "🤖", color: "#EA4335" },
+    { id: 4, name: "Digital Marketing", status: "disabled", enrolled: 201, icon: "📱", color: "#FBBC05" },
+    { id: 5, name: "Cloud Computing", status: "active", enrolled: 178, icon: "☁️", color: "#6C63FF" },
+    { id: 6, name: "Cybersecurity", status: "disabled", enrolled: 134, icon: "🔒", color: "#00ACC1" },
+    { id: 7, name: "Mobile Development", status: "active", enrolled: 167, icon: "📲", color: "#FF6D00" },
+    { id: 8, name: "Blockchain", status: "disabled", enrolled: 98, icon: "⛓️", color: "#7B1FA2" },
+    { id: 9, name: "UI/UX Design", status: "active", enrolled: 223, icon: "🎨", color: "#00897B" },
+    { id: 10, name: "DevOps", status: "disabled", enrolled: 145, icon: "⚙️", color: "#D32F2F" },
+  ];
+
+  // Duplicate courses array multiple times for seamless loop
+  const duplicatedCourses = [...courses, ...courses, ...courses, ...courses];
+  
+  const [hoveredCourse, setHoveredCourse] = useState(null);
 
   const [formData, setFormData] = useState({
     full_name: "",
@@ -360,15 +380,66 @@ const Registration = () => {
       </header>
 
       {/* Main Content with padding-top to account for fixed header */}
-      <Container className="mt-5 main-content-wrapper">
+       <Container className="mt-5 main-content-wrapper">
         <Row className="align-items-center p-4 shadow rounded bg-white official-card">
-          <Col lg={6} md={6} sm={12} className="text-center">
-            <div className="banner-container">
-              <img src={regBanner} alt="Registration" className="img-fluid rounded" />
-              <div className="banner-overlay">
-                <h3>Student Registration</h3>
-                <p>Create Your Account</p>
+          <Col lg={6} md={6} sm={12} className="course-marquee-container">
+            <div className="course-marquee-header">
+              <h3 className="text-center mb-3">Available Courses</h3>
+              <div className="header-underline mx-auto"></div>
+            </div>
+            
+            <div className="marquee-wrapper">
+              <div className="marquee-content">
+                {duplicatedCourses.map((course, index) => (
+                  <div
+                    key={`${course.id}-${index}`}
+                    className={`course-card ${course.status === "disabled" ? "disabled" : ""} ${
+                      hoveredCourse === course.id ? "hovered" : ""
+                    }`}
+                    onClick={() => {}}
+                    onMouseEnter={() => setHoveredCourse(course.id)}
+                    onMouseLeave={() => setHoveredCourse(null)}
+                    style={{
+                      background: course.status === "active" 
+                        ? `linear-gradient(135deg, ${course.color}15 0%, ${course.color}05 100%)` 
+                        : "#f5f5f5",
+                      borderLeft: `4px solid ${course.status === "active" ? course.color : "#ddd"}`
+                    }}
+                  >
+                    <div className="course-icon" style={{ color: course.color }}>
+                      {course.icon}
+                    </div>
+                    <div className="course-info">
+                      <h5 className="course-name">{course.name}</h5>
+                      <div className="course-meta">
+                        <Badge 
+                          bg={course.status === "active" ? "success" : "secondary"}
+                          className="me-2"
+                        >
+                          {course.status === "active" ? "Available" : "Locked"}
+                        </Badge>
+                        <span className="enrolled-count">
+                          <i className="fas fa-users"></i> {course.enrolled}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="course-action" style={{ color: course.status === "active" ? course.color : "#a0aec0" }}>
+                      {course.status === "active" ? (
+                        <i className="fas fa-arrow-right"></i>
+                      ) : (
+                        <i className="fas fa-lock"></i>
+                      )}
+                    </div>
+                  </div>
+                ))}
               </div>
+            </div>
+
+            <div className="marquee-footer text-center mt-3">
+              <p className="small text-muted">
+                <i className="fas fa-info-circle me-1"></i>
+                Click on any course to register and get started
+              </p>
             </div>
           </Col>
 
@@ -644,7 +715,7 @@ const Registration = () => {
                 </div>
               </Form>
 
-              <div className="text-center mt-4">
+              <div className="text-center account-style mt-4">
                 <small className="register-text">
                   Already have an account? <Link to="/login" className="register-link">Login Here</Link>
                 </small>
