@@ -582,9 +582,9 @@ const AdminDashboard = () => {
           </Button>
           <h4 className="d-inline-block align-middle mb-0">All Courses</h4>
         </div>
-        <Button variant="primary" onClick={handleAddCourseClick}>
+        {/* <Button variant="primary" onClick={handleAddCourseClick}>
           <FaPlus className="me-2" /> Add New Course
-        </Button>
+        </Button> */}
       </div>
 
       <Row className="g-4">

@@ -45,7 +45,7 @@ const UserProfile = () => {
           setUserData(data.data)
         }
       } catch (error) {
-        // Handle error silently
+        console.error('Error fetching user data:', error)
       } finally {
         setLoading(false)
       }
@@ -102,44 +102,41 @@ const UserProfile = () => {
             ) : userData ? (
               <Row>
                 <Col lg={12}>
-                  {/* Profile Header Card */}
-                   <Card className="shadow-sm mb-4 border-0 profile-header-card" style={{ borderRadius: '10px' }}>
-                    <Card.Body className="p-3">
-                      <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2">
-                        <div className="d-flex align-items-center gap-2">
-                          {/* Profile Image */}
-                          <div className="profile-image-wrapper">
-                            <div className="profile-image bg-gradient-primary rounded-circle d-flex align-items-center justify-content-center" style={{ width: '60px', height: '60px' }}>
-                              <FaUser className="text-white" style={{ fontSize: '24px' }} />
-                            </div>
-                          </div>
-                           <div>
-                            <h4 className="mb-1">{userData.full_name}</h4>
-                          
-                            <Badge bg="primary" className="px-2 py-1 small">
-                              {userData.status.charAt(0).toUpperCase() + userData.status.slice(1)}
-                            </Badge>
-                          </div>
-                        </div>
-                        <div className="d-flex gap-2">
-                          <OverlayTrigger placement="top" overlay={<Tooltip>View Aadhaar Card</Tooltip>}>
-                            <Button 
-                              variant="outline-info" 
-                              className="d-flex align-items-center" 
-                              onClick={() => window.open(`https://brjobsedu.com/girls_course/girls_course_backend/${userData.adharcard_file}`, '_blank')}
-                            >
-                              <FaIdCard className="me-2" />
-                              View Aadhaar
-                            </Button>
-                          </OverlayTrigger>
-                        </div>
-                      </div>
-                    </Card.Body>
+                   {/* Profile Header Card */}
+                    <Card className="shadow-sm mb-4 border-0 profile-header-card" style={{ borderRadius: '10px' }}>
+                     <Card.Body className="p-3">
+                       <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2">
+                         <div className="d-flex align-items-center gap-2">
+                           {/* Profile Image */}
+                           <div className="profile-image-wrapper">
+                             {userData.profile_photo ? (
+                               <img 
+                                 src={`https://brjobsedu.com/girls_course/girls_course_backend/${userData.profile_photo}`} 
+                                 alt="Profile" 
+                                 className="profile-image rounded-circle" 
+                                 style={{ width: '60px', height: '60px', objectFit: 'cover' }}
+                               />
+                             ) : (
+                               <div className="profile-image bg-gradient-primary rounded-circle d-flex align-items-center justify-content-center" style={{ width: '60px', height: '60px' }}>
+                                 <FaUser className="text-white" style={{ fontSize: '24px' }} />
+                               </div>
+                             )}
+                           </div>
+                            <div>
+                             <h4 className="mb-1">{userData.candidate_name}</h4>
+                           
+                             <Badge bg="primary" className="px-2 py-1 small">
+                               {userData.status.charAt(0).toUpperCase() + userData.status.slice(1)}
+                             </Badge>
+                           </div>
+                         </div>
+                       </div>
+                     </Card.Body>
                       <Card className="shadow-sm border-0 profile-details-card" style={{ borderRadius: '10px' }}>
                     <Card.Header className="bg-white border-bottom-0 pt-3">
                       <h6 className="mb-0">Profile Information</h6>
                     </Card.Header>
-                    <Card.Body className="p-3">
+                     <Card.Body className="p-3">
                       <Row>
                         <Col md={6} className="mb-2">
                           <div className="info-item">
@@ -154,54 +151,45 @@ const UserProfile = () => {
                           <div className="info-item">
                             <div className="info-label small">
                               <FaPhone className="me-2 text-muted" />
-                              Phone Number
+                              Mobile Number
                             </div>
-                            <div className="info-value small">{userData.phone}</div>
+                            <div className="info-value small">{userData.mobile_no}</div>
                           </div>
                         </Col>
                         <Col md={6} className="mb-2">
                           <div className="info-item">
                             <div className="info-label small">
-                              <FaIdCard className="me-2 text-muted" />
-                              Aadhaar Number
+                              <FaUserShield className="me-2 text-muted" />
+                              Guardian Name
                             </div>
-                            <div className="info-value small">{userData.aadhaar_no}</div>
+                            <div className="info-value small">{userData.guardian_name}</div>
+                          </div>
+                        </Col>
+                        <Col md={6} className="mb-2">
+                          <div className="info-item">
+                            <div className="info-label small">
+                              <FaCalendarAlt className="me-2 text-muted" />
+                              Date of Birth
+                            </div>
+                            <div className="info-value small">{userData.date_of_birth}</div>
                           </div>
                         </Col>
                         <Col md={6} className="mb-2">
                           <div className="info-item">
                             <div className="info-label small">
                               <FaBuilding className="me-2 text-muted" />
-                              Associate Wings
+                              Highest Education
                             </div>
-                            <div className="info-value small">{userData.associate_wings}</div>
+                            <div className="info-value small">{userData.highest_education}</div>
                           </div>
                         </Col>
                         <Col md={6} className="mb-2">
                           <div className="info-item">
                             <div className="info-label small">
                               <FaMapMarkerAlt className="me-2 text-muted" />
-                              State
+                              Address
                             </div>
-                            <div className="info-value small">{userData.state}</div>
-                          </div>
-                        </Col>
-                        <Col md={6} className="mb-2">
-                          <div className="info-item">
-                            <div className="info-label small">
-                              <FaMapMarkerAlt className="me-2 text-muted" />
-                              District
-                            </div>
-                            <div className="info-value small">{userData.district}</div>
-                          </div>
-                        </Col>
-                        <Col md={6} className="mb-3">
-                          <div className="info-item">
-                            <div className="info-label">
-                              <FaMapMarkerAlt className="me-2 text-muted" />
-                              Block
-                            </div>
-                            <div className="info-value">{userData.block}</div>
+                            <div className="info-value small">{userData.address}</div>
                           </div>
                         </Col>
                         <Col md={6} className="mb-3">

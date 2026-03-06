@@ -29,9 +29,9 @@ const Enrollments = () => {
       setCurrentPage(1) // Reset to first page when search term is cleared
     } else {
       const filtered = enrollments.filter(enrollment => 
-        enrollment.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        enrollment.candidate_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         enrollment.student_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        enrollment.phone.includes(searchTerm) ||
+        enrollment.mobile_no.includes(searchTerm) ||
         enrollment.email.toLowerCase().includes(searchTerm.toLowerCase())
       )
       setFilteredEnrollments(filtered)
@@ -39,7 +39,7 @@ const Enrollments = () => {
     }
   }, [searchTerm, enrollments])
 
-  const fetchEnrollments = async () => {
+   const fetchEnrollments = async () => {
     try {
       const response = await axios.get('https://brjobsedu.com/girls_course/girls_course_backend/api/all-registration/')
       if (response.data.success) {
@@ -47,7 +47,7 @@ const Enrollments = () => {
         setFilteredEnrollments(response.data.data) // Initialize filtered list
       }
     } catch (error) {
-      // Handle error silently
+      console.error('Error fetching enrollments:', error)
     } finally {
       setLoading(false)
     }
@@ -80,8 +80,8 @@ const Enrollments = () => {
     setShowViewModal(true)
   }
 
-  const handleResetPassword = (enrollment) => {
-    if (window.confirm(`Are you sure you want to reset password for ${enrollment.full_name} to Test@123?`)) {
+   const handleResetPassword = (enrollment) => {
+    if (window.confirm(`Are you sure you want to reset password for ${enrollment.candidate_name} to Test@123?`)) {
       resetPassword([enrollment.student_id])
     }
   }
@@ -245,8 +245,8 @@ const Enrollments = () => {
                                 />
                               </td>
                               <td className="ps-2"><span className="text-muted small fw-medium">{enrollment.student_id}</span></td>
-                              <td className="fw-medium text-dark">{enrollment.full_name}</td>
-                              <td className="small">{enrollment.phone}</td>
+                              <td className="fw-medium text-dark">{enrollment.candidate_name}</td>
+                              <td className="small">{enrollment.mobile_no}</td>
                               <td className="small text-muted">{enrollment.email}</td>
                               <td>
                                 <span className={`status-badge ${enrollment.status === 'active' ? 'bg-success' : 'bg-warning text-dark'}`}>
@@ -352,8 +352,8 @@ const Enrollments = () => {
         </div>
       </div>
 
-      {/* View Modal */}
-      <Modal show={showViewModal} onHide={() => setShowViewModal(false)} centered size="sm">
+       {/* View Modal */}
+      <Modal show={showViewModal} onHide={() => setShowViewModal(false)} centered size="lg">
         <Modal.Header closeButton className="border-bottom py-2 px-3">
           <Modal.Title className="fw-semibold fs-6">Student Details</Modal.Title>
         </Modal.Header>
@@ -365,24 +365,32 @@ const Enrollments = () => {
                 <span className="detail-value">{selectedEnrollment.student_id}</span>
               </div>
               <div className="detail-item">
-                <span className="detail-label">Full Name</span>
-                <span className="detail-value">{selectedEnrollment.full_name}</span>
+                <span className="detail-label">Candidate Name</span>
+                <span className="detail-value">{selectedEnrollment.candidate_name}</span>
               </div>
               <div className="detail-item">
-                <span className="detail-label">Aadhaar No</span>
-                <span className="detail-value">{selectedEnrollment.aadhaar_no}</span>
+                <span className="detail-label">Guardian Name</span>
+                <span className="detail-value">{selectedEnrollment.guardian_name}</span>
               </div>
               <div className="detail-item">
-                <span className="detail-label">Phone</span>
-                <span className="detail-value">{selectedEnrollment.phone}</span>
+                <span className="detail-label">Address</span>
+                <span className="detail-value text-break">{selectedEnrollment.address}</span>
+              </div>
+              <div className="detail-item">
+                <span className="detail-label">Date of Birth</span>
+                <span className="detail-value">{selectedEnrollment.date_of_birth}</span>
+              </div>
+              <div className="detail-item">
+                <span className="detail-label">Mobile No</span>
+                <span className="detail-value">{selectedEnrollment.mobile_no}</span>
               </div>
               <div className="detail-item">
                 <span className="detail-label">Email</span>
                 <span className="detail-value text-break">{selectedEnrollment.email}</span>
               </div>
               <div className="detail-item">
-                <span className="detail-label">District</span>
-                <span className="detail-value">{selectedEnrollment.district}</span>
+                <span className="detail-label">Highest Education</span>
+                <span className="detail-value">{selectedEnrollment.highest_education}</span>
               </div>
               <div className="detail-item">
                 <span className="detail-label">Status</span>
@@ -404,7 +412,7 @@ const Enrollments = () => {
 
 
 
-      {/* Delete Modal */}
+       {/* Delete Modal */}
       <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)} centered size="sm">
         <Modal.Header closeButton className="border-bottom py-2 px-3">
           <Modal.Title className="fw-semibold fs-6 text-danger">Delete Enrollment</Modal.Title>
@@ -412,7 +420,7 @@ const Enrollments = () => {
         <Modal.Body className="pt-2 px-3">
           {selectedEnrollment && (
             <p className="small">
-              Are you sure you want to delete <strong>{selectedEnrollment.full_name}</strong>?<br/>
+              Are you sure you want to delete <strong>{selectedEnrollment.candidate_name}</strong>?<br/>
               <span className="text-muted small">This action cannot be undone.</span>
             </p>
           )}
