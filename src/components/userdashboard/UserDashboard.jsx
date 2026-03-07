@@ -378,7 +378,7 @@ const UserDashboard = () => {
                       Back to My Courses
                     </Button>
                     
-                     <div className="d-flex justify-content-between align-items-center mb-3">
+                     <div className="d-flex justify-content-between align-items-center title-h mb-3">
                        <h4 className="mb-0">
                          <FaBook className="me-2 text-primary" />
                          {selectedCourse.course_name} - Modules
@@ -389,7 +389,7 @@ const UserDashboard = () => {
                         <Button 
                           variant="success" 
                           onClick={viewCertificate}
-                          className="d-flex align-items-center"
+                          className="d-flex align-items-center "
                         >
                           <FaCertificate className="me-2" />
                           View Certificate
@@ -399,7 +399,7 @@ const UserDashboard = () => {
                           variant="primary" 
                           onClick={generateCertificate}
                           disabled={!areAllModulesCompleted()}
-                          className="d-flex align-items-center"
+                          className="d-flex align-items-center button-view"
                         >
                           <FaCertificate className="me-2" />
                           Generate Certificate

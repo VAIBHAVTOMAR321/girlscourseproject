@@ -23,7 +23,7 @@
 }
 .in-prohrace{
     position: absolute;
-    left: 60px !important;
+    left: 96px !important;
     bottom: -12px;
     font-size: 8px !important;
 
@@ -45,4 +45,43 @@
 }
 .account-style small{
   color: #fff !important;
+}
+.section-header h2{
+color: #fff;
+}
+.official-card h1{
+color: #fff;
+font-size: 20px;
+}
+  
+
+/* This CSS applies ONLY when the viewport is exactly 500px wide */
+/* For screens up to 568px (mobile-first approach) */
+@media (max-width: 568px) {
+  .title-h h4 {
+    font-size: 12px !important;
+  }
+  .button-view {
+    font-size: 12px !important;
+  }
+}
+
+/* OR for screens 568px and wider */
+@media (min-width: 568px) {
+  .title-h h4 {
+    font-size: 12px !important;
+  }
+  .button-view {
+    font-size: 12px !important;
+  }
+}
+
+/* OR for a range around 568px */
+@media (min-width: 500px) and (max-width: 600px) {
+  .title-h h4 {
+    font-size: 12px !important;
+  }
+  .button-view {
+    font-size: 12px !important;
+  }
 }

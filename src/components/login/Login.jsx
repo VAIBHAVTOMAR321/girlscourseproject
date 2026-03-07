@@ -13,6 +13,7 @@ const Login = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [fieldErrors, setFieldErrors] = useState({});
   const [hoveredCourse, setHoveredCourse] = useState(null);
+  const [courseType, setCourseType] = useState("pad"); // New state for tab selection
   const navigate = useNavigate();
   const { login } = useAuth();
 
@@ -22,22 +23,25 @@ const Login = () => {
     password: "",
   });
 
-  // Sample courses data
+  // Sample courses data with type (pad/unpad)
   const courses = [
-    { id: 1, name: "Web Development", status: "active", enrolled: 245, icon: "💻", color: "#4285F4" },
-    { id: 2, name: "Data Science", status: "disabled", enrolled: 189, icon: "📊", color: "#34A853" },
-    { id: 3, name: "Machine Learning", status: "active", enrolled: 156, icon: "🤖", color: "#EA4335" },
-    { id: 4, name: "Digital Marketing", status: "disabled", enrolled: 201, icon: "📱", color: "#FBBC05" },
-    { id: 5, name: "Cloud Computing", status: "active", enrolled: 178, icon: "☁️", color: "#6C63FF" },
-    { id: 6, name: "Cybersecurity", status: "disabled", enrolled: 134, icon: "🔒", color: "#00ACC1" },
-    { id: 7, name: "Mobile Development", status: "active", enrolled: 167, icon: "📲", color: "#FF6D00" },
-    { id: 8, name: "Blockchain", status: "disabled", enrolled: 98, icon: "⛓️", color: "#7B1FA2" },
-    { id: 9, name: "UI/UX Design", status: "active", enrolled: 223, icon: "🎨", color: "#00897B" },
-    { id: 10, name: "DevOps", status: "disabled", enrolled: 145, icon: "⚙️", color: "#D32F2F" },
+    { id: 1, name: "Web Development", status: "active", enrolled: 245, icon: "💻", color: "#4285F4", type: "pad" },
+    { id: 2, name: "Data Science", status: "disabled", enrolled: 189, icon: "📊", color: "#34A853", type: "pad" },
+    { id: 3, name: "Machine Learning", status: "active", enrolled: 156, icon: "🤖", color: "#EA4335", type: "pad" },
+    { id: 4, name: "Digital Marketing", status: "disabled", enrolled: 201, icon: "📱", color: "#FBBC05", type: "pad" },
+    { id: 5, name: "Cloud Computing", status: "active", enrolled: 178, icon: "☁️", color: "#6C63FF", type: "pad" },
+    { id: 6, name: "Cybersecurity", status: "disabled", enrolled: 134, icon: "🔒", color: "#00ACC1", type: "unpad" },
+    { id: 7, name: "Mobile Development", status: "active", enrolled: 167, icon: "📲", color: "#FF6D00", type: "unpad" },
+    { id: 8, name: "Blockchain", status: "disabled", enrolled: 98, icon: "⛓️", color: "#7B1FA2", type: "unpad" },
+    { id: 9, name: "UI/UX Design", status: "active", enrolled: 223, icon: "🎨", color: "#00897B", type: "unpad" },
+    { id: 10, name: "DevOps", status: "disabled", enrolled: 145, icon: "⚙️", color: "#D32F2F", type: "unpad" },
   ];
 
-  // Duplicate courses array multiple times for seamless loop
-  const duplicatedCourses = [...courses, ...courses, ...courses, ...courses];
+  // Filter courses based on selected tab
+  const filteredCourses = courses.filter(course => course.type === courseType);
+
+  // Duplicate filtered courses array multiple times for seamless loop
+  const duplicatedCourses = [...filteredCourses, ...filteredCourses, ...filteredCourses, ...filteredCourses];
 
   const handleChange = (e) => {
     setFormData({
@@ -116,21 +120,21 @@ const Login = () => {
     }
   };
 
-  // const handleCourseClick = (course) => {
-  //   if (course.status === "active") {
-  //     // Navigate to registration page with course information
-  //     navigate("/Registration", { 
-  //       state: { 
-  //         courseName: course.name,
-  //         courseId: course.id,
-  //         fromCourse: true 
-  //       } 
-  //     });
-  //   } else {
-  //     // Show message for disabled courses
-  //     alert("This course is currently unavailable. Please check back later.");
-  //   }
-  // };
+  const handleCourseClick = (course) => {
+    if (course.status === "active") {
+      // Navigate to registration page with course information
+      navigate("/Registration", { 
+        state: { 
+          courseName: course.name,
+          courseId: course.id,
+          fromCourse: true 
+        } 
+      });
+    } else {
+      // Show message for disabled courses
+      alert("This course is currently unavailable. Please check back later.");
+    }
+  };
 
   return (
     <div className="gov-portal-bg">
@@ -168,6 +172,22 @@ const Login = () => {
             <div className="course-marquee-header">
               <h3 className="text-center mb-3">Available Courses</h3>
               <div className="header-underline mx-auto"></div>
+              
+              {/* Course Type Tabs */}
+              <div className="course-tabs mb-4">
+                <div 
+                  className={`course-tab ${courseType === "pad" ? "active" : ""}`}
+                  onClick={() => setCourseType("pad")}
+                >
+                  PAD Courses
+                </div>
+                <div 
+                  className={`course-tab ${courseType === "unpad" ? "active" : ""}`}
+                  onClick={() => setCourseType("unpad")}
+                >
+                  UNPAD Courses
+                </div>
+              </div>
             </div>
             
             <div className="marquee-wrapper">
@@ -329,6 +349,18 @@ const Login = () => {
                     <span>Login</span>
                   </Button>
                 </div>
+
+                {/* Register Link for UNPAD Courses */}
+                {courseType === "unpad" && (
+                  <div className="text-center mt-3">
+                    <p className="small">
+                      Don't have an account?{" "}
+                      <Link to="/Registration" className="text-primary">
+                        Register here
+                      </Link>
+                    </p>
+                  </div>
+                )}
               </Form>
 
               <div className="security-notice mt-3">
