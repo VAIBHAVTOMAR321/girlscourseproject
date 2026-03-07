@@ -96,9 +96,9 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas }) => {
                  <Nav.Link as={Link} to="/UserProfile" className="text-white">
                    <i className="bi bi-person-circle fs-5"></i>
                  </Nav.Link>
-                 <Nav.Link as={Link} to="/UserTest" className="text-white">
+                 {/* <Nav.Link as={Link} to="/UserTest" className="text-white">
                    <i className="bi bi-clipboard-check fs-5"></i>
-                 </Nav.Link>
+                 </Nav.Link> */}
                </Nav>
             </div>
           )}
