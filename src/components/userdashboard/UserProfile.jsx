@@ -32,6 +32,18 @@ const UserProfile = () => {
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
+  // Handle responsive margin for mobile
+  useEffect(() => {
+    const contentArea = document.querySelector('.flex-grow-1')
+    if (contentArea) {
+      if (isMobile) {
+        contentArea.style.marginLeft = '0px'
+      } else {
+        contentArea.style.marginLeft = '280px'
+      }
+    }
+  }, [isMobile])
+
   const handleMenuToggle = () => {
     setShowOffcanvas(!showOffcanvas)
   }
@@ -122,7 +134,7 @@ const UserProfile = () => {
   }
 
   return (
-    <div className="user-profile-wrapper min-vh-100">
+    <div className="d-flex flex-column">
       <UserTopNav onMenuToggle={handleMenuToggle} isMobile={isMobile} />
       <div className="d-flex flex-1">
         <UseLeftNav 
@@ -130,9 +142,8 @@ const UserProfile = () => {
           setShowOffcanvas={setShowOffcanvas} 
         />
         
-        {/* Main Content */}
-        <div className="flex-grow-1 p-4">
-          <Container fluid className="mt-4">
+        <div className="flex-grow-1" style={{ marginLeft: isMobile ? '0px' : '280px', padding: isMobile ? '10px' : '20px', minHeight: 'calc(100vh - 70px)' }}>
+          <Container fluid className='fixed-profile'>
             {/* Success Alert */}
             {updateSuccess && (
               <Alert variant="success" className="mb-4 animate-fade-in">
@@ -312,14 +323,8 @@ const UserProfile = () => {
         </div>
       </div>
 
-
-
-      {/* Custom Styles */}
+      {/* Handle responsive margin for mobile */}
       <style jsx>{`
-        .user-profile-wrapper {
-          background-color: #f8f9fa;
-        }
-
         .profile-image-wrapper {
           position: relative;
         }

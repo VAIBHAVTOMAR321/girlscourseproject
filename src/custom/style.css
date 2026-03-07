@@ -7,7 +7,9 @@
   position: fixed;
 }
 
-
+.official-card{
+    background: linear-gradient(135deg, #6092cb 0%, #6c8aae 100%);
+}
 .official-card::after {
   content: '';
   position: absolute;
@@ -25,6 +27,9 @@
     bottom: -12px;
     font-size: 8px !important;
 
+}
+.fixed-profile{
+  margin-top: 67px;
 }
 .container-top-fixed{
   margin-top: 30px;
