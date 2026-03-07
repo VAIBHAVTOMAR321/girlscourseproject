@@ -200,7 +200,7 @@ const Login = () => {
                   className={`course-tab ${courseType === "unPaid" ? "active" : ""}`}
                   onClick={() => setCourseType("unPaid")}
                 >
-                  UNPaid Courses
+                  UnPaid Courses
                 </div>
               </div>
             </div>
