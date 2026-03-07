@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Container, Button, Col, Form, Row, Alert, Spinner, Badge } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import "../../custom/style.css";
 import regBanner from "../../assets/reg-banner.jpg";
 import axios from "axios";
@@ -9,6 +9,11 @@ import "../../assets/css/registration.css"
 import "../../assets/css/login.css"
 
 const Registration = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Get course information from state
+  const { courseName, courseId, courseType: initialCourseType, fromCourse } = location.state || {};
   // Static list of districts
   const staticDistricts = [
     "Dehradun",
@@ -26,21 +31,40 @@ const Registration = () => {
     "Champawat"
   ];
 
-  // Sample courses data with type (pad/unpad)
-  const courses = [
-    { id: 1, name: "Web Development", status: "active", enrolled: 245, icon: "💻", color: "#4285F4", type: "pad" },
-    { id: 2, name: "Data Science", status: "disabled", enrolled: 189, icon: "📊", color: "#34A853", type: "pad" },
-    { id: 3, name: "Machine Learning", status: "active", enrolled: 156, icon: "🤖", color: "#EA4335", type: "pad" },
-    { id: 4, name: "Digital Marketing", status: "disabled", enrolled: 201, icon: "📱", color: "#FBBC05", type: "pad" },
-    { id: 5, name: "Cloud Computing", status: "active", enrolled: 178, icon: "☁️", color: "#6C63FF", type: "pad" },
-    { id: 6, name: "Cybersecurity", status: "disabled", enrolled: 134, icon: "🔒", color: "#00ACC1", type: "unpad" },
-    { id: 7, name: "Mobile Development", status: "active", enrolled: 167, icon: "📲", color: "#FF6D00", type: "unpad" },
-    { id: 8, name: "Blockchain", status: "disabled", enrolled: 98, icon: "⛓️", color: "#7B1FA2", type: "unpad" },
-    { id: 9, name: "UI/UX Design", status: "active", enrolled: 223, icon: "🎨", color: "#00897B", type: "unpad" },
-    { id: 10, name: "DevOps", status: "disabled", enrolled: 145, icon: "⚙️", color: "#D32F2F", type: "unpad" },
-  ];
+  // Fetch courses from API
+  const [courses, setCourses] = useState([]);
+  const [coursesLoading, setCoursesLoading] = useState(true);
 
-  const [courseType, setCourseType] = useState("pad"); // New state for tab selection
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await axios.get("https://brjobsedu.com/girls_course/girls_course_backend/api/course-items/");
+        if (response.data.success && response.data.data) {
+          // Process fetched courses without static type assignment
+          const processedCourses = response.data.data.map((course, index) => ({
+            id: course.id,
+            name: course.course_name,
+            course_id: course.course_id,
+            status: course.course_status === "unPaid" ? "active" : "active", // Set all courses to active
+            enrolled: Math.floor(Math.random() * 300) + 50, // Random enrolled count
+            icon: ["💻", "📊", "🤖", "📱", "☁️", "🔒", "📲", "⛓️", "🎨", "⚙️"][index % 10], // Cycle through icons
+            color: ["#4285F4", "#34A853", "#EA4335", "#FBBC05", "#6C63FF", "#00ACC1", "#FF6D00", "#7B1FA2", "#00897B", "#D32F2F"][index % 10], // Cycle through colors
+            type: course.course_status || "Paid" // Use API field or default to Paid
+          }));
+          setCourses(processedCourses);
+        }
+      } catch (error) {
+        console.error("Error fetching courses:", error);
+        setCourses([]); // Set to empty array if API fails
+      } finally {
+        setCoursesLoading(false);
+      }
+    };
+
+    fetchCourses();
+  }, []);
+
+  const [courseType, setCourseType] = useState(fromCourse && initialCourseType ? initialCourseType : "Paid"); // New state for tab selection
   const [hoveredCourse, setHoveredCourse] = useState(null);
 
   // Filter courses based on selected tab
@@ -279,6 +303,13 @@ const Registration = () => {
         }
       });
 
+      // Append course information if available
+      if (fromCourse && courseId && courseName) {
+        data.append("course_id", courseId);
+        data.append("course_name", courseName);
+        data.append("course_type", initialCourseType || courseType);
+      }
+
       console.log("Submitting registration data...");
 
       const response = await axios.post(
@@ -334,6 +365,18 @@ const Registration = () => {
     }
   };
 
+  const handleCourseClick = (course) => {
+    // Navigate to registration page with course information
+    navigate("/Registration", { 
+      state: { 
+        courseName: course.name,
+        courseId: course.course_id || course.id,
+        courseType: course.type,
+        fromCourse: true 
+      } 
+    });
+  };
+
   const handleSuccessAlertClose = () => {
     setRegistrationSuccess(false);
     setApiError("");
@@ -383,7 +426,7 @@ const Registration = () => {
         </Container>
       </header>
 
-      {/* Main Content with padding-top to account for fixed header */}
+      {/* Main Content with Paidding-top to account for fixed header */}
        <Container className="mt-5 main-content-wrapper">
         <Row className="align-items-center p-4 shadow rounded bg-white official-card">
            
@@ -396,64 +439,89 @@ const Registration = () => {
               {/* Course Type Tabs */}
               <div className="course-tabs mb-4">
                 <div 
-                  className={`course-tab ${courseType === "pad" ? "active" : ""}`}
-                  onClick={() => setCourseType("pad")}
+                  className={`course-tab ${courseType === "Paid" ? "active" : ""}`}
+                  onClick={() => setCourseType("Paid")}
                 >
-                  PAD Courses
+                  Paid Courses
                 </div>
                 <div 
-                  className={`course-tab ${courseType === "unpad" ? "active" : ""}`}
-                  onClick={() => setCourseType("unpad")}
+                  className={`course-tab ${courseType === "unPaid" ? "active" : ""}`}
+                  onClick={() => setCourseType("unPaid")}
                 >
-                  UNPAD Courses
+                  UNPaid Courses
                 </div>
               </div>
             </div>
             
             <div className="marquee-wrapper">
               <div className="marquee-content">
-                {duplicatedCourses.map((course, index) => (
-                  <div
-                    key={`${course.id}-${index}`}
-                    className={`course-card ${course.status === "disabled" ? "disabled" : ""} ${
-                      hoveredCourse === course.id ? "hovered" : ""
-                    }`}
-                    onClick={() => {}}
-                    onMouseEnter={() => setHoveredCourse(course.id)}
-                    onMouseLeave={() => setHoveredCourse(null)}
-                    style={{
-                      background: course.status === "active" 
-                        ? `linear-gradient(135deg, ${course.color}15 0%, ${course.color}05 100%)` 
-                        : "#f5f5f5",
-                      borderLeft: `4px solid ${course.status === "active" ? course.color : "#ddd"}`
-                    }}
-                  >
-                    <div className="course-icon" style={{ color: course.color }}>
-                      {course.icon}
-                    </div>
-                    <div className="course-info">
-                      <h5 className="course-name">{course.name}</h5>
-                      <div className="course-meta">
-                        <Badge 
-                          bg={course.status === "active" ? "success" : "secondary"}
-                          className="me-2"
-                        >
-                          {course.status === "active" ? "Available" : "Locked"}
-                        </Badge>
-                        <span className="enrolled-count">
-                          <i className="fas fa-users"></i> {course.enrolled}
-                        </span>
+                {coursesLoading ? (
+                  // Loading skeleton
+                  Array.from({ length: 8 }).map((_, index) => (
+                    <div
+                      key={`loading-${index}`}
+                      className="course-card disabled"
+                      style={{
+                        background: "#f5f5f5",
+                        borderLeft: "4px solid #ddd"
+                      }}
+                    >
+                      <div className="course-icon" style={{ color: "#ddd" }}>
+                        ⏳
+                      </div>
+                      <div className="course-info">
+                        <h5 className="course-name">Loading...</h5>
+                        <div className="course-meta">
+                          <Badge bg="secondary" className="me-2">
+                            Loading
+                          </Badge>
+                          <span className="enrolled-count">
+                            <i className="fas fa-users"></i> --
+                          </span>
+                        </div>
+                      </div>
+                      <div className="course-action" style={{ color: "#a0aec0" }}>
+                        <i className="fas fa-spinner fa-spin"></i>
                       </div>
                     </div>
-                    <div className="course-action" style={{ color: course.status === "active" ? course.color : "#a0aec0" }}>
-                      {course.status === "active" ? (
+                  ))
+                ) : duplicatedCourses.length > 0 ? (
+                  duplicatedCourses.map((course, index) => (
+                    <div
+                      key={`${course.id}-${index}`}
+                      className={`course-card ${course.status === "disabled" ? "disabled" : ""} ${
+                        hoveredCourse === course.id ? "hovered" : ""
+                      }`}
+                      onClick={() => handleCourseClick(course)}
+                      onMouseEnter={() => setHoveredCourse(course.id)}
+                      onMouseLeave={() => setHoveredCourse(null)}
+                      style={{
+                        background: course.status === "active" 
+                          ? `linear-gradient(135deg, ${course.color}15 0%, ${course.color}05 100%)` 
+                          : "#f5f5f5",
+                        borderLeft: `4px solid ${course.status === "active" ? course.color : "#ddd"}`
+                      }}
+                    >
+                      <div className="course-icon" style={{ color: course.color }}>
+                        {course.icon}
+                      </div>
+                      <div className="course-info">
+                        <h5 className="course-name">{course.name}</h5>
+                      </div>
+                      <div className="course-action" style={{ color: course.color }}>
                         <i className="fas fa-arrow-right"></i>
-                      ) : (
-                        <i className="fas fa-lock"></i>
-                      )}
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  // No courses message
+                  <div className="course-card disabled" style={{ width: "100%" }}>
+                    <div className="course-info">
+                      <h5 className="course-name text-center">No courses available</h5>
+                      <p className="text-center small text-muted">Please check back later for available courses</p>
                     </div>
                   </div>
-                ))}
+                )}
               </div>
             </div>
 
@@ -488,6 +556,17 @@ const Registration = () => {
               )}
 
               <Form onSubmit={handleSubmit} noValidate>
+                {/* Selected Course Display */}
+                {fromCourse && (
+                  <Form.Group className="mb-3">
+                    <Form.Label className="form-label-gov">Selected Course</Form.Label>
+                    <div className="p-3 bg-light rounded">
+                      <h6 className="mb-1">{courseName}</h6>
+                      <small className="text-muted">Course ID: {courseId}</small>
+                    </div>
+                  </Form.Group>
+                )}
+
                 <Row className="mb-3">
                   <Col md={6}>
                     <Form.Group>

@@ -247,11 +247,11 @@
           box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
         }
         
-        .course-card.disabled {
+        /* .course-card.disabled {
           opacity: 0.6;
           cursor: not-allowed;
           background: #f5f5f5 !important;
-        }
+        } */
         
         .course-card.disabled:hover {
           transform: none;
