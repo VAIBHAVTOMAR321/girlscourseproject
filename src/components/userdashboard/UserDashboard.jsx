@@ -881,12 +881,13 @@ const UserDashboard = () => {
                       <Row>
                         {courses.map((course, index) => (
                           <Col md={6} lg={4} key={course.id || index} className="mb-4">
-                            <Card className="shadow-sm border-0 h-100 course-card" style={{ borderRadius: '12px', overflow: 'hidden' }}>
+                            <Card className="shadow-sm border-0 h-100 " style={{ borderRadius: '12px', overflow: 'hidden' }}>
                               <div className="card-header-gradient" style={{ 
                                 height: '100%', 
                                 width:'100%',
                                 padding: '0',
                                 border: 'none',
+                                padding:'8px',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
