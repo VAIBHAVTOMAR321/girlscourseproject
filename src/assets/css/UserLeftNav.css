@@ -90,8 +90,9 @@
   width: 100%;
   max-width: 300px;
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
-  z-index: 1000;
+  z-index: 2000;
   height: 100vh;
+  pointer-events: auto;
 }
 
 .user-left-nav .mobile-menu {
