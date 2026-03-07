@@ -4,7 +4,15 @@
           min-height: 100vh;
           padding-bottom: 50px;
         }
+          .course-marquee-container-box {
+          padding: 20px;
+          background: linear-gradient(135deg, #f8f9ff 0%, #e8ecf4 100%);
+          border-radius: 10px;
+          position: relative;
+          overflow: hidden;
+          margin-bottom: 200px;
         
+        }
         .official-header-fixed {
           position: fixed;
           top: 0;

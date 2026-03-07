@@ -427,10 +427,10 @@ const Registration = () => {
       </header>
 
       {/* Main Content with Paidding-top to account for fixed header */}
-       <Container className="mt-5 main-content-wrapper">
-        <Row className="align-items-center p-4 shadow rounded bg-white official-card">
-           
-          <Col lg={6} md={6} sm={12} className="course-marquee-container">
+        <Container className="mt-5 main-content-wrapper">
+         <Row className="align-items-center p-4 shadow rounded bg-white official-card">
+            <h1>National Education</h1>
+          <Col lg={6} md={6} sm={12} className="course-marquee-container-box">
           
             <div className="course-marquee-header">
               <h3 className="text-center mb-3">Available Courses</h3>
