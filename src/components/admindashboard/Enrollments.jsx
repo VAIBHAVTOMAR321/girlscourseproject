@@ -215,7 +215,7 @@ const Enrollments = () => {
                   <Card.Body className="p-0">
                     <div className="table-responsive">
                       <Table hover className="custom-table align-middle mb-0">
-                        <thead className="table-light">
+                        <thead className="table-light custom-table">
                           <tr>
                             <th className="ps-3" style={{ width: '40px' }}>
                               <Form.Check 
