@@ -140,15 +140,20 @@ const Login = () => {
   };
 
   const handleCourseClick = (course) => {
-    // Navigate to registration page with course information
-    navigate("/Registration", { 
-      state: { 
-        courseName: course.name,
-        courseId: course.course_id || course.id,
-        courseType: course.type,
-        fromCourse: true 
-      } 
-    });
+    if (course.type === "Paid") {
+      // Redirect to external paid courses page
+      window.open("https://brainrock.in/", "_blank");
+    } else {
+      // Navigate to registration page with course information for unpaid courses
+      navigate("/Registration", { 
+        state: { 
+          courseName: course.name,
+          courseId: course.course_id || course.id,
+          courseType: course.type,
+          fromCourse: true 
+        } 
+      });
+    }
   };
 
   return (
