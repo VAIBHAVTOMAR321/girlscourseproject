@@ -335,6 +335,18 @@ const UserDashboard = () => {
     setShowOffcanvas(!showOffcanvas)
   }
 
+  // Handle responsive margin for mobile
+  useEffect(() => {
+    const contentArea = document.querySelector('.flex-grow-1')
+    if (contentArea) {
+      if (isMobile) {
+        contentArea.style.marginLeft = '0px'
+      } else {
+        contentArea.style.marginLeft = '280px'
+      }
+    }
+  }, [isMobile])
+
   return (
     <div className="d-flex flex-column">
       <UserTopNav onMenuToggle={handleMenuToggle} isMobile={isMobile} />
@@ -344,10 +356,11 @@ const UserDashboard = () => {
           setShowOffcanvas={setShowOffcanvas} 
         />
     
-        <Container fluid>
-          <Row>
-            <Col xs={12}>
-              <div className="mt-4">
+        <div className="flex-grow-1" style={{ marginLeft: isMobile ? '0px' : '280px', padding: isMobile ? '10px' : '20px', minHeight: 'calc(100vh - 70px)' }}>
+          <Container fluid className='container-top-fixed'>
+            <Row>
+              <Col xs={12}>
+                <div className="mt-4">
                 {error && (
                   <Alert variant="danger" className="mb-4" dismissible onClose={() => setError(null)}>
                     {error}
@@ -868,39 +881,42 @@ const UserDashboard = () => {
                       <Row>
                         {courses.map((course, index) => (
                           <Col md={6} lg={4} key={course.id || index} className="mb-4">
-                            <Card className="shadow-sm border-0 h-100 course-card" style={{ borderRadius: '10px' }}>
+                            <Card className="shadow-sm border-0 h-100 course-card" style={{ borderRadius: '12px', overflow: 'hidden' }}>
                               <div className="card-header-gradient" style={{ 
-                                height: '80px', 
-                                borderTopLeftRadius: '10px', 
-                                borderTopRightRadius: '10px',
+                                height: '100%', 
+                                width:'100%',
+                                padding: '0',
+                                border: 'none',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 position: 'relative',
-                                background: 'linear-gradient(135deg, #667eea, #764ba2)'
+                                background: isAllModulesCompleted(course) 
+                                  ? 'linear-gradient(135deg, #10b981, #059669)' // Green gradient for completed
+                                  : 'linear-gradient(135deg, #667eea, #764ba2)' // Purple gradient for in-progress
                               }}>
                                 {/* Check if all modules are completed instead of relying on course.is_completed */}
                                 {isAllModulesCompleted(course) ? (
-                                  <FaCertificate className="text-white" style={{ fontSize: '24px', animation: 'pulse 2s infinite' }} />
+                                  <FaCertificate className="text-white" style={{ fontSize: '28px', animation: 'pulse 2s infinite' }} />
                                 ) : (
-                                  <FaGraduationCap className="text-white" style={{ fontSize: '24px', animation: 'float 3s ease-in-out infinite' }} />
+                                  <FaGraduationCap className="text-white" style={{ fontSize: '28px', animation: 'float 3s ease-in-out infinite' }} />
                                 )}
                                 {isAllModulesCompleted(course) && (
-                                  <div className="position-absolute top-0 end-0 p-1">
-                                    <Badge bg="success" className="p-1 badge-custom fs-7">
+                                  <div className=" top-2 end-2">
+                                    <Badge bg="success" className="p-2 badge-custom fs-7">
                                       <FaCheckCircle className="me-1" /> Completed
                                     </Badge>
                                   </div>
                                 )}
                                 {!isAllModulesCompleted(course) && (
-                                  <div className="position-absolute top-0 start-0 p-1">
-                                    <Badge bg="warning" className="p-1 badge-custom fs-7">
+                                  <div className="position-absolute top-2 start-2">
+                                    <Badge bg="warning" className="p-2 badge-custom in-prohrace fs-7">
                                       <FaClock className="me-1" /> In Progress
                                     </Badge>
                                   </div>
                                 )}
                               </div>
-                              <Card.Body className="p-2">
+                              <Card.Body className="p-4">
                                 <div className="text-center mb-2">
                                   <h6 className="mb-1 course-title">{course.course_name}</h6>
                                 </div>
@@ -928,10 +944,10 @@ const UserDashboard = () => {
                                 
                                 <div className="d-flex justify-content-between align-items-center">
                                   <div className="d-flex align-items-center">
-                                    <div className="bg-gradient-primary text-white rounded-circle d-flex align-items-center justify-content-center" style={{ width: '45px', height: '45px', fontWeight: 'bold' }}>
+                                    <div className="bg-gradient-primary text-white rounded-circle d-flex align-items-center justify-content-center" >
                                       {course.student_name ? course.student_name.charAt(0) : 'S'}
                                     </div>
-                                    <div className="ms-3">
+                                    <div className="">
                                       <p className="mb-0 fw-semibold">{course.student_name || 'Student'}</p>
                                       <small className="text-muted">Learner</small>
                                     </div>
@@ -976,6 +992,7 @@ const UserDashboard = () => {
           </Row>
         </Container>
       </div>
+    </div>
     </div>
   )
 }

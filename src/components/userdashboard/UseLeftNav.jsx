@@ -14,9 +14,11 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas }) => {
       if (mobile) {
         setShow(false) // Hide sidebar on mobile by default
         setShowOffcanvas(false) // Close offcanvas on mobile resize
+        document.body.classList.remove('sidebar-compact')
       } else {
         setShow(true) // Show sidebar on desktop by default
         setShowOffcanvas(false) // Close offcanvas on desktop resize
+        document.body.classList.remove('sidebar-compact')
       }
     }
 
@@ -29,7 +31,19 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas }) => {
     if (isMobile) {
       setShowOffcanvas(!showOffcanvas)
     } else {
-      setShow(!show)
+      const newShow = !show
+      setShow(newShow)
+      // Directly update the content area margin based on sidebar state
+      const contentArea = document.querySelector('.flex-grow-1')
+      if (contentArea) {
+        if (newShow) {
+          // Show sidebar - set full margin
+          contentArea.style.marginLeft = '280px'
+        } else {
+          // Hide sidebar - set compact margin
+          contentArea.style.marginLeft = '100px'
+        }
+      }
     }
   }
 
@@ -39,7 +53,7 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas }) => {
       {!isMobile && (
         <>
           {show ? (
-            <div className="user-left-nav d-flex flex-column ">
+            <div className="user-left-nav d-flex flex-column fixed-sidebar">
               <div className="p-3 border-bottom border-light">
                 <Button 
                   variant="outline-light" 

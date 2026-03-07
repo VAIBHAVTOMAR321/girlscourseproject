@@ -4,6 +4,24 @@
   min-height: 100vh;
   transition: all 0.3s ease;
   z-index: 1000;
+  position: fixed;
+  top: 70px; /* Height of top navigation */
+  bottom: 0;
+  left: 0;
+  width: 280px;
+}
+
+/* Fixed sidebar styling */
+.fixed-sidebar {
+  position: fixed;
+  top: 70px;
+  bottom: 0;
+  left: 0;
+}
+
+/* Compact sidebar */
+.user-left-nav.compact {
+  width: 100px;
 }
 
 .user-left-nav .nav-header {

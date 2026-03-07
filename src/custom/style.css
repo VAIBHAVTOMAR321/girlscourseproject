@@ -7,34 +7,7 @@
   position: fixed;
 }
 
-.official-card {
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
- /* background-color: rgba(0, 78, 188, 0.763) !important; */
-  position: relative; /* Required for positioning the overlay */
-  background-image: url('../assets//reg-banner.jpg'); /* Add your background image */
-  background-size: cover;
-  background-position: center;
-  z-index: 1; /* Ensure content stays above the overlay */
-}
 
-.official-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, #1a3a5f 0%, #1a3a5f 100%);
-  z-index: -1; /* Place behind the content */
-}
-.official-card h1{
- font-size: 30px;
- color: #fff;
-}
-.section-header h2{
-  color: #fff;
-}
 .official-card::after {
   content: '';
   position: absolute;
@@ -45,6 +18,19 @@
   background: linear-gradient(135deg, #6092cb 0%, #6c8aae 100%);
   z-index: -1; /* Place behind the content but above the before pseudo-element */
   opacity: 0.7; /* Adjust opacity as needed */
+}
+.in-prohrace{
+    position: absolute;
+    left: 60px !important;
+    bottom: -12px;
+    font-size: 8px !important;
+
+}
+.container-top-fixed{
+  margin-top: 30px;
+}
+.btn-custom{
+  font-size: 10px;
 }
 .red-color{
   color: rgb(161, 35, 35) !important;
