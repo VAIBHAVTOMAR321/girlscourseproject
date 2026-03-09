@@ -497,7 +497,44 @@
             height: 300px;
           }
         }
+         
+        .course-price {
+          display: flex;
+          align-items: center;
+          gap: 5px;
+        }
         
+        .price-label {
+          font-size: 0.8rem;
+          color: #666;
+        }
+        
+        .price-value {
+          font-weight: bold;
+          color: #28a745;
+          font-size: 0.9rem;
+        }
+        
+        .free-badge {
+          background-color: #007bff;
+          color: white;
+          padding: 2px 8px;
+          border-radius: 12px;
+          font-size: 0.8rem;
+        }
+        
+        .course-meta {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-top: 5px;
+        }
+        
+        .enrolled-count {
+          font-size: 0.8rem;
+          color: #666;
+        }
+      
         @media (max-width: 768px) {
           .portal-title {
             font-size: 1.2rem;
