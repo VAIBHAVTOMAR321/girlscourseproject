@@ -9,8 +9,8 @@
 
 .official-card {
  
-  background: linear-gradient(135deg, rgb(12 16 21 / 85%) 0%, rgb(29 34 40 / 85%) 100%),  
-           url( '../assets/css/image-bg.webp');
+  
+       background-image:url( '../assets/bg-i.png');
 
   /* These properties are important for the image to look good */
   background-size: cover;
@@ -57,17 +57,17 @@
   color: rgb(161, 35, 35) !important;
 }
 .security-notice p{
-  color: #fff !important;
+  color: #000 !important;
 }
 .account-style small{
-  color: #fff !important;
+  color: #000 !important;
 }
 .section-header h2{
-color: #fff;
+color: #000;
 font-size: 18px;
 }
 .official-card h1{
-color: #fff;
+color: #000;
 font-size: 20px;
 }
   

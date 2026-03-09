@@ -10,13 +10,13 @@
           top: 0;
           left: 0;
           right: 0;
-          background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+          background: linear-gradient(90deg,#13539d 0%,#1d71ce) !important;
           box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
           z-index: 1000;
           padding: 15px 0;
         }
         .register-text a{
-          color: #fff !important;
+          color: #000 !important;
         }
         .official-header-content {
           display: flex;
@@ -80,7 +80,7 @@
         }
         
         .portal-title {
-          color: #1a3a5f;
+          color: #fff;
           font-weight: 700;
           margin-bottom: 5px;
           font-size: 1.5rem;
@@ -100,7 +100,7 @@
         }
         
         .nav-item {
-          color: #4a5568;
+          color: #fff;
           font-weight: 500;
           font-size: 0.9rem;
           cursor: pointer;
@@ -352,13 +352,13 @@
         }
         
         .form-label-gov {
-          color: #fff;
+          color: #000;
           font-weight: 600;
           margin-bottom: 8px;
           font-size: 12px;
         }
         .small a{
-          color: #fff !important;
+          color: #000 !important;
         }
         .form-control-gov {
           border: 1px solid #cbd5e0;

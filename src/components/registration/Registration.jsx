@@ -329,13 +329,12 @@ const Registration = () => {
       );
 
       console.log("Registration response:", response.data);
-      
+       
       if (response.data.status) {
-         setRegistrationSuccess(true);
-          // Redirect to login page after 2 seconds
-          setTimeout(() => {
-            navigate("/login");
-          }, 2000);
+         // Show browser alert (ignore API message)
+         alert("submitted successfully");
+         // Redirect to login page
+         navigate("/login");
        } else {
          setApiError(response.data.message || "Registration failed. Please try again.");
        }
@@ -585,13 +584,7 @@ const Registration = () => {
                 </Alert>
               )}
 
-               {/* Success Alert */}
-               {registrationSuccess && (
-                 <Alert variant="success" onClose={handleSuccessAlertClose} dismissible>
-                   <Alert.Heading>Registration Successful!</Alert.Heading>
-                   <p>Student registered successfully. You will be redirected to login page shortly.</p>
-                 </Alert>
-               )}
+ 
 
               <Form onSubmit={handleSubmit} noValidate>
                
