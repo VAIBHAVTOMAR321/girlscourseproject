@@ -689,7 +689,7 @@ const Registration = () => {
                     accept="image/*,.pdf"
                     required
                   />
-                  <Form.Text className="text-muted">
+                  <Form.Text className="file-size">
                     Upload JPG, PNG or PDF (Max 5MB)
                   </Form.Text>
                   <Form.Control.Feedback type="invalid">
