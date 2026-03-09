@@ -37,9 +37,12 @@ const Enrollments = () => {
     } else {
       const filtered = enrollments.filter(enrollment => {
         if (enrollmentType === 'paid') {
-          return enrollment.candidate_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            enrollment.student_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            enrollment.mobile_no.includes(searchTerm) ||
+          const nameField = enrollment.candidate_name || enrollment.applicant_id || ''
+          const phoneField = enrollment.mobile_no || ''
+          return nameField.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            enrollment.applicant_id?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            enrollment.student_id?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            phoneField.includes(searchTerm) ||
             enrollment.email.toLowerCase().includes(searchTerm.toLowerCase())
         } else {
           return enrollment.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -59,14 +62,20 @@ const Enrollments = () => {
        let response
        
         const config = {
-          headers: {
-            'Authorization': `Bearer ${accessToken}`
-          }
+          headers: {}
+        }
+        if (accessToken) {
+          config.headers['Authorization'] = `Bearer ${accessToken}`
         }
        
        if (enrollmentType === 'paid') {
-         // Fetch paid enrollments
-         response = await axios.get('https://brjobsedu.com/girls_course/girls_course_backend/api/all-registration/', config)
+         // Fetch paid enrollments from payment API
+         try {
+           response = await axios.get('https://brainrock.in/brainrock/backend/api/course-registration/', config)
+         } catch (error) {
+           // Fallback to girls_course API if payment API fails
+           response = await axios.get('https://brjobsedu.com/girls_course/girls_course_backend/api/all-registration/', config)
+         }
        } else {
          // Fetch unpaid enrollments
          response = await axios.get('https://brjobsedu.com/girls_course/girls_course_backend/api/student-unpaid/', config)
@@ -296,10 +305,12 @@ const Enrollments = () => {
                                 size="sm"
                               />
                             </th>
-                            <th className="ps-2">Student ID</th>
+                            <th className="ps-2">ID</th>
                             <th>{enrollmentType === 'paid' ? 'Candidate Name' : 'Full Name'}</th>
                             <th>{enrollmentType === 'paid' ? 'Phone' : 'Phone'}</th>
                             <th>Email</th>
+                            {enrollmentType === 'paid' && <th>Course Fee</th>}
+                            {enrollmentType === 'paid' && <th>Payment Status</th>}
                             {enrollmentType === 'unpaid' && <th>District</th>}
                             {enrollmentType === 'unpaid' && <th>State</th>}
                             <th>Status</th>
@@ -317,19 +328,31 @@ const Enrollments = () => {
                                   size="sm"
                                 />
                               </td>
-                              <td className="ps-2"><span className="text-muted small fw-medium">{enrollment.student_id}</span></td>
+                              <td className="ps-2"><span className="text-muted small fw-medium">{enrollment.applicant_id || enrollment.student_id}</span></td>
                               <td className="fw-medium text-dark">
-                                {enrollmentType === 'paid' ? enrollment.candidate_name : enrollment.full_name}
+                                {enrollmentType === 'paid' ? (enrollment.candidate_name || enrollment.applicant_id) : enrollment.full_name}
                               </td>
                               <td className="small">
-                                {enrollmentType === 'paid' ? enrollment.mobile_no : enrollment.phone}
+                                {enrollmentType === 'paid' ? (enrollment.mobile_no || '') : enrollment.phone}
                               </td>
                               <td className="small text-muted">{enrollment.email}</td>
+                              {enrollmentType === 'paid' && (
+                                <td className="small fw-medium">
+                                  ₹{parseFloat(enrollment.course_fee || 0).toFixed(2)}
+                                </td>
+                              )}
+                              {enrollmentType === 'paid' && (
+                                <td>
+                                  <span className={`status-badge ${enrollment.payment_status === 'completed' ? 'bg-success' : enrollment.payment_status === 'pending' ? 'bg-warning text-dark' : 'bg-danger'}`}>
+                                    {enrollment.payment_status}
+                                  </span>
+                                </td>
+                              )}
                               {enrollmentType === 'unpaid' && <td className="small">{enrollment.district}</td>}
                               {enrollmentType === 'unpaid' && <td className="small">{enrollment.state}</td>}
                               <td>
-                                <span className={`status-badge ${enrollment.status === 'active' ? 'bg-success' : 'bg-warning text-dark'}`}>
-                                  {enrollment.status}
+                                <span className={`status-badge ${enrollment.course_status === 'active' || enrollment.status === 'active' ? 'bg-success' : 'bg-warning text-dark'}`}>
+                                  {enrollment.course_status || enrollment.status}
                                 </span>
                               </td>
                               <td className="text-end pe-3">
@@ -366,6 +389,40 @@ const Enrollments = () => {
                       </Table>
                     </div>
                   </Card.Body>
+                  
+                  {/* Payment Summary Footer for Paid Enrollments */}
+                  {enrollmentType === 'paid' && filteredEnrollments.length > 0 && (
+                    <Card.Footer className="bg-light border-top py-3 px-3">
+                      <Row className="text-center">
+                        <Col md={6} className="mb-2 mb-md-0">
+                          <div className="d-flex justify-content-center align-items-center gap-3">
+                            <div>
+                              <h6 className="text-success fw-bold mb-1">Success Payments</h6>
+                              <p className="mb-0">
+                                <span className="badge bg-success">{filteredEnrollments.filter(e => e.payment_status === 'completed').length}</span>
+                              </p>
+                              <small className="text-muted">
+                                Total: ₹{filteredEnrollments.filter(e => e.payment_status === 'completed').reduce((sum, e) => sum + parseFloat(e.course_fee || 0), 0).toFixed(2)}
+                              </small>
+                            </div>
+                          </div>
+                        </Col>
+                        <Col md={6}>
+                          <div className="d-flex justify-content-center align-items-center gap-3">
+                            <div>
+                              <h6 className="text-warning fw-bold mb-1">Unsuccessful/Pending</h6>
+                              <p className="mb-0">
+                                <span className="badge bg-warning text-dark">{filteredEnrollments.filter(e => e.payment_status !== 'completed').length}</span>
+                              </p>
+                              <small className="text-muted">
+                                Total: ₹{filteredEnrollments.filter(e => e.payment_status !== 'completed').reduce((sum, e) => sum + parseFloat(e.course_fee || 0), 0).toFixed(2)}
+                              </small>
+                            </div>
+                          </div>
+                        </Col>
+                      </Row>
+                    </Card.Footer>
+                  )}
                    {/* Pagination */}
                    {totalPages > 1 && (
                      <Card.Footer className="bg-light border-top py-2 px-3">
@@ -445,28 +502,38 @@ const Enrollments = () => {
                 <>
                   {/* Paid Student Fields */}
                   <div className="detail-item">
-                    <span className="detail-label">Student ID</span>
-                    <span className="detail-value">{selectedEnrollment.student_id}</span>
+                    <span className="detail-label">Applicant ID</span>
+                    <span className="detail-value">{selectedEnrollment.applicant_id || selectedEnrollment.student_id}</span>
                   </div>
                   <div className="detail-item">
                     <span className="detail-label">Candidate Name</span>
-                    <span className="detail-value">{selectedEnrollment.candidate_name}</span>
+                    <span className="detail-value">{selectedEnrollment.candidate_name || selectedEnrollment.applicant_id}</span>
                   </div>
                   <div className="detail-item">
                     <span className="detail-label">Guardian Name</span>
-                    <span className="detail-value">{selectedEnrollment.guardian_name}</span>
+                    <span className="detail-value">{selectedEnrollment.guardian_name || 'N/A'}</span>
+                  </div>
+                  <div className="detail-item">
+                    <span className="detail-label">Course Applied</span>
+                    <span className="detail-value">
+                      {selectedEnrollment.application_for_course?.join(', ') || 'N/A'}
+                    </span>
+                  </div>
+                  <div className="detail-item">
+                    <span className="detail-label">Course Mode</span>
+                    <span className="detail-value">{selectedEnrollment.course_mode || 'N/A'}</span>
                   </div>
                   <div className="detail-item">
                     <span className="detail-label">Address</span>
-                    <span className="detail-value text-break">{selectedEnrollment.address}</span>
+                    <span className="detail-value text-break">{selectedEnrollment.address || 'N/A'}</span>
                   </div>
                   <div className="detail-item">
                     <span className="detail-label">Date of Birth</span>
-                    <span className="detail-value">{selectedEnrollment.date_of_birth}</span>
+                    <span className="detail-value">{selectedEnrollment.date_of_birth || 'N/A'}</span>
                   </div>
                   <div className="detail-item">
                     <span className="detail-label">Mobile No</span>
-                    <span className="detail-value">{selectedEnrollment.mobile_no}</span>
+                    <span className="detail-value">{selectedEnrollment.mobile_no || 'N/A'}</span>
                   </div>
                   <div className="detail-item">
                     <span className="detail-label">Email</span>
@@ -474,15 +541,45 @@ const Enrollments = () => {
                   </div>
                   <div className="detail-item">
                     <span className="detail-label">Highest Education</span>
-                    <span className="detail-value">{selectedEnrollment.highest_education}</span>
+                    <span className="detail-value">{selectedEnrollment.highest_education || 'N/A'}</span>
                   </div>
                   <div className="detail-item">
-                    <span className="detail-label">Status</span>
+                    <span className="detail-label">School/College</span>
+                    <span className="detail-value text-break">{selectedEnrollment.school_college_name || 'N/A'}</span>
+                  </div>
+                  <hr className="my-3" />
+                  <h6 className="fw-bold text-primary mb-3">Payment Information</h6>
+                  <div className="detail-item">
+                    <span className="detail-label">Course Fee</span>
+                    <span className="detail-value fw-bold">₹{parseFloat(selectedEnrollment.course_fee || 0).toFixed(2)}</span>
+                  </div>
+                  <div className="detail-item">
+                    <span className="detail-label">Payment Status</span>
                     <span className="detail-value">
-                       <span className={`badge ${selectedEnrollment.status === 'active' ? 'bg-success' : 'bg-warning text-dark'}`}>
-                        {selectedEnrollment.status}
+                      <span className={`badge ${selectedEnrollment.payment_status === 'completed' ? 'bg-success' : selectedEnrollment.payment_status === 'pending' ? 'bg-warning text-dark' : 'bg-danger'}`}>
+                        {selectedEnrollment.payment_status}
                       </span>
                     </span>
+                  </div>
+                  <div className="detail-item">
+                    <span className="detail-label">Transaction ID</span>
+                    <span className="detail-value text-break">{selectedEnrollment.transaction_id || 'N/A'}</span>
+                  </div>
+                  <div className="detail-item">
+                    <span className="detail-label">PhonePe Order ID</span>
+                    <span className="detail-value text-break">{selectedEnrollment.phonepe_order_id || 'N/A'}</span>
+                  </div>
+                  <div className="detail-item">
+                    <span className="detail-label">Course Status</span>
+                    <span className="detail-value">
+                       <span className={`badge ${selectedEnrollment.course_status === 'pending' ? 'bg-warning text-dark' : 'bg-success'}`}>
+                        {selectedEnrollment.course_status}
+                      </span>
+                    </span>
+                  </div>
+                  <div className="detail-item">
+                    <span className="detail-label">Registration Date</span>
+                    <span className="detail-value">{new Date(selectedEnrollment.created_at).toLocaleDateString()}</span>
                   </div>
                 </>
               ) : (
