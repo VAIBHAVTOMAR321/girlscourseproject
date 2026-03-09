@@ -15,7 +15,9 @@
           z-index: 1000;
           padding: 15px 0;
         }
-        
+        .register-text a{
+          color: #fff !important;
+        }
         .official-header-content {
           display: flex;
           align-items: center;
@@ -218,7 +220,6 @@
           display: flex;
           align-items: center;
           padding: 15px;
-          margin: 10px 20px;
           border-radius: 12px;
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
           cursor: pointer;
@@ -226,6 +227,7 @@
           border: none;
           position: relative;
           overflow: hidden;
+          margin: 0;
         }
         
         .course-card::before {
@@ -307,6 +309,28 @@
           transform: translateX(5px);
         }
         
+        /* Course Grid Layout */
+        .course-grid {
+          display: grid;
+          gap: 15px;
+          padding: 20px;
+          background: rgba(255, 255, 255, 0.5);
+          border-radius: 8px;
+        }
+
+        /* Two column layout for paid courses */
+        .course-grid.two-column {
+          grid-template-columns: repeat(2, 1fr);
+          min-height: 400px;
+        }
+
+        /* Single column layout for unpaid courses */
+        .course-grid.single-column {
+          grid-template-columns: 1fr;
+          max-width: 400px;
+          margin: 0 auto;
+        }
+
         .marquee-footer {
           position: absolute;
           bottom: 10px;

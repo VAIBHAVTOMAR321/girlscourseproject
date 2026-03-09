@@ -235,100 +235,96 @@ const Login = () => {
               </div>
             </div>
             
-            <div className="marquee-wrapper">
-              <div className="marquee-content">
-                {loading ? (
-                  // Loading skeleton
-                  Array.from({ length: 8 }).map((_, index) => (
-                    <div
-                      key={`loading-${index}`}
-                      className="course-card disabled"
-                      style={{
-                        background: "#f5f5f5",
-                        borderLeft: "4px solid #ddd"
-                      }}
-                    >
-                      <div className="course-icon" style={{ color: "#ddd" }}>
-                        ⏳
-                      </div>
-                      <div className="course-info">
-                        <h5 className="course-name">Loading...</h5>
-                        <div className="course-meta">
-                          <Badge bg="secondary" className="me-2">
-                            Loading
-                          </Badge>
-                          <span className="enrolled-count">
-                            <i className="fas fa-users"></i> --
-                          </span>
-                        </div>
-                      </div>
-                      <div className="course-action" style={{ color: "#a0aec0" }}>
-                        <i className="fas fa-spinner fa-spin"></i>
-                      </div>
+            {/* Courses in grid layout - paid in 2 columns, unpaid in 1 column */}
+            <div className={`course-grid ${courseType === "unpaid" ? "single-column" : "two-column"}`}>
+              {loading ? (
+                // Loading skeleton for grid
+                Array.from({ length: courseType === "unpaid" ? 3 : 6 }).map((_, index) => (
+                  <div
+                    key={`loading-${index}`}
+                    className="course-card disabled"
+                    style={{
+                      background: "#f5f5f5",
+                      borderLeft: "4px solid #ddd"
+                    }}
+                  >
+                    <div className="course-icon" style={{ color: "#ddd" }}>
+                      ⏳
                     </div>
-                  ))
-                ) : duplicatedCourses.length > 0 ? (
-                  duplicatedCourses.map((course, index) => (
-                    <div
-                      key={`${course.id}-${index}`}
-                      className={`course-card ${course.status === "disabled" ? "disabled" : ""} ${
-                        hoveredCourse === course.id ? "hovered" : ""
-                      }`}
-                      onClick={() => handleCourseClick(course)}
-                      onMouseEnter={() => setHoveredCourse(course.id)}
-                      onMouseLeave={() => setHoveredCourse(null)}
-                      style={{
-                        background: course.status === "active" 
-                          ? `linear-gradient(135deg, ${course.color}15 0%, ${course.color}05 100%)` 
-                          : "#f5f5f5",
-                        borderLeft: `4px solid ${course.status === "active" ? course.color : "#ddd"}`
-                      }}
-                    >
-                      <div className="course-icon" style={{ color: course.color }}>
-                        {course.icon}
-                      </div>
-                      <div className="course-info">
-                        <h5 className="course-name">{course.name}</h5>
-                        <div className="course-meta">
-                          <Badge 
-                            bg={course.type === "paid" ? "success" : "primary"} 
-                            className="me-2"
-                          >
-                            {course.type === "paid" ? "Paid" : "Free"}
-                          </Badge>
-                          <span className="enrolled-count">
-                            <i className="fas fa-users"></i> {course.enrolled}
-                          </span>
-                        </div>
-                        {/* Always display price for paid courses */}
-                        {course.type === "paid" && (
-                          <div className="course-price mt-2">
-                            <span className="price-label">Price:</span>
-                            <span className="price-value">{formatPrice(course.price)}</span>
-                          </div>
-                        )}
-                        {/* For unpaid courses, show "Free" badge */}
-                        {/* {course.type === "unpaid" && (
-                          <div className="course-price mt-2">
-                            <span className="price-value free-badge">Free Course</span>
-                          </div>
-                        )} */}
-                      </div>
-                      <div className="course-action" style={{ color: course.color }}>
-                        <i className="fas fa-arrow-right"></i>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  // No courses message
-                  <div className="course-card disabled" style={{ width: "100%" }}>
                     <div className="course-info">
-                      <h5 className="course-name text-center">No courses available</h5>
-                      <p className="text-center small text-muted">Please check back later for available courses</p>
+                      <h5 className="course-name">Loading...</h5>
+                      <div className="course-meta">
+                        <Badge bg="secondary" className="me-2">
+                          Loading
+                        </Badge>
+                        <span className="enrolled-count">
+                          <i className="fas fa-users"></i> --
+                        </span>
+                      </div>
+                    </div>
+                    <div className="course-action" style={{ color: "#a0aec0" }}>
+                      <i className="fas fa-spinner fa-spin"></i>
                     </div>
                   </div>
-                )}
-              </div>
+                ))
+              ) : filteredCourses.length > 0 ? (
+                filteredCourses.map((course, index) => (
+                  <div
+                    key={`${course.id}-${index}`}
+                    className={`course-card ${course.status === "disabled" ? "disabled" : ""} ${
+                      hoveredCourse === course.id ? "hovered" : ""
+                    }`}
+                    onClick={() => handleCourseClick(course)}
+                    onMouseEnter={() => setHoveredCourse(course.id)}
+                    onMouseLeave={() => setHoveredCourse(null)}
+                    style={{
+                      background: course.status === "active" 
+                        ? `linear-gradient(135deg, ${course.color}15 0%, ${course.color}05 100%)` 
+                        : "#f5f5f5",
+                      borderLeft: `4px solid ${course.status === "active" ? course.color : "#ddd"}`
+                    }}
+                  >
+                    <div className="course-icon" style={{ color: course.color }}>
+                      {course.icon}
+                    </div>
+                    <div className="course-info">
+                      <h5 className="course-name">{course.name}</h5>
+                      <div className="course-meta">
+                        <Badge 
+                          bg={course.type === "paid" ? "success" : "primary"} 
+                          className="me-2"
+                        >
+                          {course.type === "paid" ? "Paid" : "Free"}
+                        </Badge>
+                        <span className="enrolled-count">
+                          <i className="fas fa-users"></i> {course.enrolled}
+                        </span>
+                      </div>
+                      {course.type === "paid" && (
+                        <div className="course-price mt-2">
+                          <span className="price-label">Price:</span>
+                          <span className="price-value">{formatPrice(course.price)}</span>
+                        </div>
+                      )}
+                    </div>
+                    <div className="course-action" style={{ color: course.color }}>
+                      <i className="fas fa-arrow-right"></i>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                // No courses message for grid
+                <div className="course-card disabled" style={{ width: "100%" }}>
+                  <div className="course-info">
+                    <h5 className="course-name text-center">
+                      {courseType === "paid" ? "No paid courses available" : "No unpaid courses available"}
+                    </h5>
+                    <p className="text-center small text-muted">
+                      Please check back later for available {courseType === "paid" ? "paid" : "unpaid"} courses
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="marquee-footer text-center mt-3">
@@ -475,8 +471,8 @@ const Login = () => {
                   </Button>
                 </div>
 
-                {/* Register Link for Unpaid Courses */}
-                {courseType === "unpaid" && (
+                {/* Register Link for Unpaid Courses or Unpaid Student Role */}
+                {(courseType === "unpaid" || role === "student-unpaid") && (
                   <div className="text-center mt-3">
                     <p className="small">
                       Don't have an account?{" "}
