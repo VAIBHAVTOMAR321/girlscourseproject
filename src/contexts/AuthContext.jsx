@@ -72,6 +72,7 @@ export const AuthProvider = ({ children }) => {
   });
   
   const [userRole, setUserRole] = useState(() => sessionStorage.getItem('userRole'));
+  const [userRoleType, setUserRoleType] = useState(() => sessionStorage.getItem('userRoleType'));
   const [accessToken, setAccessToken] = useState(() => sessionStorage.getItem('accessToken'));
   const [refreshToken, setRefreshToken] = useState(() => sessionStorage.getItem('refreshToken'));
   const [uniqueId, setUniqueId] = useState(() => sessionStorage.getItem('uniqueId'));
@@ -165,6 +166,7 @@ export const AuthProvider = ({ children }) => {
   const logoutUser = () => {
     setIsAuthenticated(false);
     setUserRole(null);
+    setUserRoleType(null);
     setAccessToken(null);
     setRefreshToken(null);
     setUniqueId(null);
@@ -173,6 +175,7 @@ export const AuthProvider = ({ children }) => {
     sessionStorage.removeItem('accessToken');
     sessionStorage.removeItem('refreshToken');
     sessionStorage.removeItem('userRole');
+    sessionStorage.removeItem('userRoleType');
     sessionStorage.removeItem('uniqueId');
     delete axios.defaults.headers.common['Authorization'];
     if (refreshTimeoutRef.current) {
@@ -285,6 +288,7 @@ export const AuthProvider = ({ children }) => {
     const { access, refresh, role, unique_id } = responseData;
     setIsAuthenticated(true);
     setUserRole(role);
+    setUserRoleType(role); // Store the role type (admin, student, student-unpaid)
     setAccessToken(access);
     setRefreshToken(refresh);
     setUniqueId(unique_id);
@@ -297,6 +301,7 @@ export const AuthProvider = ({ children }) => {
     sessionStorage.setItem('accessToken', access);
     sessionStorage.setItem('refreshToken', refresh);
     sessionStorage.setItem('userRole', role);
+    sessionStorage.setItem('userRoleType', role);
     sessionStorage.setItem('uniqueId', unique_id);
 
     // Set axios default authorization header
@@ -323,6 +328,7 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider value={{ 
       isAuthenticated, 
       userRole, 
+      userRoleType,
       accessToken, 
       refreshToken,
       uniqueId,

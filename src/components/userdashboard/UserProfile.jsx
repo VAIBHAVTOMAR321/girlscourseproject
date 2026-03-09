@@ -8,7 +8,7 @@ import UseLeftNav from './UseLeftNav'
 import { FaCopy, FaArrowLeft, FaCheck, FaEnvelope, FaPhone, FaMapMarkerAlt, FaIdCard, FaCalendarAlt, FaBuilding, FaUserShield, FaUser } from 'react-icons/fa'
 
 const UserProfile = () => {
-  const { uniqueId, accessToken, updateProfilePhoto } = useAuth()
+  const { uniqueId, accessToken, updateProfilePhoto, userRoleType } = useAuth()
   const [userData, setUserData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [updateSuccess, setUpdateSuccess] = useState(false)
@@ -53,7 +53,24 @@ const UserProfile = () => {
     const fetchUserData = async () => {
       try {
         setLoading(true)
-        const response = await axios.get(`https://brjobsedu.com/girls_course/girls_course_backend/api/all-registration/?student_id=${uniqueId}`)
+        
+        // Admin users don't need profiles
+        if (userRoleType === 'admin') {
+          navigate('/AdminDashboard')
+          return
+        }
+
+        let response
+        
+        // Fetch data based on user role
+        if (userRoleType === 'student-unpaid') {
+          // For unpaid students, fetch from student-unpaid endpoint with student_id
+          response = await axios.get(`https://brjobsedu.com/girls_course/girls_course_backend/api/student-unpaid/?student_id=${uniqueId}`)
+        } else {
+          // For regular students, use the existing endpoint
+          response = await axios.get(`https://brjobsedu.com/girls_course/girls_course_backend/api/all-registration/?student_id=${uniqueId}`)
+        }
+        
         const { data } = response
         
         if (data.success) {
@@ -69,7 +86,7 @@ const UserProfile = () => {
     if (uniqueId) {
       fetchUserData()
     }
-  }, [uniqueId])
+  }, [uniqueId, userRoleType, navigate])
 
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text)
@@ -186,7 +203,7 @@ const UserProfile = () => {
                                  className="profile-image rounded-circle" 
                                  style={{ width: '60px', height: '60px', objectFit: 'cover' }}
                                />
-                             ) : userData.profile_photo ? (
+                             ) : (userRoleType !== 'student-unpaid' && userData.profile_photo) ? (
                                <img 
                                  src={`https://brjobsedu.com/girls_course/girls_course_backend/${userData.profile_photo}`} 
                                  alt="Profile" 
@@ -200,11 +217,7 @@ const UserProfile = () => {
                              )}
                            </div>
                             <div>
-                             <h4 className="mb-1">{userData.candidate_name}</h4>
-                           
-                             <Badge bg="primary" className="px-2 py-1 small">
-                               {userData.status.charAt(0).toUpperCase() + userData.status.slice(1)}
-                             </Badge>
+                             <h4 className="mb-1">{userRoleType === 'student-unpaid' ? userData.full_name : userData.candidate_name}</h4>
                            </div>
                          </div>
                          <div className="d-flex gap-2">
@@ -215,23 +228,27 @@ const UserProfile = () => {
                              className="d-none"
                              id="profilePhotoInput"
                            />
-                           <Button 
-                             variant="outline-primary" 
-                             className="d-flex align-items-center"
-                             onClick={() => document.getElementById('profilePhotoInput').click()}
-                           >
-                             <FaUser className="me-2" />
-                             {selectedFile ? 'Change Photo' : 'Update Photo'}
-                           </Button>
-                           {selectedFile && (
-                             <Button 
-                               variant="primary" 
-                               className="d-flex align-items-center"
-                               onClick={handleUpload}
-                               disabled={uploading}
-                             >
-                               {uploading ? 'Uploading...' : 'Upload'}
-                             </Button>
+                           {userRoleType !== 'student-unpaid' && (
+                             <>
+                               <Button 
+                                 variant="outline-primary" 
+                                 className="d-flex align-items-center"
+                                 onClick={() => document.getElementById('profilePhotoInput').click()}
+                               >
+                                 <FaUser className="me-2" />
+                                 {selectedFile ? 'Change Photo' : 'Update Photo'}
+                               </Button>
+                               {selectedFile && (
+                                 <Button 
+                                   variant="primary" 
+                                   className="d-flex align-items-center"
+                                   onClick={handleUpload}
+                                   disabled={uploading}
+                                 >
+                                   {uploading ? 'Uploading...' : 'Upload'}
+                                 </Button>
+                               )}
+                             </>
                            )}
                          </div>
                        </div>
@@ -242,69 +259,150 @@ const UserProfile = () => {
                     </Card.Header>
                      <Card.Body className="p-3">
                       <Row>
-                        <Col md={6} className="mb-2">
-                          <div className="info-item">
-                            <div className="info-label small">
-                              <FaEnvelope className="me-2 text-muted" />
-                              Email Address
-                            </div>
-                            <div className="info-value small">{userData.email}</div>
-                          </div>
-                        </Col>
-                        <Col md={6} className="mb-2">
-                          <div className="info-item">
-                            <div className="info-label small">
-                              <FaPhone className="me-2 text-muted" />
-                              Mobile Number
-                            </div>
-                            <div className="info-value small">{userData.mobile_no}</div>
-                          </div>
-                        </Col>
-                        <Col md={6} className="mb-2">
-                          <div className="info-item">
-                            <div className="info-label small">
-                              <FaUserShield className="me-2 text-muted" />
-                              Guardian Name
-                            </div>
-                            <div className="info-value small">{userData.guardian_name}</div>
-                          </div>
-                        </Col>
-                        <Col md={6} className="mb-2">
-                          <div className="info-item">
-                            <div className="info-label small">
-                              <FaCalendarAlt className="me-2 text-muted" />
-                              Date of Birth
-                            </div>
-                            <div className="info-value small">{userData.date_of_birth}</div>
-                          </div>
-                        </Col>
-                        <Col md={6} className="mb-2">
-                          <div className="info-item">
-                            <div className="info-label small">
-                              <FaBuilding className="me-2 text-muted" />
-                              Highest Education
-                            </div>
-                            <div className="info-value small">{userData.highest_education}</div>
-                          </div>
-                        </Col>
-                        <Col md={6} className="mb-2">
-                          <div className="info-item">
-                            <div className="info-label small">
-                              <FaMapMarkerAlt className="me-2 text-muted" />
-                              Address
-                            </div>
-                            <div className="info-value small">{userData.address}</div>
-                          </div>
-                        </Col>
-                        <Col md={6} className="mb-3">
-                          <div className="info-item">
-                            <div className="info-label">
-                              <FaCalendarAlt className="me-2 text-muted" />
-                              Joined Date
-                            </div>
-                            <div className="info-value">{new Date(userData.created_at).toLocaleDateString()}</div>
-                          </div>
-                        </Col>
+                        {userRoleType === 'student-unpaid' ? (
+                          <>
+                            {/* Student-Unpaid Profile Fields */}
+                            <Col md={6} className="mb-2">
+                              <div className="info-item">
+                                <div className="info-label small">
+                                  <FaIdCard className="me-2 text-muted" />
+                                  Student ID
+                                </div>
+                                <div className="info-value small">{userData.student_id}</div>
+                              </div>
+                            </Col>
+                            <Col md={6} className="mb-2">
+                              <div className="info-item">
+                                <div className="info-label small">
+                                  <FaIdCard className="me-2 text-muted" />
+                                  Aadhaar Number
+                                </div>
+                                <div className="info-value small">{userData.aadhaar_no}</div>
+                              </div>
+                            </Col>
+                            <Col md={6} className="mb-2">
+                              <div className="info-item">
+                                <div className="info-label small">
+                                  <FaEnvelope className="me-2 text-muted" />
+                                  Email Address
+                                </div>
+                                <div className="info-value small">{userData.email}</div>
+                              </div>
+                            </Col>
+                            <Col md={6} className="mb-2">
+                              <div className="info-item">
+                                <div className="info-label small">
+                                  <FaPhone className="me-2 text-muted" />
+                                  Mobile Number
+                                </div>
+                                <div className="info-value small">{userData.phone}</div>
+                              </div>
+                            </Col>
+                            <Col md={6} className="mb-2">
+                              <div className="info-item">
+                                <div className="info-label small">
+                                  <FaMapMarkerAlt className="me-2 text-muted" />
+                                  District
+                                </div>
+                                <div className="info-value small">{userData.district}</div>
+                              </div>
+                            </Col>
+                            <Col md={6} className="mb-2">
+                              <div className="info-item">
+                                <div className="info-label small">
+                                  <FaMapMarkerAlt className="me-2 text-muted" />
+                                  Block
+                                </div>
+                                <div className="info-value small">{userData.block}</div>
+                              </div>
+                            </Col>
+                            <Col md={6} className="mb-2">
+                              <div className="info-item">
+                                <div className="info-label small">
+                                  <FaMapMarkerAlt className="me-2 text-muted" />
+                                  State
+                                </div>
+                                <div className="info-value small">{userData.state}</div>
+                              </div>
+                            </Col>
+                            <Col md={6} className="mb-3">
+                              <div className="info-item">
+                                <div className="info-label small">
+                                  <FaBuilding className="me-2 text-muted" />
+                                  Associate Wings
+                                </div>
+                                <div className="info-value small">{userData.associate_wings}</div>
+                              </div>
+                            </Col>
+                          </>
+                        ) : (
+                          <>
+                            {/* Regular Student Profile Fields */}
+                            <Col md={6} className="mb-2">
+                              <div className="info-item">
+                                <div className="info-label small">
+                                  <FaEnvelope className="me-2 text-muted" />
+                                  Email Address
+                                </div>
+                                <div className="info-value small">{userData.email}</div>
+                              </div>
+                            </Col>
+                            <Col md={6} className="mb-2">
+                              <div className="info-item">
+                                <div className="info-label small">
+                                  <FaPhone className="me-2 text-muted" />
+                                  Mobile Number
+                                </div>
+                                <div className="info-value small">{userData.mobile_no}</div>
+                              </div>
+                            </Col>
+                            <Col md={6} className="mb-2">
+                              <div className="info-item">
+                                <div className="info-label small">
+                                  <FaUserShield className="me-2 text-muted" />
+                                  Guardian Name
+                                </div>
+                                <div className="info-value small">{userData.guardian_name}</div>
+                              </div>
+                            </Col>
+                            <Col md={6} className="mb-2">
+                              <div className="info-item">
+                                <div className="info-label small">
+                                  <FaCalendarAlt className="me-2 text-muted" />
+                                  Date of Birth
+                                </div>
+                                <div className="info-value small">{userData.date_of_birth}</div>
+                              </div>
+                            </Col>
+                            <Col md={6} className="mb-2">
+                              <div className="info-item">
+                                <div className="info-label small">
+                                  <FaBuilding className="me-2 text-muted" />
+                                  Highest Education
+                                </div>
+                                <div className="info-value small">{userData.highest_education}</div>
+                              </div>
+                            </Col>
+                            <Col md={6} className="mb-2">
+                              <div className="info-item">
+                                <div className="info-label small">
+                                  <FaMapMarkerAlt className="me-2 text-muted" />
+                                  Address
+                                </div>
+                                <div className="info-value small">{userData.address}</div>
+                              </div>
+                            </Col>
+                            <Col md={6} className="mb-3">
+                              <div className="info-item">
+                                <div className="info-label">
+                                  <FaCalendarAlt className="me-2 text-muted" />
+                                  Joined Date
+                                </div>
+                                <div className="info-value">{new Date(userData.created_at).toLocaleDateString()}</div>
+                              </div>
+                            </Col>
+                          </>
+                        )}
                       </Row>
                     </Card.Body>
                   </Card>
