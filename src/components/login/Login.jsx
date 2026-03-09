@@ -13,13 +13,14 @@ const Login = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [fieldErrors, setFieldErrors] = useState({});
   const [hoveredCourse, setHoveredCourse] = useState(null);
-  const [courseType, setCourseType] = useState("Paid"); // New state for tab selection
+  const [courseType, setCourseType] = useState("paid"); // Changed to lowercase to match API
   const navigate = useNavigate();
   const { login } = useAuth();
 
   const [formData, setFormData] = useState({
     email_or_phone: "",
     phone: "",
+    aadhaar_no: "",
     password: "",
   });
 
@@ -38,10 +39,11 @@ const Login = () => {
             name: course.course_name,
             course_id: course.course_id,
             status: "active", // Set all courses to active
-            enrolled: Math.floor(Math.random() * 300) + 50, // Random enrolled count
+           // Random enrolled count
             icon: ["💻", "📊", "🤖", "📱", "☁️", "🔒", "📲", "⛓️", "🎨", "⚙️"][index % 10], // Cycle through icons
             color: ["#4285F4", "#34A853", "#EA4335", "#FBBC05", "#6C63FF", "#00ACC1", "#FF6D00", "#7B1FA2", "#00897B", "#D32F2F"][index % 10], // Cycle through colors
-            type: course.course_status || "Paid" // Use API field or default to Paid
+            type: course.course_status, // Use API field directly
+            price: parseFloat(course.price) || 0 // Convert price string to number
           }));
           setCourses(processedCourses);
         }
@@ -88,6 +90,14 @@ const Login = () => {
       }
     }
 
+    if (role === "student-unpaid") {
+      if (!formData.aadhaar_no.trim()) {
+        errors.aadhaar_no = "Aadhaar number is required";
+      } else if (!/^\d{12}$/.test(formData.aadhaar_no.trim())) {
+        errors.aadhaar_no = "Aadhaar number must be exactly 12 digits";
+      }
+    }
+
     if (!formData.password.trim()) {
       errors.password = "Password is required";
     }
@@ -103,13 +113,23 @@ const Login = () => {
     let payload =
       role === "admin"
         ? {
+            role: "admin",
             email_or_phone: formData.email_or_phone,
             password: formData.password,
           }
-        : {
+        : role === "student"
+        ? {
+            role: "student",
             phone: formData.phone,
             password: formData.password,
-          };
+          }
+        : role === "student-unpaid"
+        ? {
+            role: "student-unpaid",
+            aadhaar_no: formData.aadhaar_no,
+            password: formData.password,
+          }
+        : {};
 
     try {
       const response = await axios.post(
@@ -140,9 +160,9 @@ const Login = () => {
   };
 
   const handleCourseClick = (course) => {
-    if (course.type === "Paid") {
+    if (course.type === "paid") {
       // Redirect to external paid courses page
-      window.open("https://brainrock.in/", "_blank");
+      window.open("https://brainrock.in/Courses", "_blank");
     } else {
       // Navigate to registration page with course information for unpaid courses
       navigate("/Registration", { 
@@ -154,6 +174,11 @@ const Login = () => {
         } 
       });
     }
+  };
+
+  // Format price with currency symbol
+  const formatPrice = (price) => {
+    return `₹${price.toFixed(2)}`;
   };
 
   return (
@@ -183,7 +208,7 @@ const Login = () => {
         </Container>
       </header>
 
-      {/* Main Content with Paidding-top to account for fixed header */}
+      {/* Main Content with Padding-top to account for fixed header */}
       <Container className="mt-5 main-content-wrapper">
        
         <Row className="align-items-center p-4 shadow rounded bg-white official-card">
@@ -196,16 +221,16 @@ const Login = () => {
               {/* Course Type Tabs */}
               <div className="course-tabs mb-4">
                 <div 
-                  className={`course-tab ${courseType === "Paid" ? "active" : ""}`}
-                  onClick={() => setCourseType("Paid")}
+                  className={`course-tab ${courseType === "paid" ? "active" : ""}`}
+                  onClick={() => setCourseType("paid")}
                 >
                   Paid Courses
                 </div>
                 <div 
-                  className={`course-tab ${courseType === "unPaid" ? "active" : ""}`}
-                  onClick={() => setCourseType("unPaid")}
+                  className={`course-tab ${courseType === "unpaid" ? "active" : ""}`}
+                  onClick={() => setCourseType("unpaid")}
                 >
-                  UnPaid Courses
+                  Unpaid Courses
                 </div>
               </div>
             </div>
@@ -264,6 +289,30 @@ const Login = () => {
                       </div>
                       <div className="course-info">
                         <h5 className="course-name">{course.name}</h5>
+                        <div className="course-meta">
+                          <Badge 
+                            bg={course.type === "paid" ? "success" : "primary"} 
+                            className="me-2"
+                          >
+                            {course.type === "paid" ? "Paid" : "Free"}
+                          </Badge>
+                          <span className="enrolled-count">
+                            <i className="fas fa-users"></i> {course.enrolled}
+                          </span>
+                        </div>
+                        {/* Always display price for paid courses */}
+                        {course.type === "paid" && (
+                          <div className="course-price mt-2">
+                            <span className="price-label">Price:</span>
+                            <span className="price-value">{formatPrice(course.price)}</span>
+                          </div>
+                        )}
+                        {/* For unpaid courses, show "Free" badge */}
+                        {/* {course.type === "unpaid" && (
+                          <div className="course-price mt-2">
+                            <span className="price-value free-badge">Free Course</span>
+                          </div>
+                        )} */}
                       </div>
                       <div className="course-action" style={{ color: course.color }}>
                         <i className="fas fa-arrow-right"></i>
@@ -292,10 +341,11 @@ const Login = () => {
 
           <Col lg={6} md={6} sm={12}>
             <div className="p-4">
-              {/* Dynamic heading based on role */}
+               {/* Dynamic heading based on role */}
               <div className="section-header">
                 <h2 className="text-center mb-4">
-                  {role === "admin" ? "Admin Login" : "Student Login"}
+                  {role === "admin" ? "Admin Login" : 
+                   role === "student" ? "Student (Paid) Login" : "Student (Unpaid) Login"}
                 </h2>
                 <div className="header-underline"></div>
               </div>
@@ -320,7 +370,16 @@ const Login = () => {
                     <div className="gov-radio-button">
                       <div className={`gov-radio-inner ${role === "student" ? "checked" : ""}`}></div>
                     </div>
-                    <span>Student</span>
+                    <span>Student (Paid)</span>
+                  </div>
+                  <div 
+                    className={`gov-role-option ${role === "student-unpaid" ? "selected" : ""}`}
+                    onClick={() => setRole("student-unpaid")}
+                  >
+                    <div className="gov-radio-button">
+                      <div className={`gov-radio-inner ${role === "student-unpaid" ? "checked" : ""}`}></div>
+                    </div>
+                    <span>Student (Unpaid)</span>
                   </div>
                 </div>
               </Form.Group>
@@ -346,7 +405,7 @@ const Login = () => {
                   </Form.Group>
                 )}
 
-                {/* Student Field */}
+                {/* Student (Paid) Field */}
                 {role === "student" && (
                   <Form.Group className="mb-3">
                     <Form.Label className="form-label-gov">Phone Number</Form.Label>
@@ -362,6 +421,27 @@ const Login = () => {
                     {fieldErrors.phone && (
                       <small className="text-danger">
                         {fieldErrors.phone}
+                      </small>
+                    )}
+                  </Form.Group>
+                )}
+
+                {/* Student (Unpaid) Field */}
+                {role === "student-unpaid" && (
+                  <Form.Group className="mb-3">
+                    <Form.Label className="form-label-gov">Aadhaar Number</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="aadhaar_no"
+                      value={formData.aadhaar_no}
+                      onChange={handleChange}
+                      maxLength={12}
+                      placeholder="Enter 12 Digit Aadhaar Number"
+                      className="form-control-gov"
+                    />
+                    {fieldErrors.aadhaar_no && (
+                      <small className="text-danger">
+                        {fieldErrors.aadhaar_no}
                       </small>
                     )}
                   </Form.Group>
@@ -395,8 +475,8 @@ const Login = () => {
                   </Button>
                 </div>
 
-                {/* Register Link for UNPaid Courses */}
-                {courseType === "unPaid" && (
+                {/* Register Link for Unpaid Courses */}
+                {courseType === "unpaid" && (
                   <div className="text-center mt-3">
                     <p className="small">
                       Don't have an account?{" "}
@@ -426,7 +506,8 @@ const Login = () => {
         </div>
       </Container>
 
-    
+      
+     
     </div>
   );
 };
