@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import '../../assets/css/UserTopNav.css'
 
 const UserTopNav = ({ onMenuToggle, isMobile }) => {
-  const { userRole, uniqueId, logout, isAuthenticated, accessToken, profilePhoto, updateProfilePhoto } = useAuth()
+  const { userRole, userRoleType, uniqueId, logout, isAuthenticated, accessToken, profilePhoto, updateProfilePhoto } = useAuth()
   const navigate = useNavigate()
   const [showDropdown, setShowDropdown] = useState(false)
   const [userData, setUserData] = useState(null)
@@ -17,12 +17,24 @@ const UserTopNav = ({ onMenuToggle, isMobile }) => {
     const fetchUserData = async () => {
       try {
         setLoading(true)
-        const response = await axios.get(`https://brjobsedu.com/girls_course/girls_course_backend/api/all-registration/?student_id=${uniqueId}`)
+        let response
+        
+        // Fetch data based on user role
+        if (userRoleType === 'student-unpaid') {
+          // For unpaid students, fetch from student-unpaid endpoint with student_id
+          response = await axios.get(`https://brjobsedu.com/girls_course/girls_course_backend/api/student-unpaid/?student_id=${uniqueId}`)
+        } else {
+          // For regular students, use the existing endpoint
+          response = await axios.get(`https://brjobsedu.com/girls_course/girls_course_backend/api/all-registration/?student_id=${uniqueId}`)
+        }
+        
         const { data } = response
         
         if (data.success) {
           setUserData(data.data)
-          updateProfilePhoto(data.data.profile_photo) // Update profile photo in context
+          if (userRoleType !== 'student-unpaid' && data.data.profile_photo) {
+            updateProfilePhoto(data.data.profile_photo) // Update profile photo in context
+          }
         }
       } catch (error) {
         // Handle error silently
@@ -34,7 +46,7 @@ const UserTopNav = ({ onMenuToggle, isMobile }) => {
     if (uniqueId) {
       fetchUserData()
     }
-  }, [uniqueId, updateProfilePhoto])
+  }, [uniqueId, userRoleType, updateProfilePhoto])
 
   const handleLogout = () => {
     logout()
@@ -94,7 +106,7 @@ const UserTopNav = ({ onMenuToggle, isMobile }) => {
                   )}
                 </div>
                 <div className="user-details">
-                  <span className="user-name">{loading ? 'Loading...' : (userData?.candidate_name || uniqueId)}</span>
+                  <span className="user-name">{loading ? 'Loading...' : (userRoleType === 'student-unpaid' ? userData?.full_name : userData?.candidate_name) || uniqueId}</span>
                 </div>
               </div>
               <i className="bi bi-chevron-down ms-2"></i>
