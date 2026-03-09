@@ -12,8 +12,9 @@ const Registration = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Get course information from state
-  const { courseName, courseId, courseType: initialCourseType, fromCourse } = location.state || {};
+  // Get course information from state and normalize to lowercase
+  const { courseName, courseId, courseType: initialCourseTypeRaw, fromCourse } = location.state || {};
+  const initialCourseType = initialCourseTypeRaw ? initialCourseTypeRaw.toLowerCase() : null;
   // Static list of districts
   const staticDistricts = [
     "Dehradun",
@@ -45,11 +46,12 @@ const Registration = () => {
             id: course.id,
             name: course.course_name,
             course_id: course.course_id,
-            status: course.course_status === "unPaid" ? "active" : "active", // Set all courses to active
-            enrolled: Math.floor(Math.random() * 300) + 50, // Random enrolled count
+            status: "active", // Set all courses to active
+           
             icon: ["💻", "📊", "🤖", "📱", "☁️", "🔒", "📲", "⛓️", "🎨", "⚙️"][index % 10], // Cycle through icons
             color: ["#4285F4", "#34A853", "#EA4335", "#FBBC05", "#6C63FF", "#00ACC1", "#FF6D00", "#7B1FA2", "#00897B", "#D32F2F"][index % 10], // Cycle through colors
-            type: course.course_status || "Paid" // Use API field or default to Paid
+            type: course.course_status, // Use API field directly
+            price: parseFloat(course.price) || 0 // Convert price string to number
           }));
           setCourses(processedCourses);
         }
@@ -64,7 +66,7 @@ const Registration = () => {
     fetchCourses();
   }, []);
 
-  const [courseType, setCourseType] = useState(fromCourse && initialCourseType ? initialCourseType : "Paid"); // New state for tab selection
+  const [courseType, setCourseType] = useState(fromCourse && initialCourseType ? initialCourseType : "paid"); // Changed to lowercase to match API
   const [hoveredCourse, setHoveredCourse] = useState(null);
 
   // Filter courses based on selected tab
@@ -95,6 +97,7 @@ const Registration = () => {
     aadhaar_no: "",
   });
 
+  
   const [apiError, setApiError] = useState("");
   const [availableBlocks, setAvailableBlocks] = useState([]);
   const [isBlocksLoading, setIsBlocksLoading] = useState(false);
@@ -277,6 +280,7 @@ const Registration = () => {
     setFieldErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
+// NEW: useEffect to handle redirect after successful registration
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -313,7 +317,7 @@ const Registration = () => {
       console.log("Submitting registration data...");
 
       const response = await axios.post(
-        "https://brjobsedu.com/girls_course/girls_course_backend/api/all-registration/",
+        "https://brjobsedu.com/girls_course/girls_course_backend/api/student-unpaid/",
         data,
         {
           headers: { 
@@ -366,9 +370,9 @@ const Registration = () => {
   };
 
   const handleCourseClick = (course) => {
-    if (course.type === "Paid") {
-      // Open paid courses in new tab
-      window.open("https://brainrock.in/", "_blank");
+    if (course.type === "paid") {
+      // Redirect to external paid courses page
+      window.open("https://brainrock.in/Courses", "_blank");
     } else {
       // Navigate to registration page with course information for unpaid courses
       navigate("/Registration", { 
@@ -380,6 +384,11 @@ const Registration = () => {
         } 
       });
     }
+  };
+
+  // Format price with currency symbol
+  const formatPrice = (price) => {
+    return `₹${price.toFixed(2)}`;
   };
 
   const handleSuccessAlertClose = () => {
@@ -444,16 +453,16 @@ const Registration = () => {
               {/* Course Type Tabs */}
               <div className="course-tabs mb-4">
                 <div 
-                  className={`course-tab ${courseType === "Paid" ? "active" : ""}`}
-                  onClick={() => setCourseType("Paid")}
+                  className={`course-tab ${courseType === "paid" ? "active" : ""}`}
+                  onClick={() => setCourseType("paid")}
                 >
                   Paid Courses
                 </div>
                 <div 
-                  className={`course-tab ${courseType === "unPaid" ? "active" : ""}`}
-                  onClick={() => setCourseType("unPaid")}
+                  className={`course-tab ${courseType === "unpaid" ? "active" : ""}`}
+                  onClick={() => setCourseType("unpaid")}
                 >
-                  UnPaid Courses
+                  Unpaid Courses
                 </div>
               </div>
             </div>
@@ -510,8 +519,26 @@ const Registration = () => {
                       <div className="course-icon" style={{ color: course.color }}>
                         {course.icon}
                       </div>
-                      <div className="course-info">
+                       <div className="course-info">
                         <h5 className="course-name">{course.name}</h5>
+                        <div className="course-meta">
+                          <Badge 
+                            bg={course.type === "paid" ? "success" : "primary"} 
+                            className="me-2"
+                          >
+                            {course.type === "paid" ? "Paid" : "Free"}
+                          </Badge>
+                          <span className="enrolled-count">
+                            <i className="fas fa-users"></i> {course.enrolled}
+                          </span>
+                        </div>
+                        {/* Always display price for paid courses */}
+                        {course.type === "paid" && (
+                          <div className="course-price mt-2">
+                            <span className="price-label">Price:</span>
+                            <span className="price-value">{formatPrice(course.price)}</span>
+                          </div>
+                        )}
                       </div>
                       <div className="course-action" style={{ color: course.color }}>
                         <i className="fas fa-arrow-right"></i>
@@ -561,16 +588,8 @@ const Registration = () => {
               )}
 
               <Form onSubmit={handleSubmit} noValidate>
-                {/* Selected Course Display */}
-                {fromCourse && (
-                  <Form.Group className="mb-3">
-                    <Form.Label className="form-label-gov">Selected Course</Form.Label>
-                    <div className="p-3 bg-light rounded">
-                      <h6 className="mb-1">{courseName}</h6>
-                      <small className="text-muted">Course ID: {courseId}</small>
-                    </div>
-                  </Form.Group>
-                )}
+               
+              
 
                 <Row className="mb-3">
                   <Col md={6}>
