@@ -10,7 +10,7 @@
           border-radius: 10px;
           position: relative;
           overflow: hidden;
-          margin-bottom: 200px;
+          margin-bottom: 427px;
         
         }
         .official-header-fixed {
@@ -136,7 +136,10 @@
         .main-content-wrapper {
           padding-top: 38px;
         }
-        
+        .file-size{
+          color: #fff;
+          font-size: 10px;
+        }
         .official-card {
           border: 1px solid #e2e8f0;
           box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
@@ -181,7 +184,7 @@
         .form-label-gov {
           color: #fff;
           font-weight: 600;
-          margin-bottom: 8px;
+          margin-bottom: 12px;
         }
         
         .form-control-gov {

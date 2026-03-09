@@ -7,9 +7,24 @@
   position: fixed;
 }
 
-.official-card{
-    background: linear-gradient(135deg, #6092cb 0%, #6c8aae 100%);
+.official-card {
+ 
+  background: linear-gradient(135deg, rgb(12 16 21 / 85%) 0%, rgb(29 34 40 / 85%) 100%),  
+           url( '../assets/css/image-bg.webp');
+
+  /* These properties are important for the image to look good */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  
+  /* Add other styles like color, padding, etc. */
+  color: white; 
+  position: relative; 
+
 }
+
+
+
 .official-card::after {
   content: '';
   position: absolute;
@@ -18,9 +33,10 @@
   right: 0;
   bottom: 0;
   background: linear-gradient(135deg, #6092cb 0%, #6c8aae 100%);
-  z-index: -1; /* Place behind the content but above the before pseudo-element */
-  opacity: 0.7; /* Adjust opacity as needed */
+  z-index: -1;
+  opacity: 0.7;
 }
+
 .in-prohrace{
     position: absolute;
     left: 96px !important;
