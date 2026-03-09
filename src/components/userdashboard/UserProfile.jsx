@@ -62,10 +62,16 @@ const UserProfile = () => {
 
         let response
         
+        const config = {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`
+          }
+        }
+        
         // Fetch data based on user role
         if (userRoleType === 'student-unpaid') {
           // For unpaid students, fetch from student-unpaid endpoint with student_id
-          response = await axios.get(`https://brjobsedu.com/girls_course/girls_course_backend/api/student-unpaid/?student_id=${uniqueId}`)
+          response = await axios.get(`https://brjobsedu.com/girls_course/girls_course_backend/api/student-unpaid/?student_id=${uniqueId}`, config)
         } else {
           // For regular students, use the existing endpoint
           response = await axios.get(`https://brjobsedu.com/girls_course/girls_course_backend/api/all-registration/?student_id=${uniqueId}`)
@@ -162,13 +168,6 @@ const UserProfile = () => {
         <div className="flex-grow-1" style={{ marginLeft: isMobile ? '0px' : '280px', padding: isMobile ? '10px' : '20px', minHeight: 'calc(100vh - 70px)' }}>
           <Container fluid className='fixed-profile'>
             {/* Success Alert */}
-            {updateSuccess && (
-              <Alert variant="success" className="mb-4 animate-fade-in">
-                <FaCheck className="me-2" />
-                Profile updated successfully!
-              </Alert>
-            )}
-            
             {/* Back Button */}
             <div className="mb-4">
               <Button 
@@ -180,6 +179,13 @@ const UserProfile = () => {
                 Back to Dashboard
               </Button>
             </div>
+            
+            {updateSuccess && (
+              <Alert variant="success" className="mb-4 animate-fade-in">
+                <FaCheck className="me-2" />
+                Profile updated successfully!
+              </Alert>
+            )}
 
             {loading ? (
               <div className="text-center py-5">
@@ -191,67 +197,77 @@ const UserProfile = () => {
                 <Col lg={12}>
                    {/* Profile Header Card */}
                     <Card className="shadow-sm mb-4 border-0 profile-header-card" style={{ borderRadius: '10px' }}>
-                     <Card.Body className="p-3">
-                       <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2">
-                         <div className="d-flex align-items-center gap-2">
-                           {/* Profile Image */}
-                           <div className="profile-image-wrapper">
-                             {previewImage ? (
-                               <img 
-                                 src={previewImage} 
-                                 alt="Preview" 
-                                 className="profile-image rounded-circle" 
-                                 style={{ width: '60px', height: '60px', objectFit: 'cover' }}
-                               />
-                             ) : (userRoleType !== 'student-unpaid' && userData.profile_photo) ? (
-                               <img 
-                                 src={`https://brjobsedu.com/girls_course/girls_course_backend/${userData.profile_photo}`} 
-                                 alt="Profile" 
-                                 className="profile-image rounded-circle" 
-                                 style={{ width: '60px', height: '60px', objectFit: 'cover' }}
-                               />
-                             ) : (
-                               <div className="profile-image bg-gradient-primary rounded-circle d-flex align-items-center justify-content-center" style={{ width: '60px', height: '60px' }}>
-                                 <FaUser className="text-white" style={{ fontSize: '24px' }} />
-                               </div>
+                      <Card.Body className="p-3">
+                        <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2">
+                          <div className="d-flex align-items-center gap-2">
+                            {/* Profile Image */}
+                            <div className="profile-image-wrapper">
+                              {previewImage ? (
+                                <img 
+                                  src={previewImage} 
+                                  alt="Preview" 
+                                  className="profile-image rounded-circle" 
+                                  style={{ width: '60px', height: '60px', objectFit: 'cover' }}
+                                />
+                              ) : (userRoleType !== 'student-unpaid' && userData.profile_photo) ? (
+                                <img 
+                                  src={`https://brjobsedu.com/girls_course/girls_course_backend/${userData.profile_photo}`} 
+                                  alt="Profile" 
+                                  className="profile-image rounded-circle" 
+                                  style={{ width: '60px', height: '60px', objectFit: 'cover' }}
+                                />
+                              ) : (
+                                <div className="profile-image bg-gradient-primary rounded-circle d-flex align-items-center justify-content-center" style={{ width: '60px', height: '60px' }}>
+                                  <FaUser className="text-white" style={{ fontSize: '24px' }} />
+                                </div>
+                              )}
+                            </div>
+                             <div>
+                              <h4 className="mb-1">{userRoleType === 'student-unpaid' ? userData.full_name : userData.candidate_name}</h4>
+                            </div>
+                          </div>
+                           <div className="d-flex gap-2">
+                             {userRoleType === 'student-unpaid' && (
+                               <Button 
+                                 variant="outline-info" 
+                                 className="d-flex align-items-center" 
+                                 onClick={() => window.open(`https://brjobsedu.com/girls_course/girls_course_backend${userData.adharcard_file}`, '_blank')}
+                               >
+                                 <FaIdCard className="me-2" />
+                                 View Aadhaar
+                               </Button>
+                             )}
+                             {userRoleType !== 'student-unpaid' && (
+                               <>
+                                 <input
+                                   type="file"
+                                   accept="image/*"
+                                   onChange={handleFileChange}
+                                   className="d-none"
+                                   id="profilePhotoInput"
+                                 />
+                                 <Button 
+                                   variant="outline-primary" 
+                                   className="d-flex align-items-center"
+                                   onClick={() => document.getElementById('profilePhotoInput').click()}
+                                 >
+                                   <FaUser className="me-2" />
+                                   {selectedFile ? 'Change Photo' : 'Update Photo'}
+                                 </Button>
+                                 {selectedFile && (
+                                   <Button 
+                                     variant="primary" 
+                                     className="d-flex align-items-center"
+                                     onClick={handleUpload}
+                                     disabled={uploading}
+                                   >
+                                     {uploading ? 'Uploading...' : 'Upload'}
+                                   </Button>
+                                 )}
+                               </>
                              )}
                            </div>
-                            <div>
-                             <h4 className="mb-1">{userRoleType === 'student-unpaid' ? userData.full_name : userData.candidate_name}</h4>
-                           </div>
-                         </div>
-                         <div className="d-flex gap-2">
-                           <input
-                             type="file"
-                             accept="image/*"
-                             onChange={handleFileChange}
-                             className="d-none"
-                             id="profilePhotoInput"
-                           />
-                           {userRoleType !== 'student-unpaid' && (
-                             <>
-                               <Button 
-                                 variant="outline-primary" 
-                                 className="d-flex align-items-center"
-                                 onClick={() => document.getElementById('profilePhotoInput').click()}
-                               >
-                                 <FaUser className="me-2" />
-                                 {selectedFile ? 'Change Photo' : 'Update Photo'}
-                               </Button>
-                               {selectedFile && (
-                                 <Button 
-                                   variant="primary" 
-                                   className="d-flex align-items-center"
-                                   onClick={handleUpload}
-                                   disabled={uploading}
-                                 >
-                                   {uploading ? 'Uploading...' : 'Upload'}
-                                 </Button>
-                               )}
-                             </>
-                           )}
-                         </div>
-                       </div>
+                        </div>
                      </Card.Body>
                       <Card className="shadow-sm border-0 profile-details-card" style={{ borderRadius: '10px' }}>
                     <Card.Header className="bg-white border-bottom-0 pt-3">

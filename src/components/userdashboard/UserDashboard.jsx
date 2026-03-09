@@ -21,7 +21,7 @@ const UserDashboard = () => {
 
   const location = useLocation()
   const navigate = useNavigate()
-  const { uniqueId, accessToken, isAuthenticated } = useAuth()
+  const { uniqueId, accessToken, isAuthenticated, userRoleType } = useAuth()
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -64,8 +64,13 @@ const UserDashboard = () => {
       setLoading(true)
       setError(null)
       
+      // Use appropriate endpoint based on user role
+      const endpoint = userRoleType === 'student-unpaid' 
+        ? `https://brjobsedu.com/girls_course/girls_course_backend/api/enrollment-unpaid/?student_id=${uniqueId}`
+        : `https://brjobsedu.com/girls_course/girls_course_backend/api/student-entrollment/?student_id=${uniqueId}`
+      
       const response = await axios.get(
-        `https://brjobsedu.com/girls_course/girls_course_backend/api/student-entrollment/?student_id=${uniqueId}`,
+        endpoint,
         {
           headers: {
             'Authorization': `Bearer ${accessToken}`,
@@ -213,8 +218,12 @@ const UserDashboard = () => {
   // Generate certificate
   const generateCertificate = async () => {
     try {
+      const endpoint = userRoleType === 'student-unpaid' 
+        ? 'https://brjobsedu.com/girls_course/girls_course_backend/api/enrollment-unpaid/'
+        : 'https://brjobsedu.com/girls_course/girls_course_backend/api/student-entrollment/'
+        
       const response = await axios.post(
-        'https://brjobsedu.com/girls_course/girls_course_backend/api/student-entrollment/',
+        endpoint,
         {
           student_id: uniqueId,
           course_id: selectedCourse.course_id
@@ -274,8 +283,14 @@ const UserDashboard = () => {
   const fetchModuleProgress = async () => {
     try {
       setProgressLoading(true)
+      
+      // Use appropriate endpoint based on user role
+      const endpoint = userRoleType === 'student-unpaid' 
+        ? `https://brjobsedu.com/girls_course/girls_course_backend/api/module-progress-unpaid/?student_id=${uniqueId}`
+        : `https://brjobsedu.com/girls_course/girls_course_backend/api/module-progress/?student_id=${uniqueId}`
+      
       const response = await axios.get(
-        `https://brjobsedu.com/girls_course/girls_course_backend/api/module-progress/?student_id=${uniqueId}`,
+        endpoint,
         {
           headers: {
             'Authorization': `Bearer ${accessToken}`,
@@ -298,8 +313,13 @@ const UserDashboard = () => {
   const markModuleComplete = async (moduleIndex) => {
     try {
       const currentModule = courseModules.modules[moduleIndex]
+      
+      const endpoint = userRoleType === 'student-unpaid' 
+        ? `https://brjobsedu.com/girls_course/girls_course_backend/api/module-progress-unpaid/`
+        : `https://brjobsedu.com/girls_course/girls_course_backend/api/module-progress/`
+        
       const response = await axios.put(
-        `https://brjobsedu.com/girls_course/girls_course_backend/api/module-progress/`,
+        endpoint,
         {
           module_status: "ongoing",
           student_id: uniqueId,
@@ -379,33 +399,46 @@ const UserDashboard = () => {
                     </Button>
                     
                      <div className="d-flex justify-content-between align-items-center title-h mb-3">
-                       <h4 className="mb-0">
-                         <FaBook className="me-2 text-primary" />
-                         {selectedCourse.course_name} - Modules
-                       </h4>
-                      
-                      {/* Certificate Button */}
-                      {isCertificateGenerated() ? (
-                        <Button 
-                          variant="success" 
-                          onClick={viewCertificate}
-                          className="d-flex align-items-center "
-                        >
-                          <FaCertificate className="me-2" />
-                          View Certificate
-                        </Button>
-                      ) : (
-                        <Button 
-                          variant="primary" 
-                          onClick={generateCertificate}
-                          disabled={!areAllModulesCompleted()}
-                          className="d-flex align-items-center button-view"
-                        >
-                          <FaCertificate className="me-2" />
-                          Generate Certificate
-                        </Button>
-                      )}
-                    </div>
+                        <h4 className="mb-0">
+                          <FaBook className="me-2 text-primary" />
+                          {selectedCourse.course_name} - Modules
+                        </h4>
+                       
+                       {/* Certificate Button */}
+                       {isCertificateGenerated() ? (
+                         <Button 
+                           variant="success" 
+                           onClick={viewCertificate}
+                           className="d-flex align-items-center "
+                         >
+                           <FaCertificate className="me-2" />
+                           View Certificate
+                         </Button>
+                       ) : (
+                         <Button 
+                           variant="primary" 
+                           onClick={generateCertificate}
+                           disabled={!areAllModulesCompleted()}
+                           className="d-flex align-items-center button-view"
+                         >
+                           <FaCertificate className="me-2" />
+                           Generate Certificate
+                         </Button>
+                       )}
+                     </div>
+
+                     {/* Course Completed Message */}
+                     {areAllModulesCompleted() && (
+                       <Alert variant="success" className="mb-4">
+                         <FaCheckCircle className="me-2" />
+                         <strong>Congratulations!</strong> You have completed all modules in this course.
+                         {isCertificateGenerated() ? (
+                           <span className="ms-2">Your certificate is ready to view.</span>
+                         ) : (
+                           <span className="ms-2">Click the "Generate Certificate" button to get your certificate.</span>
+                         )}
+                       </Alert>
+                     )}
                     
                     {modulesLoading ? (
                       <div className="text-center py-5">
@@ -964,8 +997,8 @@ const UserDashboard = () => {
                                   >
                                     {isAllModulesCompleted(course) ? (
                                       <>
-                                        <FaEye className="me-2" />
-                                        Start Course
+                                        <FaCheckCircle className="me-2" />
+                                        Completed
                                       </>
                                     ) : (
                                       <>

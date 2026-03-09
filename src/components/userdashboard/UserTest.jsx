@@ -22,7 +22,7 @@ const UserTest = () => {
 
   const location = useLocation()
   const navigate = useNavigate()
-  const { uniqueId, accessToken } = useAuth()
+  const { uniqueId, accessToken, userRoleType } = useAuth()
   
   // Get course and module from location state
   const { course, moduleIndex, isLastModule } = location.state || {}
@@ -180,8 +180,12 @@ const UserTest = () => {
       }
 
       // Submit test
+      const endpoint = userRoleType === 'student-unpaid' 
+        ? 'https://brjobsedu.com/girls_course/girls_course_backend/api/submit-test-unpaid/'
+        : 'https://brjobsedu.com/girls_course/girls_course_backend/api/module-test/submit/'
+        
       const response = await axios.post(
-        'https://brjobsedu.com/girls_course/girls_course_backend/api/module-test/submit/',
+        endpoint,
         submissionData,
         {
           headers: {
@@ -209,8 +213,12 @@ const UserTest = () => {
   // Generate certificate
   const generateCertificate = async () => {
     try {
+      const endpoint = userRoleType === 'student-unpaid' 
+        ? 'https://brjobsedu.com/girls_course/girls_course_backend/api/student-unpaid/'
+        : 'https://brjobsedu.com/girls_course/girls_course_backend/api/student-entrollment/'
+        
       const response = await axios.post(
-        'https://brjobsedu.com/girls_course/girls_course_backend/api/student-entrollment/',
+        endpoint,
         {
           student_id: uniqueId,
           course_id: course.course_id
@@ -233,8 +241,12 @@ const UserTest = () => {
           window.open(`https://brjobsedu.com/girls_course/girls_course_backend${response.data.data.certificate_file}`, '_blank')
         } else {
           // If not, try to fetch updated course data
+          const coursesEndpoint = userRoleType === 'student-unpaid' 
+            ? `https://brjobsedu.com/girls_course/girls_course_backend/api/enrollment-unpaid/?student_id=${uniqueId}`
+            : `https://brjobsedu.com/girls_course/girls_course_backend/api/student-entrollment/?student_id=${uniqueId}`
+            
           const coursesResponse = await axios.get(
-            `https://brjobsedu.com/girls_course/girls_course_backend/api/student-entrollment/?student_id=${uniqueId}`,
+            coursesEndpoint,
             {
               headers: {
                 'Authorization': `Bearer ${accessToken}`,
@@ -278,11 +290,12 @@ const UserTest = () => {
           showOffcanvas={showOffcanvas} 
           setShowOffcanvas={setShowOffcanvas} 
         />
-    
-        <Container fluid>
-          <Row>
-            <Col xs={12}>
-              <div className="mt-4">
+        
+        <div className="flex-grow-1" style={{ marginLeft: isMobile ? '0px' : '280px', padding: isMobile ? '10px' : '20px', minHeight: 'calc(100vh - 70px)' }}>
+          <Container fluid className='fixed-profile'>
+            <Row>
+              <Col xs={12}>
+                <div className="mt-4">
                 <div className="d-flex align-items-center mb-4">
                   <Button 
                     variant="outline-secondary" 
@@ -470,7 +483,8 @@ const UserTest = () => {
               </div>
             </Modal.Body>
           </Modal>
-        </Container>
+          </Container>
+        </div>
       </div>
     </div>
   )

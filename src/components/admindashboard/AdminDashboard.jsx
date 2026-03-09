@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { 
   Container, Row, Col, Card, Spinner, Button, Modal, Form, 
-  Accordion, Badge, InputGroup, FormControl, Image 
+  Accordion, Badge, InputGroup, FormControl, Image, Nav, Tab 
 } from 'react-bootstrap'
 import AdminLeftNav from './AdminLeftNav'
 import AdminTopNav from './AdminTopNav'
@@ -25,8 +25,10 @@ const AdminDashboard = () => {
   const authToken = authData?.accessToken;
   
   // State for Data
-  const [enrollmentCount, setEnrollmentCount] = useState(0)
+  const [paidEnrollmentCount, setPaidEnrollmentCount] = useState(0)
+  const [unpaidEnrollmentCount, setUnpaidEnrollmentCount] = useState(0)
   const [courses, setCourses] = useState([])
+  const [courseType, setCourseType] = useState('paid') // 'paid' or 'unpaid'
   const [loading, setLoading] = useState(true)
   
   // State for Views
@@ -103,14 +105,24 @@ const AdminDashboard = () => {
     try {
       const config = getAuthConfig()
       
-      // Fetch enrollment count
+      // Fetch paid enrollment count
       try {
-        const enrollRes = await axios.get('https://brjobsedu.com/girls_course/girls_course_backend/api/all-registration/', config)
-        if (enrollRes.data && enrollRes.data.success) {
-          setEnrollmentCount(enrollRes.data.data.length)
+        const paidEnrollRes = await axios.get('https://brjobsedu.com/girls_course/girls_course_backend/api/all-registration/', config)
+        if (paidEnrollRes.data && paidEnrollRes.data.success) {
+          setPaidEnrollmentCount(paidEnrollRes.data.data.length)
         }
-      } catch (enrollError) {
-        setEnrollmentCount(0)
+      } catch (paidEnrollError) {
+        setPaidEnrollmentCount(0)
+      }
+      
+      // Fetch unpaid enrollment count
+      try {
+        const unpaidEnrollRes = await axios.get('https://brjobsedu.com/girls_course/girls_course_backend/api/student-unpaid/', config)
+        if (unpaidEnrollRes.data && unpaidEnrollRes.data.success) {
+          setUnpaidEnrollmentCount(unpaidEnrollRes.data.data.length)
+        }
+      } catch (unpaidEnrollError) {
+        setUnpaidEnrollmentCount(0)
       }
 
       // Fetch courses data from new endpoint
@@ -125,7 +137,8 @@ const AdminDashboard = () => {
 
     } catch (error) {
       // Fallback data in case of error
-      setEnrollmentCount(0)
+      setPaidEnrollmentCount(0)
+      setUnpaidEnrollmentCount(0)
       setCourses([])
     } finally {
       setLoading(false)
@@ -133,8 +146,11 @@ const AdminDashboard = () => {
   }
 
   // --- Navigation Handlers ---
-  const handleEnrollmentsClick = () => navigate('/Enrollments')
-  const handleCoursesClick = () => setCurrentView('list')
+  const handleEnrollmentsClick = (type = 'paid') => navigate('/Enrollments', { state: { enrollmentType: type } })
+  const handleCoursesClick = (type = 'paid') => {
+    setCourseType(type)
+    setCurrentView('list')
+  }
   const handleBackToDashboard = () => {
     setCurrentView('dashboard')
     fetchData() // Refresh data when returning to dashboard
@@ -543,28 +559,54 @@ const AdminDashboard = () => {
   const renderDashboardView = () => (
     <div className="fade-in">
       <Row className="g-4">
-        <Col xs={12} md={6} lg={4}>
-          <Card className="stat-card h-100 shadow-sm border-0" onClick={handleEnrollmentsClick}>
+        <Col xs={12} sm={6} md={3} lg={3}>
+          <Card className="stat-card h-100 shadow-sm border-0" onClick={() => handleEnrollmentsClick('paid')}>
             <Card.Body className="d-flex align-items-center">
               <div className="stat-icon-wrapper users me-3">
                 <FaUsers className="stat-icon" />
               </div>
               <div>
-                <h6 className="stat-label text-muted mb-1">Total Enrollments</h6>
-                <h2 className="stat-value mb-0">{loading ? <Spinner size="sm" animation="border" /> : enrollmentCount}</h2>
+                <h6 className="stat-label text-muted mb-1">Paid Enrollments</h6>
+                <h2 className="stat-value mb-0">{loading ? <Spinner size="sm" animation="border" /> : paidEnrollmentCount}</h2>
               </div>
             </Card.Body>
           </Card>
         </Col>
-        <Col xs={12} md={6} lg={4}>
-          <Card className="stat-card h-100 shadow-sm border-0" onClick={handleCoursesClick}>
+        <Col xs={12} sm={6} md={3} lg={3}>
+          <Card className="stat-card h-100 shadow-sm border-0" onClick={() => handleEnrollmentsClick('unpaid')}>
+            <Card.Body className="d-flex align-items-center">
+              <div className="stat-icon-wrapper users me-3">
+                <FaUsers className="stat-icon" />
+              </div>
+              <div>
+                <h6 className="stat-label text-muted mb-1">Unpaid Enrollments</h6>
+                <h2 className="stat-value mb-0">{loading ? <Spinner size="sm" animation="border" /> : unpaidEnrollmentCount}</h2>
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col xs={12} sm={6} md={3} lg={3}>
+          <Card className="stat-card h-100 shadow-sm border-0" onClick={() => handleCoursesClick('paid')}>
             <Card.Body className="d-flex align-items-center">
               <div className="stat-icon-wrapper courses me-3">
                 <FaBook className="stat-icon" />
               </div>
               <div>
-                <h6 className="stat-label text-muted mb-1">Total Courses</h6>
-                <h2 className="stat-value mb-0">{loading ? <Spinner size="sm" animation="border" /> : courses.length}</h2>
+                <h6 className="stat-label text-muted mb-1">Paid Courses</h6>
+                <h2 className="stat-value mb-0">{loading ? <Spinner size="sm" animation="border" /> : courses.filter(c => c.course_status === 'paid').length}</h2>
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col xs={12} sm={6} md={3} lg={3}>
+          <Card className="stat-card h-100 shadow-sm border-0" onClick={() => handleCoursesClick('unpaid')}>
+            <Card.Body className="d-flex align-items-center">
+              <div className="stat-icon-wrapper courses me-3">
+                <FaBook className="stat-icon" />
+              </div>
+              <div>
+                <h6 className="stat-label text-muted mb-1">Unpaid Courses</h6>
+                <h2 className="stat-value mb-0">{loading ? <Spinner size="sm" animation="border" /> : courses.filter(c => c.course_status === 'unpaid').length}</h2>
               </div>
             </Card.Body>
           </Card>
@@ -573,7 +615,11 @@ const AdminDashboard = () => {
     </div>
   )
 
-  const renderCoursesListView = () => (
+  const renderCoursesListView = () => {
+    // Filter courses based on selected type
+    const filteredCourses = courses.filter(course => course.course_status === courseType)
+
+    return (
     <div className="fade-in">
       <div className="d-flex justify-content-between align-items-center mb-4 page-header">
         <div>
@@ -582,43 +628,71 @@ const AdminDashboard = () => {
           </Button>
           <h4 className="d-inline-block align-middle mb-0">All Courses</h4>
         </div>
-        {<Button variant="primary" onClick={handleAddCourseClick}>
+        {/* {<Button variant="primary" onClick={handleAddCourseClick}>
           <FaPlus className="me-2" /> Add New Course
-        </Button> }
+        </Button> } */}
       </div>
 
+      {/* Course Type Tabs */}
+      <Nav variant="tabs" className="mb-4" activeKey={courseType} onSelect={(eventKey) => setCourseType(eventKey)}>
+        <Nav.Item>
+          <Nav.Link eventKey="paid" className={courseType === 'paid' ? 'active fw-semibold' : ''}>
+            <FaBook className="me-2" /> Paid Courses
+          </Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link eventKey="unpaid" className={courseType === 'unpaid' ? 'active fw-semibold' : ''}>
+            <FaBook className="me-2" /> Unpaid Courses
+          </Nav.Link>
+        </Nav.Item>
+      </Nav>
+
       <Row className="g-4">
-        {courses.map((course) => (
-          <Col key={course.id} xs={12} md={6} lg={4}>
-            <Card className="course-card h-100 shadow-sm border-0">
-              <Card.Body className="d-flex flex-column">
-                <div className="mb-3">
-                  <Badge bg="primary" className="mb-2">ID: {course.course_id}</Badge>
-                  <Card.Title className="fw-bold">{course.course_name}</Card.Title>
-                </div>
-                <div className="mt-auto pt-3 border-top">
-                  <div className="d-flex flex-wrap gap-1">
-                    <Button variant="light" size="sm" className="flex-shrink-0 text-primary" onClick={() => handleViewCourse(course)}>
-                      <FaEye className="me-1" /> View
-                    </Button>
-                    <Button variant="outline-warning" size="sm" className="flex-shrink-0 text-warning" onClick={() => handleEditCourse(course)}>
-                      <FaEdit className="me-1" /> Edit
-                    </Button>
-                    <Button variant="outline-danger" size="sm" className="flex-shrink-0 text-danger" onClick={() => handleDeleteCourse(course)}>
-                      <FaTrash className="me-1" /> Delete
-                    </Button>
-                    <Button variant="outline-info" size="sm" className="flex-shrink-0 text-info" onClick={() => handleAddModule(course)}>
-                      <FaLayerGroup className="me-1" /> Add Module
-                    </Button>
+        {filteredCourses.length > 0 ? (
+          filteredCourses.map((course) => (
+            <Col key={course.id} xs={12} md={6} lg={4}>
+              <Card className="course-card h-100 shadow-sm border-0">
+                <Card.Body className="d-flex flex-column">
+                  <div className="mb-3">
+                    <div className="d-flex justify-content-between align-items-start mb-2">
+                      <Badge bg="primary" className="">ID: {course.course_id}</Badge>
+                      <Badge bg={course.course_status === 'paid' ? 'success' : 'info'} className="">
+                        {course.course_status === 'paid' ? 'Paid' : 'Free'}
+                      </Badge>
+                    </div>
+                    <Card.Title className="fw-bold">{course.course_name}</Card.Title>
                   </div>
-                </div>
-              </Card.Body>
+                  <div className="mt-auto pt-3 border-top">
+                    <div className="d-flex flex-wrap gap-1">
+                      <Button variant="light" size="sm" className="flex-shrink-0 text-primary" onClick={() => handleViewCourse(course)}>
+                        <FaEye className="me-1" /> View
+                      </Button>
+                      <Button variant="outline-warning" size="sm" className="flex-shrink-0 text-warning" onClick={() => handleEditCourse(course)}>
+                        <FaEdit className="me-1" /> Edit
+                      </Button>
+                      <Button variant="outline-danger" size="sm" className="flex-shrink-0 text-danger" onClick={() => handleDeleteCourse(course)}>
+                        <FaTrash className="me-1" /> Delete
+                      </Button>
+                      <Button variant="outline-info" size="sm" className="flex-shrink-0 text-info" onClick={() => handleAddModule(course)}>
+                        <FaLayerGroup className="me-1" /> Add Module
+                      </Button>
+                    </div>
+                  </div>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))
+        ) : (
+          <Col xs={12}>
+            <Card className="shadow-sm border-0 text-center p-5">
+              <p className="text-muted mb-0">No {courseType} courses found</p>
             </Card>
           </Col>
-        ))}
+        )}
       </Row>
     </div>
   )
+  }
 
   const renderModulesView = () => (
     <div className="fade-in">

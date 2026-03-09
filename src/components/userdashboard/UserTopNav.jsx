@@ -19,13 +19,19 @@ const UserTopNav = ({ onMenuToggle, isMobile }) => {
         setLoading(true)
         let response
         
+        const config = {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`
+          }
+        }
+        
         // Fetch data based on user role
         if (userRoleType === 'student-unpaid') {
           // For unpaid students, fetch from student-unpaid endpoint with student_id
-          response = await axios.get(`https://brjobsedu.com/girls_course/girls_course_backend/api/student-unpaid/?student_id=${uniqueId}`)
+          response = await axios.get(`https://brjobsedu.com/girls_course/girls_course_backend/api/student-unpaid/?student_id=${uniqueId}`, config)
         } else {
           // For regular students, use the existing endpoint
-          response = await axios.get(`https://brjobsedu.com/girls_course/girls_course_backend/api/all-registration/?student_id=${uniqueId}`)
+          response = await axios.get(`https://brjobsedu.com/girls_course/girls_course_backend/api/all-registration/?student_id=${uniqueId}`, config)
         }
         
         const { data } = response
