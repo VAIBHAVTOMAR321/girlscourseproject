@@ -346,8 +346,14 @@
           margin-bottom: 8px;
           font-size: 12px;
         }
+        .small{
+          color: #000;
+        }
         .small a{
           color: #000 !important;
+        }
+         .small a :hover{
+          color: orange !important;
         }
         .form-control-gov {
           border: 1px solid #cbd5e0;
