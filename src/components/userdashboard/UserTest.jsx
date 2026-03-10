@@ -214,7 +214,7 @@ const UserTest = () => {
   const generateCertificate = async () => {
     try {
       const endpoint = userRoleType === 'student-unpaid' 
-        ? 'https://brjobsedu.com/girls_course/girls_course_backend/api/student-unpaid/'
+        ? 'https://brjobsedu.com/girls_course/girls_course_backend/api/enrollment-unpaid/'
         : 'https://brjobsedu.com/girls_course/girls_course_backend/api/student-entrollment/'
         
       const response = await axios.post(
