@@ -332,11 +332,13 @@ const Registration = () => {
 
       console.log("Registration response:", response.data);
        
-      if (response.data.status) {
+      // Check for success - handle different response formats
+      if (response.data.status || response.data.success || response.data.message?.includes("success")) {
           // Show success alert popup
           alert("Registration submitted successfully!");
-          // Redirect to login page
-          navigate("/login");
+          // Redirect to login page with unpaid student tab
+          console.log("Navigating to login page with role: student-unpaid");
+          navigate("/login", { state: { role: "student-unpaid" }, replace: true });
         } else {
           // Show error alert popup
           alert(response.data.message || "Registration failed. Please try again.");

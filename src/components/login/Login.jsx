@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Form, Button, Badge } from "react-bootstrap";
 import axios from "axios";
 import regBanner from "../../assets/reg-banner.jpg";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import "../../custom/style.css";
 import { useAuth } from "../../contexts/AuthContext";
 import "../../assets/css/login.css";
@@ -11,7 +11,9 @@ import Footer from "../footer/Footer";
 import NavBar from "../navbar/NavBar";
 
 const Login = () => {
-  const [role, setRole] = useState("admin");
+  const location = useLocation();
+  const initialRole = location.state?.role || "admin";
+  const [role, setRole] = useState(initialRole);
   const [errorMessage, setErrorMessage] = useState("");
   const [fieldErrors, setFieldErrors] = useState({});
   const [hoveredCourse, setHoveredCourse] = useState(null);
