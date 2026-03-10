@@ -4,6 +4,7 @@ import { useAuth } from '../../contexts/AuthContext'
 import UserTopNav from './UserTopNav'
 import UseLeftNav from './UseLeftNav'
 import "../../assets/css/UserDashboard.css"
+import { renderContentWithLineBreaks } from '../../utils/contentRenderer'
 import { FaBook, FaCheckCircle, FaClock, FaEye, FaLock, FaUnlock, FaQuestionCircle, FaArrowLeft, FaFileAlt, FaImage, FaGraduationCap, FaChalkboardTeacher, FaCertificate, FaStar, FaPlay, FaAward, FaCalendarCheck, FaCrown } from 'react-icons/fa'
 import { useLocation, useNavigate } from 'react-router-dom'
 import axios from 'axios'
@@ -401,7 +402,7 @@ const UserDashboard = () => {
                      <div className="d-flex justify-content-between align-items-center title-h mb-3">
                         <h4 className="mb-0">
                           <FaBook className="me-2 text-primary" />
-                          {selectedCourse.course_name} - Modules
+                          {renderContentWithLineBreaks(selectedCourse.course_name)} - Modules
                         </h4>
                        
                        {/* Certificate Button */}
@@ -531,7 +532,7 @@ const UserDashboard = () => {
                                         </div>
                                       )}
                                      <span className={!isAccessible ? 'text-gray-300' : 'text-white'}>
-                                       Module {module.order}: {module.mod_title}
+                                       Module {module.order}: {renderContentWithLineBreaks(module.mod_title)}
                                      </span>
                                      {!isAccessible && (
                                        <span className="ms-auto text-sm text-gray-300">
@@ -557,11 +558,11 @@ const UserDashboard = () => {
                                              </div>
                                              <div className="book-title flex-grow-1">
                                                <h5 className="mb-1 fw-bold text-primary">
-                                              {subModule.order}: {subModule.sub_modu_title}
+                                              {subModule.order}: {renderContentWithLineBreaks(subModule.sub_modu_title)}
                                                </h5>
                                                {subModule.sub_modu_description && (
                                                  <p className="mb-0 text-muted small">
-                                                   {subModule.sub_modu_description}
+                                                   {renderContentWithLineBreaks(subModule.sub_modu_description)}
                                                  </p>
                                                )}
                                              </div>
@@ -584,11 +585,11 @@ const UserDashboard = () => {
                                                                 <div className="content-pair">
                                                                   {item[0].toLowerCase() === 'title' ? (
                                                                     <div className="content-title fw-bold text-dark mb-2">
-                                                                      {item[1]}
+                                                                      {renderContentWithLineBreaks(item[1])}
                                                                     </div>
                                                                   ) : item[0].toLowerCase() === 'description' ? (
                                                                     <div className="content-description text-muted">
-                                                                      {item[1]}
+                                                                      {renderContentWithLineBreaks(item[1])}
                                                                     </div>
                                                                   ) : (
                                                                     <div className="content-field">
@@ -596,7 +597,7 @@ const UserDashboard = () => {
                                                                         {item[0]}:
                                                                       </span>
                                                                       <span className="field-value text-dark">
-                                                                        {item[1]}
+                                                                        {renderContentWithLineBreaks(item[1])}
                                                                       </span>
                                                                     </div>
                                                                   )}
@@ -607,11 +608,11 @@ const UserDashboard = () => {
                                                                     <div key={key} className="content-entry mb-2">
                                                                       {key.toLowerCase() === 'title' ? (
                                                                         <h6 className="content-title fw-bold text-dark mb-2">
-                                                                          {value}
+                                                                          {renderContentWithLineBreaks(value)}
                                                                         </h6>
                                                                       ) : key.toLowerCase() === 'description' ? (
                                                                         <p className="content-description text-muted mb-0">
-                                                                          {value}
+                                                                          {renderContentWithLineBreaks(value)}
                                                                         </p>
                                                                       ) : (
                                                                         <div className="content-field">
@@ -619,7 +620,7 @@ const UserDashboard = () => {
                                                                             {key}:
                                                                           </span>
                                                                           <span className="field-value text-dark">
-                                                                            {value}
+                                                                            {renderContentWithLineBreaks(value)}
                                                                           </span>
                                                                         </div>
                                                                       )}
@@ -628,7 +629,7 @@ const UserDashboard = () => {
                                                                 </div>
                                                               ) : (
                                                                 <div className="content-text text-dark">
-                                                                  {item}
+                                                                  {renderContentWithLineBreaks(item)}
                                                                 </div>
                                                               )}
                                                             </div>
@@ -745,11 +746,11 @@ const UserDashboard = () => {
                                                                 <div className="content-pair">
                                                                   {item[0].toLowerCase() === 'title' ? (
                                                                     <div className="content-title fw-bold text-dark mb-2">
-                                                                      {item[1]}
+                                                                      {renderContentWithLineBreaks(item[1])}
                                                                     </div>
                                                                   ) : item[0].toLowerCase() === 'description' ? (
                                                                     <div className="content-description text-muted">
-                                                                      {item[1]}
+                                                                      {renderContentWithLineBreaks(item[1])}
                                                                     </div>
                                                                   ) : (
                                                                     <div className="content-field">
@@ -757,7 +758,7 @@ const UserDashboard = () => {
                                                                         {item[0]}:
                                                                       </span>
                                                                       <span className="field-value text-dark">
-                                                                        {item[1]}
+                                                                        {renderContentWithLineBreaks(item[1])}
                                                                       </span>
                                                                     </div>
                                                                   )}
@@ -768,11 +769,11 @@ const UserDashboard = () => {
                                                                     <div key={key} className="content-entry mb-2">
                                                                       {key.toLowerCase() === 'title' ? (
                                                                         <h6 className="content-title fw-bold text-dark mb-2">
-                                                                          {value}
+                                                                          {renderContentWithLineBreaks(value)}
                                                                         </h6>
                                                                       ) : key.toLowerCase() === 'description' ? (
                                                                         <p className="content-description text-muted mb-0">
-                                                                          {value}
+                                                                          {renderContentWithLineBreaks(value)}
                                                                         </p>
                                                                       ) : (
                                                                         <div className="content-field">
@@ -780,7 +781,7 @@ const UserDashboard = () => {
                                                                             {key}:
                                                                           </span>
                                                                           <span className="field-value text-dark">
-                                                                            {value}
+                                                                            {renderContentWithLineBreaks(value)}
                                                                           </span>
                                                                         </div>
                                                                       )}
@@ -789,7 +790,7 @@ const UserDashboard = () => {
                                                                 </div>
                                                               ) : (
                                                                 <div className="content-text text-dark">
-                                                                  {item}
+                                                                  {renderContentWithLineBreaks(item)}
                                                                 </div>
                                                               )}
                                                             </div>
@@ -952,7 +953,7 @@ const UserDashboard = () => {
                               </div>
                               <Card.Body className="p-4">
                                 <div className="text-center mb-2">
-                                  <h6 className="mb-1 course-title">{course.course_name}</h6>
+                                  <h6 className="mb-1 course-title">{renderContentWithLineBreaks(course.course_name)}</h6>
                                 </div>
                                 
                                 <div className="course-stats mb-4">

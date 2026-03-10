@@ -8,6 +8,7 @@ import AdminTopNav from './AdminTopNav'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import '../../assets/css/AdminDashboard.css'
+import { renderContentWithLineBreaks } from '../../utils/contentRenderer'
 import { 
   FaPlus, FaArrowLeft, FaBook, FaUsers, FaLayerGroup, 
   FaTrash, FaImage, FaList, FaEye, FaEdit 
@@ -660,7 +661,7 @@ const AdminDashboard = () => {
                         {course.course_status === 'paid' ? 'Paid' : 'Free'}
                       </Badge>
                     </div>
-                    <Card.Title className="fw-bold">{course.course_name}</Card.Title>
+                    <Card.Title className="fw-bold">{renderContentWithLineBreaks(course.course_name)}</Card.Title>
                   </div>
                   <div className="mt-auto pt-3 border-top">
                     <div className="d-flex flex-wrap gap-1">
@@ -707,7 +708,7 @@ const AdminDashboard = () => {
       <Card className="shadow-sm border-0 mb-4">
         <Card.Body>
           <h5 className="mb-3">
-            <FaBook className="me-2" /> {moduleViewData?.course?.course_name}
+            <FaBook className="me-2" /> {renderContentWithLineBreaks(moduleViewData?.course?.course_name)}
           </h5>
           <p className="text-muted small">
             Course ID: {moduleViewData?.course?.course_id}
@@ -774,7 +775,7 @@ const AdminDashboard = () => {
                   <Card.Body>
                     <div className="d-flex justify-content-between align-items-start mb-3">
                       <h6 className="fw-bold mb-0">
-                        Module {module.order}: {module.mod_title}
+                        Module {module.order}: {renderContentWithLineBreaks(module.mod_title)}
                       </h6>
                       <Badge bg="secondary">ID: {module.module_id}</Badge>
                     </div>
@@ -866,13 +867,13 @@ const AdminDashboard = () => {
       <Card className="shadow-sm border-0 mb-4">
         <Card.Body>
           <h5 className="mb-3">
-            <FaBook className="me-2" /> {submodulesViewData?.course?.course_name}
+            <FaBook className="me-2" /> {renderContentWithLineBreaks(submodulesViewData?.course?.course_name)}
           </h5>
           <p className="text-muted small">
             Course ID: {submodulesViewData?.course?.course_id}
           </p>
           <p className="text-muted small">
-            Module: {submodulesViewData?.module?.mod_title} (ID: {submodulesViewData?.module?.module_id})
+            Module: {renderContentWithLineBreaks(submodulesViewData?.module?.mod_title)} (ID: {submodulesViewData?.module?.module_id})
           </p>
         </Card.Body>
       </Card>
@@ -1018,22 +1019,22 @@ const AdminDashboard = () => {
                   <Card.Body>
                     <div className="d-flex justify-content-between align-items-start mb-3">
                       <h6 className="fw-bold mb-0">
-                        Submodule {submodule.order}: {submodule.sub_modu_title}
+                        Submodule {submodule.order}: {renderContentWithLineBreaks(submodule.sub_modu_title)}
                       </h6>
                       <Badge bg="secondary">ID: {submodule.sub_module_id}</Badge>
                     </div>
-                    <p className="mb-3">{submodule.sub_modu_description}</p>
+                    <p className="mb-3">{renderContentWithLineBreaks(submodule.sub_modu_description)}</p>
                     <div className="mb-3">
                       <h6 className="small fw-bold">Sections:</h6>
                       {submodule.sub_mod.map((section, sectionIndex) => (
                         <div key={sectionIndex} className="mb-3 p-2 border rounded bg-light">
                           <div className="d-flex justify-content-between align-items-start mb-2">
                             <h6 className="small fw-bold mb-0">
-                              Section {sectionIndex + 1}: {section.title || 'Untitled Section'}
+                              Section {sectionIndex + 1}: {renderContentWithLineBreaks(section.title || 'Untitled Section')}
                             </h6>
                           </div>
                           {section.description && (
-                            <p className="small mb-2">{section.description}</p>
+                            <p className="small mb-2">{renderContentWithLineBreaks(section.description)}</p>
                           )}
                         </div>
                       ))}
@@ -1088,7 +1089,7 @@ const AdminDashboard = () => {
       <Card className="shadow-sm border-0 mb-4">
         <Card.Body>
           <h5 className="mb-3">
-            <FaBook className="me-2" /> {questionsViewData?.course?.course_name}
+            <FaBook className="me-2" /> {renderContentWithLineBreaks(questionsViewData?.course?.course_name)}
           </h5>
           <div className="mb-3">
             <label className="form-label fw-bold">Select Module:</label>
@@ -1101,8 +1102,8 @@ const AdminDashboard = () => {
                     setQuestionsViewData({ ...questionsViewData, module })
                     fetchQuestions(questionsViewData.course.course_id, module.module_id)
                   }}
-                >
-                  {module.mod_title}
+                >  
+                  {renderContentWithLineBreaks(module.mod_title)}
                 </Button>
               ))}
             </div>
@@ -1274,13 +1275,13 @@ const AdminDashboard = () => {
   contentClassName="border-0"
   dialogClassName="m-0"
 >        <Modal.Header closeButton className="border-bottom py-2">
-          <Modal.Title className="fw-bold fs-5">{selectedCourse?.course_name}</Modal.Title>
+          <Modal.Title className="fw-bold fs-5">{renderContentWithLineBreaks(selectedCourse?.course_name)}</Modal.Title>
         </Modal.Header>
         <Modal.Body className="p-4">
           {selectedCourse && (
             <div>
               <p><strong>Course ID:</strong> {selectedCourse.course_id}</p>
-              <p><strong>Course Name:</strong> {selectedCourse.course_name}</p>
+              <p><strong>Course Name:</strong> {renderContentWithLineBreaks(selectedCourse.course_name)}</p>
               {selectedCourse.modules && selectedCourse.modules.length > 0 && (
                 <div className="mt-4">
                   <h5>Modules ({selectedCourse.modules.length})</h5>
@@ -1288,7 +1289,7 @@ const AdminDashboard = () => {
                     {selectedCourse.modules.map((mod, index) => (
                       <div key={index} className="module-item mb-4 p-3 border rounded">
                         <h6 className="fw-bold mb-2">
-                          Module {mod.order}: {mod.mod_title}
+                          Module {mod.order}: {renderContentWithLineBreaks(mod.mod_title)}
                           <Badge bg="secondary" className="ms-2">ID: {mod.module_id}</Badge>
                         </h6>
                         
@@ -1299,12 +1300,12 @@ const AdminDashboard = () => {
                               {mod.sub_modules.map((subMod, subIndex) => (
                                 <div key={subIndex} className="submodule-item mb-3 p-2 border rounded bg-light">
                                   <h7 className="fw-bold">
-                                    Submodule {subMod.order}: {subMod.sub_modu_title}
+                                    Submodule {subMod.order}: {renderContentWithLineBreaks(subMod.sub_modu_title)}
                                     <Badge bg="secondary" className="ms-2">ID: {subMod.sub_module_id}</Badge>
                                   </h7>
                                   
                                   {subMod.sub_modu_description && (
-                                    <p className="small mt-1">{subMod.sub_modu_description}</p>
+                                    <p className="small mt-1">{renderContentWithLineBreaks(subMod.sub_modu_description)}</p>
                                   )}
                                   
                                   {subMod.image && (
@@ -1326,10 +1327,10 @@ const AdminDashboard = () => {
                                         {subMod.sub_mod.map((section, sectionIndex) => (
                                           <div key={sectionIndex} className="section-item mb-2 p-1 border rounded">
                                             <h8 className="fw-bold small">
-                                              Section {sectionIndex + 1}: {section.title || 'Untitled Section'}
+                                              Section {sectionIndex + 1}: {renderContentWithLineBreaks(section.title || 'Untitled Section')}
                                             </h8>
                                             {section.description && (
-                                              <p className="small mt-1">{section.description}</p>
+                                              <p className="small mt-1">{renderContentWithLineBreaks(section.description)}</p>
                                             )}
                                             {section.topics && section.topics.length > 0 && (
                                               <div className="mt-1">
