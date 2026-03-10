@@ -233,8 +233,8 @@ const Enrollments = () => {
           <div className="content-area p-4">
             <Container fluid>
               <div className="d-flex justify-content-between align-items-center mb-4 page-header">
-                <div className="d-flex align-items-center gap-3">
-                  <Button variant="outline-secondary" size="sm" onClick={() => navigate('/AdminDashboard')} className="me-2">
+                <div className="d-flex align-items-center all-en-box gap-3">
+                  <Button variant="outline-secondary back-btn" size="sm" onClick={() => navigate('/AdminDashboard')} className="me-2">
                     <FaArrowLeft /> Dashboard
                   </Button>
                   <h4 className="mb-0">All Enrollments</h4>
@@ -259,22 +259,22 @@ const Enrollments = () => {
 
                 <Card className="enrollments-table-card border">
                   <Card.Header className="bg-light border-bottom py-2 px-3">
-                    <Nav variant="tabs" defaultActiveKey="paid" onSelect={(eventKey) => setEnrollmentType(eventKey)}>
-                      <Nav.Item>
-                        <Nav.Link eventKey="paid" className={enrollmentType === 'paid' ? 'active fw-semibold' : ''}>
-                          Paid Enrollments
-                        </Nav.Link>
-                      </Nav.Item>
-                      <Nav.Item>
-                        <Nav.Link eventKey="unpaid" className={enrollmentType === 'unpaid' ? 'active fw-semibold' : ''}>
-                          Unpaid Enrollments
-                        </Nav.Link>
-                      </Nav.Item>
-                    </Nav>
+                     <Nav variant="tabs" activeKey={enrollmentType} onSelect={(eventKey) => setEnrollmentType(eventKey)}>
+                       <Nav.Item>
+                         <Nav.Link eventKey="paid">
+                           Paid Enrollments
+                         </Nav.Link>
+                       </Nav.Item>
+                       <Nav.Item>
+                         <Nav.Link eventKey="unpaid">
+                           Unpaid Enrollments
+                         </Nav.Link>
+                       </Nav.Item>
+                     </Nav>
                   </Card.Header>
                   
                   <Card.Header className="bg-light border-bottom py-2 px-3 d-flex justify-content-between align-items-center">
-                    <div className="d-flex align-items-center gap-2">
+                    <div className="d-flex align-items-center paid-btn  gap-2">
                       <h5 className="mb-0 fw-semibold text-secondary">
                         {enrollmentType === 'paid' ? 'Paid' : 'Unpaid'} Enrollments
                       </h5>
