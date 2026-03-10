@@ -29,8 +29,8 @@ function Footer() {
                 <a href="/Login"><li> <i><MdArrowForwardIos className='i-space' /></i>Home</li></a>
                 <a href="/Login"><li> <i><MdArrowForwardIos className='i-space' /></i>Login</li></a>
                 <a href="/Registration"><li> <i><MdArrowForwardIos className='i-space' /></i>Register</li></a>
-                <a href="/login"><li> <i><MdArrowForwardIos className='i-space' /></i>Certificate</li></a>
-                <a href="/register"><li> <i><MdArrowForwardIos className='i-space' /></i>Contact us</li></a>
+
+               
               </ul>
             </div>
           </Col>
