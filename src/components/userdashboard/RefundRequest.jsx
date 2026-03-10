@@ -65,6 +65,31 @@ const RefundRequest = () => {
       }))
     }
 
+    // Function to fetch course registration data from brainrock API
+    const fetchCourseRegistrationData = async (mobileNo) => {
+      if (mobileNo) {
+        try {
+          const courseRegResponse = await axios.get(
+            `https://brainrock.in/brainrock/backend/api/course-registration/?mobile_no=${mobileNo}`
+          )
+          
+          if (courseRegResponse.data.success && courseRegResponse.data.data) {
+            const courseRegData = courseRegResponse.data.data
+            setFormData(prev => ({
+              ...prev,
+              course_id: courseRegData.application_for_course_id?.[0] || '', // Get first course ID
+              amount: courseRegData.course_fee || prev.amount, // Use course fee from API
+              transaction_id: courseRegData.transaction_id || '', // Add transaction ID if available
+              course_name: courseRegData.application_for_course?.[0] || '', // Get first course name
+              applicant_id: courseRegData.applicant_id || prev.applicant_id // Use applicant_id from brainrock API
+            }))
+          }
+        } catch (courseRegError) {
+          console.error('Error fetching course registration data:', courseRegError)
+        }
+      }
+    }
+
     // If user data is provided in navigation state, use it to pre-fill form
      if (navigationUserData) {
       setUserData(navigationUserData)
@@ -76,6 +101,10 @@ const RefundRequest = () => {
         applicant_id: uniqueId // Set applicant_id from context
       }))
       setCanRequestRefund(navigationUserData.status === 'pending')
+      
+      // Fetch course registration data using mobile number from navigation user data
+      const mobileNo = userRoleType === 'student-unpaid' ? navigationUserData.phone : navigationUserData.mobile_no
+      fetchCourseRegistrationData(mobileNo)
     } else {
       // Otherwise, fetch user data from API
       const fetchUserData = async () => {
@@ -111,6 +140,10 @@ const RefundRequest = () => {
             // Check if user can request refund based on status
             // Only allow if status is pending
             setCanRequestRefund(data.data.status === 'pending')
+            
+            // Fetch additional course registration data from brainrock API using mobile number
+            const mobileNo = userRoleType === 'student-unpaid' ? data.data.phone : data.data.mobile_no
+            fetchCourseRegistrationData(mobileNo)
           }
         } catch (error) {
           console.error('Error fetching user data:', error)
@@ -122,15 +155,8 @@ const RefundRequest = () => {
       }
     }
 
-     // If course data is provided, pre-fill course details
-     if (course) {
-       setFormData(prev => ({
-         ...prev,
-         course_name: course.course_name,
-         course_id: course.course_id,
-         amount: course.course_fee || prev.amount // Use course fee if available
-       }))
-     }
+     // Do NOT overwrite brainrock API data with course data from navigation state
+     // Prioritize brainrock API data over navigation state course data
   }, [uniqueId, userRoleType, course, navigationUserData])
 
   const handleMenuToggle = () => {
@@ -161,7 +187,7 @@ const RefundRequest = () => {
     const payload = {
       request_id: `REQ-${Date.now().toString().slice(-8)}`,
       full_name: formData.full_name,
-      applicant_id: uniqueId,
+      applicant_id: formData.applicant_id, // Use applicant_id from brainrock API
       amount: formData.amount,
       course_name: formData.course_name || null,
       course_id: formData.course_id || null,
