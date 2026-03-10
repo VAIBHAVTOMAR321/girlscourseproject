@@ -15,7 +15,11 @@ const RefundRequest = () => {
     full_name: '',
     phone: '',
     transaction_id: '',
-    reason: ''
+    reason: '',
+    course_name: '',
+    course_id: '',
+    amount: '',
+    applicant_id: ''
   })
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -26,6 +30,9 @@ const RefundRequest = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const { uniqueId, accessToken, isAuthenticated, userRoleType } = useAuth()
+
+  // Get course data from navigation state if available
+  const { course, userData: navigationUserData } = location.state || {}
 
   // Redirect to login if not authenticated or to dashboard if unpaid user
   React.useEffect(() => {
@@ -50,47 +57,81 @@ const RefundRequest = () => {
 
   // Fetch user data to pre-fill form
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const config = {
-          headers: {
-            'Authorization': `Bearer ${accessToken}`
+    // Set applicant_id from context immediately
+    if (uniqueId) {
+      setFormData(prev => ({
+        ...prev,
+        applicant_id: uniqueId
+      }))
+    }
+
+    // If user data is provided in navigation state, use it to pre-fill form
+     if (navigationUserData) {
+      setUserData(navigationUserData)
+      setFormData(prev => ({
+        ...prev,
+        full_name: userRoleType === 'student-unpaid' ? navigationUserData.full_name : navigationUserData.candidate_name,
+        phone: userRoleType === 'student-unpaid' ? navigationUserData.phone : navigationUserData.mobile_no,
+        amount: navigationUserData.course_fee || navigationUserData.amount || '', // Check for course fee first
+        applicant_id: uniqueId // Set applicant_id from context
+      }))
+      setCanRequestRefund(navigationUserData.status === 'pending')
+    } else {
+      // Otherwise, fetch user data from API
+      const fetchUserData = async () => {
+        try {
+          const config = {
+            headers: {
+              'Authorization': `Bearer ${accessToken}`
+            }
           }
-        }
-        
-        let response
-        
-        // Fetch data based on user role
-        if (userRoleType === 'student-unpaid') {
-          response = await axios.get(`https://brjobsedu.com/girls_course/girls_course_backend/api/student-unpaid/?student_id=${uniqueId}`, config)
-        } else {
-          response = await axios.get(`https://brjobsedu.com/girls_course/girls_course_backend/api/all-registration/?student_id=${uniqueId}`)
-        }
-        
-        const { data } = response
-        
-        if (data.success) {
-          setUserData(data.data)
-          // Pre-fill form with user data
-          setFormData(prev => ({
-            ...prev,
-            full_name: userRoleType === 'student-unpaid' ? data.data.full_name : data.data.candidate_name,
-            phone: userRoleType === 'student-unpaid' ? data.data.phone : data.data.mobile_no
-          }))
           
-          // Check if user can request refund based on status
-          // Only allow if status is pending
-          setCanRequestRefund(data.data.status === 'pending')
+          let response
+          
+          // Fetch data based on user role
+          if (userRoleType === 'student-unpaid') {
+            response = await axios.get(`https://brjobsedu.com/girls_course/girls_course_backend/api/student-unpaid/?student_id=${uniqueId}`, config)
+          } else {
+            response = await axios.get(`https://brjobsedu.com/girls_course/girls_course_backend/api/all-registration/?student_id=${uniqueId}`)
+          }
+          
+          const { data } = response
+          
+          if (data.success) {
+            setUserData(data.data)
+             // Pre-fill form with user data
+            setFormData(prev => ({
+              ...prev,
+              full_name: userRoleType === 'student-unpaid' ? data.data.full_name : data.data.candidate_name,
+              phone: userRoleType === 'student-unpaid' ? data.data.phone : data.data.mobile_no,
+              amount: data.data.course_fee || data.data.amount || '', // Check for course fee first
+              applicant_id: uniqueId // Set applicant_id from context
+            }))
+            
+            // Check if user can request refund based on status
+            // Only allow if status is pending
+            setCanRequestRefund(data.data.status === 'pending')
+          }
+        } catch (error) {
+          console.error('Error fetching user data:', error)
         }
-      } catch (error) {
-        console.error('Error fetching user data:', error)
+      }
+
+      if (uniqueId) {
+        fetchUserData()
       }
     }
 
-    if (uniqueId) {
-      fetchUserData()
-    }
-  }, [uniqueId, userRoleType])
+     // If course data is provided, pre-fill course details
+     if (course) {
+       setFormData(prev => ({
+         ...prev,
+         course_name: course.course_name,
+         course_id: course.course_id,
+         amount: course.course_fee || prev.amount // Use course fee if available
+       }))
+     }
+  }, [uniqueId, userRoleType, course, navigationUserData])
 
   const handleMenuToggle = () => {
     setShowOffcanvas(!showOffcanvas)
@@ -116,13 +157,24 @@ const RefundRequest = () => {
     setError(null)
     setSuccess(false)
 
+    // Prepare payload based on the required format
+    const payload = {
+      request_id: `REQ-${Date.now().toString().slice(-8)}`,
+      full_name: formData.full_name,
+      applicant_id: uniqueId,
+      amount: formData.amount,
+      course_name: formData.course_name || null,
+      course_id: formData.course_id || null,
+      phone: formData.phone,
+      transaction_id: formData.transaction_id,
+      reason: formData.reason,
+      status: 'pending'
+    }
+
     try {
       const response = await axios.post(
         'https://brjobsedu.com/girls_course/girls_course_backend/api/refund-request/',
-        {
-          ...formData,
-          student_id: uniqueId
-        },
+        payload,
         {
           headers: {
             'Authorization': `Bearer ${accessToken}`,
@@ -133,12 +185,14 @@ const RefundRequest = () => {
 
       if (response.data.success) {
         setSuccess(true)
-        setFormData({
-          full_name: '',
-          phone: '',
+        setFormData(prev => ({
+          ...prev,
           transaction_id: '',
-          reason: ''
-        })
+          reason: '',
+          course_name: '',
+          course_id: '',
+          amount: ''
+        }))
       } else {
         setError(response.data.message || 'Failed to submit refund request')
       }
@@ -197,8 +251,22 @@ const RefundRequest = () => {
                         </Alert>
                       )}
 
-                       <Form onSubmit={handleSubmit}>
+                          <Form onSubmit={handleSubmit}>
                         <Row>
+                          <Col md={6} className="mb-3">
+                            <Form.Group>
+                              <Form.Label>Applicant ID</Form.Label>
+                              <Form.Control
+                                type="text"
+                                name="applicant_id"
+                                value={formData.applicant_id}
+                                onChange={handleInputChange}
+                                placeholder="Enter your applicant ID"
+                                required
+                                disabled
+                              />
+                            </Form.Group>
+                          </Col>
                           <Col md={6} className="mb-3">
                             <Form.Group>
                               <Form.Label>Full Name</Form.Label>
@@ -224,6 +292,52 @@ const RefundRequest = () => {
                                 placeholder="Enter your phone number"
                                 required
                                 disabled
+                              />
+                            </Form.Group>
+                          </Col>
+                          {formData.course_name && (
+                            <Col md={6} className="mb-3">
+                              <Form.Group>
+                                <Form.Label>Course Name</Form.Label>
+                                <Form.Control
+                                  type="text"
+                                  name="course_name"
+                                  value={formData.course_name}
+                                  onChange={handleInputChange}
+                                  placeholder="Enter course name"
+                                  required
+                                  disabled
+                                />
+                              </Form.Group>
+                            </Col>
+                          )}
+                          {formData.course_id && (
+                            <Col md={6} className="mb-3">
+                              <Form.Group>
+                                <Form.Label>Course ID</Form.Label>
+                                <Form.Control
+                                  type="text"
+                                  name="course_id"
+                                  value={formData.course_id}
+                                  onChange={handleInputChange}
+                                  placeholder="Enter course ID"
+                                  required
+                                  disabled
+                                />
+                              </Form.Group>
+                            </Col>
+                          )}
+                          <Col md={6} className="mb-3">
+                            <Form.Group>
+                              <Form.Label>Amount</Form.Label>
+                              <Form.Control
+                                type="number"
+                                name="amount"
+                                value={formData.amount}
+                                onChange={handleInputChange}
+                                placeholder="Enter refund amount"
+                                required
+                                disabled={!canRequestRefund}
                               />
                             </Form.Group>
                           </Col>

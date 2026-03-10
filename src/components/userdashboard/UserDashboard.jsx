@@ -4,7 +4,6 @@ import { useAuth } from '../../contexts/AuthContext'
 import UserTopNav from './UserTopNav'
 import UseLeftNav from './UseLeftNav'
 import "../../assets/css/UserDashboard.css"
-import { renderContentWithLineBreaks } from '../../utils/contentRenderer'
 import { FaBook, FaCheckCircle, FaClock, FaEye, FaLock, FaUnlock, FaQuestionCircle, FaArrowLeft, FaFileAlt, FaImage, FaGraduationCap, FaChalkboardTeacher, FaCertificate, FaStar, FaPlay, FaAward, FaCalendarCheck, FaCrown } from 'react-icons/fa'
 import { useLocation, useNavigate } from 'react-router-dom'
 import axios from 'axios'
@@ -19,6 +18,7 @@ const UserDashboard = () => {
   const [modulesLoading, setModulesLoading] = useState(false)
   const [completedModules, setCompletedModules] = useState([])
   const [error, setError] = useState(null)
+  const [refundRequests, setRefundRequests] = useState([])
 
   const location = useLocation()
   const navigate = useNavigate()
@@ -94,15 +94,74 @@ const UserDashboard = () => {
     }
   }
 
-  // Fetch courses and module progress when component mounts or uniqueId/accessToken changes
+  // Fetch refund requests for the user
+  const fetchRefundRequests = async () => {
+    try {
+      const response = await axios.get(
+        `https://brjobsedu.com/girls_course/girls_course_backend/api/student-unpaid/?student_id=${uniqueId}`,
+        {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      )
+      
+      if (response.data.success && Array.isArray(response.data.data)) {
+        setRefundRequests(response.data.data)
+      }
+    } catch (error) {
+      console.error('Error fetching refund requests:', error)
+      setRefundRequests([])
+    }
+  }
+
+  // Fetch courses, module progress, and refund requests when component mounts or uniqueId/accessToken changes
   useEffect(() => {
     const fetchData = async () => {
       await fetchCourses()
       await fetchModuleProgress()
+      await fetchRefundRequests()
     }
     
     fetchData()
   }, [uniqueId, accessToken])
+
+  // Fetch user data for navigation state
+  const [userData, setUserData] = useState(null)
+  const fetchUserData = async () => {
+    try {
+      const config = {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`
+        }
+      }
+      
+      let response
+      
+      // Fetch data based on user role
+      if (userRoleType === 'student-unpaid') {
+        response = await axios.get(`https://brjobsedu.com/girls_course/girls_course_backend/api/student-unpaid/?student_id=${uniqueId}`, config)
+      } else {
+        response = await axios.get(`https://brjobsedu.com/girls_course/girls_course_backend/api/all-registration/?student_id=${uniqueId}`)
+      }
+      
+      const { data } = response
+      
+      if (data.success) {
+        setUserData(data.data)
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error)
+    }
+  }
+
+  // Fetch user data on mount
+  useEffect(() => {
+    if (uniqueId) {
+      fetchUserData()
+    }
+  }, [uniqueId, userRoleType])
 
   // Fetch course modules
   const fetchCourseModules = async (courseId) => {
@@ -402,7 +461,7 @@ const UserDashboard = () => {
                      <div className="d-flex justify-content-between align-items-center title-h mb-3">
                         <h4 className="mb-0">
                           <FaBook className="me-2 text-primary" />
-                          {renderContentWithLineBreaks(selectedCourse.course_name)} - Modules
+                          {selectedCourse.course_name} - Modules
                         </h4>
                        
                        {/* Certificate Button */}
@@ -532,7 +591,7 @@ const UserDashboard = () => {
                                         </div>
                                       )}
                                      <span className={!isAccessible ? 'text-gray-300' : 'text-white'}>
-                                       Module {module.order}: {renderContentWithLineBreaks(module.mod_title)}
+                                       Module {module.order}: {module.mod_title}
                                      </span>
                                      {!isAccessible && (
                                        <span className="ms-auto text-sm text-gray-300">
@@ -558,11 +617,11 @@ const UserDashboard = () => {
                                              </div>
                                              <div className="book-title flex-grow-1">
                                                <h5 className="mb-1 fw-bold text-primary">
-                                              {subModule.order}: {renderContentWithLineBreaks(subModule.sub_modu_title)}
+                                              {subModule.order}: {subModule.sub_modu_title}
                                                </h5>
                                                {subModule.sub_modu_description && (
                                                  <p className="mb-0 text-muted small">
-                                                   {renderContentWithLineBreaks(subModule.sub_modu_description)}
+                                                   {subModule.sub_modu_description}
                                                  </p>
                                                )}
                                              </div>
@@ -585,11 +644,11 @@ const UserDashboard = () => {
                                                                 <div className="content-pair">
                                                                   {item[0].toLowerCase() === 'title' ? (
                                                                     <div className="content-title fw-bold text-dark mb-2">
-                                                                      {renderContentWithLineBreaks(item[1])}
+                                                                      {item[1]}
                                                                     </div>
                                                                   ) : item[0].toLowerCase() === 'description' ? (
                                                                     <div className="content-description text-muted">
-                                                                      {renderContentWithLineBreaks(item[1])}
+                                                                      {item[1]}
                                                                     </div>
                                                                   ) : (
                                                                     <div className="content-field">
@@ -597,7 +656,7 @@ const UserDashboard = () => {
                                                                         {item[0]}:
                                                                       </span>
                                                                       <span className="field-value text-dark">
-                                                                        {renderContentWithLineBreaks(item[1])}
+                                                                        {item[1]}
                                                                       </span>
                                                                     </div>
                                                                   )}
@@ -608,11 +667,11 @@ const UserDashboard = () => {
                                                                     <div key={key} className="content-entry mb-2">
                                                                       {key.toLowerCase() === 'title' ? (
                                                                         <h6 className="content-title fw-bold text-dark mb-2">
-                                                                          {renderContentWithLineBreaks(value)}
+                                                                          {value}
                                                                         </h6>
                                                                       ) : key.toLowerCase() === 'description' ? (
                                                                         <p className="content-description text-muted mb-0">
-                                                                          {renderContentWithLineBreaks(value)}
+                                                                          {value}
                                                                         </p>
                                                                       ) : (
                                                                         <div className="content-field">
@@ -620,7 +679,7 @@ const UserDashboard = () => {
                                                                             {key}:
                                                                           </span>
                                                                           <span className="field-value text-dark">
-                                                                            {renderContentWithLineBreaks(value)}
+                                                                            {value}
                                                                           </span>
                                                                         </div>
                                                                       )}
@@ -629,7 +688,7 @@ const UserDashboard = () => {
                                                                 </div>
                                                               ) : (
                                                                 <div className="content-text text-dark">
-                                                                  {renderContentWithLineBreaks(item)}
+                                                                  {item}
                                                                 </div>
                                                               )}
                                                             </div>
@@ -746,11 +805,11 @@ const UserDashboard = () => {
                                                                 <div className="content-pair">
                                                                   {item[0].toLowerCase() === 'title' ? (
                                                                     <div className="content-title fw-bold text-dark mb-2">
-                                                                      {renderContentWithLineBreaks(item[1])}
+                                                                      {item[1]}
                                                                     </div>
                                                                   ) : item[0].toLowerCase() === 'description' ? (
                                                                     <div className="content-description text-muted">
-                                                                      {renderContentWithLineBreaks(item[1])}
+                                                                      {item[1]}
                                                                     </div>
                                                                   ) : (
                                                                     <div className="content-field">
@@ -758,7 +817,7 @@ const UserDashboard = () => {
                                                                         {item[0]}:
                                                                       </span>
                                                                       <span className="field-value text-dark">
-                                                                        {renderContentWithLineBreaks(item[1])}
+                                                                        {item[1]}
                                                                       </span>
                                                                     </div>
                                                                   )}
@@ -769,11 +828,11 @@ const UserDashboard = () => {
                                                                     <div key={key} className="content-entry mb-2">
                                                                       {key.toLowerCase() === 'title' ? (
                                                                         <h6 className="content-title fw-bold text-dark mb-2">
-                                                                          {renderContentWithLineBreaks(value)}
+                                                                          {value}
                                                                         </h6>
                                                                       ) : key.toLowerCase() === 'description' ? (
                                                                         <p className="content-description text-muted mb-0">
-                                                                          {renderContentWithLineBreaks(value)}
+                                                                          {value}
                                                                         </p>
                                                                       ) : (
                                                                         <div className="content-field">
@@ -781,7 +840,7 @@ const UserDashboard = () => {
                                                                             {key}:
                                                                           </span>
                                                                           <span className="field-value text-dark">
-                                                                            {renderContentWithLineBreaks(value)}
+                                                                            {value}
                                                                           </span>
                                                                         </div>
                                                                       )}
@@ -790,7 +849,7 @@ const UserDashboard = () => {
                                                                 </div>
                                                               ) : (
                                                                 <div className="content-text text-dark">
-                                                                  {renderContentWithLineBreaks(item)}
+                                                                  {item}
                                                                 </div>
                                                               )}
                                                             </div>
@@ -953,7 +1012,7 @@ const UserDashboard = () => {
                               </div>
                               <Card.Body className="p-4">
                                 <div className="text-center mb-2">
-                                  <h6 className="mb-1 course-title">{renderContentWithLineBreaks(course.course_name)}</h6>
+                                  <h6 className="mb-1 course-title">{course.course_name}</h6>
                                 </div>
                                 
                                 <div className="course-stats mb-4">
@@ -987,27 +1046,59 @@ const UserDashboard = () => {
                                       <small className="text-muted">Learner</small>
                                     </div>
                                   </div>
-                                  <Button 
-                                    variant={isAllModulesCompleted(course) ? "success" : "primary"} 
-                                    onClick={() => handleViewCourse(course)}
-                                    className="d-flex align-items-center btn-custom"
-                                    style={{
-                                      background: 'linear-gradient(135deg, #667eea, #764ba2)',
-                                      border: 'none'
-                                    }}
-                                  >
-                                    {isAllModulesCompleted(course) ? (
-                                      <>
-                                        <FaCheckCircle className="me-2" />
-                                        Completed
-                                      </>
-                                    ) : (
-                                      <>
-                                        <FaPlay className="me-2" />
-                                        Start
-                                      </>
+                                  <div className="d-flex gap-2">
+                                    <Button 
+                                      variant={isAllModulesCompleted(course) ? "success" : "primary"} 
+                                      onClick={() => handleViewCourse(course)}
+                                      className="d-flex align-items-center btn-custom"
+                                      style={{
+                                        background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                                        border: 'none'
+                                      }}
+                                    >
+                                      {isAllModulesCompleted(course) ? (
+                                        <>
+                                          <FaCheckCircle className="me-2" />
+                                          Completed
+                                        </>
+                                      ) : (
+                                        <>
+                                          <FaPlay className="me-2" />
+                                          Start
+                                        </>
+                                      )}
+                                    </Button>
+                                    {/* Refund Request Button - Only for paid users with pending status and no existing pending refund */}
+                                    {userRoleType !== 'student-unpaid' && !isAllModulesCompleted(course) && !refundRequests.some(req => req.status === 'pending') && (
+                                      <Button 
+                                        variant="outline-danger" 
+                                        onClick={() => {
+                                          // Navigate to refund request with course details to auto-fill
+                                          navigate('/RefundRequest', {
+                                            state: {
+                                              course: course,
+                                              userData: {
+                                                ...userData,
+                                                status: userData?.status || 'pending',
+                                                amount: course.course_fee || userData?.course_fee || userData?.amount || '' // Use course fee if available
+                                              }
+                                            }
+                                          })
+                                        }}
+                                        className="d-flex align-items-center"
+                                      >
+                                        <i className="bi bi-currency-exchange me-2"></i>
+                                        Refund
+                                      </Button>
                                     )}
-                                  </Button>
+                                    {/* Show pending status if refund request is pending */}
+                                    {refundRequests.some(req => req.status === 'pending') && (
+                                      <Badge bg="warning" className="d-flex align-items-center p-2">
+                                        <i className="bi bi-clock me-2"></i>
+                                        Refund Pending
+                                      </Badge>
+                                    )}
+                                  </div>
                                 </div>
                               </Card.Body>
                             </Card>
