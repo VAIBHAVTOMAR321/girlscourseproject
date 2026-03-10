@@ -7,6 +7,8 @@ import "../../custom/style.css";
 import { useAuth } from "../../contexts/AuthContext";
 import "../../assets/css/login.css";
 import Logo from "../../assets/brainrock_logo.png";
+import Footer from "../footer/Footer";
+import NavBar from "../navbar/NavBar";
 
 const Login = () => {
   const [role, setRole] = useState("admin");
@@ -183,31 +185,6 @@ const Login = () => {
 
   return (
     <div className="gov-portal-bg">
-      {/* Fixed Header with Flexbox */}
-      <header className="official-header-fixed">
-        <Container fluid>
-          <div className="official-header-content">
-            <div className="header-left">
-              <div className="official-seal">
-                <div className="seal-inner">
-                  <img src={Logo} alt="Logo" />
-                </div>
-              </div>
-            </div>
-            
-            <div className="header-center">
-              <h1 className="portal-title">National Education & Training Portal</h1>
-            </div>
-            
-            <div className="header-right">
-              <div className="header-nav">
-                <span className="nav-item">Home</span>
-              </div>
-            </div>
-          </div>
-        </Container>
-      </header>
-
       {/* Main Content with Padding-top to account for fixed header */}
       <Container className="mt-5 main-content-wrapper">
        
@@ -494,16 +471,11 @@ const Login = () => {
           </Col>
         </Row>
         
-        <div className="footer-notice text-center mt-4">
-          <p className="small text-muted">
-            © 2026 National Education Portal. All rights reserved. | 
-            Designed by <a href="https://brainrock.in/" target="_blank" rel="noopener noreferrer" className="footer-link">Brainrock</a>
-          </p>
-        </div>
+      
       </Container>
 
       
-     
+ 
     </div>
   );
 };

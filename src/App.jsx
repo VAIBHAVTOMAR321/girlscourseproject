@@ -4,6 +4,7 @@ import {
   Routes,
   Route,
   Navigate,
+  useLocation,
 } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css'; // If you use Bootstrap CSS
 import 'bootstrap-icons/font/bootstrap-icons.css'; // <-- ADD THIS LINE
@@ -18,19 +19,23 @@ import Enrollments from "./components/admindashboard/Enrollments.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import { AuthProvider } from "./contexts/AuthContext.jsx";
 import UserProfile from "./components/userdashboard/UserProfile.jsx";
-
-
 import UserTest from "./components/userdashboard/UserTest.jsx";
 import Registration from "./components/registration/Registration.jsx";
+import Footer from "./components/footer/Footer.jsx";
+import NavBar from "./components/navbar/NavBar.jsx";
 
-function App() {
+function AppContent() {
+  const location = useLocation();
+  const hideFooter = location.pathname.includes("/AdminDashboard") || location.pathname.includes("/UserDashboard") || location.pathname.includes("/UserProfile") || location.pathname.includes("/UserTest") || location.pathname.includes("/Enrollments");
+  const hideNavBar = location.pathname.includes("/AdminDashboard") || location.pathname.includes("/UserDashboard") || location.pathname.includes("/UserProfile") || location.pathname.includes("/UserTest") || location.pathname.includes("/Enrollments");
+
   return (
-    <AuthProvider>
-      <Router>
-        <Routes>
+    <>
+      {!hideNavBar && <NavBar />}
+      <Routes>
           <Route path="/" element={<Navigate to="/login" />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/UserDashboard" element={<UserDashboard />} />
+          {/* <Route path="/UserDashboard" element={<UserDashboard />} /> */}
           <Route path="/Registration" element={<Registration />} />
           
           {/* User Dashboard Routes - Accessible to all authenticated users */}
@@ -52,14 +57,14 @@ function App() {
             }
           />
           
-          {/* <Route
+          <Route
             path="/UserDashboard"
             element={
               <ProtectedRoute>
                 <UserDashboard />
               </ProtectedRoute>
             }
-          /> */}
+          />
           <Route
             path="/UserTest"
             element={
@@ -94,6 +99,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+          
           <Route
             path="/AdminTopNav"
             element={
@@ -137,6 +143,16 @@ function App() {
             }
           />
         </Routes>
+        {!hideFooter && <Footer />}
+    </>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <Router>
+        <AppContent />
       </Router>
     </AuthProvider>
   );

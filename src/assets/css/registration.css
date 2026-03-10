@@ -65,6 +65,7 @@
           font-weight: bold;
           font-size: 10px;
           line-height: 1.2;
+          display: flex;
         }
         
         .seal-inner img {
