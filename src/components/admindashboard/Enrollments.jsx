@@ -639,7 +639,7 @@ const Enrollments = () => {
           )}
         </Modal.Body>
         <Modal.Footer className="border-top py-2 px-3">
-          <Button variant="light" onClick={() => setShowViewModal(false)} className="border small">
+          <Button variant="light" onClick={() => setShowViewModal(false)} className="border small en-btn">
             Close
           </Button>
         </Modal.Footer>
