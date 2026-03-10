@@ -233,28 +233,29 @@ const Enrollments = () => {
           <div className="content-area p-4">
             <Container fluid>
               <div className="d-flex justify-content-between align-items-center mb-4 page-header">
-                <div>
+                <div className="d-flex align-items-center gap-3">
                   <Button variant="outline-secondary" size="sm" onClick={() => navigate('/AdminDashboard')} className="me-2">
                     <FaArrowLeft /> Dashboard
                   </Button>
-                  <h4 className="d-inline-block align-middle mb-0">All Enrollments</h4>
+                  <h4 className="mb-0">All Enrollments</h4>
+                </div>
+                <div className="search-section" style={{ width: '400px' }}>
+                  <Form.Group controlId="searchTerm" className="mb-0">
+                    <Form.Control 
+                      type="text" 
+                      placeholder="Search by student name, ID, phone, or email..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="search-input"
+                      size="sm"
+                    />
+                  </Form.Group>
                 </div>
               </div>
             <Row>
               <Col xs={12}>
                  {/* Search and Filter Section */}
-                 <div className="search-section mb-2">
-                   <Form.Group controlId="searchTerm">
-                     <Form.Control 
-                       type="text" 
-                       placeholder="Search by student name, ID, phone, or email..."
-                       value={searchTerm}
-                       onChange={(e) => setSearchTerm(e.target.value)}
-                       className="search-input"
-                       size="sm"
-                     />
-                   </Form.Group>
-                 </div>
+               
 
                 <Card className="enrollments-table-card border">
                   <Card.Header className="bg-light border-bottom py-2 px-3">
