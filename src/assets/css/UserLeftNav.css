@@ -1,6 +1,6 @@
 /* User Left Navigation */
 .user-left-nav {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(90deg, #13539d 0%, #1d71ce);
   min-height: 100vh;
   transition: all 0.3s ease;
   z-index: 1000;

@@ -6,7 +6,7 @@
   height: 100vh;
   width: 250px;
   z-index: 1000;
-  background: #2c3e50;
+     background: linear-gradient(90deg, #13539d 0%, #1d71ce);
   box-shadow: 2px 0 10px rgba(0,0,0,0.1);
   transition: all 0.3s ease;
   border-right: 1px solid #dee2e6;

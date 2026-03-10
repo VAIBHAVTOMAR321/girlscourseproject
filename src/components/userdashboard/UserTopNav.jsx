@@ -4,6 +4,7 @@ import axios from 'axios'
 import { useAuth } from '../../contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import '../../assets/css/UserTopNav.css'
+import Logo from '../../assets/brainrock_logo.png'
 
 const UserTopNav = ({ onMenuToggle, isMobile }) => {
   const { userRole, userRoleType, uniqueId, logout, isAuthenticated, accessToken, profilePhoto, updateProfilePhoto } = useAuth()
@@ -79,8 +80,12 @@ const UserTopNav = ({ onMenuToggle, isMobile }) => {
         </Button>
       )}
       
-      <Navbar.Brand href="/UserDashboard" className="ms-3">
-        <h5 className="mb-0 text-primary">User Dashboard</h5>
+      <Navbar.Brand href="/UserDashboard" className="ms-3 d-flex align-items-center">
+        <img src={Logo} alt="BrainRock Logo" className="user-logo-img me-3" />
+        <div className="user-logo-text">
+          <div className="user-logo-main">Brainrock Consulting Services</div>
+          <div className="user-logo-sub">I.S.O certified 9001:2015</div>
+        </div>
       </Navbar.Brand>
       
       <Navbar.Toggle aria-controls="admin-topnav" className="border-0 shadow-none" />

@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react'
 import { Nav, Button, Offcanvas } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import '../../assets/css/UserLeftNav.css'
+import { useAuth } from '../../contexts/AuthContext'
 
 const UseLeftNav = ({ showOffcanvas, setShowOffcanvas }) => {
+  const { userRoleType } = useAuth()
   const [show, setShow] = useState(true)
   const [isMobile, setIsMobile] = useState(false)
 
@@ -63,19 +65,26 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas }) => {
                   <i className="bi bi-arrow-left-short me-2"></i> Hide
                 </Button>
               </div>
-               <Nav className="flex-column p-3">
-                 <Nav.Link as={Link} to="/UserDashboard" className="text-white">
-                   <i className="bi bi-grid-3x3-gap me-2"></i> Dashboard
-                 </Nav.Link>
-                 
-                  <Nav.Link as={Link} to="/UserProfile" className="text-white">
-                   <i className="bi bi-person-circle me-2"></i> User Profile
-                 </Nav.Link>
-                 
-                  {/* <Nav.Link as={Link} to="/UserTest" className="text-white">
-                   <i className="bi bi-clipboard-check me-2"></i> Test Dashboard
-                 </Nav.Link> */}
-               </Nav>
+                <Nav className="flex-column p-3">
+                  <Nav.Link as={Link} to="/UserDashboard" className="text-white">
+                    <i className="bi bi-grid-3x3-gap me-2"></i> Dashboard
+                  </Nav.Link>
+                  
+                   <Nav.Link as={Link} to="/UserProfile" className="text-white">
+                    <i className="bi bi-person-circle me-2"></i> User Profile
+                  </Nav.Link>
+                  
+                   {/* Refund Request only visible to paid users */}
+                   {userRoleType !== 'student-unpaid' && (
+                     <Nav.Link as={Link} to="/RefundRequest" className="text-white">
+                       <i className="bi bi-currency-exchange me-2"></i> Refund Request
+                     </Nav.Link>
+                   )}
+                  
+                   {/* <Nav.Link as={Link} to="/UserTest" className="text-white">
+                    <i className="bi bi-clipboard-check me-2"></i> Test Dashboard
+                  </Nav.Link> */}
+                </Nav>
               
             </div>
           ) : (
@@ -89,17 +98,23 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas }) => {
                   <i className="bi bi-arrow-right-short"></i> 
                 </Button>
                 </div>
-               <Nav className="flex-column p-3 align-items-center">
-                 <Nav.Link as={Link} to="/UserDashboard" className="text-white">
-                   <i className="bi bi-grid-3x3-gap fs-5"></i>
-                 </Nav.Link>
-                 <Nav.Link as={Link} to="/UserProfile" className="text-white">
-                   <i className="bi bi-person-circle fs-5"></i>
-                 </Nav.Link>
-                 {/* <Nav.Link as={Link} to="/UserTest" className="text-white">
-                   <i className="bi bi-clipboard-check fs-5"></i>
-                 </Nav.Link> */}
-               </Nav>
+                <Nav className="flex-column p-3 align-items-center">
+                  <Nav.Link as={Link} to="/UserDashboard" className="text-white">
+                    <i className="bi bi-grid-3x3-gap fs-5"></i>
+                  </Nav.Link>
+                  <Nav.Link as={Link} to="/UserProfile" className="text-white">
+                    <i className="bi bi-person-circle fs-5"></i>
+                  </Nav.Link>
+                  {/* Refund Request only visible to paid users */}
+                  {userRoleType !== 'student-unpaid' && (
+                    <Nav.Link as={Link} to="/RefundRequest" className="text-white">
+                      <i className="bi bi-currency-exchange fs-5"></i>
+                    </Nav.Link>
+                  )}
+                  {/* <Nav.Link as={Link} to="/UserTest" className="text-white">
+                    <i className="bi bi-clipboard-check fs-5"></i>
+                  </Nav.Link> */}
+                </Nav>
             </div>
           )}
         </>
@@ -119,17 +134,23 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas }) => {
             <Offcanvas.Title className="text-white">User Menu</Offcanvas.Title>
           </Offcanvas.Header>
           <Offcanvas.Body>
-             <Nav className="nav-menu mobile-menu flex-column">
-               <Nav.Link as={Link} to="/UserDashboard" className="text-white" onClick={() => setShowOffcanvas(false)}>
-                 <i className="bi bi-grid-3x3-gap me-2"></i> Dashboard
-               </Nav.Link>
-               <Nav.Link as={Link} to="/UserProfile" className="text-white" onClick={() => setShowOffcanvas(false)}>
-                 <i className="bi bi-person-circle me-2"></i> User Profile
-               </Nav.Link>
-               {/* <Nav.Link as={Link} to="/UserTest" className="text-white" onClick={() => setShowOffcanvas(false)}>
-                 <i className="bi bi-clipboard-check me-2"></i> Test Dashboard
-               </Nav.Link> */}
-             </Nav>
+              <Nav className="nav-menu mobile-menu flex-column">
+                <Nav.Link as={Link} to="/UserDashboard" className="text-white" onClick={() => setShowOffcanvas(false)}>
+                  <i className="bi bi-grid-3x3-gap me-2"></i> Dashboard
+                </Nav.Link>
+                <Nav.Link as={Link} to="/UserProfile" className="text-white" onClick={() => setShowOffcanvas(false)}>
+                  <i className="bi bi-person-circle me-2"></i> User Profile
+                </Nav.Link>
+                {/* Refund Request only visible to paid users */}
+                {userRoleType !== 'student-unpaid' && (
+                  <Nav.Link as={Link} to="/RefundRequest" className="text-white" onClick={() => setShowOffcanvas(false)}>
+                    <i className="bi bi-currency-exchange me-2"></i> Refund Request
+                  </Nav.Link>
+                )}
+                {/* <Nav.Link as={Link} to="/UserTest" className="text-white" onClick={() => setShowOffcanvas(false)}>
+                  <i className="bi bi-clipboard-check me-2"></i> Test Dashboard
+                </Nav.Link> */}
+              </Nav>
           </Offcanvas.Body>
         </Offcanvas>
       )}
