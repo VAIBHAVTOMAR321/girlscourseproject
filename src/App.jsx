@@ -23,11 +23,12 @@ import UserTest from "./components/userdashboard/UserTest.jsx";
 import Registration from "./components/registration/Registration.jsx";
 import Footer from "./components/footer/Footer.jsx";
 import NavBar from "./components/navbar/NavBar.jsx";
+import RefundRequest from "./components/userdashboard/RefundRequest.jsx";
 
 function AppContent() {
   const location = useLocation();
-  const hideFooter = location.pathname.includes("/AdminDashboard") || location.pathname.includes("/UserDashboard") || location.pathname.includes("/UserProfile") || location.pathname.includes("/UserTest") || location.pathname.includes("/Enrollments");
-  const hideNavBar = location.pathname.includes("/AdminDashboard") || location.pathname.includes("/UserDashboard") || location.pathname.includes("/UserProfile") || location.pathname.includes("/UserTest") || location.pathname.includes("/Enrollments");
+  const hideFooter = location.pathname.includes("/AdminDashboard") || location.pathname.includes("/UserDashboard") || location.pathname.includes("/UserProfile") || location.pathname.includes("/UserTest") || location.pathname.includes("/Enrollments") || location.pathname.includes("/RefundRequest");
+  const hideNavBar = location.pathname.includes("/AdminDashboard") || location.pathname.includes("/UserDashboard") || location.pathname.includes("/UserProfile") || location.pathname.includes("/UserTest") || location.pathname.includes("/Enrollments") || location.pathname.includes("/RefundRequest");
 
   return (
     <>
@@ -78,6 +79,14 @@ function AppContent() {
             element={
               <ProtectedRoute>
                 <UserTopNav />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/RefundRequest"
+            element={
+              <ProtectedRoute>
+                <RefundRequest />
               </ProtectedRoute>
             }
           />

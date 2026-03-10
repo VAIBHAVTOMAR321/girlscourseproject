@@ -57,7 +57,10 @@
         
        
         
-     
+     .form-check-input[type=checkbox] {
+    border-radius: .25em;
+    border: 1px solid #433f3f;
+}
         
         .seal-inner {
           color: white;
