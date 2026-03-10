@@ -1,25 +1,46 @@
 /* Admin Top Navigation */
 .admin-top-nav {
-  background: white;
+  background: linear-gradient(90deg, #13539d 0%, #1d71ce) !important;
   border-bottom: 1px solid #e0e0e0;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
   position: sticky;
   top: 0;
+  padding: 0px !important;
   z-index: 1001;
   transition: all 0.3s ease;
 }
+.logout-btn {
+  border: 1px solid #fff;
+  color: #fff;
 
+}
 .admin-top-nav .navbar-brand {
   padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
 }
 
-.admin-top-nav .navbar-brand h5 {
-  margin: 0;
-  font-weight: 600;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.admin-top-nav .admin-logo-img {
+  height: 50px;
+  width: auto;
+  border-radius: 4px;
+}
+
+.admin-top-nav .admin-logo-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.admin-top-nav .admin-logo-main {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+.admin-top-nav .admin-logo-sub {
+  font-size: 0.75rem;
+  color: #ccc;
 }
 
 .admin-top-nav .user-dropdown {
@@ -177,8 +198,16 @@
     padding: 0.5rem 0.75rem !important;
   }
 
-  .admin-top-nav .navbar-brand h5 {
-    font-size: 1rem;
+  .admin-top-nav .admin-logo-img {
+    height: 40px;
+  }
+
+  .admin-top-nav .admin-logo-main {
+    font-size: 0.9rem;
+  }
+
+  .admin-top-nav .admin-logo-sub {
+    font-size: 0.65rem;
   }
 
   .admin-top-nav .user-details {

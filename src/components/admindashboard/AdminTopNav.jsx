@@ -3,6 +3,7 @@ import { Navbar, Nav, Button } from 'react-bootstrap'
 import { useAuth } from '../../contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import '../../assets/css/AdminTopNav.css'
+import Logo from '../../assets/brainrock_logo.png'
 
 const AdminTopNav = () => {
   const { userRole, uniqueId, logout } = useAuth()
@@ -15,8 +16,12 @@ const AdminTopNav = () => {
 
   return (
     <Navbar bg="white" expand="md" className="admin-top-nav shadow-sm border-bottom">
-      <Navbar.Brand href="/AdminDashboard" className="ms-3">
-        <h5 className="mb-0">Admin Dashboard</h5>
+      <Navbar.Brand href="/AdminDashboard" className="ms-3 d-flex align-items-center">
+        <img src={Logo} alt="BrainRock Logo" className="admin-logo-img me-3" />
+        <div className="admin-logo-text">
+          <div className="admin-logo-main">Brainrock Consulting Services</div>
+          <div className="admin-logo-sub">I.S.O certified 9001:2015</div>
+        </div>
       </Navbar.Brand>
       
       {/* Logout button for mobile view - visible only on sm and smaller screens */}
