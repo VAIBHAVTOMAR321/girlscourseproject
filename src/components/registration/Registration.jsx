@@ -333,13 +333,14 @@ const Registration = () => {
       console.log("Registration response:", response.data);
        
       if (response.data.status) {
-         // Show browser alert (ignore API message)
-         alert("submitted successfully");
-         // Redirect to login page
-         navigate("/login");
-       } else {
-         setApiError(response.data.message || "Registration failed. Please try again.");
-       }
+          // Show success alert popup
+          alert("Registration submitted successfully!");
+          // Redirect to login page
+          navigate("/login");
+        } else {
+          // Show error alert popup
+          alert(response.data.message || "Registration failed. Please try again.");
+        }
 
     } catch (error) {
       console.error("Registration error:", error);
@@ -368,7 +369,8 @@ const Registration = () => {
         errorMessage = error.message;
       }
       
-      setApiError(errorMessage);
+       // Show error alert popup
+       alert(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
