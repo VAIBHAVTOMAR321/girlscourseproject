@@ -9,7 +9,7 @@
   right: 0;
   z-index: 1001;
   transition: all 0.3s ease;
-  height: 70px;
+  height: 60px;
   display: flex;
   align-items: center;
 }

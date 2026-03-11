@@ -15,7 +15,7 @@
 
 }
 .admin-top-nav .navbar-brand {
-  padding: 0.75rem 1rem;
+  //padding: 0.75rem 1rem;
   display: flex;
   align-items: center;
 }
@@ -193,6 +193,11 @@
   .admin-top-nav {
     padding: 0.5rem !important;
   }
+
+  .admin-logo-text {
+    display: none !important;
+  }
+
 
   .admin-top-nav .navbar-brand {
     padding: 0.5rem 0.75rem !important;

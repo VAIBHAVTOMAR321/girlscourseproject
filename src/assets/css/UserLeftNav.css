@@ -8,13 +8,13 @@
   top: 70px; /* Height of top navigation */
   bottom: 0;
   left: 0;
-  width: 280px;
+  width: 220px;
 }
 
 /* Fixed sidebar styling */
 .fixed-sidebar {
   position: fixed;
-  top: 70px;
+  top: 60px;
   bottom: 0;
   left: 0;
 }
@@ -186,7 +186,7 @@
 
 @media (min-width: 768px) and (max-width: 1023px) {
   .user-left-nav {
-    width: 250px;
+    width: 220px;
   }
 
   .user-left-nav.compact {
@@ -196,7 +196,7 @@
 
 @media (min-width: 1024px) {
   .user-left-nav {
-    width: 280px;
+    width: 220px;
   }
 
   .user-left-nav.compact {
