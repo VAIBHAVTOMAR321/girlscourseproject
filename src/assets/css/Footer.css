@@ -130,11 +130,11 @@
     padding-left: 0px;
 }
 
-li {
+.footer-list li {
     list-style: none;
 }
 
-li:hover {
+.footer-list li:hover {
     list-style: none;
 }
 

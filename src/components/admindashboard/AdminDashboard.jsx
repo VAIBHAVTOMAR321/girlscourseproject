@@ -200,10 +200,6 @@ const AdminDashboard = () => {
     setModuleViewData({ course })
     setCurrentView('modules')
     setModules([])
-    setModuleFormData({
-      mod_title: '',
-      order: 1
-    })
     fetchModules(course.course_id)
   }
 
@@ -213,7 +209,13 @@ const AdminDashboard = () => {
       const config = getAuthConfig()
       const response = await axios.get(`https://brjobsedu.com/girls_course/girls_course_backend/api/module-items/?course_id=${course_id}`, config)
       if (response.data && response.data.success) {
-        setModules(response.data.data)
+        const fetchedModules = response.data.data
+        setModules(fetchedModules)
+        // Set initial order to next sequential number
+        setModuleFormData(prev => ({
+          ...prev,
+          order: fetchedModules.length + 1
+        }))
       }
     } catch (error) {
       alert('Failed to fetch modules. Please check the console for details.')
@@ -253,7 +255,7 @@ const AdminDashboard = () => {
       // Reset form and fetch updated modules
       setModuleFormData({
         mod_title: '',
-        order: 1
+        order: 0 // Will be updated in fetchModules
       })
       fetchModules(moduleViewData.course.course_id)
     } catch (error) {
@@ -299,7 +301,7 @@ const AdminDashboard = () => {
       sub_modu_description: '',
       sub_mod: [{ title: '', description: '', topics: [] }],
       image: null,
-      order: 1
+      order: 0 // Will be updated in fetchSubmodules
     })
     fetchSubmodules(course.course_id, module.module_id)
   }
@@ -315,6 +317,11 @@ const AdminDashboard = () => {
           sub_mod: typeof submodule.sub_mod === 'string' ? JSON.parse(submodule.sub_mod) : submodule.sub_mod
         }))
         setSubmodules(parsedSubmodules)
+        // Set initial order to next sequential number
+        setSubmoduleFormData(prev => ({
+          ...prev,
+          order: parsedSubmodules.length + 1
+        }))
       }
     } catch (error) {
       alert('Failed to fetch submodules. Please check the console for details.')
@@ -374,7 +381,7 @@ const AdminDashboard = () => {
         sub_modu_description: '',
         sub_mod: [{ title: '', description: '', topics: [] }],
         image: null,
-        order: 1
+        order: 0 // Will be updated in fetchSubmodules
       })
       fetchSubmodules(submodulesViewData.course.course_id, submodulesViewData.module.module_id)
       alert(submoduleFormData.sub_module_id ? 'Submodule updated successfully!' : 'Submodule added successfully!')
