@@ -363,12 +363,12 @@ const RefundRequest = () => {
                                 onChange={handleInputChange}
                                 placeholder="Enter refund amount"
                                 required
-                                disabled={!canRequestRefund}
+                                disabled
                               />
                             </Form.Group>
                           </Col>
                          <Col md={6} className="mb-3">
-                         
+                          
                         <Form.Group className="mb-3">
                           <Form.Label>Transaction ID</Form.Label>
                           <Form.Control
@@ -378,7 +378,7 @@ const RefundRequest = () => {
                             onChange={handleInputChange}
                             placeholder="Enter transaction ID"
                             required
-                            disabled={!canRequestRefund}
+                            disabled
                           />
                         </Form.Group>
 </Col>
