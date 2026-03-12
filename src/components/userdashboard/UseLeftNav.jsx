@@ -56,13 +56,13 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas }) => {
         <>
           {show ? (
             <div className="user-left-nav d-flex flex-column fixed-sidebar">
-              <div className="p-3 border-bottom border-light">
+              <div className=" border-bottom border-light">
                 <Button 
                   variant="outline-light" 
                   onClick={handleToggle} 
-                  className="w-100"
+                  className=" btn-hide"
                 >
-                  <i className="bi bi-arrow-left-short me-2"></i> Hide
+                  <i className="bi bi-arrow-left-short me-2"></i>
                 </Button>
               </div>
                 <Nav className="flex-column p-3">

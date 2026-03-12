@@ -209,3 +209,8 @@
     font-size: 1.25rem;
   }
 }
+
+@media (max-width: 567px) {
+  .user-logo-main { font-size: 10px!important ;
+  }
+}
