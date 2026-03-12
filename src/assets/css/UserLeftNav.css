@@ -5,12 +5,19 @@
   transition: all 0.3s ease;
   z-index: 1000;
   position: fixed;
-  top: 70px; /* Height of top navigation */
+  top: 57px; /* Height of top navigation */
   bottom: 0;
   left: 0;
   width: 220px;
 }
-
+.border-bottom{
+padding: 6px;
+}
+.btn-hide{
+  padding: 2px !important;
+      position: relative;
+    left: 26px;
+}
 /* Fixed sidebar styling */
 .fixed-sidebar {
   position: fixed;
