@@ -8,6 +8,7 @@ import Logo from "../../assets/brainrock_logo.png";
 import "../../assets/css/registration.css"
 import "../../assets/css/login.css"
 import Footer from "../footer/Footer";
+import { renderContentWithLineBreaks } from "../../utils/contentRenderer";
 
 
 const Registration = () => {
@@ -105,6 +106,38 @@ const Registration = () => {
   const [isBlocksLoading, setIsBlocksLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
+  const [checkingAadhaar, setCheckingAadhaar] = useState(false);
+
+  // Check if Aadhaar number exists
+  const checkAadhaarExists = async (aadhaarNo) => {
+    if (aadhaarNo.length !== 12) return;
+    
+    setCheckingAadhaar(true);
+    
+    try {
+      const response = await axios.get("https://brjobsedu.com/girls_course/girls_course_backend/api/get-aadhar-list/");
+      
+      if (response.data && Array.isArray(response.data)) {
+        const existingAadhaarNumbers = response.data;
+        
+        if (existingAadhaarNumbers.includes(aadhaarNo)) {
+          // Aadhaar number already exists - show popup
+          const userConfirmed = window.confirm(
+            "This Aadhaar number is already registered. Please login to register for a new course."
+          );
+          
+          if (userConfirmed) {
+            // Navigate to login page with unpaid student role
+            navigate("/login", { state: { role: "student-unpaid" }, replace: true });
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Error checking Aadhaar number:", error);
+    } finally {
+      setCheckingAadhaar(false);
+    }
+  };
 
   // Fetch blocks when district changes
   useEffect(() => {
@@ -205,16 +238,18 @@ const Registration = () => {
       }
     }
 
-    if (name === "aadhaar_no") {
-      const aadhaarRegex = /^[0-9]{0,12}$/;
-      if (!aadhaarRegex.test(value)) {
-        setErrors((prev) => ({ ...prev, aadhaar_no: "Only numbers allowed (max 12 digits)" }));
-      } else if (value.length !== 0 && value.length !== 12) {
-        setErrors((prev) => ({ ...prev, aadhaar_no: "Aadhaar must be exactly 12 digits" }));
-      } else {
-        setErrors((prev) => ({ ...prev, aadhaar_no: "" }));
-      }
-    }
+     if (name === "aadhaar_no") {
+       const aadhaarRegex = /^[0-9]{0,12}$/;
+       if (!aadhaarRegex.test(value)) {
+         setErrors((prev) => ({ ...prev, aadhaar_no: "Only numbers allowed (max 12 digits)" }));
+       } else if (value.length !== 0 && value.length !== 12) {
+         setErrors((prev) => ({ ...prev, aadhaar_no: "Aadhaar must be exactly 12 digits" }));
+       } else {
+         setErrors((prev) => ({ ...prev, aadhaar_no: "" }));
+         // Check if Aadhaar number already exists when user enters 12 digits
+         checkAadhaarExists(value);
+       }
+     }
 
     if (name === "password") {
       if (value.length < 6) {
@@ -504,7 +539,7 @@ const Registration = () => {
                       {course.icon}
                     </div>
                     <div className="course-info">
-                      <h5 className="course-name">{course.name}</h5>
+                      <h5 className="course-name">{renderContentWithLineBreaks(course.name)}</h5>
                       <div className="course-meta">
                         <Badge 
                           bg={course.type === "paid" ? "success" : "primary"} 

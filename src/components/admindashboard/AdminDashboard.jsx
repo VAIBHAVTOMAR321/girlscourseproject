@@ -542,11 +542,12 @@ const AdminDashboard = () => {
         }, config)
         alert('Course updated successfully!')
       } else {
-        // Create new course
+        // Create new course - only create unpaid courses
         await axios.post('https://brjobsedu.com/girls_course/girls_course_backend/api/course-items/', {
-          course_name: courseFormData.course_name
+          course_name: courseFormData.course_name,
+          course_status: 'unpaid' // Explicitly set to unpaid
         }, config)
-        alert('Course created successfully!')
+        alert('Unpaid course created successfully!')
       }
       
       fetchData()
@@ -636,9 +637,11 @@ const AdminDashboard = () => {
           </Button>
           <h4 className="d-inline-block align-middle mb-0">All Courses</h4>
         </div>
-        {/* {<Button variant="primary" onClick={handleAddCourseClick}>
-          <FaPlus className="me-2" /> Add New Course
-        </Button> } */}
+        {courseType === 'unpaid' && (
+          <Button variant="primary" onClick={handleAddCourseClick}>
+            <FaPlus className="me-2" /> Add New Course
+          </Button>
+        )}
       </div>
 
       {/* Course Type Tabs */}
