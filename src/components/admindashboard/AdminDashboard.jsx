@@ -644,63 +644,79 @@ const AdminDashboard = () => {
         )}
       </div>
 
-      {/* Course Type Tabs */}
-      <Nav variant="tabs" className="mb-4" activeKey={courseType} onSelect={(eventKey) => setCourseType(eventKey)}>
-        <Nav.Item>
-          <Nav.Link eventKey="paid" className={courseType === 'paid' ? 'active fw-semibold' : ''}>
-            <FaBook className="me-2" /> Paid Courses
-          </Nav.Link>
-        </Nav.Item>
-        <Nav.Item>
-          <Nav.Link eventKey="unpaid" className={courseType === 'unpaid' ? 'active fw-semibold' : ''}>
-            <FaBook className="me-2" /> Unpaid Courses
-          </Nav.Link>
-        </Nav.Item>
-      </Nav>
-
-      <Row className="g-4">
-        {filteredCourses.length > 0 ? (
-          filteredCourses.map((course) => (
-            <Col key={course.id} xs={12} md={6} lg={4}>
-              <Card className="course-card h-100 shadow-sm border-0">
-                <Card.Body className="d-flex flex-column">
-                  <div className="mb-3">
-                    <div className="d-flex justify-content-between align-items-start mb-2">
-                      <Badge bg="primary" className="">ID: {course.course_id}</Badge>
-                      <Badge bg={course.course_status === 'paid' ? 'success' : 'info'} className="">
-                        {course.course_status === 'paid' ? 'Paid' : 'Free'}
-                      </Badge>
-                    </div>
-                    <Card.Title className="fw-bold">{renderContentWithLineBreaks(course.course_name)}</Card.Title>
-                  </div>
-                  <div className="mt-auto pt-3 border-top">
-                    <div className="d-flex flex-wrap gap-1">
-                      <Button variant="light" size="sm" className="flex-shrink-0 text-primary" onClick={() => handleViewCourse(course)}>
-                        <FaEye className="me-1" /> View
-                      </Button>
-                      <Button variant="outline-warning" size="sm" className="flex-shrink-0 text-warning" onClick={() => handleEditCourse(course)}>
-                        <FaEdit className="me-1" /> Edit
-                      </Button>
-                      <Button variant="outline-danger" size="sm" className="flex-shrink-0 text-danger" onClick={() => handleDeleteCourse(course)}>
-                        <FaTrash className="me-1" /> Delete
-                      </Button>
-                      <Button variant="outline-info" size="sm" className="flex-shrink-0 text-info" onClick={() => handleAddModule(course)}>
-                        <FaLayerGroup className="me-1" /> Add Module
-                      </Button>
-                    </div>
-                  </div>
-                </Card.Body>
-              </Card>
-            </Col>
-          ))
-        ) : (
-          <Col xs={12}>
-            <Card className="shadow-sm border-0 text-center p-5">
-              <p className="text-muted mb-0">No {courseType} courses found</p>
-            </Card>
-          </Col>
-        )}
-      </Row>
+      <Card className="courses-table-card border">
+        <Card.Header className="bg-light border-bottom py-2 px-3">
+          <Nav variant="tabs" activeKey={courseType} onSelect={(eventKey) => setCourseType(eventKey)}>
+            <Nav.Item>
+              <Nav.Link eventKey="paid">
+                <FaBook className="me-2" /> Paid Courses
+              </Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link eventKey="unpaid">
+                <FaBook className="me-2" /> Unpaid Courses
+              </Nav.Link>
+            </Nav.Item>
+          </Nav>
+        </Card.Header>
+        
+        <Card.Header className="bg-light border-bottom py-2 px-3 d-flex justify-content-between align-items-center">
+          <div className="d-flex align-items-center paid-btn gap-2">
+            <h5 className="mb-0 fw-semibold text-secondary">
+              {courseType === 'paid' ? 'Paid' : 'Unpaid'} Courses
+            </h5>
+          </div>
+          <span className="text-muted small">
+            Showing {filteredCourses.length} course{filteredCourses.length !== 1 ? 's' : ''}
+          </span>
+        </Card.Header>
+        
+        <Card.Body className="p-4">
+          <Row className="g-4">
+            {filteredCourses.length > 0 ? (
+              filteredCourses.map((course) => (
+                <Col key={course.id} xs={12} md={6} lg={4}>
+                  <Card className="course-card h-100 shadow-sm border-0">
+                    <Card.Body className="d-flex flex-column">
+                      <div className="mb-3">
+                        <div className="d-flex justify-content-between align-items-start mb-2">
+                          <Badge bg="primary" className="">ID: {course.course_id}</Badge>
+                          <Badge bg={course.course_status === 'paid' ? 'success' : 'info'} className="">
+                            {course.course_status === 'paid' ? 'Paid' : 'Free'}
+                          </Badge>
+                        </div>
+                        <Card.Title className="fw-bold">{renderContentWithLineBreaks(course.course_name)}</Card.Title>
+                      </div>
+                      <div className="mt-auto pt-3 border-top">
+                        <div className="d-flex flex-wrap gap-1">
+                          <Button variant="light" size="sm" className="flex-shrink-0 text-primary" onClick={() => handleViewCourse(course)}>
+                            <FaEye className="me-1" /> View
+                          </Button>
+                          <Button variant="outline-warning" size="sm" className="flex-shrink-0 text-warning" onClick={() => handleEditCourse(course)}>
+                            <FaEdit className="me-1" /> Edit
+                          </Button>
+                          <Button variant="outline-danger" size="sm" className="flex-shrink-0 text-danger" onClick={() => handleDeleteCourse(course)}>
+                            <FaTrash className="me-1" /> Delete
+                          </Button>
+                          <Button variant="outline-info" size="sm" className="flex-shrink-0 text-info" onClick={() => handleAddModule(course)}>
+                            <FaLayerGroup className="me-1" /> Add Module
+                          </Button>
+                        </div>
+                      </div>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              ))
+            ) : (
+              <Col xs={12}>
+                <Card className="shadow-sm border-0 text-center p-5">
+                  <p className="text-muted mb-0">No {courseType} courses found</p>
+                </Card>
+              </Col>
+            )}
+          </Row>
+        </Card.Body>
+      </Card>
     </div>
   )
   }
