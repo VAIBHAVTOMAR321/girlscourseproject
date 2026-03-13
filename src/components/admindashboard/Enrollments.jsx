@@ -57,41 +57,38 @@ const Enrollments = () => {
   }, [searchTerm, enrollments, enrollmentType])
 
     const fetchEnrollments = async () => {
-     try {
-       setLoading(true)
-       let response
-       
-        const config = {
-          headers: {}
-        }
-        if (accessToken) {
-          config.headers['Authorization'] = `Bearer ${accessToken}`
-        }
-       
-       if (enrollmentType === 'paid') {
-         // Fetch paid enrollments from payment API
-         try {
-           response = await axios.get('https://brainrock.in/brainrock/backend/api/course-registration/', config)
-         } catch (error) {
-           // Fallback to girls_course API if payment API fails
-           response = await axios.get('https://brjobsedu.com/girls_course/girls_course_backend/api/all-registration/', config)
+      try {
+        setLoading(true)
+        let response
+        
+         const config = {
+           headers: {}
          }
-       } else {
-         // Fetch unpaid enrollments
-         response = await axios.get('https://brjobsedu.com/girls_course/girls_course_backend/api/student-unpaid/', config)
+         if (accessToken) {
+           config.headers['Authorization'] = `Bearer ${accessToken}`
+         }
+        
+        if (enrollmentType === 'paid') {
+          // Fetch paid enrollments from the same API used for deletion to ensure consistency
+          response = await axios.get('https://brjobsedu.com/girls_course/girls_course_backend/api/all-registration/', config)
+          console.log('Paid Enrollments API response:', response.data)
+        } else {
+          // Fetch unpaid enrollments
+          response = await axios.get('https://brjobsedu.com/girls_course/girls_course_backend/api/student-unpaid/', config)
+          console.log('Unpaid API response:', response.data)
+        }
+       
+       if (response.data.success) {
+         setEnrollments(response.data.data)
+         setFilteredEnrollments(response.data.data) // Initialize filtered list
+         setSelectedEnrollments([]) // Clear selections when switching tabs
        }
-      
-      if (response.data.success) {
-        setEnrollments(response.data.data)
-        setFilteredEnrollments(response.data.data) // Initialize filtered list
-        setSelectedEnrollments([]) // Clear selections when switching tabs
-      }
-    } catch (error) {
-      console.error('Error fetching enrollments:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
+     } catch (error) {
+       console.error('Error fetching enrollments:', error)
+     } finally {
+       setLoading(false)
+     }
+   }
 
   // Pagination logic
   const indexOfLastRecord = currentPage * recordsPerPage
@@ -175,9 +172,16 @@ const Enrollments = () => {
 
   const confirmDelete = async () => {
     try {
+      // Determine the correct student ID property based on enrollment type
+      // For paid enrollments from brainrock API, it might use applicant_id instead of student_id
+      const studentId = selectedEnrollment.student_id || selectedEnrollment.applicant_id
+      
       const payload = {
-        student_id: selectedEnrollment.student_id
+        student_id: studentId
       }
+      
+      console.log('Deleting enrollment with student_id:', studentId)
+      console.log('Enrollment data:', selectedEnrollment)
       
       let endpoint = 'https://brjobsedu.com/girls_course/girls_course_backend/api/all-registration/'
       
@@ -196,11 +200,17 @@ const Enrollments = () => {
         data: payload,
         ...config
       })
+      console.log('Delete response:', response)
       setShowDeleteModal(false)
       fetchEnrollments()
       alert('Enrollment deleted successfully!')
     } catch (error) {
-      alert('Failed to delete enrollment')
+      console.error('Delete error:', error)
+      if (error.response) {
+        console.error('Response data:', error.response.data)
+        console.error('Response status:', error.response.status)
+      }
+      alert(`Failed to delete enrollment: ${error.response?.data?.message || error.message}`)
     }
   }
 
@@ -374,14 +384,16 @@ const Enrollments = () => {
                                   >
                                     Reset Password
                                   </Button>
-                                  <Button 
-                                    variant="danger" 
-                                    size="sm"
-                                    className="action-btn"
-                                    onClick={() => handleDelete(enrollment)}
-                                  >
-                                    Delete
-                                  </Button>
+                                  {enrollmentType === 'unpaid' && (
+                                    <Button 
+                                      variant="danger" 
+                                      size="sm"
+                                      className="action-btn"
+                                      onClick={() => handleDelete(enrollment)}
+                                    >
+                                      Delete
+                                    </Button>
+                                  )}
                                 </div>
                               </td>
                             </tr>
