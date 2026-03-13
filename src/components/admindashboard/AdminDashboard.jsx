@@ -79,6 +79,15 @@ const AdminDashboard = () => {
   })
   const [loadingQuestions, setLoadingQuestions] = useState(false)
 
+  // State for Exercises Management
+  const [exercisesViewData, setExercisesViewData] = useState(null) // { course, module }
+  const [exercises, setExercises] = useState([])
+  const [exerciseFormData, setExerciseFormData] = useState({
+    img_name: '',
+    img: null
+  })
+  const [loadingExercises, setLoadingExercises] = useState(false)
+
   useEffect(() => {
     if (isMounted.current) {
       fetchData()
@@ -472,6 +481,136 @@ const AdminDashboard = () => {
     }
   }
 
+  const handleAddExercises = (course, module) => {
+    console.log('handleAddExercises called with:', { course, module })
+    setExercisesViewData({ course, module })
+    setCurrentView('exercises')
+    setExercises([])
+    setExerciseFormData({
+      img_name: '',
+      img: null
+    })
+    fetchExercises(module.module_id)
+  }
+
+  const fetchExercises = async (module_id) => {
+    setLoadingExercises(true)
+    try {
+      console.log('Fetching exercises for module_id:', module_id)
+      
+      // Validate module_id
+      if (!module_id || module_id === 'undefined') {
+        console.error('Invalid module_id:', module_id)
+        setExercises([])
+        return
+      }
+      
+      const config = getAuthConfig()
+      const response = await axios.get(`https://brjobsedu.com/girls_course/girls_course_backend/api/exercise-img/?module_id=${module_id}`, config)
+      console.log('API Response:', response)
+      if (response.data && response.data.success) {
+        setExercises(response.data.data)
+      } else {
+        console.log('API returned success: false or no data')
+        setExercises([])
+      }
+    } catch (error) {
+      console.error('Error fetching exercises:', error)
+      alert('Failed to fetch exercises. Please check the console for details.')
+      setExercises([])
+    } finally {
+      setLoadingExercises(false)
+    }
+  }
+
+  const handleAddExerciseSubmit = async (e) => {
+    e.preventDefault()
+    
+    try {
+      const config = getAuthConfig()
+      
+      // Create FormData for file upload
+      const formData = new FormData()
+      formData.append('course_id', exercisesViewData.course.course_id)
+      formData.append('module_id', exercisesViewData.module.module_id)
+      formData.append('img_name', exerciseFormData.img_name)
+      if (exerciseFormData.img) {
+        formData.append('img', exerciseFormData.img)
+      }
+      if (exerciseFormData.id) {
+        formData.append('id', exerciseFormData.id)
+      }
+
+      if (exerciseFormData.id) {
+        // Update existing exercise
+        await axios.put('https://brjobsedu.com/girls_course/girls_course_backend/api/exercise-img/', formData, {
+          ...config,
+          headers: {
+            ...config.headers,
+            'Content-Type': 'multipart/form-data'
+          }
+        })
+        alert('Exercise updated successfully!')
+      } else {
+        // Create new exercise
+        await axios.post('https://brjobsedu.com/girls_course/girls_course_backend/api/exercise-img/', formData, {
+          ...config,
+          headers: {
+            ...config.headers,
+            'Content-Type': 'multipart/form-data'
+          }
+        })
+        alert('Exercise added successfully!')
+      }
+      
+      // Reset form and fetch updated exercises
+      setExerciseFormData({
+        img_name: '',
+        img: null
+      })
+      fetchExercises(exercisesViewData.module.module_id)
+    } catch (error) {
+      if (error.response) {
+        alert(`Failed: ${error.response.data.message || error.response.data.detail || 'Check console for details'}`)
+      } else {
+        alert('Failed: ' + error.message)
+      }
+    }
+  }
+
+  const handleEditExercise = (exercise) => {
+    setExerciseFormData({
+      id: exercise.id,
+      img_name: exercise.img_name,
+      img: null
+    })
+    // Scroll to top of the page
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const handleDeleteExercise = async (exercise) => {
+    if (window.confirm(`Are you sure you want to delete the exercise "${exercise.img_name}"?`)) {
+      try {
+        const config = getAuthConfig()
+        await axios.delete('https://brjobsedu.com/girls_course/girls_course_backend/api/exercise-img/', {
+          data: { id: exercise.id },
+          ...config
+        })
+        fetchExercises(exercisesViewData.module.module_id)
+      } catch (error) {
+        alert('Failed to delete exercise. Please check the console for details.')
+      }
+    }
+  }
+
+  const handleExerciseImageChange = (e) => {
+    const file = e.target.files[0]
+    setExerciseFormData({
+      ...exerciseFormData,
+      img: file
+    })
+  }
+
   const fetchQuestions = async (course_id, module_id) => {
     setLoadingQuestions(true)
     try {
@@ -821,6 +960,13 @@ const AdminDashboard = () => {
                         <FaList className="me-1" /> Add Questions
                       </Button>
                       <Button 
+                        variant="outline-info" 
+                        size="sm" 
+                        onClick={() => handleAddExercises(moduleViewData.course, module)}
+                      >
+                        <FaImage className="me-1" /> Add Exercises
+                      </Button>
+                      <Button 
                         variant="outline-warning" 
                         size="sm"
                         onClick={() => handleEditModule(module)}
@@ -1102,6 +1248,141 @@ const AdminDashboard = () => {
     </div>
   )
 
+  const renderExercisesView = () => (
+    <div className="fade-in">
+      <div className="d-flex justify-content-between align-items-center mb-4 page-header">
+        <Button variant="outline-secondary" size="sm" onClick={() => setCurrentView('modules')}>
+          <FaArrowLeft /> Back to Modules
+        </Button>
+        <h4 className="mb-0">Exercises Management</h4>
+      </div>
+
+      {/* Course and Module Information */}
+      <Card className="shadow-sm border-0 mb-4">
+        <Card.Body>
+          <h5 className="mb-3">
+            <FaBook className="me-2" /> {renderContentWithLineBreaks(exercisesViewData?.course?.course_name)}
+          </h5>
+          <p className="text-muted small">
+            Course ID: {exercisesViewData?.course?.course_id}
+          </p>
+          <p className="text-muted small">
+            Module: {renderContentWithLineBreaks(exercisesViewData?.module?.mod_title)} (ID: {exercisesViewData?.module?.module_id})
+          </p>
+        </Card.Body>
+      </Card>
+
+      {/* Add Exercise Form */}
+      <Card className="shadow-sm border-0 mb-4">
+        <Card.Header className="bg-primary text-white">
+          <FaPlus className="me-2" /> {exerciseFormData.id ? 'Edit Exercise' : 'Add New Exercise'}
+        </Card.Header>
+        <Card.Body>
+          <Form onSubmit={handleAddExerciseSubmit}>
+            <Form.Group className="mb-3">
+              <Form.Label>Image Name</Form.Label>
+              <Form.Control
+                type="text"
+                value={exerciseFormData.img_name}
+                onChange={(e) => setExerciseFormData({ ...exerciseFormData, img_name: e.target.value })}
+                placeholder="e.g. bike"
+                required
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Image</Form.Label>
+              <Form.Control
+                type="file"
+                accept="image/*"
+                onChange={handleExerciseImageChange}
+              />
+              {exerciseFormData.img && (
+                <div className="mt-2">
+                  <Image 
+                    src={URL.createObjectURL(exerciseFormData.img)} 
+                    alt="Preview" 
+                    thumbnail 
+                    className="img-fluid" 
+                    style={{ maxWidth: '200px' }}
+                  />
+                </div>
+              )}
+            </Form.Group>
+
+            <Button variant="primary" type="submit">
+              <FaPlus className="me-2" /> {exerciseFormData.id ? 'Update Exercise' : 'Add Exercise'}
+            </Button>
+          </Form>
+        </Card.Body>
+      </Card>
+
+      {/* Exercises List */}
+      <Card className="shadow-sm border-0">
+        <Card.Header className="bg-info text-white">
+          <FaImage className="me-2" /> Exercises ({exercises.length})
+        </Card.Header>
+        <Card.Body>
+          {loadingExercises ? (
+            <div className="text-center">
+              <Spinner animation="border" variant="primary" />
+              <p className="mt-2">Loading exercises...</p>
+            </div>
+          ) : exercises.length === 0 ? (
+            <div className="text-center text-muted">
+              <p>No exercises found.</p>
+              <p>Add your first exercise above!</p>
+            </div>
+          ) : (
+            <div className="exercises-list">
+              {exercises.map((exercise) => (
+                <Card key={exercise.id} className="mb-2 border-left-primary">
+                  <Card.Body className="p-3">
+                    <div className="d-flex justify-content-between align-items-center">
+                      <div className="flex-grow-1">
+                        <h6 className="fw-bold mb-1">
+                          {renderContentWithLineBreaks(exercise.img_name)}
+                        </h6>
+                        <Badge bg="secondary" className="small">ID: {exercise.id}</Badge>
+                      </div>
+                      {exercise.img && (
+                        <div className="me-3">
+                          <Image 
+                            src={`https://brjobsedu.com/girls_course/girls_course_backend${exercise.img}`} 
+                            alt={exercise.img_name} 
+                            thumbnail 
+                            className="img-fluid"
+                            style={{ maxWidth: '80px', maxHeight: '60px' }}
+                          />
+                        </div>
+                      )}
+                      <div className="d-flex gap-1">
+                        <Button 
+                          variant="outline-warning" 
+                          size="sm"
+                          onClick={() => handleEditExercise(exercise)}
+                        >
+                          <FaEdit className="me-1" /> Edit
+                        </Button>
+                        <Button 
+                          variant="outline-danger" 
+                          size="sm"
+                          onClick={() => handleDeleteExercise(exercise)}
+                        >
+                          <FaTrash className="me-1" /> Delete
+                        </Button>
+                      </div>
+                    </div>
+                  </Card.Body>
+                </Card>
+              ))}
+            </div>
+          )}
+        </Card.Body>
+      </Card>
+    </div>
+  )
+
   const renderQuestionsView = () => (
     <div className="fade-in">
       <div className="d-flex justify-content-between align-items-center mb-4 page-header">
@@ -1285,6 +1566,7 @@ const AdminDashboard = () => {
               {currentView === 'modules' && renderModulesView()}
               {currentView === 'submodules' && renderSubmodulesView()}
               {currentView === 'questions' && renderQuestionsView()}
+              {currentView === 'exercises' && renderExercisesView()}
             </Container>
           </div>
         </div>

@@ -23,6 +23,13 @@ const UserDashboard = () => {
   const [completedModules, setCompletedModules] = useState([])
   const [error, setError] = useState(null)
   const [refundRequests, setRefundRequests] = useState([])
+  
+  // Exercise management state
+  const [currentExerciseModule, setCurrentExerciseModule] = useState(null)
+  const [showExerciseView, setShowExerciseView] = useState(false)
+  const [draggedItem, setDraggedItem] = useState(null)
+  const [correctMatches, setCorrectMatches] = useState([])
+  const [exerciseFeedback, setExerciseFeedback] = useState({ type: '', message: '' })
 
   const location = useLocation()
   const navigate = useNavigate()
@@ -395,6 +402,65 @@ const UserDashboard = () => {
     }
   }
 
+  // Start exercise for module
+  const handleStartExercise = (module) => {
+    setCurrentExerciseModule(module)
+    setShowExerciseView(true)
+    setCorrectMatches([])
+    setExerciseFeedback({ type: '', message: '' })
+  }
+
+  // Handle drag and drop for exercise
+  const handleDragStart = (e, item) => {
+    setDraggedItem(item)
+    e.target.style.opacity = '0.5'
+  }
+
+  const handleDragEnd = (e) => {
+    e.target.style.opacity = '1'
+  }
+
+  const handleDragOver = (e) => {
+    e.preventDefault()
+  }
+
+  // Shuffle array function
+  const shuffleArray = (array) => {
+    const shuffled = [...array]
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1))
+      ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+    }
+    return shuffled
+  }
+
+  const handleDrop = (e, targetName) => {
+    e.preventDefault()
+    
+    if (draggedItem && draggedItem.img_name === targetName) {
+      // Correct match - keep in right side
+      setCorrectMatches(prev => [...prev, draggedItem])
+      setExerciseFeedback({
+        type: 'success',
+        message: `✓ Correct! "${draggedItem.img_name}" matches.`
+      })
+    } else {
+      // Incorrect match - return to left side with feedback
+      setExerciseFeedback({
+        type: 'error',
+        message: `✗ Incorrect! "${draggedItem?.img_name}" does not match "${targetName}"`
+      })
+    }
+
+    // Clear dragged item
+    setDraggedItem(null)
+    
+    // Auto-clear feedback after 3 seconds
+    setTimeout(() => {
+      setExerciseFeedback({ type: '', message: '' })
+    }, 3000)
+  }
+
   // Mark module as completed
   const markModuleComplete = async (moduleIndex) => {
     try {
@@ -440,6 +506,7 @@ const UserDashboard = () => {
   // Handle enrollment in free course
   const handleEnrollCourse = async (courseId) => {
     try {
+      
       const response = await axios.post(
         'https://brjobsedu.com/girls_course/girls_course_backend/api/enroll-unpaid/',
         {
@@ -454,13 +521,36 @@ const UserDashboard = () => {
         }
       )
 
-      if (response.data.success) {
-        alert('Enrolled successfully!')
-        // Refresh courses data to reflect the new enrollment without full page reload
-        await fetchCourses()
-        await fetchAllCourses()
+
+      // Check if enrollment was successful (API returns message on success)
+      if (response.data && response.data.message) {
+        // Show success message
+        alert(response.data.message)
+        
+        // Refresh both enrolled courses and all courses
+        console.log('Fetching updated course data...')
+        try {
+          await fetchCourses()
+          console.log('Courses fetched successfully')
+        } catch (e) {
+          console.error('Error fetching courses:', e)
+        }
+        
+        try {
+          await fetchAllCourses()
+          console.log('All courses fetched successfully')
+        } catch (e) {
+          console.error('Error fetching all courses:', e)
+        }
+        
+        // Switch to My Courses tab after data is refreshed
+        setTimeout(() => {
+          console.log('Switching to My Courses tab')
+          setActiveTab('my-courses')
+        }, 800)
+        
       } else {
-        alert(response.data.message || 'Failed to enroll in course.')
+        alert('Failed to enroll in course. Please try again.')
       }
     } catch (error) {
       console.error('Error enrolling in course:', error)
@@ -929,10 +1019,107 @@ const UserDashboard = () => {
                                         </div>
                                       ))}
                                     </div>
-                                  ) : (
+                                   ) : (
                                     <div className="text-center py-5">
                                       <FaFileAlt className="text-muted mb-3" style={{ fontSize: '48px' }} />
                                       <p className="text-muted">No sub-modules available for this module.</p>
+                                    </div>
+                                  )}
+                                  
+                                  {/* Exercise Section - Show directly below submodules */}
+                                  {module.exercises && module.exercises.length > 0 && (
+                                    <div className="mt-4 exercise-section">
+                                      <div className="bg-light p-3 rounded-3 border border-primary">
+                                        <h6 className="fw-bold text-primary mb-3">
+                                          <FaImage className="me-2" /> Module Exercise: Match the Images to Their Names
+                                        </h6>
+                                        
+                                        {/* Feedback Message */}
+                                        {exerciseFeedback.message && (
+                                          <div className={`feedback ${exerciseFeedback.type} mb-3 p-2 rounded`}>
+                                            {exerciseFeedback.message}
+                                          </div>
+                                        )}
+
+                                        <div className="game-container">
+                                          {/* Left Side: Images to Drag */}
+                                          <div className="game-column images-column">
+                                            <h6 className="mb-2 text-muted">Images</h6>
+                                            {module.exercises.filter(exercise => 
+                                              !correctMatches.some(correct => correct.img_name === exercise.img_name)
+                                            ).length === 0 ? (
+                                              <div className="no-items text-center py-4">
+                                                <i className="bi bi-check-circle-fill text-success mb-2"></i>
+                                                <p className="mb-0 text-success">All exercises completed!</p>
+                                                <Button 
+                                                  variant="outline-success" 
+                                                  size="sm"
+                                                  onClick={() => {
+                                                    setCorrectMatches([])
+                                                    setExerciseFeedback({ type: '', message: '' })
+                                                  }}
+                                                >
+                                                  Reset Exercise
+                                                </Button>
+                                              </div>
+                                            ) : (
+                                              <div className="items-grid images-grid">
+                                                {module.exercises.filter(exercise => 
+                                                  !correctMatches.some(correct => correct.img_name === exercise.img_name)
+                                                ).map((exercise, index) => (
+                                                  <div
+                                                    key={index}
+                                                    className="draggable-item image-item p-2 bg-white rounded border"
+                                                    draggable
+                                                    onDragStart={(e) => handleDragStart(e, exercise)}
+                                                    onDragEnd={handleDragEnd}
+                                                  >
+                                                    <img
+                                                      src={`https://brjobsedu.com/girls_course/girls_course_backend${exercise.img}`}
+                                                      alt={exercise.img_name}
+                                                      onError={(e) => {
+                                                        e.target.style.display = 'none';
+                                                        e.target.nextElementSibling.style.display = 'block';
+                                                      }}
+                                                    />
+                                                    <div className="no-image" style={{ display: 'none' }}>
+                                                      No Image
+                                                    </div>
+                                                  </div>
+                                                ))}
+                                              </div>
+                                            )}
+                                          </div>
+
+                                          {/* Right Side: Target Names */}
+                                          <div className="game-column targets-column">
+                                            <h6 className="mb-2 text-muted">Names</h6>
+                                            <div className="items-grid targets-grid">
+                                              {shuffleArray(module.exercises).map((exercise, index) => {
+                                                const isMatched = correctMatches.some(correct => correct.img_name === exercise.img_name);
+                                                
+                                                return (
+                                                  <div
+                                                    key={index}
+                                                    className={`target-item p-3 bg-white rounded border ${isMatched ? 'matched' : ''}`}
+                                                    onDragOver={handleDragOver}
+                                                    onDrop={(e) => handleDrop(e, exercise.img_name)}
+                                                  >
+                                                    {isMatched ? (
+                                                      <div className="matched-content">
+                                                        <i className="bi bi-check-circle text-success me-2"></i>
+                                                        <span className="text-success">{exercise.img_name}</span>
+                                                      </div>
+                                                    ) : (
+                                                      <span>{exercise.img_name}</span>
+                                                    )}
+                                                  </div>
+                                                );
+                                              })}
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
                                     </div>
                                   )}
                                   
@@ -957,54 +1144,58 @@ const UserDashboard = () => {
                                            )
                                          )}
                                        </div>
-                                       {isAccessible ? (
-                                         <div className="d-flex gap-2">
-                                           {isTestPassed ? (
-                                             // If test is passed, show nothing (already completed)
-                                             null
-                                           ) : !isCompleted && !isOngoing ? (
-                                             <>
-                                               <Button 
-                                                 variant="success" 
-                                                 onClick={() => markModuleComplete(moduleIndex)}
-                                                 className="d-flex align-items-center px-4 py-2"
-                                               >
-                                                 <FaCheckCircle className="me-2" />
-                                                 Complete Module
-                                               </Button>
-                                               <Button 
-                                                 variant={testButtonVariant} 
-                                                 onClick={() => handleTestClick(moduleIndex)}
-                                                 className="d-flex align-items-center px-4 py-2"
-                                                 disabled={!isCompleted && !isOngoing || isTestDisabled}
-                                               >
-                                                 <FaQuestionCircle className="me-2" />
-                                                 {testButtonText}
-                                               </Button>
-                                             </>
-                                           ) : (
-                                             <Button 
-                                               variant={testButtonVariant} 
-                                               onClick={() => handleTestClick(moduleIndex)}
-                                               className="d-flex align-items-center px-4 py-2"
-                                               disabled={isTestDisabled}
-                                             >
-                                               <FaCheckCircle className="me-2" />
-                                               {testButtonText}
-                                             </Button>
-                                           )}
-                                         </div>
-                                       ) : (
-                                         <Button 
-                                           variant="secondary" 
-                                           disabled
-                                           className="d-flex align-items-center px-4 py-2"
-                                         >
-                                           <FaLock className="me-2" />
-                                           Locked
-                                         </Button>
-                                       )}
-                                     </div>
+                                        {isAccessible ? (
+                                          <div className="d-flex gap-1">
+                                            {isTestPassed ? (
+                                              // If test is passed, show nothing (already completed)
+                                              null
+                                            ) : !isCompleted && !isOngoing ? (
+                                              <>
+                                                <Button 
+                                                  variant="success" 
+                                                  onClick={() => markModuleComplete(moduleIndex)}
+                                                  className="d-flex align-items-center px-3 py-1"
+                                                  size="sm"
+                                                >
+                                                  <FaCheckCircle className="me-2" />
+                                                  Complete
+                                                </Button>
+                                                <Button 
+                                                  variant={testButtonVariant} 
+                                                  onClick={() => handleTestClick(moduleIndex)}
+                                                  className="d-flex align-items-center px-3 py-1"
+                                                  disabled={!isCompleted && !isOngoing || isTestDisabled}
+                                                  size="sm"
+                                                >
+                                                  <FaQuestionCircle className="me-2" />
+                                                  {testButtonText.includes('(') ? 'Test' : testButtonText}
+                                                </Button>
+                                              </>
+                                            ) : (
+                                              <Button 
+                                                variant={testButtonVariant} 
+                                                onClick={() => handleTestClick(moduleIndex)}
+                                                className="d-flex align-items-center px-3 py-1"
+                                                disabled={isTestDisabled}
+                                                size="sm"
+                                              >
+                                                <FaCheckCircle className="me-2" />
+                                                {testButtonText.includes('(') ? 'Test' : testButtonText}
+                                              </Button>
+                                            )}
+                                          </div>
+                                        ) : (
+                                          <Button 
+                                            variant="secondary" 
+                                            disabled
+                                            className="d-flex align-items-center px-3 py-1"
+                                            size="sm"
+                                          >
+                                            <FaLock className="me-2" />
+                                            Locked
+                                          </Button>
+                                        )}
+                                      </div>
                                 </Accordion.Body>
                               </Accordion.Item>
                             )
@@ -1288,8 +1479,110 @@ const UserDashboard = () => {
         </Container>
       </div>
     </div>
+    {showExerciseView && renderExerciseView()}
     </div>
   )
+
+  // Render exercise view with drag and drop interface
+  function renderExerciseView() {
+    if (!currentExerciseModule) return null
+
+    const remainingExercises = currentExerciseModule.exercises.filter(exercise => 
+      !correctMatches.some(correct => correct.img_name === exercise.img_name)
+    )
+
+    return (
+      <div className="exercise-view fade-in">
+        <div className="d-flex justify-content-between align-items-center mb-4 page-header">
+          <Button variant="outline-secondary" size="sm" onClick={() => setShowExerciseView(false)}>
+            <FaArrowLeft /> Back to Module
+          </Button>
+          <h4 className="mb-0">Exercise: Match the Images to Their Names</h4>
+        </div>
+
+        {/* Feedback Message */}
+        {exerciseFeedback.message && (
+          <div className={`feedback ${exerciseFeedback.type}`}>
+            {exerciseFeedback.message}
+          </div>
+        )}
+
+        <div className="game-container">
+          {/* Left Side: Images to Drag */}
+          <div className="game-column images-column">
+            <h3>Images</h3>
+            {remainingExercises.length === 0 ? (
+              <div className="no-items">
+                <i className="bi bi-check-circle-fill"></i>
+                <p>All exercises completed!</p>
+                <Button 
+                  className="reset-button"
+                  onClick={() => {
+                    setCorrectMatches([])
+                    setExerciseFeedback({ type: '', message: '' })
+                  }}
+                >
+                  Reset Exercise
+                </Button>
+              </div>
+            ) : (
+              <div className="items-grid images-grid">
+                {remainingExercises.map((exercise, index) => (
+                  <div
+                    key={index}
+                    className="draggable-item image-item"
+                    draggable
+                    onDragStart={(e) => handleDragStart(e, exercise)}
+                    onDragEnd={handleDragEnd}
+                  >
+                    <img
+                      src={`https://brjobsedu.com/girls_course/girls_course_backend${exercise.img}`}
+                      alt={exercise.img_name}
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.nextElementSibling.style.display = 'block';
+                      }}
+                    />
+                    <div className="no-image" style={{ display: 'none' }}>
+                      No Image
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Right Side: Target Names */}
+          <div className="game-column targets-column">
+            <h3>Names</h3>
+            <div className="items-grid targets-grid">
+              {currentExerciseModule.exercises.map((exercise, index) => {
+                const isMatched = correctMatches.some(correct => correct.img_name === exercise.img_name);
+                
+                return (
+                  <div
+                    key={index}
+                    className={`target-item ${isMatched ? 'matched' : ''}`}
+                    onDragOver={handleDragOver}
+                    onDrop={(e) => handleDrop(e, exercise.img_name)}
+                  >
+                    {isMatched ? (
+                      <div className="matched-content">
+                        <i className="bi bi-check-circle"></i>
+                        <span>{exercise.img_name}</span>
+                      </div>
+                    ) : (
+                      <span>{exercise.img_name}</span>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
 }
 
 export default UserDashboard

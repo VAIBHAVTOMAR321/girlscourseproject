@@ -91,9 +91,9 @@ export const renderContentWithLineBreaks = (content) => {
     // Handle newlines
     processedContent = processedContent.replace(/\n/g, '<br>')
     
-    // Now render the processed content
+     // Now render the processed content
     return (
-      <div dangerouslySetInnerHTML={{ __html: processedContent }} />
+      <span dangerouslySetInnerHTML={{ __html: processedContent }} />
     )
   }
   

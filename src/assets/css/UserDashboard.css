@@ -319,6 +319,148 @@ body.sidebar-compact .dashboard-content {
   }
 }
 
+/* Exercise Section Responsive Styles for Mobile */
+@media (max-width: 768px) {
+  .game-container {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .exercise-section .bg-light {
+    padding: 15px;
+  }
+  
+  .exercise-section h6 {
+    font-size: 0.95rem;
+    margin-bottom: 15px;
+  }
+  
+  .game-column {
+    margin-bottom: 10px;
+  }
+  
+  .game-column h6 {
+    font-size: 0.85rem;
+    margin-bottom: 10px;
+  }
+  
+  .images-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  
+  .targets-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  
+  .image-item {
+    min-height: 60px;
+    padding: 8px;
+  }
+  
+  .image-item img {
+    max-height: 50px;
+  }
+  
+  .target-item {
+    min-height: 40px;
+    padding: 6px 8px;
+    font-size: 0.8rem;
+  }
+  
+  .feedback {
+    font-size: 0.8rem;
+    padding: 6px 10px;
+  }
+  
+  .no-items {
+    padding: 20px 10px;
+  }
+  
+  .no-items p {
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+  }
+  
+  .no-items button {
+    font-size: 0.8rem;
+    padding: 6px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .exercise-section .bg-light {
+    padding: 12px;
+  }
+  
+  .exercise-section h6 {
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+  }
+  
+  .images-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+  
+  .targets-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+  
+  .image-item {
+    min-height: 50px;
+    padding: 6px;
+  }
+  
+  .image-item img {
+    max-height: 40px;
+  }
+  
+  .target-item {
+    min-height: 35px;
+    padding: 5px 6px;
+    font-size: 0.75rem;
+  }
+  
+  .feedback {
+    font-size: 0.75rem;
+    padding: 5px 8px;
+  }
+  
+  .matched-content i {
+    font-size: 0.7rem;
+    margin-right: 4px;
+  }
+}
+
+@media (max-width: 360px) {
+  .exercise-section h6 {
+    font-size: 0.85rem;
+  }
+  
+  .images-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .targets-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .image-item {
+    min-height: 45px;
+  }
+  
+  .image-item img {
+    max-height: 35px;
+  }
+  
+  .target-item {
+    font-size: 0.7rem;
+  }
+}
+
 @media (max-width: 768px) {
   .book-header {
     padding: 15px 20px;
@@ -485,6 +627,138 @@ body.sidebar-compact .dashboard-content {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Exercise Section Styles */
+.exercise-section {
+  margin-top: 2rem;
+}
+
+.exercise-section h6 {
+  font-size: 1.1rem;
+}
+
+.game-container {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.game-column {
+  flex: 1;
+  min-width: 0;
+}
+
+.game-column h6 {
+  font-size: 0.95rem;
+}
+
+.items-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.images-grid {
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+}
+
+.targets-grid {
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+}
+
+.draggable-item {
+  cursor: grab;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.draggable-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.draggable-item:active {
+  cursor: grabbing;
+}
+
+.image-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100px;
+}
+
+.image-item img {
+  max-width: 100%;
+  max-height: 80px;
+  object-fit: contain;
+}
+
+.target-item {
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  border: 2px solid #dee2e6;
+  background-color: white;
+  font-weight: 500;
+}
+
+.target-item:hover {
+  border-color: #6c757d;
+  background-color: #f8f9fa;
+}
+
+.target-item.dragover {
+  border-color: #007bff;
+  background-color: #e7f3ff;
+  transform: scale(1.05);
+}
+
+.target-item.matched {
+  border-color: #28a745;
+  background-color: #d4edda;
+}
+
+.matched-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.no-items {
+  background-color: #f8f9fa;
+  border: 2px dashed #dee2e6;
+  border-radius: 8px;
+}
+
+.feedback {
+  font-weight: 500;
+  font-size: 0.9rem;
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+}
+
+.feedback.success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.feedback.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
 }
 
 /* Course Card Styles */
