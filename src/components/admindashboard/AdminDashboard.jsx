@@ -115,15 +115,19 @@ const AdminDashboard = () => {
     try {
       const config = getAuthConfig()
       
-      // Fetch paid enrollment count
-      try {
-        const paidEnrollRes = await axios.get('https://brjobsedu.com/girls_course/girls_course_backend/api/all-registration/', config)
-        if (paidEnrollRes.data && paidEnrollRes.data.success) {
-          setPaidEnrollmentCount(paidEnrollRes.data.data.length)
-        }
-      } catch (paidEnrollError) {
-        setPaidEnrollmentCount(0)
-      }
+       // Fetch paid enrollment count (same endpoint as Enrollments.jsx)
+       try {
+         const paidEnrollRes = await axios.get('https://brainrock.in/brainrock/backend/api/course-registration/', config)
+         if (paidEnrollRes.data && paidEnrollRes.data.success) {
+           setPaidEnrollmentCount(paidEnrollRes.data.data.length)
+         }
+       } catch (paidEnrollError) {
+         // Fallback to girls_course API if payment API fails (same as Enrollments.jsx)
+         const fallbackRes = await axios.get('https://brjobsedu.com/girls_course/girls_course_backend/api/all-registration/', config)
+         if (fallbackRes.data && fallbackRes.data.success) {
+           setPaidEnrollmentCount(fallbackRes.data.data.length)
+         }
+       }
       
       // Fetch unpaid enrollment count
       try {
