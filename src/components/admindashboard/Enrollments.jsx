@@ -374,14 +374,16 @@ const Enrollments = () => {
                                   >
                                     Reset Password
                                   </Button>
-                                  <Button 
-                                    variant="danger" 
-                                    size="sm"
-                                    className="action-btn"
-                                    onClick={() => handleDelete(enrollment)}
-                                  >
-                                    Delete
-                                  </Button>
+                                  {enrollmentType === 'unpaid' && (
+                                    <Button 
+                                      variant="danger" 
+                                      size="sm"
+                                      className="action-btn"
+                                      onClick={() => handleDelete(enrollment)}
+                                    >
+                                      Delete
+                                    </Button>
+                                  )}
                                 </div>
                               </td>
                             </tr>
