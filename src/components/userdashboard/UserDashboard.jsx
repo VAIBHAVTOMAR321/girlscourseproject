@@ -12,8 +12,11 @@ import axios from 'axios'
 const UserDashboard = () => {
   const [showOffcanvas, setShowOffcanvas] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
+  const [activeTab, setActiveTab] = useState('my-courses') // 'my-courses' or 'all-courses'
   const [courses, setCourses] = useState([])
+  const [allCourses, setAllCourses] = useState([])
   const [loading, setLoading] = useState(true)
+  const [allCoursesLoading, setAllCoursesLoading] = useState(true)
   const [selectedCourse, setSelectedCourse] = useState(null)
   const [courseModules, setCourseModules] = useState(null)
   const [modulesLoading, setModulesLoading] = useState(false)
@@ -117,12 +120,34 @@ const UserDashboard = () => {
     }
   }
 
-  // Fetch courses, module progress, and refund requests when component mounts or uniqueId/accessToken changes
+  // Fetch all available courses
+  const fetchAllCourses = async () => {
+    try {
+      setAllCoursesLoading(true)
+      const response = await axios.get(
+        'https://brjobsedu.com/girls_course/girls_course_backend/api/course-items/'
+      )
+      
+      if (response.data.success && Array.isArray(response.data.data)) {
+        setAllCourses(response.data.data)
+      } else {
+        setAllCourses([])
+      }
+    } catch (error) {
+      console.error('Error fetching all courses:', error)
+      setAllCourses([])
+    } finally {
+      setAllCoursesLoading(false)
+    }
+  }
+
+  // Fetch courses, module progress, refund requests, and all courses when component mounts or uniqueId/accessToken changes
   useEffect(() => {
     const fetchData = async () => {
       await fetchCourses()
       await fetchModuleProgress()
       await fetchRefundRequests()
+      await fetchAllCourses()
     }
     
     fetchData()
@@ -409,6 +434,37 @@ const UserDashboard = () => {
       // Show failure alert
       alert('Failed to mark module as complete. Please try again.')
       setError('Failed to mark module as complete')
+    }
+  }
+
+  // Handle enrollment in free course
+  const handleEnrollCourse = async (courseId) => {
+    try {
+      const response = await axios.post(
+        'https://brjobsedu.com/girls_course/girls_course_backend/api/enroll-unpaid/',
+        {
+          student_id: uniqueId,
+          course_id: courseId
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      )
+
+      if (response.data.success) {
+        alert('Enrolled successfully!')
+        // Refresh courses data to reflect the new enrollment without full page reload
+        await fetchCourses()
+        await fetchAllCourses()
+      } else {
+        alert(response.data.message || 'Failed to enroll in course.')
+      }
+    } catch (error) {
+      console.error('Error enrolling in course:', error)
+      alert('Failed to enroll in course. Please try again.')
     }
   }
 
@@ -964,152 +1020,264 @@ const UserDashboard = () => {
                   </div>
                 ) : (
                   <div>
-                    <h4 className="mb-3">My Courses</h4>
-                    
-                    {loading ? (
-                      <div className="text-center py-5">
-                        <Spinner animation="border" variant="primary" style={{ width: '60px', height: '60px' }} />
-                        <p className="mt-3">Loading courses...</p>
-                      </div>
-                    ) : courses.length > 0 ? (
-                      <Row>
-                        {courses.map((course, index) => (
-                          <Col md={6} lg={4} key={course.id || index} className="mb-4">
-                            <Card className="shadow-sm border-0 h-100 " style={{ borderRadius: '12px', overflow: 'hidden' }}>
-                              <div className="card-header-gradient" style={{ 
-                                height: '100%', 
-                                width:'100%',
-                                padding: '0',
-                                border: 'none',
-                                padding:'8px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                position: 'relative',
-                                background: isAllModulesCompleted(course) 
-                                  ? 'linear-gradient(135deg, #10b981, #059669)' // Green gradient for completed
-                                  : 'linear-gradient(135deg, #667eea, #764ba2)' // Purple gradient for in-progress
-                              }}>
-                                {/* Check if all modules are completed instead of relying on course.is_completed */}
-                                {isAllModulesCompleted(course) ? (
-                                  <FaCertificate className="text-white" style={{ fontSize: '28px', animation: 'pulse 2s infinite' }} />
-                                ) : (
-                                  <FaGraduationCap className="text-white" style={{ fontSize: '28px', animation: 'float 3s ease-in-out infinite' }} />
-                                )}
-                                {isAllModulesCompleted(course) && (
-                                  <div className=" top-2 end-2">
-                                    <Badge bg="success" className="p-2 badge-custom fs-7">
-                                      <FaCheckCircle className="me-1" /> Completed
-                                    </Badge>
+                    {/* Tab Navigation */}
+                    <div className="d-flex gap-2 mb-4" style={{ borderBottom: '2px solid #e0e0e0', paddingBottom: '10px' }}>
+                      <Button 
+                        variant={activeTab === 'my-courses' ? 'primary' : 'outline-primary'}
+                        onClick={() => setActiveTab('my-courses')}
+                        className="fw-semibold"
+                      >
+                        <FaBook className="me-2" />
+                        My Courses ({courses.length})
+                      </Button>
+                      <Button 
+                        variant={activeTab === 'all-courses' ? 'primary' : 'outline-primary'}
+                        onClick={() => setActiveTab('all-courses')}
+                        className="fw-semibold"
+                      >
+                        <FaGraduationCap className="me-2" />
+                        Free Courses ({allCourses.filter(c => c.course_status === 'unpaid').length})
+                      </Button>
+                    </div>
+
+                    {/* My Courses Tab */}
+                    {activeTab === 'my-courses' && (
+                      <div>
+                        <h4 className="mb-3">My Courses</h4>
+                        
+                        {loading ? (
+                          <div className="text-center py-5">
+                            <Spinner animation="border" variant="primary" style={{ width: '60px', height: '60px' }} />
+                            <p className="mt-3">Loading courses...</p>
+                          </div>
+                        ) : courses.length > 0 ? (
+                          <Row>
+                            {courses.map((course, index) => (
+                              <Col md={6} lg={4} key={course.id || index} className="mb-4">
+                                <Card className="shadow-sm border-0 h-100 " style={{ borderRadius: '12px', overflow: 'hidden' }}>
+                                  <div className="card-header-gradient" style={{ 
+                                    height: '100%', 
+                                    width:'100%',
+                                    padding: '0',
+                                    border: 'none',
+                                    padding:'8px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    position: 'relative',
+                                    background: isAllModulesCompleted(course) 
+                                      ? 'linear-gradient(135deg, #10b981, #059669)' // Green gradient for completed
+                                      : 'linear-gradient(135deg, #667eea, #764ba2)' // Purple gradient for in-progress
+                                  }}>
+                                    {/* Check if all modules are completed instead of relying on course.is_completed */}
+                                    {isAllModulesCompleted(course) ? (
+                                      <FaCertificate className="text-white" style={{ fontSize: '28px', animation: 'pulse 2s infinite' }} />
+                                    ) : (
+                                      <FaGraduationCap className="text-white" style={{ fontSize: '28px', animation: 'float 3s ease-in-out infinite' }} />
+                                    )}
+                                    {isAllModulesCompleted(course) && (
+                                      <div className=" top-2 end-2">
+                                        <Badge bg="success" className="p-2 badge-custom fs-7">
+                                          <FaCheckCircle className="me-1" /> Completed
+                                        </Badge>
+                                      </div>
+                                    )}
+                                    {!isAllModulesCompleted(course) && (
+                                      <div className="position-absolute top-2 start-2">
+                                        <Badge bg="warning" className="p-2 badge-custom in-prohrace fs-7">
+                                          <FaClock className="me-1" /> In Progress
+                                        </Badge>
+                                      </div>
+                                    )}
                                   </div>
-                                )}
-                                {!isAllModulesCompleted(course) && (
-                                  <div className="position-absolute top-2 start-2">
-                                    <Badge bg="warning" className="p-2 badge-custom in-prohrace fs-7">
-                                      <FaClock className="me-1" /> In Progress
-                                    </Badge>
-                                  </div>
-                                )}
-                              </div>
-                              <Card.Body className="p-4">
-                                <div className="text-center mb-2">
-                                  <h6 className="mb-1 course-title">{renderContentWithLineBreaks(course.course_name)}</h6>
-                                </div>
-                                
-                                <div className="course-stats mb-4">
-                                  <div className="d-flex justify-content-between align-items-center mb-2">
-                                    <span className="text-muted small">
-                                      <FaCalendarCheck className="me-1" /> Enrolled
-                                    </span>
-                                    <span className="fw-semibold">
-                                      {course.enrolled_at ? new Date(course.enrolled_at).toLocaleDateString() : 'N/A'}
-                                    </span>
-                                  </div>
-                                  {isAllModulesCompleted(course) && course.completed_at && (
-                                    <div className="d-flex justify-content-between align-items-center mb-2">
-                                      <span className="text-muted small">
-                                        <FaAward className="me-1" /> Completed
-                                      </span>
-                                      <span className="fw-semibold text-success">
-                                        {new Date(course.completed_at).toLocaleDateString()}
-                                      </span>
+                                  <Card.Body className="p-4">
+                                    <div className="text-center mb-2">
+                                      <h6 className="mb-1 course-title">{renderContentWithLineBreaks(course.course_name)}</h6>
                                     </div>
-                                  )}
-                                </div>
-                                
-                                <div className="d-flex justify-content-between align-items-center">
-                                  <div className="d-flex align-items-center">
-                                    <div className="bg-gradient-primary text-white rounded-circle d-flex align-items-center justify-content-center" >
-                                      {course.student_name ? course.student_name.charAt(0) : 'S'}
-                                    </div>
-                                    <div className="">
-                                      <p className="mb-0 fw-semibold">{course.student_name || 'Student'}</p>
-                                      <small className="text-muted">Learner</small>
-                                    </div>
-                                  </div>
-                                  <div className="d-flex gap-2">
-                                    <Button 
-                                      variant={isAllModulesCompleted(course) ? "success" : "primary"} 
-                                      onClick={() => handleViewCourse(course)}
-                                      className="d-flex align-items-center btn-custom"
-                                      style={{
-                                        background: 'linear-gradient(135deg, #667eea, #764ba2)',
-                                        border: 'none'
-                                      }}
-                                    >
-                                      {isAllModulesCompleted(course) ? (
-                                        <>
-                                          <FaCheckCircle className="me-2" />
-                                          Completed
-                                        </>
-                                      ) : (
-                                        <>
-                                          <FaPlay className="me-2" />
-                                          Start
-                                        </>
+                                    
+                                    <div className="course-stats mb-4">
+                                      <div className="d-flex justify-content-between align-items-center mb-2">
+                                        <span className="text-muted small">
+                                          <FaCalendarCheck className="me-1" /> Enrolled
+                                        </span>
+                                        <span className="fw-semibold">
+                                          {course.enrolled_at ? new Date(course.enrolled_at).toLocaleDateString() : 'N/A'}
+                                        </span>
+                                      </div>
+                                      {isAllModulesCompleted(course) && course.completed_at && (
+                                        <div className="d-flex justify-content-between align-items-center mb-2">
+                                          <span className="text-muted small">
+                                            <FaAward className="me-1" /> Completed
+                                          </span>
+                                          <span className="fw-semibold text-success">
+                                            {new Date(course.completed_at).toLocaleDateString()}
+                                          </span>
+                                        </div>
                                       )}
-                                    </Button>
-                                    {/* Refund Request Button - Only for paid users with pending status and no existing pending refund */}
-                                    {userRoleType !== 'student-unpaid' && !isAllModulesCompleted(course) && !refundRequests.some(req => req.status === 'pending') && (
-                                      <Button 
-                                        variant="outline-danger" 
-                                        onClick={() => {
-                                          // Navigate to refund request with course details to auto-fill
-                                          navigate('/RefundRequest', {
-                                            state: {
-                                              course: course,
-                                              userData: {
-                                                ...userData,
-                                                status: userData?.status || 'pending',
-                                                amount: course.course_fee || userData?.course_fee || userData?.amount || '' // Use course fee if available
-                                              }
-                                            }
-                                          })
-                                        }}
-                                        className="d-flex align-items-center"
-                                      >
-                                        <i className="bi bi-currency-exchange me-2"></i>
-                                        Refund
-                                      </Button>
-                                    )}
-                                    {/* Show pending status if refund request is pending */}
-                                    {refundRequests.some(req => req.status === 'pending') && (
-                                      <Badge bg="warning" className="d-flex align-items-center p-2">
-                                        <i className="bi bi-clock me-2"></i>
-                                        Refund Pending
-                                      </Badge>
-                                    )}
-                                  </div>
-                                </div>
-                              </Card.Body>
-                            </Card>
-                          </Col>
-                        ))}
-                      </Row>
-                    ) : (
-                      <div className="text-center py-5">
-                        <FaBook className="text-muted mb-3" style={{ fontSize: '48px' }} />
-                        <p className="text-muted fs-4">No courses enrolled yet</p>
+                                    </div>
+                                    
+                                    <div className="d-flex justify-content-between align-items-center">
+                                      <div className="d-flex align-items-center">
+                                        <div className="bg-gradient-primary text-white rounded-circle d-flex align-items-center justify-content-center" >
+                                          {course.student_name ? course.student_name.charAt(0) : 'S'}
+                                        </div>
+                                        <div className="">
+                                          <p className="mb-0 fw-semibold">{course.student_name || 'Student'}</p>
+                                          <small className="text-muted">Learner</small>
+                                        </div>
+                                      </div>
+                                      <div className="d-flex gap-2">
+                                        <Button 
+                                          variant={isAllModulesCompleted(course) ? "success" : "primary"} 
+                                          onClick={() => handleViewCourse(course)}
+                                          className="d-flex align-items-center btn-custom"
+                                          style={{
+                                            background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                                            border: 'none'
+                                          }}
+                                        >
+                                          {isAllModulesCompleted(course) ? (
+                                            <>
+                                              <FaCheckCircle className="me-2" />
+                                              Completed
+                                            </>
+                                          ) : (
+                                            <>
+                                              <FaPlay className="me-2" />
+                                              Start
+                                            </>
+                                          )}
+                                        </Button>
+                                        {/* Refund Request Button - Only for paid users with pending status and no existing pending refund */}
+                                        {userRoleType !== 'student-unpaid' && !isAllModulesCompleted(course) && !refundRequests.some(req => req.status === 'pending') && (
+                                          <Button 
+                                            variant="outline-danger" 
+                                            onClick={() => {
+                                              // Navigate to refund request with course details to auto-fill
+                                              navigate('/RefundRequest', {
+                                                state: {
+                                                  course: course,
+                                                  userData: {
+                                                    ...userData,
+                                                    status: userData?.status || 'pending',
+                                                    amount: course.course_fee || userData?.course_fee || userData?.amount || '' // Use course fee if available
+                                                  }
+                                                }
+                                              })
+                                            }}
+                                            className="d-flex align-items-center"
+                                          >
+                                            <i className="bi bi-currency-exchange me-2"></i>
+                                            Refund
+                                          </Button>
+                                        )}
+                                        {/* Show pending status if refund request is pending */}
+                                        {refundRequests.some(req => req.status === 'pending') && (
+                                          <Badge bg="warning" className="d-flex align-items-center p-2">
+                                            <i className="bi bi-clock me-2"></i>
+                                            Refund Pending
+                                          </Badge>
+                                        )}
+                                      </div>
+                                    </div>
+                                  </Card.Body>
+                                </Card>
+                              </Col>
+                            ))}
+                          </Row>
+                        ) : (
+                          <div className="text-center py-5">
+                            <FaBook className="text-muted mb-3" style={{ fontSize: '48px' }} />
+                            <p className="text-muted fs-4">No courses enrolled yet</p>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {/* All Courses Tab */}
+                    {activeTab === 'all-courses' && (
+                      <div>
+                        <h4 className="mb-3">All Free Courses</h4>
+                        
+                        {allCoursesLoading ? (
+                          <div className="text-center py-5">
+                            <Spinner animation="border" variant="primary" style={{ width: '60px', height: '60px' }} />
+                            <p className="mt-3">Loading all courses...</p>
+                          </div>
+                        ) : allCourses.filter(c => c.course_status === 'unpaid').length > 0 ? (
+                          <Row>
+                            {allCourses.filter(c => c.course_status === 'unpaid').map((course, index) => {
+                              const isEnrolled = courses.some(ec => ec.course_id === course.course_id)
+                              return (
+                                <Col md={6} lg={4} key={course.id || index} className="mb-4">
+                                  <Card className="shadow-sm border-0 h-100" style={{ borderRadius: '12px', overflow: 'hidden' }}>
+                                    <div className="card-header-gradient" style={{ 
+                                      height: '150px', 
+                                      width:'100%',
+                                      padding: '0',
+                                      border: 'none',
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      justifyContent: 'center',
+                                      position: 'relative',
+                                      background: isEnrolled 
+                                        ? 'linear-gradient(135deg, #10b981, #059669)' // Green for enrolled
+                                        : 'linear-gradient(135deg, #667eea, #764ba2)' // Purple for available
+                                    }}>
+                                      {isEnrolled ? (
+                                        <div className="text-center">
+                                          <FaCertificate className="text-white" style={{ fontSize: '40px', marginBottom: '8px' }} />
+                                          <p className="text-white fw-bold mb-0">Already Enrolled</p>
+                                        </div>
+                                      ) : (
+                                        <FaBook className="text-white" style={{ fontSize: '48px' }} />
+                                      )}
+                                    </div>
+                                    <Card.Body className="p-4">
+                                      <div className="mb-3">
+                                        <h6 className="mb-2 course-title">{renderContentWithLineBreaks(course.course_name)}</h6>
+                                        <Badge bg={course.course_status === 'paid' ? 'success' : 'primary'} className="mb-2">
+                                          {course.course_status === 'paid' ? `₹ ${course.price}` : 'Free'}
+                                        </Badge>
+                                      </div>
+                                      
+                                      {course.course_description && (
+                                        <p className="text-muted small mb-3">{course.course_description.substring(0, 100)}...</p>
+                                      )}
+                                      
+                                      <div className="d-flex gap-2 mt-3">
+                                        {isEnrolled ? (
+                                          <Button 
+                                            variant="success" 
+                                            onClick={() => handleViewCourse(courses.find(ec => ec.course_id === course.course_id))}
+                                            className="w-100 d-flex align-items-center justify-content-center"
+                                          >
+                                            <FaPlay className="me-2" />
+                                            Continue Learning
+                                          </Button>
+                                        ) : (
+                                          <Button 
+                                            variant="primary" 
+                                            onClick={() => handleEnrollCourse(course.course_id)}
+                                            className="w-100 d-flex align-items-center justify-content-center"
+                                          >
+                                            <FaCheckCircle className="me-2" />
+                                            Enroll Now
+                                          </Button>
+                                        )}
+                                      </div>
+                                    </Card.Body>
+                                  </Card>
+                                </Col>
+                              )
+                            })}
+                          </Row>
+                        ) : (
+                          <div className="text-center py-5">
+                            <FaGraduationCap className="text-muted mb-3" style={{ fontSize: '48px' }} />
+                            <p className="text-muted fs-4">No free courses available</p>
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
