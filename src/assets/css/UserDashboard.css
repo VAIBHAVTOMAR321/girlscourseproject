@@ -821,10 +821,12 @@ body.sidebar-compact .dashboard-content {
 .course-card:hover .card-header-gradient {
   transform: scale(1.02);
 }
-
+.course-stats span{
+  font-size: 10px;
+}
 .course-title {
   color: #2c3e50;
-  font-size: 1.2rem;
+  font-size: 12px;
   font-weight: 700;
   line-height: 1.4;
   margin-bottom: 12px;

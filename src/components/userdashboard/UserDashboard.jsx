@@ -1258,7 +1258,7 @@ const UserDashboard = () => {
                                     position: 'relative',
                                     background: isAllModulesCompleted(course) 
                                       ? 'linear-gradient(135deg, #10b981, #059669)' // Green gradient for completed
-                                      : 'linear-gradient(135deg, #667eea, #764ba2)' // Purple gradient for in-progress
+                                      : 'linear-gradient(135deg, #667eea, #667eea)' // Purple gradient for in-progress
                                   }}>
                                     {/* Check if all modules are completed instead of relying on course.is_completed */}
                                     {isAllModulesCompleted(course) ? (
@@ -1323,7 +1323,7 @@ const UserDashboard = () => {
                                           onClick={() => handleViewCourse(course)}
                                           className="d-flex align-items-center btn-custom"
                                           style={{
-                                            background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                                            background: 'linear-gradient(135deg, #667eea, #667eea)',
                                             border: 'none'
                                           }}
                                         >
@@ -1413,7 +1413,7 @@ const UserDashboard = () => {
                                       position: 'relative',
                                       background: isEnrolled 
                                         ? 'linear-gradient(135deg, #10b981, #059669)' // Green for enrolled
-                                        : 'linear-gradient(135deg, #667eea, #764ba2)' // Purple for available
+                                        : 'linear-gradient(135deg, #667eea, #667eea)' // Purple for available
                                     }}>
                                       {isEnrolled ? (
                                         <div className="text-center">
