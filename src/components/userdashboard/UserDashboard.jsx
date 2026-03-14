@@ -1221,14 +1221,16 @@ const UserDashboard = () => {
                         <FaBook className="me-2" />
                         My Courses ({courses.length})
                       </Button>
-                      <Button 
-                        variant={activeTab === 'all-courses' ? 'primary' : 'outline-primary'}
-                        onClick={() => setActiveTab('all-courses')}
-                        className="fw-semibold"
-                      >
-                        <FaGraduationCap className="me-2" />
-                        Free Courses ({allCourses.filter(c => c.course_status === 'unpaid').length})
-                      </Button>
+                      {userRoleType === 'student-unpaid' && (
+                        <Button 
+                          variant={activeTab === 'all-courses' ? 'primary' : 'outline-primary'}
+                          onClick={() => setActiveTab('all-courses')}
+                          className="fw-semibold"
+                        >
+                          <FaGraduationCap className="me-2" />
+                          Free Courses ({allCourses.filter(c => c.course_status === 'unpaid').length})
+                        </Button>
+                      )}
                     </div>
 
                     {/* My Courses Tab */}
@@ -1385,8 +1387,8 @@ const UserDashboard = () => {
                       </div>
                     )}
 
-                    {/* All Courses Tab */}
-                    {activeTab === 'all-courses' && (
+                    {/* All Courses Tab - Only visible to unpaid users */}
+                    {activeTab === 'all-courses' && userRoleType === 'student-unpaid' && (
                       <div>
                         <h4 className="mb-3">All Free Courses</h4>
                         
