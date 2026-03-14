@@ -18,6 +18,7 @@ const Login = () => {
   const [fieldErrors, setFieldErrors] = useState({});
   const [hoveredCourse, setHoveredCourse] = useState(null);
   const [courseType, setCourseType] = useState("paid"); // Changed to lowercase to match API
+  const [isSubmitting, setIsSubmitting] = useState(false); // Loading state
   const navigate = useNavigate();
   const { login } = useAuth();
 
@@ -77,6 +78,13 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Prevent multiple submissions
+    if (isSubmitting) {
+      return;
+    }
+    
+    setIsSubmitting(true);
 
     let errors = {};
 
@@ -108,6 +116,7 @@ const Login = () => {
 
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors);
+      setIsSubmitting(false);
       return;
     }
 
@@ -143,6 +152,7 @@ const Login = () => {
 
       if (response.data.error || response.data.detail) {
         setErrorMessage(response.data.error || response.data.detail);
+        setIsSubmitting(false);
         return;
       }
 
@@ -153,6 +163,7 @@ const Login = () => {
         ? "/AdminDashboard"
         : "/UserDashboard";
       navigate(dashboardRoute);
+      setIsSubmitting(false);
     } catch (error) {
       const message =
         error.response?.data?.error ||
@@ -160,6 +171,8 @@ const Login = () => {
         "Login Failed";
 
       setErrorMessage(message);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -445,8 +458,19 @@ const Login = () => {
                   </div>
                 )}
                 <div className="text-center">
-                  <Button type="submit" className="text-center btn-gov-primary">
-                    <span>Login</span>
+                  <Button 
+                    type="submit" 
+                    className="text-center btn-gov-primary"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <span className="spinner-border spinner-border-sm me-2"></span>
+                        Logging in...
+                      </>
+                    ) : (
+                      <span>Login</span>
+                    )}
                   </Button>
                 </div>
 
