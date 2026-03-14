@@ -12,17 +12,30 @@ export const renderContentWithLineBreaks = (content) => {
   if (typeof content === 'string') {
     let processedContent = content
     
-    // Replace &nbsp; with non-breaking spaces
-    processedContent = processedContent.replace(/&nbsp;/g, '\u00A0')
+    // First, escape all HTML tags completely
+    processedContent = processedContent.replace(/&/g, '&amp;')
+    processedContent = processedContent.replace(/</g, '&lt;')
+    processedContent = processedContent.replace(/>/g, '&gt;')
     
-    // Handle <p> tags
-    processedContent = processedContent.replace(/<p>(.*?)<\/p>/gs, '<p>$1</p>')
+    // Then, selectively unescape only the tags we want to preserve
+    // This way, all other tags remain escaped and are displayed as text
+    const tagsToPreserve = [
+      { search: /&lt;br\s*\/?&gt;/gi, replace: '<br>' },
+      { search: /&lt;p&gt;(.*?)&lt;\/p&gt;/gs, replace: '<p>$1</p>' },
+      { search: /&lt;b&gt;(.*?)&lt;\/b&gt;/gs, replace: '<strong>$1</strong>' },
+      { search: /&lt;i&gt;(.*?)&lt;\/i&gt;/gs, replace: '<em>$1</em>' },
+      { search: /&lt;strong&gt;(.*?)&lt;\/strong&gt;/gs, replace: '<strong>$1</strong>' },
+      { search: /&lt;em&gt;(.*?)&lt;\/em&gt;/gs, replace: '<em>$1</em>' },
+      { search: /&lt;li&gt;(.*?)&lt;\/li&gt;/gs, replace: '<li>$1</li>' },
+      { search: /&lt;ul(\s*[^&gt;]*)&gt;/g, replace: '<ul style="list-style-type: disc; margin: 0; padding-left: 20px;">' },
+      { search: /&lt;\/ul&gt;/g, replace: '</ul>' },
+      { search: /&lt;ol(\s*[^&gt;]*)&gt;/g, replace: '<ol style="list-style-type: decimal; margin: 0; padding-left: 20px;">' },
+      { search: /&lt;\/ol&gt;/g, replace: '</ol>' }
+    ]
     
-    // Handle <b> tags for bold text
-    processedContent = processedContent.replace(/<b>(.*?)<\/b>/gs, '<strong>$1</strong>')
-    
-    // Handle <i> tags for italic text
-    processedContent = processedContent.replace(/<i>(.*?)<\/i>/gs, '<em>$1</em>')
+    tagsToPreserve.forEach(({ search, replace }) => {
+      processedContent = processedContent.replace(search, replace)
+    })
     
     // Handle plain text lists with newlines
     // Look for lines that start with indentation or are simple list items
@@ -90,6 +103,12 @@ export const renderContentWithLineBreaks = (content) => {
     
     // Handle newlines
     processedContent = processedContent.replace(/\n/g, '<br>')
+    
+    // Handle special characters like { and }
+    processedContent = processedContent.replace(/\{/g, '&#123;').replace(/\}/g, '&#125;')
+    
+    // Replace &nbsp; with non-breaking spaces
+    processedContent = processedContent.replace(/&nbsp;/g, '\u00A0')
     
      // Now render the processed content
     return (
