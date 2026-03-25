@@ -1076,7 +1076,7 @@ const AdminDashboard = () => {
               <Form.Label>Submodule Description</Form.Label>
               <Form.Control
                 as="textarea"
-                rows={3}
+                rows={6}
                 value={submoduleFormData.sub_modu_description}
                 onChange={(e) => setSubmoduleFormData({ ...submoduleFormData, sub_modu_description: e.target.value })}
                 placeholder="e.g. Basic concepts"
@@ -1135,7 +1135,7 @@ const AdminDashboard = () => {
                     <Form.Label className="small">Section Description</Form.Label>
                     <Form.Control
                       as="textarea"
-                      rows={2}
+                       rows={10}
                       placeholder="e.g. Basic concepts and fundamentals"
                       value={section.description}
                       onChange={(e) => handleSubModSectionChange(sectionIndex, 'description', e.target.value)}

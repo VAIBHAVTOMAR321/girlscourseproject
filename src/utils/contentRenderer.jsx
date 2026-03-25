@@ -12,6 +12,12 @@ export const renderContentWithLineBreaks = (content) => {
   if (typeof content === 'string') {
     let processedContent = content
     
+    // Process content inside curly braces {} - show as code, not rendered HTML
+    // This handles cases like {<input type="text">} to show the code instead of the input tag
+    processedContent = processedContent.replace(/\{([^}]*)\}/g, (match, innerContent) => {
+      return '<code>' + innerContent.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</code>'
+    })
+    
     // Replace &nbsp; with non-breaking spaces
     processedContent = processedContent.replace(/&nbsp;/g, '\u00A0')
     
@@ -23,6 +29,10 @@ export const renderContentWithLineBreaks = (content) => {
     
     // Handle <i> tags for italic text
     processedContent = processedContent.replace(/<i>(.*?)<\/i>/gs, '<em>$1</em>')
+    
+    // Add form handling to clear inputs when submit is clicked
+    processedContent = processedContent.replace(/<form/g, '<form onsubmit="event.preventDefault(); this.reset();"')
+    processedContent = processedContent.replace(/<button/g, '<button onclick="event.preventDefault(); this.form && this.form.reset();"')
     
     // Handle plain text lists with newlines
     // Look for lines that start with indentation or are simple list items
