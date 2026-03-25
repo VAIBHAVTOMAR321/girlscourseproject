@@ -775,247 +775,145 @@ const UserDashboard = () => {
                                            </div>
                                            
                                            <Row className="g-4">
-                                            {/* Alternating layout: Content and Image swap sides for each sub-module */}
-                                            {subModuleIndex % 2 === 0 ? (
-                                              <>
-                                                {/* Left Side: Content */}
-                                                <Col lg={7} md={12}>
-                                                  <div className="content-wrapper">
-                                                    {subModule.sub_mod && subModule.sub_mod.length > 0 ? (
-                                                      <div className="content-section">
-                                                      
-                                                        <div className="content-items">
-                                                          {subModule.sub_mod.map((item, itemIndex) => (
-                                                            <div key={itemIndex} className="content-item p-3 mb-3 bg-white rounded-3 shadow-sm border-l-4 border-primary">
-                                                              {Array.isArray(item) && item.length === 2 ? (
-                                                                <div className="content-pair">
-                                                                  {item[0].toLowerCase() === 'title' ? (
-                                                                    <div className="content-title fw-bold text-dark mb-2">
-                                                                      {renderContentWithLineBreaks(item[1])}
-                                                                    </div>
-                                                                  ) : item[0].toLowerCase() === 'description' ? (
-                                                                    <div className="content-description text-muted">
-                                                                      {renderContentWithLineBreaks(item[1])}
-                                                                    </div>
-                                                                  ) : (
-                                                                    <div className="content-field">
-                                                                      <span className="field-label fw-semibold text-primary me-2">
-                                                                        {item[0]}:
-                                                                      </span>
-                                                                      <span className="field-value text-dark">
-                                                                        {renderContentWithLineBreaks(item[1])}
-                                                                      </span>
-                                                                    </div>
-                                                                  )}
-                                                                </div>
-                                                              ) : typeof item === 'object' && item !== null ? (
-                                                                <div className="content-object">
-                                                                  {Object.entries(item).map(([key, value]) => (
-                                                                    <div key={key} className="content-entry mb-2">
-                                                                      {key.toLowerCase() === 'title' ? (
-                                                                        <h6 className="content-title fw-bold text-dark mb-2">
-                                                                          {renderContentWithLineBreaks(value)}
-                                                                        </h6>
-                                                                      ) : key.toLowerCase() === 'description' ? (
-                                                                        <p className="content-description text-muted mb-0">
-                                                                          {renderContentWithLineBreaks(value)}
-                                                                        </p>
-                                                                      ) : (
-                                                                        <div className="content-field">
-                                                                          <span className="field-label fw-semibold text-primary me-2">
-                                                                            {key}:
-                                                                          </span>
-                                                                          <span className="field-value text-dark">
-                                                                            {renderContentWithLineBreaks(value)}
-                                                                          </span>
-                                                                        </div>
-                                                                      )}
-                                                                    </div>
-                                                                  ))}
-                                                                </div>
-                                                              ) : (
-                                                                <div className="content-text text-dark">
-                                                                  {renderContentWithLineBreaks(item)}
-                                                                </div>
-                                                              )}
-                                                            </div>
-                                                          ))}
-                                                        </div>
-                                                      </div>
-                                                    ) : (
-                                                      <div className="no-content p-5 bg-gray-50 rounded-3 text-center">
-                                                        <FaFileAlt className="text-muted mb-3" style={{ fontSize: '48px' }} />
-                                                        <p className="text-muted mb-0">
-                                                          📚 No content available for this sub-module.
-                                                        </p>
-                                                      </div>
-                                                    )}
-                                                  </div>
-                                                </Col>
-                                                
-                                                {/* Right Side: Image */}
-                                                <Col lg={5} md={12}>
-                                                  <div className="image-wrapper">
-                                                    {subModule.image ? (
-                                                      <div className="book-image-container rounded-3 overflow-hidden shadow-lg">
-                                                        <img 
-                                                          src={`https://brjobsedu.com/girls_course/girls_course_backend/${subModule.image}`} 
-                                                          alt={subModule.sub_modu_title} 
-                                                          className="book-image w-100 h-100"
-                                                          style={{ objectFit: 'cover' }}
-                                                          onError={(e) => {
+                                             {/* Determine layout based on image presence and alternating pattern */}
+                                             {(() => {
+                                               const hasImage = subModule.image;
+                                               let contentCol, imageCol, contentFirst;
 
-                                                            e.target.onerror = null;
-                                                            e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"%3E%3Crect fill="%23f8f9fa" width="400" height="300"/%3E%3Ctext fill="%236c757d" font-family="Arial" font-size="18" x="50%25" y="50%25" text-anchor="middle" dy=".3em"%3EImage Not Available%3C/text%3E%3C/svg%3E';
-                                                          }}
-                                                        />
-                                                        <div className="image-overlay">
-                                                          <div className="overlay-content">
-                                                            <FaImage className="text-white mb-2" style={{ fontSize: '32px' }} />
-                                                            <p className="text-white mb-0 small">
-                                                              Sub Module {subModule.order}
-                                                            </p>
-                                                          </div>
-                                                        </div>
-                                                      </div>
-                                                    ) : (
-                                                      <div className="no-image-container rounded-3 bg-gray-50 d-flex align-items-center justify-content-center" style={{ minHeight: '300px' }}>
-                                                        <div className="text-center">
-                                                          <FaImage className="text-muted mb-3" style={{ fontSize: '48px' }} />
-                                                          <p className="text-muted mb-0">
-                                                            No Image Available
-                                                          </p>
-                                                          <small className="text-muted">
-                                                            Sub Module {subModule.order}
-                                                          </small>
-                                                        </div>
-                                                      </div>
-                                                    )}
-                                                  </div>
-                                                </Col>
-                                              </>
-                                            ) : (
-                                              <>
-                                                {/* Right Side: Image (for odd indices) */}
-                                                <Col lg={5} md={12}>
-                                                  <div className="image-wrapper">
-                                                    {subModule.image ? (
-                                                      <div className="book-image-container rounded-3 overflow-hidden shadow-lg">
-                                                        <img 
-                                                          src={`https://brjobsedu.com/girls_course/girls_course_backend/${subModule.image}`} 
-                                                          alt={subModule.sub_modu_title} 
-                                                          className="book-image w-100 h-100"
-                                                          style={{ objectFit: 'cover' }}
-                                                          onError={(e) => {
-                                                            e.target.onerror = null;
-                                                            e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"%3E%3Crect fill="%23f8f9fa" width="400" height="300"/%3E%3Ctext fill="%236c757d" font-family="Arial" font-size="18" x="50%25" y="50%25" text-anchor="middle" dy=".3em"%3EImage Not Available%3C/text%3E%3C/svg%3E';
-                                                          }}
-                                                        />
-                                                        <div className="image-overlay">
-                                                          <div className="overlay-content">
-                                                            <FaImage className="text-white mb-2" style={{ fontSize: '32px' }} />
-                                                            <p className="text-white mb-0 small">
-                                                              Sub Module {subModule.order}
-                                                            </p>
-                                                          </div>
-                                                        </div>
-                                                      </div>
-                                                    ) : (
-                                                      <div className="no-image-container rounded-3 bg-gray-50 d-flex align-items-center justify-content-center" style={{ minHeight: '300px' }}>
-                                                        <div className="text-center">
-                                                          <FaImage className="text-muted mb-3" style={{ fontSize: '48px' }} />
-                                                          <p className="text-muted mb-0">
-                                                            No Image Available
-                                                          </p>
-                                                          <small className="text-muted">
-                                                            Sub Module {subModule.order}
-                                                          </small>
-                                                        </div>
-                                                      </div>
-                                                    )}
-                                                  </div>
-                                                </Col>
-                                                
-                                                {/* Left Side: Content (for odd indices) */}
-                                                <Col lg={7} md={12}>
-                                                  <div className="content-wrapper">
-                                                    {subModule.sub_mod && subModule.sub_mod.length > 0 ? (
-                                                      <div className="content-section">
-                                                        <div className="section-header d-flex align-items-center mb-3">
-                                                          <FaFileAlt className="me-2 text-primary" />
-                                                          <h6 className="mb-0 fw-semibold">📖 Course Content</h6>
-                                                        </div>
-                                                        <div className="content-items">
-                                                          {subModule.sub_mod.map((item, itemIndex) => (
-                                                            <div key={itemIndex} className="content-item p-3 mb-3 bg-white rounded-3 shadow-sm border-l-4 border-primary">
-                                                              {Array.isArray(item) && item.length === 2 ? (
-                                                                <div className="content-pair">
-                                                                  {item[0].toLowerCase() === 'title' ? (
-                                                                    <div className="content-title fw-bold text-dark mb-2">
-                                                                      {renderContentWithLineBreaks(item[1])}
-                                                                    </div>
-                                                                  ) : item[0].toLowerCase() === 'description' ? (
-                                                                    <div className="content-description text-muted">
-                                                                      {renderContentWithLineBreaks(item[1])}
-                                                                    </div>
-                                                                  ) : (
-                                                                    <div className="content-field">
-                                                                      <span className="field-label fw-semibold text-primary me-2">
-                                                                        {item[0]}:
-                                                                      </span>
-                                                                      <span className="field-value text-dark">
-                                                                        {renderContentWithLineBreaks(item[1])}
-                                                                      </span>
-                                                                    </div>
-                                                                  )}
-                                                                </div>
-                                                              ) : typeof item === 'object' && item !== null ? (
-                                                                <div className="content-object">
-                                                                  {Object.entries(item).map(([key, value]) => (
-                                                                    <div key={key} className="content-entry mb-2">
-                                                                      {key.toLowerCase() === 'title' ? (
-                                                                        <h6 className="content-title fw-bold text-dark mb-2">
-                                                                          {renderContentWithLineBreaks(value)}
-                                                                        </h6>
-                                                                      ) : key.toLowerCase() === 'description' ? (
-                                                                        <p className="content-description text-muted mb-0">
-                                                                          {renderContentWithLineBreaks(value)}
-                                                                        </p>
-                                                                      ) : (
-                                                                        <div className="content-field">
-                                                                          <span className="field-label fw-semibold text-primary me-2">
-                                                                            {key}:
-                                                                          </span>
-                                                                          <span className="field-value text-dark">
-                                                                            {renderContentWithLineBreaks(value)}
-                                                                          </span>
-                                                                        </div>
-                                                                      )}
-                                                                    </div>
-                                                                  ))}
-                                                                </div>
-                                                              ) : (
-                                                                <div className="content-text text-dark">
-                                                                  {renderContentWithLineBreaks(item)}
-                                                                </div>
-                                                              )}
-                                                            </div>
-                                                          ))}
-                                                        </div>
-                                                      </div>
-                                                    ) : (
-                                                      <div className="no-content p-5 bg-gray-50 rounded-3 text-center">
-                                                        <FaFileAlt className="text-muted mb-3" style={{ fontSize: '48px' }} />
-                                                        <p className="text-muted mb-0">
-                                                          📚 No content available for this sub-module.
-                                                        </p>
-                                                      </div>
-                                                    )}
-                                                  </div>
-                                                </Col>
-                                              </>
-                                            )}
-                                          </Row>
+                                               if (hasImage) {
+                                                 // Alternating layout when image exists
+                                                 contentCol = subModuleIndex % 2 === 0 ? 7 : 5;
+                                                 imageCol = subModuleIndex % 2 === 0 ? 5 : 7;
+                                                 contentFirst = subModuleIndex % 2 === 0;
+                                               } else {
+                                                 // Full width content when no image
+                                                 contentCol = 12;
+                                                 imageCol = 0;
+                                                 contentFirst = true;
+                                               }
+
+                                               // Render content section
+                                               const contentElement = (
+                                                 <Col lg={contentCol} md={12}>
+                                                   <div className="content-wrapper">
+                                                     {subModule.sub_mod && subModule.sub_mod.length > 0 ? (
+                                                       <div className="content-section">
+                                                         <div className="section-header d-flex align-items-center mb-3">
+                                                           <FaFileAlt className="me-2 text-primary" />
+                                                           <h6 className="mb-0 fw-semibold">📖 Course Content</h6>
+                                                         </div>
+                                                         <div className="content-items">
+                                                           {subModule.sub_mod.map((item, itemIndex) => (
+                                                             <div key={itemIndex} className="content-item p-3 mb-3 bg-white rounded-3 shadow-sm border-l-4 border-primary">
+                                                               {Array.isArray(item) && item.length === 2 ? (
+                                                                 <div className="content-pair">
+                                                                   {item[0].toLowerCase() === 'title' ? (
+                                                                     <div className="content-title fw-bold text-dark mb-2">
+                                                                       {renderContentWithLineBreaks(item[1])}
+                                                                     </div>
+                                                                   ) : item[0].toLowerCase() === 'description' ? (
+                                                                     <div className="content-description text-muted">
+                                                                       {renderContentWithLineBreaks(item[1])}
+                                                                     </div>
+                                                                   ) : (
+                                                                     <div className="content-field">
+                                                                       <span className="field-label fw-semibold text-primary me-2">
+                                                                         {item[0]}:
+                                                                       </span>
+                                                                       <span className="field-value text-dark">
+                                                                         {renderContentWithLineBreaks(item[1])}
+                                                                       </span>
+                                                                     </div>
+                                                                   )}
+                                                                 </div>
+                                                               ) : typeof item === 'object' && item !== null ? (
+                                                                 <div className="content-object">
+                                                                   {Object.entries(item).map(([key, value]) => (
+                                                                     <div key={key} className="content-entry mb-2">
+                                                                       {key.toLowerCase() === 'title' ? (
+                                                                         <h6 className="content-title fw-bold text-dark mb-2">
+                                                                           {renderContentWithLineBreaks(value)}
+                                                                         </h6>
+                                                                       ) : key.toLowerCase() === 'description' ? (
+                                                                         <p className="content-description text-muted mb-0">
+                                                                           {renderContentWithLineBreaks(value)}
+                                                                         </p>
+                                                                       ) : (
+                                                                         <div className="content-field">
+                                                                           <span className="field-label fw-semibold text-primary me-2">
+                                                                             {key}:
+                                                                           </span>
+                                                                           <span className="field-value text-dark">
+                                                                             {renderContentWithLineBreaks(value)}
+                                                                           </span>
+                                                                         </div>
+                                                                       )}
+                                                                     </div>
+                                                                   ))}
+                                                                 </div>
+                                                               ) : (
+                                                                 <div className="content-text text-dark">
+                                                                   {renderContentWithLineBreaks(item)}
+                                                                 </div>
+                                                               )}
+                                                             </div>
+                                                           ))}
+                                                         </div>
+                                                       </div>
+                                                     ) : (
+                                                       <div className="no-content p-5 bg-gray-50 rounded-3 text-center">
+                                                         <FaFileAlt className="text-muted mb-3" style={{ fontSize: '48px' }} />
+                                                         <p className="text-muted mb-0">
+                                                           📚 No content available for this sub-module.
+                                                         </p>
+                                                       </div>
+                                                     )}
+                                                   </div>
+                                                 </Col>
+                                               );
+
+                                               // Render image section
+                                               const imageElement = hasImage ? (
+                                                 <Col lg={imageCol} md={12}>
+                                                   <div className="image-wrapper">
+                                                     <div className="book-image-container rounded-3 overflow-hidden shadow-lg">
+                                                       <img
+                                                         src={`https://brjobsedu.com/girls_course/girls_course_backend/${subModule.image}`}
+                                                         alt={subModule.sub_modu_title}
+                                                         className="book-image w-100 h-100"
+                                                         style={{ objectFit: 'contain', objectPosition: 'center' }}
+                                                         onError={(e) => {
+                                                           e.target.onerror = null;
+                                                           e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"%3E%3Crect fill="%23f8f9fa" width="400" height="300"/%3E%3Ctext fill="%236c757d" font-family="Arial" font-size="18" x="50%25" y="50%25" text-anchor="middle" dy=".3em"%3EImage Not Available%3C/text%3E%3C/svg%3E';
+                                                         }}
+                                                       />
+                                                       <div className="image-overlay">
+                                                         <div className="overlay-content">
+                                                           <FaImage className="text-white mb-2" style={{ fontSize: '32px' }} />
+                                                           <p className="text-white mb-0 small">
+                                                             Sub Module {subModule.order}
+                                                           </p>
+                                                         </div>
+                                                       </div>
+                                                     </div>
+                                                   </div>
+                                                 </Col>
+                                               ) : null;
+
+                                               // Order based on alternating pattern or content-first when no image
+                                               return contentFirst ? (
+                                                 <>
+                                                   {contentElement}
+                                                   {imageElement}
+                                                 </>
+                                               ) : (
+                                                 <>
+                                                   {imageElement}
+                                                   {contentElement}
+                                                 </>
+                                               );
+                                             })()}
+                                           </Row>
                                         </div>
                                       ))}
                                     </div>
