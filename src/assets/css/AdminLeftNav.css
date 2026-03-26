@@ -38,12 +38,13 @@
   border-radius: 4px;
   transition: all 0.2s ease;
   font-weight: 400;
-  font-size: 0.875rem;
+  font-size: 12px;
 }
 
 .admin-left-nav .nav-menu .nav-link:hover {
   background: #e9ecef;
   color: #495057;
+  font-size: 12px;
 }
 
 .admin-left-nav .nav-menu .nav-link.active {
