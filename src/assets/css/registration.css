@@ -10,7 +10,7 @@
           border-radius: 10px;
           position: relative;
           overflow: hidden;
-          margin-bottom: 427px;
+          margin-bottom: 20px;
         
         }
         .official-header-fixed {
@@ -126,7 +126,7 @@
         }
         
         .main-content-wrapper {
-          padding-top: 38px;
+          padding-top: 55px;
         }
         .file-size{
           color: #000;
@@ -277,7 +277,7 @@
           .portal-subtitle {
             font-size: 0.8rem;
           }
-          
+        
           .official-seal {
             width: 50px;
             height: 50px;
@@ -288,10 +288,10 @@
             height: 30px;
           }
           
-          .main-content-wrapper {
-            padding-top: 130px;
+        
+          .course-marquee-container-box{
+            margin-bottom: 0px !important;
           }
-          
           .header-left {
             position: static;
           }
@@ -299,6 +299,10 @@
           .official-header-content {
             flex-direction: column;
             gap: 10px;
+          }
+          .main-content-wrapper 
+          {
+padding-top: 0px !important;
           }
         }
       

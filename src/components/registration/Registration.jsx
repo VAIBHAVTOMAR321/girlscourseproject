@@ -3,6 +3,7 @@ import { Container, Button, Col, Form, Row, Alert, Spinner, Badge } from "react-
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import "../../custom/style.css";
 import regBanner from "../../assets/reg-banner.jpg";
+import BannerImg from "../../assets/image.png";
 import axios from "axios";
 import Logo from "../../assets/brainrock_logo.png";
 import "../../assets/css/registration.css"
@@ -486,8 +487,8 @@ const Registration = () => {
               </div>
             </div>
             
-            {/* Courses in grid layout - paid in 2 columns, unpaid in 1 column */}
-            <div className={`course-grid ${courseType === "unpaid" ? "single-column" : "two-column"}`}>
+            {/* Courses in grid layout - paid in 2 columns, unpaid in banner layout */}
+            <div className={`course-grid ${courseType === "unpaid" ? "banner-layout" : "two-column"}`}>
               {coursesLoading ? (
                 // Loading skeleton for grid
                 Array.from({ length: courseType === "unpaid" ? 3 : 6 }).map((_, index) => (
@@ -519,50 +520,123 @@ const Registration = () => {
                   </div>
                 ))
               ) : filteredCourses.length > 0 ? (
-                filteredCourses.map((course, index) => (
-                  <div
-                    key={`${course.id}-${index}`}
-                    className={`course-card ${course.status === "disabled" ? "disabled" : ""} ${
-                      hoveredCourse === course.id ? "hovered" : ""
-                    }`}
-                    onClick={() => handleCourseClick(course)}
-                    onMouseEnter={() => setHoveredCourse(course.id)}
-                    onMouseLeave={() => setHoveredCourse(null)}
-                    style={{
-                      background: course.status === "active" 
-                        ? `linear-gradient(135deg, ${course.color}15 0%, ${course.color}05 100%)` 
-                        : "#f5f5f5",
-                      borderLeft: `4px solid ${course.status === "active" ? course.color : "#ddd"}`
-                    }}
-                  >
-                    <div className="course-icon" style={{ color: course.color }}>
-                      {course.icon}
-                    </div>
-                    <div className="course-info">
-                      <h5 className="course-name">{renderContentWithLineBreaks(course.name)}</h5>
-                      <div className="course-meta">
-                        <Badge 
-                          bg={course.type === "paid" ? "success" : "primary"} 
-                          className="me-2"
-                        >
-                          {course.type === "paid" ? "Paid" : "Free"}
-                        </Badge>
-                        <span className="enrolled-count">
-                          <i className="fas fa-users"></i> {course.enrolled}
-                        </span>
-                      </div>
-                      {course.type === "paid" && (
-                        <div className="course-price mt-2">
-                          <span className="price-label">Price:</span>
-                          <span className="price-value">{formatPrice(course.price)}</span>
+                courseType === "unpaid" ? (
+                  // Unpaid courses with banner image on left and courses on right
+                  <div className="unpaid-banner-layout">
+                    {/* Left side - Banner Image */}
+                    <div className="banner-image-section">
+                      <div className="banner-container">
+                        <img src={BannerImg} alt="banner" />
+                        <div className="banner-overlay">
+                          <div className="banner-content">
+                            <div className="banner-stats">
+                              <div className="stat-item">
+                                <i className="fas fa-book"></i>
+                                <span>{filteredCourses.length} Courses</span>
+                              </div>
+                              <div className="stat-item">
+                                <i className="fas fa-users"></i>
+                                <span>{filteredCourses.reduce((sum, course) => sum + (course.enrolled || 0), 0)} Students</span>
+                              </div>
+                            </div>
+                          </div>
                         </div>
-                      )}
+                      </div>
                     </div>
-                    <div className="course-action" style={{ color: course.color }}>
-                      <i className="fas fa-arrow-right"></i>
+                    
+                    {/* Right side - Courses List */}
+                    <div className="courses-list-section">
+                      <div className="courses-list-header">
+                        <h5>Available Unpaid Courses</h5>
+                        <div className="course-count-badge">
+                          {filteredCourses.length} Courses
+                        </div>
+                      </div>
+                      
+                      <div className="courses-list-container">
+                        {filteredCourses.map((course, index) => (
+                          <div
+                            key={`unpaid-${course.id}-${index}`}
+                            className={`unpaid-list-item ${course.status === "disabled" ? "disabled" : ""}`}
+                            onClick={() => handleCourseClick(course)}
+                            style={{
+                              background: course.status === "active" 
+                                ? `linear-gradient(135deg, ${course.color}08 0%, transparent 100%)` 
+                                : "#f5f5f5",
+                              borderLeft: `3px solid ${course.status === "active" ? course.color : "#ddd"}`
+                            }}
+                          >
+                            <div className="list-item-content">
+                              <div className="course-icon-small" style={{ color: course.color }}>
+                                {course.icon}
+                              </div>
+                              <div className="course-details">
+                                <h6 className="course-title">{renderContentWithLineBreaks(course.name)}</h6>
+                                <div className="course-meta-info">
+                                  <span className="enrolled-info">
+                                    <i className="fas fa-users"></i> {course.enrolled}
+                                  </span>
+                                  <Badge bg="primary" className="free-badge">
+                                    
+                                  </Badge>
+                                </div>
+                              </div>
+                              <div className="course-action-arrow">
+                                <i className="fas fa-chevron-right"></i>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
-                ))
+                ) : (
+                  // Paid courses - card layout
+                  filteredCourses.map((course, index) => (
+                    <div
+                      key={`${course.id}-${index}`}
+                      className={`course-card ${course.status === "disabled" ? "disabled" : ""} ${
+                        hoveredCourse === course.id ? "hovered" : ""
+                      }`}
+                      onClick={() => handleCourseClick(course)}
+                      onMouseEnter={() => setHoveredCourse(course.id)}
+                      onMouseLeave={() => setHoveredCourse(null)}
+                      style={{
+                        background: course.status === "active" 
+                          ? `linear-gradient(135deg, ${course.color}15 0%, ${course.color}05 100%)` 
+                          : "#f5f5f5",
+                        borderLeft: `4px solid ${course.status === "active" ? course.color : "#ddd"}`
+                      }}
+                    >
+                      <div className="course-icon" style={{ color: course.color }}>
+                        {course.icon}
+                      </div>
+                      <div className="course-info">
+                        <h5 className="course-name">{renderContentWithLineBreaks(course.name)}</h5>
+                        <div className="course-meta">
+                          <Badge 
+                            bg={course.type === "paid" ? "success" : "primary"} 
+                            className="me-2"
+                          >
+                            {course.type === "paid" ? "Paid" : ""}
+                          </Badge>
+                          <span className="enrolled-count">
+                            <i className="fas fa-users"></i> {course.enrolled}
+                          </span>
+                        </div>
+                        {course.type === "paid" && (
+                          <div className="course-price mt-2">
+                            <span className="price-label">Price:</span>
+                            <span className="price-value">{formatPrice(course.price)}</span>
+                          </div>
+                        )}
+                      </div>
+                      <div className="course-action" style={{ color: course.color }}>
+                        <i className="fas fa-arrow-right"></i>
+                      </div>
+                    </div>
+                  ))
+                )
               ) : (
                 // No courses message for grid
                 <div className="course-card disabled" style={{ width: "100%" }}>
@@ -586,7 +660,7 @@ const Registration = () => {
             </div>
           </Col>
 
-          <Col lg={6} md={6} sm={12}>
+          <Col lg={6} md={6} sm={12} className="mb-3">
             <div className="p-4">
               <div className="section-header">
                 <h2 className="text-center mb-4">Course Registration</h2>

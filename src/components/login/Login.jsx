@@ -1,27 +1,37 @@
-import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Form, Button, Badge } from "react-bootstrap";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
+import { Container, Row, Col, Form, Button, Badge, Alert, Spinner } from "react-bootstrap";
 import axios from "axios";
-import regBanner from "../../assets/reg-banner.jpg";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import "../../custom/style.css";
 import { useAuth } from "../../contexts/AuthContext";
 import "../../assets/css/login.css";
 import Logo from "../../assets/brainrock_logo.png";
 import Footer from "../footer/Footer";
 import NavBar from "../navbar/NavBar";
+import BannerImg from "../../assets/image.png";
+
+// Constants
+const API_BASE_URL = "https://brjobsedu.com/girls_course/girls_course_backend/api";
+const COURSE_ICONS = ["💻", "📊", "🤖", "📱", "☁️", "🔒", "📲", "⛓️", "🎨", "⚙️"];
+const COURSE_COLORS = ["#4285F4", "#34A853", "#EA4335", "#FBBC05", "#6C63FF", "#00ACC1", "#FF6D00", "#7B1FA2", "#00897B", "#D32F2F"];
 
 const Login = () => {
   const location = useLocation();
-  const initialRole = location.state?.role || "admin";
-  const [role, setRole] = useState(initialRole);
+  const navigate = useNavigate();
+  const { login } = useAuth();
+  
+  // State management
+  const [role, setRole] = useState(location.state?.role || "admin");
+  const [courseType, setCourseType] = useState("paid");
+  const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [fieldErrors, setFieldErrors] = useState({});
   const [hoveredCourse, setHoveredCourse] = useState(null);
-  const [courseType, setCourseType] = useState("paid"); // Changed to lowercase to match API
-  const [isSubmitting, setIsSubmitting] = useState(false); // Loading state
-  const navigate = useNavigate();
-  const { login } = useAuth();
+  const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
 
+  // Form data state
   const [formData, setFormData] = useState({
     email_or_phone: "",
     phone: "",
@@ -29,68 +39,73 @@ const Login = () => {
     password: "",
   });
 
-  const [courses, setCourses] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  // Fetch courses from API
-  useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        const response = await axios.get("https://brjobsedu.com/girls_course/girls_course_backend/api/course-items/");
-        if (response.data.success && response.data.data) {
-          // Process fetched courses without static type assignment
-          const processedCourses = response.data.data.map((course, index) => ({
-            id: course.id,
-            name: course.course_name,
-            course_id: course.course_id,
-            status: "active", // Set all courses to active
-           // Random enrolled count
-            icon: ["💻", "📊", "🤖", "📱", "☁️", "🔒", "📲", "⛓️", "🎨", "⚙️"][index % 10], // Cycle through icons
-            color: ["#4285F4", "#34A853", "#EA4335", "#FBBC05", "#6C63FF", "#00ACC1", "#FF6D00", "#7B1FA2", "#00897B", "#D32F2F"][index % 10], // Cycle through colors
-            type: course.course_status, // Use API field directly
-            price: parseFloat(course.price) || 0 // Convert price string to number
-          }));
-          setCourses(processedCourses);
-        }
-      } catch (error) {
-        console.error("Error fetching courses:", error);
-        setCourses([]); // Set to empty array if API fails
-      } finally {
-        setLoading(false);
+  // Fetch courses with useCallback for optimization
+  const fetchCourses = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`${API_BASE_URL}/course-items/`);
+      
+      if (response.data?.success && response.data?.data) {
+        const processedCourses = response.data.data.map((course, index) => ({
+          id: course.id,
+          name: course.course_name,
+          course_id: course.course_id,
+          status: "active",
+          enrolled: Math.floor(Math.random() * 500) + 100,
+          icon: COURSE_ICONS[index % COURSE_ICONS.length],
+          color: COURSE_COLORS[index % COURSE_COLORS.length],
+          type: course.course_status,
+          price: parseFloat(course.price) || 0,
+          description: course.description || "",
+          duration: course.duration || "",
+        }));
+        setCourses(processedCourses);
       }
-    };
-
-    fetchCourses();
+    } catch (error) {
+      console.error("Error fetching courses:", error);
+      setErrorMessage("Failed to load courses. Please try again later.");
+      setCourses([]);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  // Filter courses based on selected tab
-  const filteredCourses = courses.filter(course => course.type === courseType);
+  // Fetch courses on component mount
+  useEffect(() => {
+    fetchCourses();
+  }, [fetchCourses]);
 
-  // Duplicate filtered courses array multiple times for seamless loop
-  const duplicatedCourses = [...filteredCourses, ...filteredCourses, ...filteredCourses, ...filteredCourses];
+  // Memoize filtered courses for performance
+  const filteredCourses = useMemo(() => {
+    return courses.filter(course => course.type === courseType);
+  }, [courses, courseType]);
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  // Handle form input changes
+  const handleChange = useCallback((e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value,
+    }));
     
-    // Prevent multiple submissions
-    if (isSubmitting) {
-      return;
+    // Clear field error when user starts typing
+    if (fieldErrors[name]) {
+      setFieldErrors(prev => ({
+        ...prev,
+        [name]: "",
+      }));
     }
-    
-    setIsSubmitting(true);
+  }, [fieldErrors]);
 
-    let errors = {};
+  // Validate form fields
+  const validateForm = useCallback(() => {
+    const errors = {};
 
     if (role === "admin") {
       if (!formData.email_or_phone.trim()) {
         errors.email_or_phone = "Email or Phone is required";
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email_or_phone) && !/^\d{10}$/.test(formData.email_or_phone)) {
+        errors.email_or_phone = "Please enter a valid email or 10-digit phone number";
       }
     }
 
@@ -112,76 +127,77 @@ const Login = () => {
 
     if (!formData.password.trim()) {
       errors.password = "Password is required";
+    } else if (formData.password.length < 6) {
+      errors.password = "Password must be at least 6 characters";
     }
 
-    if (Object.keys(errors).length > 0) {
-      setFieldErrors(errors);
-      setIsSubmitting(false);
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
+  }, [role, formData]);
+
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (isSubmitting || !validateForm()) {
       return;
     }
-
-    setFieldErrors({});
+    
+    setIsSubmitting(true);
     setErrorMessage("");
 
-    let payload =
-      role === "admin"
-        ? {
-            role: "admin",
-            email_or_phone: formData.email_or_phone,
-            password: formData.password,
-          }
-        : role === "student"
-        ? {
-            role: "student",
-            phone: formData.phone,
-            password: formData.password,
-          }
-        : role === "student-unpaid"
-        ? {
-            role: "student-unpaid",
-            aadhaar_no: formData.aadhaar_no,
-            password: formData.password,
-          }
-        : {};
+    const payload = {
+      role,
+      ...(role === "admin" && { email_or_phone: formData.email_or_phone }),
+      ...(role === "student" && { phone: formData.phone }),
+      ...(role === "student-unpaid" && { aadhaar_no: formData.aadhaar_no }),
+      password: formData.password,
+    };
 
     try {
-      const response = await axios.post(
-        "https://brjobsedu.com/girls_course/girls_course_backend/api/login/",
-        payload
-      );
+      const response = await axios.post(`${API_BASE_URL}/login/`, payload);
 
-      if (response.data.error || response.data.detail) {
+      if (response.data?.error || response.data?.detail) {
         setErrorMessage(response.data.error || response.data.detail);
-        setIsSubmitting(false);
         return;
       }
 
+      // Store remember me preference
+      if (rememberMe) {
+        localStorage.setItem('rememberedRole', role);
+      }
+
       login(response.data);
-      alert("Login Successful");
+      
+      // Show success message
+      const successMessage = document.createElement('div');
+      successMessage.className = 'alert alert-success position-fixed top-0 start-50 translate-middle-x mt-3';
+      successMessage.style.zIndex = '9999';
+      successMessage.innerHTML = `
+        <i class="fas fa-check-circle me-2"></i>
+        Login Successful! Redirecting...
+      `;
+      document.body.appendChild(successMessage);
+      
+      setTimeout(() => {
+        successMessage.remove();
+        const dashboardRoute = response.data.role === "admin" ? "/AdminDashboard" : "/UserDashboard";
+        navigate(dashboardRoute);
+      }, 1500);
 
-      const dashboardRoute = response.data.role === "admin"
-        ? "/AdminDashboard"
-        : "/UserDashboard";
-      navigate(dashboardRoute);
-      setIsSubmitting(false);
     } catch (error) {
-      const message =
-        error.response?.data?.error ||
-        error.response?.data?.detail ||
-        "Login Failed";
-
+      const message = error.response?.data?.error || error.response?.data?.detail || "Login Failed. Please try again.";
       setErrorMessage(message);
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleCourseClick = (course) => {
+  // Handle course click
+  const handleCourseClick = useCallback((course) => {
     if (course.type === "paid") {
-      // Redirect to external paid courses page
       window.open("https://brainrock.in/Courses", "_blank");
     } else {
-      // Navigate to registration page with course information for unpaid courses
       navigate("/Registration", { 
         state: { 
           courseName: course.name,
@@ -191,189 +207,275 @@ const Login = () => {
         } 
       });
     }
+  }, [navigate]);
+
+  // Format price
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+      minimumFractionDigits: 2
+    }).format(price);
   };
 
-  // Format price with currency symbol
-  const formatPrice = (price) => {
-    return `₹${price.toFixed(2)}`;
+  // Render course card
+  const renderCourseCard = (course, index) => (
+    <div
+      key={`${course.id}-${index}`}
+      className={`course-card ${course.status === "disabled" ? "disabled" : ""} ${
+        hoveredCourse === course.id ? "hovered" : ""
+      }`}
+      onClick={() => handleCourseClick(course)}
+      onMouseEnter={() => setHoveredCourse(course.id)}
+      onMouseLeave={() => setHoveredCourse(null)}
+      style={{
+        background: course.status === "active" 
+          ? `linear-gradient(135deg, ${course.color}15 0%, ${course.color}05 100%)` 
+          : "#f5f5f5",
+        borderLeft: `4px solid ${course.status === "active" ? course.color : "#ddd"}`
+      }}
+    >
+      <div className="course-icon" style={{ color: course.color }}>
+        {course.icon}
+      </div>
+      <div className="course-info">
+        <h5 className="course-name">{course.name}</h5>
+        <div className="course-meta">
+          <Badge 
+            bg={course.type === "paid" ? "success" : "primary"} 
+            className="me-2"
+          >
+            {course.type === "paid" ? "Paid" : ""}
+          </Badge>
+          <span className="enrolled-count">
+            <i className="fas fa-users"></i> {course.enrolled} enrolled
+          </span>
+        </div>
+        {course.type === "paid" && (
+          <div className="course-price mt-2">
+            <span className="price-label">Price:</span>
+            <span className="price-value">{formatPrice(course.price)}</span>
+          </div>
+        )}
+        {course.duration && (
+          <div className="course-duration mt-1">
+            <small className="text-muted">
+              <i className="fas fa-clock me-1"></i>
+              {course.duration}
+            </small>
+          </div>
+        )}
+      </div>
+      <div className="course-action" style={{ color: course.color }}>
+        <i className="fas fa-arrow-right"></i>
+      </div>
+    </div>
+  );
+
+  // Render loading skeleton
+  const renderLoadingSkeleton = () => {
+    const count = courseType === "unpaid" ? 3 : 6;
+    return Array.from({ length: count }).map((_, index) => (
+      <div
+        key={`loading-${index}`}
+        className="course-card disabled"
+        style={{
+          background: "#f5f5f5",
+          borderLeft: "4px solid #ddd"
+        }}
+      >
+        <div className="course-icon" style={{ color: "#ddd" }}>
+          <Spinner animation="border" size="sm" />
+        </div>
+        <div className="course-info">
+          <h5 className="course-name">Loading...</h5>
+          <div className="course-meta">
+            <Badge bg="secondary" className="me-2">
+              Loading
+            </Badge>
+            <span className="enrolled-count">
+              <i className="fas fa-users"></i> --
+            </span>
+          </div>
+        </div>
+        <div className="course-action" style={{ color: "#a0aec0" }}>
+          <i className="fas fa-spinner fa-spin"></i>
+        </div>
+      </div>
+    ));
   };
 
   return (
     <div className="gov-portal-bg">
-      {/* Main Content with Padding-top to account for fixed header */}
+      <NavBar />
+      
       <Container className="mt-5 main-content-wrapper">
-       
         <Row className="align-items-center p-4 shadow rounded bg-white official-card">
-           <h1>National Education</h1>
-          <Col lg={6} md={6} sm={12} className="course-marquee-container">
-            <div className="course-marquee-header">
-              <h3 className="text-center mb-3">Available Courses</h3>
-              <div className="header-underline mx-auto"></div>
-              
-              {/* Course Type Tabs */}
-              <div className="course-tabs mb-4">
-                <div 
-                  className={`course-tab ${courseType === "paid" ? "active" : ""}`}
-                  onClick={() => setCourseType("paid")}
-                >
-                  Paid Courses
-                </div>
-                <div 
-                  className={`course-tab ${courseType === "unpaid" ? "active" : ""}`}
-                  onClick={() => setCourseType("unpaid")}
-                >
-                  Unpaid Courses
+          <h1 className="text-center mb-4">National Education Portal</h1>
+          
+          {/* Courses Section */}
+        <Col lg={6} md={6} sm={12} className="course-marquee-container">
+  <div className="course-marquee-header">
+    <h3 className="text-center mb-3">Available Courses</h3>
+    <div className="header-underline mx-auto"></div>
+    
+    {/* Course Type Tabs */}
+    <div className="course-tabs mb-4">
+      <div 
+        className={`course-tab ${courseType === "paid" ? "active" : ""}`}
+        onClick={() => setCourseType("paid")}
+      >
+        Paid Courses
+      </div>
+      <div 
+        className={`course-tab ${courseType === "unpaid" ? "active" : ""}`}
+        onClick={() => setCourseType("unpaid")}
+      >
+        UnPaid Courses
+      </div>
+    </div>
+  </div>
+  
+  {/* Courses Grid */}
+  <div className={`course-grid ${courseType === "unpaid" ? "banner-layout" : "two-column"}`}>
+    {loading ? (
+      renderLoadingSkeleton()
+    ) : filteredCourses.length > 0 ? (
+      courseType === "unpaid" ? (
+        // Unpaid courses with banner image on left and courses on right
+        <div className="unpaid-banner-layout">
+          {/* Left side - Banner Image */}
+          <div className="banner-image-section">
+            <div className="banner-container">
+              <img  src={BannerImg} alt="banner"
+                
+              />
+              <div className="banner-overlay">
+                <div className="banner-content">
+                 
+                  <div className="banner-stats">
+                    <div className="stat-item">
+                      <i className="fas fa-book"></i>
+                     
+                    </div>
+                    <div className="stat-item">
+                      <i className="fas fa-users"></i>
+                     
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
+          </div>
+          
+          {/* Right side - Courses List */}
+          <div className="courses-list-section">
+           
             
-            {/* Courses in grid layout - paid in 2 columns, unpaid in 1 column */}
-            <div className={`course-grid ${courseType === "unpaid" ? "single-column" : "two-column"}`}>
-              {loading ? (
-                // Loading skeleton for grid
-                Array.from({ length: courseType === "unpaid" ? 3 : 6 }).map((_, index) => (
-                  <div
-                    key={`loading-${index}`}
-                    className="course-card disabled"
-                    style={{
-                      background: "#f5f5f5",
-                      borderLeft: "4px solid #ddd"
-                    }}
-                  >
-                    <div className="course-icon" style={{ color: "#ddd" }}>
-                      ⏳
-                    </div>
-                    <div className="course-info">
-                      <h5 className="course-name">Loading...</h5>
-                      <div className="course-meta">
-                        <Badge bg="secondary" className="me-2">
-                          Loading
-                        </Badge>
-                        <span className="enrolled-count">
-                          <i className="fas fa-users"></i> --
-                        </span>
-                      </div>
-                    </div>
-                    <div className="course-action" style={{ color: "#a0aec0" }}>
-                      <i className="fas fa-spinner fa-spin"></i>
-                    </div>
-                  </div>
-                ))
-              ) : filteredCourses.length > 0 ? (
-                filteredCourses.map((course, index) => (
-                  <div
-                    key={`${course.id}-${index}`}
-                    className={`course-card ${course.status === "disabled" ? "disabled" : ""} ${
-                      hoveredCourse === course.id ? "hovered" : ""
-                    }`}
-                    onClick={() => handleCourseClick(course)}
-                    onMouseEnter={() => setHoveredCourse(course.id)}
-                    onMouseLeave={() => setHoveredCourse(null)}
-                    style={{
-                      background: course.status === "active" 
-                        ? `linear-gradient(135deg, ${course.color}15 0%, ${course.color}05 100%)` 
-                        : "#f5f5f5",
-                      borderLeft: `4px solid ${course.status === "active" ? course.color : "#ddd"}`
-                    }}
-                  >
-                    <div className="course-icon" style={{ color: course.color }}>
+            <div className="courses-list-container">
+              {filteredCourses.map((course, index) => (
+                <div
+                  key={`unpaid-${course.id}-${index}`}
+                  className={`unpaid-list-item ${course.status === "disabled" ? "disabled" : ""}`}
+                  onClick={() => handleCourseClick(course)}
+                  style={{
+                    background: course.status === "active" 
+                      ? `linear-gradient(135deg, ${course.color}08 0%, transparent 100%)` 
+                      : "#f5f5f5",
+                    borderLeft: `3px solid ${course.status === "active" ? course.color : "#ddd"}`
+                  }}
+                >
+                  <div className="list-item-content">
+                    <div className="course-icon-small" style={{ color: course.color }}>
                       {course.icon}
                     </div>
-                    <div className="course-info">
-                      <h5 className="course-name">{course.name}</h5>
-                      <div className="course-meta">
-                        <Badge 
-                          bg={course.type === "paid" ? "success" : "primary"} 
-                          className="me-2"
-                        >
-                          {course.type === "paid" ? "Paid" : "Free"}
-                        </Badge>
-                        <span className="enrolled-count">
+                    <div className="course-details">
+                      <h6 className="course-title">{course.name}</h6>
+                      <div className="course-meta-info">
+                        <span className="enrolled-info">
                           <i className="fas fa-users"></i> {course.enrolled}
                         </span>
+                        {course.duration && (
+                          <span className="duration-info">
+                            <i className="fas fa-clock"></i> {course.duration}
+                          </span>
+                        )}
+                        <Badge bg="primary" className="free-badge">
+                          
+                        </Badge>
                       </div>
-                      {course.type === "paid" && (
-                        <div className="course-price mt-2">
-                          <span className="price-label">Price:</span>
-                          <span className="price-value">{formatPrice(course.price)}</span>
-                        </div>
-                      )}
                     </div>
-                    <div className="course-action" style={{ color: course.color }}>
-                      <i className="fas fa-arrow-right"></i>
+                    <div className="course-action-arrow">
+                      <i className="fas fa-chevron-right"></i>
                     </div>
-                  </div>
-                ))
-              ) : (
-                // No courses message for grid
-                <div className="course-card disabled" style={{ width: "100%" }}>
-                  <div className="course-info">
-                    <h5 className="course-name text-center">
-                      {courseType === "paid" ? "No paid courses available" : "No unpaid courses available"}
-                    </h5>
-                    <p className="text-center small text-muted">
-                      Please check back later for available {courseType === "paid" ? "paid" : "unpaid"} courses
-                    </p>
                   </div>
                 </div>
-              )}
+              ))}
             </div>
+          </div>
+        </div>
+      ) : (
+        // Paid courses - original card layout
+        filteredCourses.map(renderCourseCard)
+      )
+    ) : (
+      <div className="course-card disabled" style={{ width: "100%" }}>
+        <div className="course-info">
+          <h5 className="course-name text-center">
+            No {courseType === "paid" ? "paid" : "free"} courses available
+          </h5>
+          <p className="text-center small text-muted">
+            Please check back later for available courses
+          </p>
+        </div>
+      </div>
+    )}
+  </div>
 
-            <div className="marquee-footer text-center mt-3">
-              <p className="small text-muted">
-                <i className="fas fa-info-circle me-1"></i>
-                Click on any course to register and get started
-              </p>
-            </div>
-          </Col>
+  <div className="marquee-footer text-center mt-3">
+    <p className="small text-muted">
+      <i className="fas fa-info-circle me-1"></i>
+      Click on any course to register and get started
+    </p>
+  </div>
+</Col>
 
+          {/* Login Section */}
           <Col lg={6} md={6} sm={12}>
             <div className="p-4">
-               {/* Dynamic heading based on role */}
               <div className="section-header">
                 <h2 className="text-center mb-4">
                   {role === "admin" ? "Admin Login" : 
-                   role === "student" ? "Student (Paid) Login" : "Student (Unpaid) Login"}
+                   role === "student" ? "Student Login" : "Free Student Login"}
                 </h2>
                 <div className="header-underline"></div>
               </div>
 
-              {/* Role Selection with Radio Buttons */}
+              {/* Role Selection */}
               <Form.Group className="mb-4">
                 <Form.Label className="mb-3 form-label-gov">Select User Type</Form.Label>
-                <div className="d-flex justify-content-around">
-                  <div 
-                    className={`gov-role-option ${role === "admin" ? "selected" : ""}`}
-                    onClick={() => setRole("admin")}
-                  >
-                    <div className="gov-radio-button">
-                      <div className={`gov-radio-inner ${role === "admin" ? "checked" : ""}`}></div>
+                <div className="d-flex justify-content-around flex-wrap gap-2">
+                  {[
+                    { value: "admin", label: "Administrator" },
+                    { value: "student", label: "Student (Paid)" },
+                    { value: "student-unpaid", label: "Student (Free)" }
+                  ].map(({ value, label }) => (
+                    <div 
+                      key={value}
+                      className={`gov-role-option ${role === value ? "selected" : ""}`}
+                      onClick={() => setRole(value)}
+                    >
+                      <div className="gov-radio-button">
+                        <div className={`gov-radio-inner ${role === value ? "checked" : ""}`}></div>
+                      </div>
+                      <span>{label}</span>
                     </div>
-                    <span>Administrator</span>
-                  </div>
-                  <div 
-                    className={`gov-role-option ${role === "student" ? "selected" : ""}`}
-                    onClick={() => setRole("student")}
-                  >
-                    <div className="gov-radio-button">
-                      <div className={`gov-radio-inner ${role === "student" ? "checked" : ""}`}></div>
-                    </div>
-                    <span>Student (Paid)</span>
-                  </div>
-                  <div 
-                    className={`gov-role-option ${role === "student-unpaid" ? "selected" : ""}`}
-                    onClick={() => setRole("student-unpaid")}
-                  >
-                    <div className="gov-radio-button">
-                      <div className={`gov-radio-inner ${role === "student-unpaid" ? "checked" : ""}`}></div>
-                    </div>
-                    <span>Student (Unpaid)</span>
-                  </div>
+                  ))}
                 </div>
               </Form.Group>
 
               <Form onSubmit={handleSubmit}>
-                {/* Admin Field */}
+                {/* Dynamic form fields based on role */}
                 {role === "admin" && (
                   <Form.Group className="mb-3">
                     <Form.Label className="form-label-gov">Email or Phone Number</Form.Label>
@@ -382,39 +484,35 @@ const Login = () => {
                       name="email_or_phone"
                       value={formData.email_or_phone}
                       onChange={handleChange}
-                      placeholder="Enter Email Or Phone"
+                      placeholder="Enter email or phone"
                       className="form-control-gov"
+                      isInvalid={!!fieldErrors.email_or_phone}
                     />
-                    {fieldErrors.email_or_phone && (
-                      <small className="text-danger">
-                        {fieldErrors.email_or_phone}
-                      </small>
-                    )}
+                    <Form.Control.Feedback type="invalid">
+                      {fieldErrors.email_or_phone}
+                    </Form.Control.Feedback>
                   </Form.Group>
                 )}
 
-                {/* Student (Paid) Field */}
                 {role === "student" && (
                   <Form.Group className="mb-3">
                     <Form.Label className="form-label-gov">Phone Number</Form.Label>
                     <Form.Control
-                      type="text"
+                      type="tel"
                       name="phone"
                       value={formData.phone}
                       onChange={handleChange}
                       maxLength={10}
-                      placeholder="Enter 10 Digit Phone Number"
+                      placeholder="Enter 10-digit phone number"
                       className="form-control-gov"
+                      isInvalid={!!fieldErrors.phone}
                     />
-                    {fieldErrors.phone && (
-                      <small className="text-danger">
-                        {fieldErrors.phone}
-                      </small>
-                    )}
+                    <Form.Control.Feedback type="invalid">
+                      {fieldErrors.phone}
+                    </Form.Control.Feedback>
                   </Form.Group>
                 )}
 
-                {/* Student (Unpaid) Field */}
                 {role === "student-unpaid" && (
                   <Form.Group className="mb-3">
                     <Form.Label className="form-label-gov">Aadhaar Number</Form.Label>
@@ -424,49 +522,72 @@ const Login = () => {
                       value={formData.aadhaar_no}
                       onChange={handleChange}
                       maxLength={12}
-                      placeholder="Enter 12 Digit Aadhaar Number"
+                      placeholder="Enter 12-digit Aadhaar number"
                       className="form-control-gov"
+                      isInvalid={!!fieldErrors.aadhaar_no}
                     />
-                    {fieldErrors.aadhaar_no && (
-                      <small className="text-danger">
-                        {fieldErrors.aadhaar_no}
-                      </small>
-                    )}
+                    <Form.Control.Feedback type="invalid">
+                      {fieldErrors.aadhaar_no}
+                    </Form.Control.Feedback>
                   </Form.Group>
                 )}
 
-                {/* Common Password */}
+                {/* Password Field */}
                 <Form.Group className="mb-3">
                   <Form.Label className="form-label-gov">Password</Form.Label>
-                  <Form.Control
-                    type="password"
-                    name="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    placeholder="Enter Password"
-                    className="form-control-gov"
+                  <div className="password-input-wrapper">
+                    <Form.Control
+                      type={showPassword ? "text" : "password"}
+                      name="password"
+                      value={formData.password}
+                      onChange={handleChange}
+                      placeholder="Enter password"
+                      className="form-control-gov"
+                      isInvalid={!!fieldErrors.password}
+                    />
+                    <Button
+                      variant="link"
+                      className="password-toggle"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      <i className={`fas fa-${showPassword ? "eye-slash" : "eye"}`}></i>
+                    </Button>
+                    <Form.Control.Feedback type="invalid">
+                      {fieldErrors.password}
+                    </Form.Control.Feedback>
+                  </div>
+                </Form.Group>
+
+                {/* Remember Me */}
+                <Form.Group className="mb-3">
+                  <Form.Check
+                    type="checkbox"
+                    label="Remember me"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    className="form-check-gov"
                   />
-                  {fieldErrors.password && (
-                    <small className="text-danger">{fieldErrors.password}</small>
-                  )}
                 </Form.Group>
                 
+                {/* Error Message */}
                 {errorMessage && (
-                  <div className="alert alert-danger error-box-gov">
+                  <Alert variant="danger" className="error-box-gov">
                     <i className="fas fa-exclamation-circle me-2"></i>
                     {errorMessage}
-                  </div>
+                  </Alert>
                 )}
+
+                {/* Submit Button */}
                 <div className="text-center">
                   <Button 
                     type="submit" 
-                    className="text-center btn-gov-primary"
+                    className="btn-gov-primary"
                     disabled={isSubmitting}
                   >
                     {isSubmitting ? (
                       <>
-                        <span className="spinner-border spinner-border-sm me-2"></span>
-                        Logging in...
+                        <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
+                        <span className="ms-2">Logging in...</span>
                       </>
                     ) : (
                       <span>Login</span>
@@ -474,12 +595,12 @@ const Login = () => {
                   </Button>
                 </div>
 
-                {/* Register Link for Unpaid Courses or Unpaid Student Role */}
+                {/* Register Link */}
                 {(courseType === "unpaid" || role === "student-unpaid") && (
                   <div className="text-center mt-3">
                     <p className="small">
                       Don't have an account?{" "}
-                      <Link to="/Registration" className="text-primary">
+                      <Link to="/Registration" className="register-link">
                         Register here
                       </Link>
                     </p>
@@ -496,12 +617,9 @@ const Login = () => {
             </div>
           </Col>
         </Row>
-        
-      
       </Container>
 
-      
- 
+      <Footer />
     </div>
   );
 };
