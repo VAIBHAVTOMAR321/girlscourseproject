@@ -458,31 +458,34 @@ const OccupationDetails = () => {
                     <p className="text-muted mb-0">Follow these steps to become a {occupationDetails.title}</p>
                   </Card.Header>
                   <Card.Body className="p-4">
-                    {occupationDetails.steps.map((step, index) => (
-                      <Card key={index} className="mb-3 border step-card">
-                        <Card.Body className="p-3">
-                          <div className="d-flex align-items-start gap-3">
-                            <div className="step-number">
-                              <Badge bg="primary" className="rounded-circle p-3" style={{ width: '50px', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                {step.step}
-                              </Badge>
-                            </div>
-                            <div className="flex-grow-1">
-                            
-                              <p className="text-muted mb-2">{step.description}</p>
-                              <div className="mt-2">
-                                <small className="text-muted d-block mb-1">Tips:</small>
-                                <ul className="mb-0 ps-3">
-                                  {step.tips.map((tip, idx) => (
-                                    <li key={idx} className="small text-muted">{tip}</li>
-                                  ))}
-                                </ul>
+                    <Row>
+                      {occupationDetails.steps.map((step, index) => (
+                        <Col md={6} key={index}>
+                          <Card className="mb-3 border step-card">
+                            <Card.Body className="p-3">
+                              <div className="d-flex align-items-start gap-3">
+                                <div className="step-number">
+                                  <Badge bg="primary" className="rounded-circle p-3" style={{ width: '50px', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                    {step.step}
+                                  </Badge>
+                                </div>
+                                <div className="flex-grow-1">
+                                  <p className="text-muted mb-2">{step.description}</p>
+                                  <div className="mt-2">
+                                    <small className="text-muted d-block mb-1">Tips:</small>
+                                    <ul className="mb-0 ps-3">
+                                      {step.tips.map((tip, idx) => (
+                                        <li key={idx} className="small text-muted">{tip}</li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                </div>
                               </div>
-                            </div>
-                          </div>
-                        </Card.Body>
-                      </Card>
-                    ))}
+                            </Card.Body>
+                          </Card>
+                        </Col>
+                      ))}
+                    </Row>
                   </Card.Body>
                 </Card>
 
