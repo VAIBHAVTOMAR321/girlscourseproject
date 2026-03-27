@@ -19,13 +19,14 @@ const UserTest = () => {
   const [testLoading, setTestLoading] = useState(true)
   const [testResult, setTestResult] = useState(null)
   const [showCelebrationModal, setShowCelebrationModal] = useState(false)
+  const [attemptsLeft, setAttemptsLeft] = useState(0)
 
   const location = useLocation()
   const navigate = useNavigate()
   const { uniqueId, accessToken, userRoleType } = useAuth()
   
   // Get course and module from location state
-  const { course, moduleIndex, isLastModule } = location.state || {}
+  const { course, moduleIndex, isLastModule, attemptCount } = location.state || {}
 
   // Check mobile view
   useEffect(() => {
@@ -75,6 +76,17 @@ const UserTest = () => {
           setUserAnswers(new Array(response.data.questions.length).fill(null))
           // Set overall timer: 30 seconds per question
           setTimer(response.data.questions.length * 30)
+          // Store attempt count if available in response
+          if (response.data.attempt_count !== undefined) {
+            setTestResult(prev => ({ ...prev, attempt_count: response.data.attempt_count }))
+          }
+          // Store attempts left if available in response
+          if (response.data.attempts_left !== undefined) {
+            setAttemptsLeft(response.data.attempts_left)
+          } else if (response.data.attempt_count !== undefined) {
+            // Calculate attempts left (assuming max 3 attempts)
+            setAttemptsLeft(3 - response.data.attempt_count)
+          }
         }
       } catch (error) {
         // Handle error silently
@@ -102,19 +114,77 @@ const UserTest = () => {
     }
   }, [timer, testCompleted])
 
-  // State to track if user has been warned before
-  const [hasBeenWarned, setHasBeenWarned] = useState(false)
+  // State to track navigation attempts
+  const [navigationAttempts, setNavigationAttempts] = useState(0)
+
+  // Block navigation when user tries to leave the test page
+  useEffect(() => {
+    // Store current location
+    const currentPath = window.location.pathname
+    
+    // Block all link clicks on the page
+    const handleLinkClick = (e) => {
+      if (testCompleted) return
+      
+      // Check if it's a link to another page
+      const href = e.target.closest('a')?.href
+      if (href && !href.includes(currentPath)) {
+        e.preventDefault()
+        if (navigationAttempts === 0) {
+          alert('Are you sure you want to leave? Your test will be submitted automatically if you leave again.')
+          setNavigationAttempts(1)
+        } else {
+          handleTestComplete()
+        }
+      }
+    }
+    
+    document.addEventListener('click', handleLinkClick, true)
+    
+    return () => {
+      document.removeEventListener('click', handleLinkClick, true)
+    }
+  }, [testCompleted, navigationAttempts])
+
+  // Prevent navigation away from test page
+  useEffect(() => {
+    // Check if we're on the test page and test is not completed
+    if (testCompleted) return
+
+    const handlePopState = (e) => {
+      if (!testCompleted) {
+        if (navigationAttempts === 0) {
+          // First attempt - show warning
+          alert('Are you sure you want to leave? Your test will be submitted automatically if you leave again.')
+          setNavigationAttempts(1)
+          // Prevent going back
+          window.history.pushState(null, '', window.location.href)
+        } else {
+          // Second attempt - auto submit
+          handleTestComplete()
+        }
+      }
+    }
+
+    // Push initial state to prevent immediate back
+    window.history.pushState(null, '', window.location.href)
+    window.addEventListener('popstate', handlePopState)
+    
+    return () => {
+      window.removeEventListener('popstate', handlePopState)
+    }
+  }, [testCompleted, navigationAttempts])
 
   // Auto submit when user closes the window or navigates away
   useEffect(() => {
     const handleBeforeUnload = (e) => {
       if (!testCompleted) {
-        if (!hasBeenWarned) {
+        if (navigationAttempts === 0) {
           // Show warning on first attempt
           e.preventDefault()
           e.returnValue = ''
-          // Modern browsers don't allow custom messages, so we'll use the tab switch warning for better UX
-          setHasBeenWarned(true)
+          setNavigationAttempts(1)
+          alert('Are you sure you want to leave? Your test will be submitted automatically if you leave again.')
           return ''
         } else {
           // Auto submit on subsequent attempts
@@ -125,16 +195,16 @@ const UserTest = () => {
 
     window.addEventListener('beforeunload', handleBeforeUnload)
     return () => window.removeEventListener('beforeunload', handleBeforeUnload)
-  }, [testCompleted, hasBeenWarned])
+  }, [testCompleted, navigationAttempts])
 
   // Auto submit when user switches to another tab/window
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.hidden && !testCompleted) {
-        if (!hasBeenWarned) {
+        if (navigationAttempts === 0) {
           // Show warning on first attempt (works for both tab switch and window close)
           alert('Are you sure you want to leave? Your test will be submitted automatically if you leave again.')
-          setHasBeenWarned(true)
+          setNavigationAttempts(1)
         } else {
           // Auto submit on subsequent attempts
           handleTestComplete()
@@ -144,7 +214,7 @@ const UserTest = () => {
 
     document.addEventListener('visibilitychange', handleVisibilityChange)
     return () => document.removeEventListener('visibilitychange', handleVisibilityChange)
-  }, [testCompleted, hasBeenWarned])
+  }, [testCompleted, navigationAttempts])
 
   // Handle answer selection
   const handleAnswerSelect = (answerIndex) => {
@@ -199,6 +269,14 @@ const UserTest = () => {
         // Show results
         setTestCompleted(true)
         setTestResult(response.data)
+        
+        // Store attempts left from API response
+        if (response.data.attempts_left !== undefined) {
+          setAttemptsLeft(response.data.attempts_left)
+        } else if (response.data.attempt_count !== undefined) {
+          // Calculate attempts left (assuming max 3 attempts)
+          setAttemptsLeft(3 - response.data.attempt_count)
+        }
         
         // Show celebration modal if test passed and it's the last module
         if (response.data.test_status === 'passed' && isLastModule) {
@@ -273,9 +351,21 @@ const UserTest = () => {
     }
   }
 
-  // Go back to dashboard without completing
+  // Go back to dashboard - with warning logic
   const handleGoBack = () => {
-    navigate('/UserDashboard')
+    if (testCompleted) {
+      navigate('/UserDashboard')
+      return
+    }
+    
+    if (navigationAttempts === 0) {
+      // First attempt - show warning and keep user on test
+      alert('Are you sure you want to leave? Your test will be submitted automatically if you leave again.')
+      setNavigationAttempts(1)
+    } else {
+      // Second attempt - auto submit
+      handleTestComplete()
+    }
   }
 
   const handleMenuToggle = () => {
@@ -337,8 +427,8 @@ const UserTest = () => {
                     </p>
                     <div className="d-flex justify-content-center gap-4 mb-4">
                       <div className="bg-light p-3 rounded">
-                        <p className="mb-0 text-muted small">Attempt Count</p>
-                        <p className="mb-0 fw-bold">{testResult.attempt_count}</p>
+                        <p className="mb-0 text-muted small">Attempts Left</p>
+                        <p className="mb-0 fw-bold">{testResult?.attempts_left !== undefined ? testResult.attempts_left : (attemptsLeft > 0 ? attemptsLeft : '0')}</p>
                       </div>
                       {testResult.locked_until && (
                         <div className="bg-light p-3 rounded">
@@ -395,28 +485,36 @@ const UserTest = () => {
                           </div>
                         </div>
                         
-                        <div className="d-flex justify-content-between">
-                          <Button 
-                            variant="secondary" 
-                            onClick={handlePreviousQuestion}
-                            disabled={currentQuestionIndex === 0}
-                          >
-                            Previous
-                          </Button>
-                          {currentQuestionIndex < questions.length - 1 ? (
+                        <div className="d-flex justify-content-between align-items-center">
+                          <div className="d-flex gap-2">
                             <Button 
-                              variant="primary" 
-                              onClick={handleNextQuestion}
+                              variant="secondary" 
+                              onClick={handlePreviousQuestion}
+                              disabled={currentQuestionIndex === 0}
+                              className="me-2"
                             >
-                              Next
+                              Previous
                             </Button>
-                          ) : (
-                            <Button 
-                              variant="success" 
-                              onClick={handleTestComplete}
-                            >
-                              Submit Test
-                            </Button>
+                            {currentQuestionIndex < questions.length - 1 ? (
+                              <Button 
+                                variant="primary" 
+                                onClick={handleNextQuestion}
+                              >
+                                Next
+                              </Button>
+                            ) : (
+                              <Button 
+                                variant="success" 
+                                onClick={handleTestComplete}
+                              >
+                                Submit Test {attemptsLeft > 0 && `(Attempts left: ${attemptsLeft})`}
+                              </Button>
+                            )}
+                          </div>
+                          {testResult && (
+                            <div className="text-muted small">
+                              <span>Attempts Left: {attemptsLeft > 0 ? attemptsLeft : '0'}</span>
+                            </div>
                           )}
                         </div>
                       </Card.Body>
