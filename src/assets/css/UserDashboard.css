@@ -670,6 +670,7 @@ body.sidebar-compact .dashboard-content {
   cursor: grab;
   transition: all 0.2s ease;
   user-select: none;
+  touch-action: none; /* Prevent scrolling on mobile while dragging */
 }
 
 .draggable-item:hover {
@@ -703,6 +704,7 @@ body.sidebar-compact .dashboard-content {
   border: 2px solid #dee2e6;
   background-color: white;
   font-weight: 500;
+  touch-action: manipulation; /* Improve touch response on mobile */
 }
 
 .target-item:hover {

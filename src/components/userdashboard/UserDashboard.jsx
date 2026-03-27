@@ -21,15 +21,17 @@ const UserDashboard = () => {
   const [courseModules, setCourseModules] = useState(null)
   const [modulesLoading, setModulesLoading] = useState(false)
   const [completedModules, setCompletedModules] = useState([])
+  const [activeAccordionKey, setActiveAccordionKey] = useState('0')
   const [error, setError] = useState(null)
   const [refundRequests, setRefundRequests] = useState([])
-  
+
   // Exercise management state
   const [currentExerciseModule, setCurrentExerciseModule] = useState(null)
   const [showExerciseView, setShowExerciseView] = useState(false)
   const [draggedItem, setDraggedItem] = useState(null)
   const [correctMatches, setCorrectMatches] = useState([])
   const [exerciseFeedback, setExerciseFeedback] = useState({ type: '', message: '' })
+  const [shuffledTargets, setShuffledTargets] = useState({})
 
   const location = useLocation()
   const navigate = useNavigate()
@@ -236,6 +238,7 @@ const UserDashboard = () => {
     setCourseModules(null)
     setCompletedModules([])
     setError(null)
+    setActiveAccordionKey('0') // Reset to first module, will be updated by useEffect
     await fetchCourseModules(course.course_id)
     await fetchModuleProgress()
   }
@@ -246,6 +249,7 @@ const UserDashboard = () => {
     setCourseModules(null)
     setCompletedModules([])
     setError(null)
+    setActiveAccordionKey('0') // Reset accordion to first module
   }
 
   // Check if module is accessible
@@ -274,12 +278,23 @@ const UserDashboard = () => {
   const handleTestClick = (moduleIndex) => {
     const currentModule = courseModules.modules[moduleIndex]
     const isLastModule = moduleIndex === courseModules.modules.length - 1
+    
+    // Get module progress data to pass attempt count
+    const moduleProgressData = moduleProgress.find(
+      progress => 
+        progress.course_id === selectedCourse.course_id && 
+        progress.module_id === currentModule.module_id
+    )
+    
+    const attemptCount = moduleProgressData?.attempt_count || 0
+    
     navigate('/UserTest', {
       state: {
         course: selectedCourse,
         moduleIndex: moduleIndex,
         moduleId: currentModule.module_id,
-        isLastModule: isLastModule
+        isLastModule: isLastModule,
+        attemptCount: attemptCount
       }
     })
   }
@@ -402,6 +417,44 @@ const UserDashboard = () => {
     }
   }
 
+  // Compute the first incomplete module index based on user progress
+  const computeFirstIncompleteModule = () => {
+    if (!courseModules || !courseModules.modules || courseModules.modules.length === 0) {
+      return '0'
+    }
+    
+    for (let i = 0; i < courseModules.modules.length; i++) {
+      const module = courseModules.modules[i]
+      
+      // Check if module is completed via local state
+      const isLocalCompleted = completedModules.includes(i)
+      
+      // Check if module test is passed from API progress
+      const moduleProgressData = moduleProgress.find(
+        progress => 
+          progress.course_id === selectedCourse?.course_id && 
+          progress.module === module.module_id
+      )
+      const isTestPassed = moduleProgressData?.test_status === 'passed'
+      
+      // If neither completed nor test passed, this is the first incomplete module
+      if (!isLocalCompleted && !isTestPassed) {
+        return i.toString()
+      }
+    }
+    
+    // All modules are completed, return the last module index
+    return (courseModules.modules.length - 1).toString()
+  }
+
+  // Update active accordion key when module progress changes
+  useEffect(() => {
+    if (courseModules && selectedCourse && !modulesLoading) {
+      const firstIncomplete = computeFirstIncompleteModule()
+      setActiveAccordionKey(firstIncomplete)
+    }
+  }, [courseModules, completedModules, moduleProgress, selectedCourse, modulesLoading])
+
   // Start exercise for module
   const handleStartExercise = (module) => {
     setCurrentExerciseModule(module)
@@ -410,7 +463,7 @@ const UserDashboard = () => {
     setExerciseFeedback({ type: '', message: '' })
   }
 
-  // Handle drag and drop for exercise
+  // Handle drag and drop for exercise (mouse)
   const handleDragStart = (e, item) => {
     setDraggedItem(item)
     e.target.style.opacity = '0.5'
@@ -422,6 +475,43 @@ const UserDashboard = () => {
 
   const handleDragOver = (e) => {
     e.preventDefault()
+  }
+
+  // Touch event handlers for mobile support
+  const [touchPosition, setTouchPosition] = useState({ x: 0, y: 0 })
+  const [touchDraggedItem, setTouchDraggedItem] = useState(null)
+
+  const handleTouchStart = (e, item) => {
+    setTouchDraggedItem(item)
+    const touch = e.touches[0]
+    setTouchPosition({ x: touch.clientX, y: touch.clientY })
+  }
+
+  const handleTouchMove = (e) => {
+    if (!touchDraggedItem) return
+    e.preventDefault() // Prevent scrolling while dragging
+    const touch = e.touches[0]
+    setTouchPosition({ x: touch.clientX, y: touch.clientY })
+  }
+
+  const handleTouchEnd = (e) => {
+    if (!touchDraggedItem) return
+    
+    const touch = e.changedTouches[0]
+    const target = document.elementFromPoint(touch.clientX, touch.clientY)
+    
+    // Find the closest target item
+    const targetItem = target?.closest('.target-item')
+    
+    if (targetItem) {
+      const targetName = targetItem.getAttribute('data-target')
+      if (targetName) {
+        handleDrop(e, targetName)
+      }
+    }
+    
+    setTouchDraggedItem(null)
+    setTouchPosition({ x: 0, y: 0 })
   }
 
   // Shuffle array function
@@ -437,23 +527,27 @@ const UserDashboard = () => {
   const handleDrop = (e, targetName) => {
     e.preventDefault()
     
-    if (draggedItem && draggedItem.img_name === targetName) {
+    // Use either mouse-dragged item or touch-dragged item
+    const itemToCheck = draggedItem || touchDraggedItem
+    
+    if (itemToCheck && itemToCheck.img_name === targetName) {
       // Correct match - keep in right side
-      setCorrectMatches(prev => [...prev, draggedItem])
+      setCorrectMatches(prev => [...prev, itemToCheck])
       setExerciseFeedback({
         type: 'success',
-        message: `✓ Correct! "${draggedItem.img_name}" matches.`
+        message: `✓ Correct! "${itemToCheck.img_name}" matches.`
       })
     } else {
       // Incorrect match - return to left side with feedback
       setExerciseFeedback({
         type: 'error',
-        message: `✗ Incorrect! "${draggedItem?.img_name}" does not match "${targetName}"`
+        message: `✗ Incorrect! "${itemToCheck?.img_name}" does not match "${targetName}"`
       })
     }
 
     // Clear dragged item
     setDraggedItem(null)
+    setTouchDraggedItem(null)
     
     // Auto-clear feedback after 3 seconds
     setTimeout(() => {
@@ -654,7 +748,7 @@ const UserDashboard = () => {
                       </div>
                     ) : courseModules && courseModules.modules ? (
                       <div>
-                        <Accordion defaultActiveKey="0" className="course-accordion">
+                        <Accordion activeKey={activeAccordionKey} onSelect={(key) => setActiveAccordionKey(key)} className="course-accordion">
                           {courseModules.modules.map((module, moduleIndex) => {
                             const isAccessible = isModuleAccessible(moduleIndex)
                             const isCompleted = completedModules.includes(moduleIndex)
@@ -971,6 +1065,9 @@ const UserDashboard = () => {
                                                     draggable
                                                     onDragStart={(e) => handleDragStart(e, exercise)}
                                                     onDragEnd={handleDragEnd}
+                                                    onTouchStart={(e) => handleTouchStart(e, exercise)}
+                                                    onTouchMove={handleTouchMove}
+                                                    onTouchEnd={handleTouchEnd}
                                                   >
                                                     <img
                                                       src={`https://brjobsedu.com/girls_course/girls_course_backend${exercise.img}`}
@@ -993,15 +1090,17 @@ const UserDashboard = () => {
                                           <div className="game-column targets-column">
                                             <h6 className="mb-2 text-muted">Names</h6>
                                             <div className="items-grid targets-grid">
-                                              {shuffleArray(module.exercises).map((exercise, index) => {
+                                              {module.exercises.map((exercise, index) => {
                                                 const isMatched = correctMatches.some(correct => correct.img_name === exercise.img_name);
                                                 
                                                 return (
                                                   <div
                                                     key={index}
                                                     className={`target-item p-3 bg-white rounded border ${isMatched ? 'matched' : ''}`}
+                                                    data-target={exercise.img_name}
                                                     onDragOver={handleDragOver}
                                                     onDrop={(e) => handleDrop(e, exercise.img_name)}
+                                                    onTouchEnd={handleTouchEnd}
                                                   >
                                                     {isMatched ? (
                                                       <div className="matched-content">
@@ -1434,6 +1533,9 @@ const UserDashboard = () => {
                     draggable
                     onDragStart={(e) => handleDragStart(e, exercise)}
                     onDragEnd={handleDragEnd}
+                    onTouchStart={(e) => handleTouchStart(e, exercise)}
+                    onTouchMove={handleTouchMove}
+                    onTouchEnd={handleTouchEnd}
                   >
                     <img
                       src={`https://brjobsedu.com/girls_course/girls_course_backend${exercise.img}`}
@@ -1463,8 +1565,10 @@ const UserDashboard = () => {
                   <div
                     key={index}
                     className={`target-item ${isMatched ? 'matched' : ''}`}
+                    data-target={exercise.img_name}
                     onDragOver={handleDragOver}
                     onDrop={(e) => handleDrop(e, exercise.img_name)}
+                    onTouchEnd={handleTouchEnd}
                   >
                     {isMatched ? (
                       <div className="matched-content">
