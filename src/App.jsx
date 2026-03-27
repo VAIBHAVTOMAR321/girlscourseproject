@@ -26,11 +26,12 @@ import NavBar from "./components/navbar/NavBar.jsx";
 import RefundRequest from "./components/userdashboard/RefundRequest.jsx";
 import UserSettings from "./components/userdashboard/UserSettings.jsx";
 import UserNotifications from "./components/userdashboard/UserNotifications.jsx";
+import OccupationDetails from "./components/userdashboard/OccupationDetails.jsx";
 
 function AppContent() {
   const location = useLocation();
-  const hideFooter = location.pathname.includes("/AdminDashboard") || location.pathname.includes("/UserDashboard") || location.pathname.includes("/UserProfile") || location.pathname.includes("/UserTest") || location.pathname.includes("/Enrollments") || location.pathname.includes("/RefundRequest") || location.pathname.includes("/UserSettings") || location.pathname.includes("/UserNotifications");
-  const hideNavBar = location.pathname.includes("/AdminDashboard") || location.pathname.includes("/UserDashboard") || location.pathname.includes("/UserProfile") || location.pathname.includes("/UserTest") || location.pathname.includes("/Enrollments") || location.pathname.includes("/RefundRequest") || location.pathname.includes("/UserSettings") || location.pathname.includes("/UserNotifications");
+  const hideFooter = location.pathname.includes("/AdminDashboard") || location.pathname.includes("/UserDashboard") || location.pathname.includes("/UserProfile") || location.pathname.includes("/UserTest") || location.pathname.includes("/Enrollments") || location.pathname.includes("/RefundRequest") || location.pathname.includes("/UserSettings") || location.pathname.includes("/UserNotifications") || location.pathname.includes("/OccupationDetails");
+  const hideNavBar = location.pathname.includes("/AdminDashboard") || location.pathname.includes("/UserDashboard") || location.pathname.includes("/UserProfile") || location.pathname.includes("/UserTest") || location.pathname.includes("/Enrollments") || location.pathname.includes("/RefundRequest") || location.pathname.includes("/UserSettings") || location.pathname.includes("/UserNotifications") || location.pathname.includes("/OccupationDetails");
 
   return (
     <>
@@ -105,6 +106,14 @@ function AppContent() {
             element={
               <ProtectedRoute>
                 <UserNotifications />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/OccupationDetails"
+            element={
+              <ProtectedRoute>
+                <OccupationDetails />
               </ProtectedRoute>
             }
           />
