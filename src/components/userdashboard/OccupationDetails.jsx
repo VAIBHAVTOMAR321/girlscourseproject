@@ -468,13 +468,7 @@ const OccupationDetails = () => {
                               </Badge>
                             </div>
                             <div className="flex-grow-1">
-                              <div className="d-flex justify-content-between align-items-start mb-2">
-                                <h5 className="mb-1">{step.title}</h5>
-                                <Badge bg="secondary">
-                                  <FaClock className="me-1" />
-                                  {step.duration}
-                                </Badge>
-                              </div>
+                            
                               <p className="text-muted mb-2">{step.description}</p>
                               <div className="mt-2">
                                 <small className="text-muted d-block mb-1">Tips:</small>

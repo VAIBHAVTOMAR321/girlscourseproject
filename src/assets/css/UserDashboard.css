@@ -1,6 +1,7 @@
 /* Dashboard Layout Fix */
 .dashboard-content {
-  margin-left: 280px; /* Default sidebar width */
+  margin-left: 220px;
+  /* Default sidebar width */
   padding: 20px;
   min-height: calc(100vh - 70px);
   transition: margin-left 0.3s ease;
@@ -8,7 +9,8 @@
 
 /* Adjust for compact sidebar - using body class to track sidebar state */
 body.sidebar-compact .dashboard-content {
-  margin-left: 100px; /* Compact sidebar width */
+  margin-left: 100px;
+  /* Compact sidebar width */
 }
 
 /* Mobile responsive adjustments */
@@ -17,7 +19,7 @@ body.sidebar-compact .dashboard-content {
     margin-left: 0;
     padding: 10px;
   }
-  
+
   body.sidebar-compact .dashboard-content {
     margin-left: 0;
   }
@@ -28,7 +30,7 @@ body.sidebar-compact .dashboard-content {
   .dashboard-content {
     margin-left: 250px;
   }
-  
+
   body.sidebar-compact .dashboard-content {
     margin-left: 80px;
   }
@@ -65,8 +67,13 @@ body.sidebar-compact .dashboard-content {
 }
 
 @keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 .book-card:hover::before {
@@ -308,11 +315,11 @@ body.sidebar-compact .dashboard-content {
   .book-card {
     margin-bottom: 20px;
   }
-  
+
   .book-image-container {
     height: 250px;
   }
-  
+
   .content-wrapper,
   .image-wrapper {
     padding: 20px;
@@ -325,64 +332,64 @@ body.sidebar-compact .dashboard-content {
     flex-direction: column;
     gap: 15px;
   }
-  
+
   .exercise-section .bg-light {
     padding: 15px;
   }
-  
+
   .exercise-section h6 {
     font-size: 0.95rem;
     margin-bottom: 15px;
   }
-  
+
   .game-column {
     margin-bottom: 10px;
   }
-  
+
   .game-column h6 {
     font-size: 0.85rem;
     margin-bottom: 10px;
   }
-  
+
   .images-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 8px;
   }
-  
+
   .targets-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 8px;
   }
-  
+
   .image-item {
     min-height: 60px;
     padding: 8px;
   }
-  
+
   .image-item img {
     max-height: 50px;
   }
-  
+
   .target-item {
     min-height: 40px;
     padding: 6px 8px;
     font-size: 0.8rem;
   }
-  
+
   .feedback {
     font-size: 0.8rem;
     padding: 6px 10px;
   }
-  
+
   .no-items {
     padding: 20px 10px;
   }
-  
+
   .no-items p {
     font-size: 0.9rem;
     margin-bottom: 8px;
   }
-  
+
   .no-items button {
     font-size: 0.8rem;
     padding: 6px 12px;
@@ -393,42 +400,42 @@ body.sidebar-compact .dashboard-content {
   .exercise-section .bg-light {
     padding: 12px;
   }
-  
+
   .exercise-section h6 {
     font-size: 0.9rem;
     margin-bottom: 12px;
   }
-  
+
   .images-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 6px;
   }
-  
+
   .targets-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 6px;
   }
-  
+
   .image-item {
     min-height: 50px;
     padding: 6px;
   }
-  
+
   .image-item img {
     max-height: 40px;
   }
-  
+
   .target-item {
     min-height: 35px;
     padding: 5px 6px;
     font-size: 0.75rem;
   }
-  
+
   .feedback {
     font-size: 0.75rem;
     padding: 5px 8px;
   }
-  
+
   .matched-content i {
     font-size: 0.7rem;
     margin-right: 4px;
@@ -439,23 +446,23 @@ body.sidebar-compact .dashboard-content {
   .exercise-section h6 {
     font-size: 0.85rem;
   }
-  
+
   .images-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .targets-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .image-item {
     min-height: 45px;
   }
-  
+
   .image-item img {
     max-height: 35px;
   }
-  
+
   .target-item {
     font-size: 0.7rem;
   }
@@ -465,25 +472,25 @@ body.sidebar-compact .dashboard-content {
   .book-header {
     padding: 15px 20px;
   }
-  
+
   .book-icon {
     width: 40px;
     height: 40px;
   }
-  
+
   .book-title h5 {
     font-size: 1.1rem;
   }
-  
+
   .book-image-container {
     height: 200px;
   }
-  
+
   .content-wrapper,
   .image-wrapper {
     padding: 15px;
   }
-  
+
   .content-section {
     padding: 15px;
   }
@@ -607,12 +614,19 @@ body.sidebar-compact .dashboard-content {
 }
 
 @keyframes celebrationBounce {
-  0%, 20%, 50%, 80%, 100% {
+
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
     transform: translateY(0);
   }
+
   40% {
     transform: translateY(-20px);
   }
+
   60% {
     transform: translateY(-10px);
   }
@@ -623,6 +637,7 @@ body.sidebar-compact .dashboard-content {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -670,7 +685,8 @@ body.sidebar-compact .dashboard-content {
   cursor: grab;
   transition: all 0.2s ease;
   user-select: none;
-  touch-action: none; /* Prevent scrolling on mobile while dragging */
+  touch-action: none;
+  /* Prevent scrolling on mobile while dragging */
 }
 
 .draggable-item:hover {
@@ -704,7 +720,8 @@ body.sidebar-compact .dashboard-content {
   border: 2px solid #dee2e6;
   background-color: white;
   font-weight: 500;
-  touch-action: manipulation; /* Improve touch response on mobile */
+  touch-action: manipulation;
+  /* Improve touch response on mobile */
 }
 
 .target-item:hover {
@@ -758,9 +775,19 @@ body.sidebar-compact .dashboard-content {
 }
 
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  75% { transform: translateX(5px); }
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-5px);
+  }
+
+  75% {
+    transform: translateX(5px);
+  }
 }
 
 /* Course Card Styles */
@@ -823,9 +850,11 @@ body.sidebar-compact .dashboard-content {
 .course-card:hover .card-header-gradient {
   transform: scale(1.02);
 }
-.course-stats span{
+
+.course-stats span {
   font-size: 10px;
 }
+
 .course-title {
   color: #2c3e50;
   font-size: 12px;
@@ -895,26 +924,37 @@ body.sidebar-compact .dashboard-content {
 
 /* Animation Classes */
 @keyframes pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: scale(1);
   }
+
   50% {
     transform: scale(1.1);
   }
 }
 
 @keyframes float {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0px);
   }
+
   50% {
     transform: translateY(-10px);
   }
 }
 
 @keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 .fade-in {
@@ -926,6 +966,7 @@ body.sidebar-compact .dashboard-content {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -941,6 +982,7 @@ body.sidebar-compact .dashboard-content {
     opacity: 0;
     transform: translateX(-30px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -956,6 +998,7 @@ body.sidebar-compact .dashboard-content {
     opacity: 0;
     transform: translateX(30px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
