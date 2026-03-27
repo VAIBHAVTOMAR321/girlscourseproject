@@ -24,11 +24,13 @@ import Registration from "./components/registration/Registration.jsx";
 import Footer from "./components/footer/Footer.jsx";
 import NavBar from "./components/navbar/NavBar.jsx";
 import RefundRequest from "./components/userdashboard/RefundRequest.jsx";
+import UserSettings from "./components/userdashboard/UserSettings.jsx";
+import UserNotifications from "./components/userdashboard/UserNotifications.jsx";
 
 function AppContent() {
   const location = useLocation();
-  const hideFooter = location.pathname.includes("/AdminDashboard") || location.pathname.includes("/UserDashboard") || location.pathname.includes("/UserProfile") || location.pathname.includes("/UserTest") || location.pathname.includes("/Enrollments") || location.pathname.includes("/RefundRequest");
-  const hideNavBar = location.pathname.includes("/AdminDashboard") || location.pathname.includes("/UserDashboard") || location.pathname.includes("/UserProfile") || location.pathname.includes("/UserTest") || location.pathname.includes("/Enrollments") || location.pathname.includes("/RefundRequest");
+  const hideFooter = location.pathname.includes("/AdminDashboard") || location.pathname.includes("/UserDashboard") || location.pathname.includes("/UserProfile") || location.pathname.includes("/UserTest") || location.pathname.includes("/Enrollments") || location.pathname.includes("/RefundRequest") || location.pathname.includes("/UserSettings") || location.pathname.includes("/UserNotifications");
+  const hideNavBar = location.pathname.includes("/AdminDashboard") || location.pathname.includes("/UserDashboard") || location.pathname.includes("/UserProfile") || location.pathname.includes("/UserTest") || location.pathname.includes("/Enrollments") || location.pathname.includes("/RefundRequest") || location.pathname.includes("/UserSettings") || location.pathname.includes("/UserNotifications");
 
   return (
     <>
@@ -87,6 +89,22 @@ function AppContent() {
             element={
               <ProtectedRoute>
                 <RefundRequest />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/UserSettings"
+            element={
+              <ProtectedRoute>
+                <UserSettings />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/UserNotifications"
+            element={
+              <ProtectedRoute>
+                <UserNotifications />
               </ProtectedRoute>
             }
           />

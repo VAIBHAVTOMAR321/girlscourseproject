@@ -356,7 +356,6 @@ const Login = () => {
                   <div className="banner-stats">
                     <div className="stat-item">
                       <i className="fas fa-book"></i>
-                     
                     </div>
                     <div className="stat-item">
                       <i className="fas fa-users"></i>
@@ -386,9 +385,9 @@ const Login = () => {
                   }}
                 >
                   <div className="list-item-content">
-                    <div className="course-icon-small" style={{ color: course.color }}>
+                    {/* <div className="course-icon-small" style={{ color: course.color }}>
                       {course.icon}
-                    </div>
+                    </div> */}
                     <div className="course-details">
                       <h6 className="course-title">{course.name}</h6>
                       <div className="course-meta-info">
@@ -422,7 +421,7 @@ const Login = () => {
       <div className="course-card disabled" style={{ width: "100%" }}>
         <div className="course-info">
           <h5 className="course-name text-center">
-            No {courseType === "paid" ? "paid" : "free"} courses available
+            No {courseType === "paid" ? "paid" : ""} courses available
           </h5>
           <p className="text-center small text-muted">
             Please check back later for available courses
@@ -619,7 +618,7 @@ const Login = () => {
         </Row>
       </Container>
 
-      <Footer />
+    
     </div>
   );
 };

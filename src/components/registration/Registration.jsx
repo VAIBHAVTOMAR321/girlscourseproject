@@ -546,13 +546,7 @@ const Registration = () => {
                     
                     {/* Right side - Courses List */}
                     <div className="courses-list-section">
-                      <div className="courses-list-header">
-                        <h5>Available Unpaid Courses</h5>
-                        <div className="course-count-badge">
-                          {filteredCourses.length} Courses
-                        </div>
-                      </div>
-                      
+                    
                       <div className="courses-list-container">
                         {filteredCourses.map((course, index) => (
                           <div
@@ -567,9 +561,9 @@ const Registration = () => {
                             }}
                           >
                             <div className="list-item-content">
-                              <div className="course-icon-small" style={{ color: course.color }}>
+                              {/* <div className="course-icon-small" style={{ color: course.color }}>
                                 {course.icon}
-                              </div>
+                              </div> */}
                               <div className="course-details">
                                 <h6 className="course-title">{renderContentWithLineBreaks(course.name)}</h6>
                                 <div className="course-meta-info">

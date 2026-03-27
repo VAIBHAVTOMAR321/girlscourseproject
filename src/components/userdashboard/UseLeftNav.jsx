@@ -80,6 +80,14 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas }) => {
                        <i className="bi bi-currency-exchange me-2"></i> Refund Request
                      </Nav.Link>
                    )}
+                   
+                   <Nav.Link as={Link} to="/UserNotifications" className="text-white">
+                     <i className="bi bi-bell me-2"></i>12th
+                   </Nav.Link>
+                   
+                   <Nav.Link as={Link} to="/UserSettings" className="text-white">
+                     <i className="bi bi-gear me-2"></i> 10th
+                   </Nav.Link>
                   
                    {/* <Nav.Link as={Link} to="/UserTest" className="text-white">
                     <i className="bi bi-clipboard-check me-2"></i> Test Dashboard
@@ -111,6 +119,12 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas }) => {
                       <i className="bi bi-currency-exchange fs-5"></i>
                     </Nav.Link>
                   )}
+                  <Nav.Link as={Link} to="/UserNotifications" className="text-white">
+                    <i className="bi bi-bell fs-5"></i>
+                  </Nav.Link>
+                  <Nav.Link as={Link} to="/UserSettings" className="text-white">
+                    <i className="bi bi-gear fs-5"></i>
+                  </Nav.Link>
                   {/* <Nav.Link as={Link} to="/UserTest" className="text-white">
                     <i className="bi bi-clipboard-check fs-5"></i>
                   </Nav.Link> */}
@@ -147,6 +161,12 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas }) => {
                     <i className="bi bi-currency-exchange me-2"></i> Refund Request
                   </Nav.Link>
                 )}
+                <Nav.Link as={Link} to="/UserNotifications" className="text-white" onClick={() => setShowOffcanvas(false)}>
+                  <i className="bi bi-bell me-2"></i> Notifications
+                </Nav.Link>
+                <Nav.Link as={Link} to="/UserSettings" className="text-white" onClick={() => setShowOffcanvas(false)}>
+                  <i className="bi bi-gear me-2"></i> Settings
+                </Nav.Link>
                 {/* <Nav.Link as={Link} to="/UserTest" className="text-white" onClick={() => setShowOffcanvas(false)}>
                   <i className="bi bi-clipboard-check me-2"></i> Test Dashboard
                 </Nav.Link> */}
