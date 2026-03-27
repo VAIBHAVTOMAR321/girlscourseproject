@@ -1165,7 +1165,7 @@ const UserDashboard = () => {
                                                   size="sm"
                                                 >
                                                   <FaQuestionCircle className="me-2" />
-                                                  {testButtonText.includes('(') ? 'Test' : testButtonText}
+                                                  {testButtonText}
                                                 </Button>
                                               </>
                                             ) : (
@@ -1177,7 +1177,7 @@ const UserDashboard = () => {
                                                 size="sm"
                                               >
                                                 <FaCheckCircle className="me-2" />
-                                                {testButtonText.includes('(') ? 'Test' : testButtonText}
+                                                {testButtonText}
                                               </Button>
                                             )}
                                           </div>

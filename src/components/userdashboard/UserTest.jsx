@@ -507,7 +507,7 @@ const UserTest = () => {
                                 variant="success" 
                                 onClick={handleTestComplete}
                               >
-                                Submit Test
+                                Submit Test {attemptsLeft > 0 && `(Attempts left: ${attemptsLeft})`}
                               </Button>
                             )}
                           </div>
