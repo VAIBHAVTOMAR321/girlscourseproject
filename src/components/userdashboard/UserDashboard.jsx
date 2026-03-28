@@ -736,7 +736,7 @@ const UserDashboard = () => {
       if (isMobile) {
         contentArea.style.marginLeft = '0px'
       } else {
-        contentArea.style.marginLeft = '280px'
+        contentArea.style.marginLeft = '220px'
       }
     }
   }, [isMobile])
