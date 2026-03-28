@@ -775,8 +775,8 @@ const UserSettings = () => {
                 {/* Instructions */}
                 {!selectedStream && (
                   <Card className="shadow-sm border-0 instructions-card" style={{ borderRadius: '10px' }}>
-                    <Card.Body className=" text-center">
-                      <FaLightbulb className="text-warning mb-3" style={{ fontSize: '48px' }} />
+                    <Card.Body className="">
+                     
                       <h4>How to Get 11th Stream Guidance</h4>
                       <p className="text-muted mb-0">
                         <strong>Step 1:</strong> Select your 10th stream from the options above<br />

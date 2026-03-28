@@ -59,10 +59,10 @@ import '../../assets/css/UserNotifications.css'
   // 12th Streams
   
   const streams = [
-    { id: 'science', name: 'Science Stream', icon: <FaRocket className="text-primary" />, subjects: 'Physics, Chemistry, Biology/Mathematics' },
-    { id: 'commerce', name: 'Commerce Stream', icon: <FaChartLine className="text-success" />, subjects: 'Accountancy, Business Studies, Economics' },
-    { id: 'arts', name: 'Arts Stream', icon: <FaPalette className="text-warning" />, subjects: 'History, Political Science, Sociology, Psychology' },
-    { id: 'computer', name: 'Computer Science', icon: <FaCode className="text-info" />, subjects: 'Programming, Data Structures, Algorithms' }
+    { id: 'science', name: 'Science Stream', icon: <FaRocket className="" />, subjects: 'Physics, Chemistry, Biology/Mathematics' },
+    { id: 'commerce', name: 'Commerce Stream', icon: <FaChartLine className="" />, subjects: 'Accountancy, Business Studies, Economics' },
+    { id: 'arts', name: 'Arts Stream', icon: <FaPalette className="" />, subjects: 'History, Political Science, Sociology, Psychology' },
+    { id: 'computer', name: 'Computer Science', icon: <FaCode className="" />, subjects: 'Programming, Data Structures, Algorithms' }
   ]
 
   // Courses based on stream and percentage
@@ -1168,7 +1168,20 @@ import '../../assets/css/UserNotifications.css'
               </Button>
             </div>
 
-            {/* Header Card */}
+        
+
+            {loading ? (
+              <div className="text-center py-5">
+                <div className="spinner-border text-primary" role="status" style={{ width: '60px', height: '60px' }}>
+                  <span className="visually-hidden">Loading...</span>
+                </div>
+                <p className="mt-3">Loading guidance...</p>
+              </div>
+            ) : (
+              <>
+                {/* Step 1: Select Stream */}
+                <Card className="shadow-sm mb-4 border-0" style={{ borderRadius: '10px' }}>
+                      {/* Header Card */}
             <Card className="shadow-sm mb-4 border-0 notifications-header-card" style={{ borderRadius: '10px' }}>
               <Card.Body className="">
                 <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
@@ -1184,18 +1197,6 @@ import '../../assets/css/UserNotifications.css'
                 </div>
               </Card.Body>
             </Card>
-
-            {loading ? (
-              <div className="text-center py-5">
-                <div className="spinner-border text-primary" role="status" style={{ width: '60px', height: '60px' }}>
-                  <span className="visually-hidden">Loading...</span>
-                </div>
-                <p className="mt-3">Loading guidance...</p>
-              </div>
-            ) : (
-              <>
-                {/* Step 1: Select Stream */}
-                <Card className="shadow-sm mb-4 border-0" style={{ borderRadius: '10px' }}>
                   <Card.Body className="">
                     <h5 className="mb-3">
                       <Badge bg="primary" className="me-2">Step 1</Badge>
@@ -1441,8 +1442,8 @@ import '../../assets/css/UserNotifications.css'
                 {/* Instructions */}
                 {!selectedStream && (
                   <Card className="shadow-sm border-0 instructions-card" style={{ borderRadius: '10px' }}>
-                    <Card.Body className="p-4 text-center">
-                      <FaLightbulb className="text-warning mb-3" style={{ fontSize: '48px' }} />
+                    <Card.Body className="p-4">
+                     
                       <h4>How to Get Course Guidance</h4>
                       <p className="text-muted mb-0">
                         <strong>Step 1:</strong> Select your 12th stream from the options above<br />
