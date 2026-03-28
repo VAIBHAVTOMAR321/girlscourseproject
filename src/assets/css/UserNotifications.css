@@ -1,0 +1,497 @@
+
+
+/* Header Card */
+.notifications-header-card {
+  background: linear-gradient(90deg, #13539d 0%, #1d71ce);
+  color: white;
+}
+
+.notifications-header-card .text-muted {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.notifications-header-card h3 {
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.notifications-header-card p {
+  font-size: 0.85rem;
+}
+
+/* Stream Selection Cards */
+.stream-selection-card {
+  transition: all 0.3s ease;
+  border-radius: 10px;
+}
+
+.stream-selection-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+}
+
+.stream-selection-card.selected {
+  border-width: 2px !important;
+  border-color: #667eea !important;
+  background-color: #f0f4ff;
+}
+
+.stream-icon-large {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 0.75rem;
+  font-size: 28px;
+  flex-shrink: 0;
+}
+
+.stream-icon-large.text-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.stream-icon-large.text-success {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+}
+
+.stream-icon-large.text-warning {
+  background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+  color: white;
+}
+
+.stream-icon-large.text-info {
+  background: linear-gradient(135deg, #17a2b8 0%, #6f42c1 100%);
+  color: white;
+}
+
+.stream-selection-card h6 {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.stream-selection-card small {
+  font-size: 0.75rem;
+}
+
+/* Percentage Input */
+.percentage-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.percentage-input-large {
+  padding-right: 40px;
+  font-weight: 600;
+  font-size: 1rem;
+  height: 45px;
+  border-radius: 8px;
+}
+
+.percentage-icon-large {
+  position: absolute;
+  right: 15px;
+  color: #6c757d;
+  font-size: 1rem;
+}
+
+/* Course Cards */
+.course-card {
+  transition: all 0.3s ease;
+  border-radius: 10px;
+}
+
+.course-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+}
+
+.course-icon-large {
+  width: 45px;
+  height: 45px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(90deg, #13539d 0%, #1d71ce);
+  color: white;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.course-card h6 {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.course-card p {
+  font-size: 0.8rem;
+}
+
+.course-card .badge {
+  font-size: 0.7rem;
+}
+
+/* Guidance Card */
+.guidance-card {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 10px;
+}
+
+.guidance-card h5 {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.guidance-card h6 {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.guidance-card li {
+  font-size: 0.8rem;
+}
+
+/* Instructions Card */
+.instructions-card {
+  background: linear-gradient(135deg, #fff9e6 0%, #fff3cd 100%);
+  border-radius: 10px;
+}
+
+.instructions-card h4 {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.instructions-card p {
+  font-size: 0.85rem;
+}
+
+.instructions-card .fa-lightbulb {
+  font-size: 36px;
+}
+
+/* Career Path Cards */
+.career-path-card {
+  transition: all 0.3s ease;
+  border-radius: 8px;
+}
+
+.career-path-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.career-path-card.selected {
+  border-color: #667eea !important;
+  background-color: #f0f4ff;
+}
+
+.career-path-card h6 {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.career-path-card .badge {
+  font-size: 0.7rem;
+}
+
+.career-path-card li {
+  font-size: 0.8rem;
+}
+
+/* Step Badges */
+.badge.bg-primary {
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* Step Headers */
+h5 .badge {
+  font-size: 0.75rem;
+}
+
+h5 {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+/* Performance Summary */
+.card h5 {
+  font-size: 1.1rem;
+}
+
+.card .fs-5 {
+  font-size: 1rem !important;
+}
+
+/* Progress Bar */
+.progress {
+  height: 12px;
+  border-radius: 6px;
+}
+
+/* Course Tabs */
+.nav-tabs .nav-link {
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0.75rem 1rem;
+}
+
+.nav-tabs .nav-link.active {
+  font-weight: 600;
+}
+
+/* Modal Styles */
+.modal-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.modal-body h6 {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.modal-body p {
+  font-size: 0.85rem;
+}
+
+.modal-body .badge {
+  font-size: 0.75rem;
+}
+
+.modal-body li {
+  font-size: 0.8rem;
+}
+
+/* Alert Styles */
+.alert {
+  font-size: 0.85rem;
+  border-radius: 8px;
+}
+
+.alert strong {
+  font-weight: 600;
+}
+
+/* Buttons */
+.btn {
+  font-size: 0.85rem;
+  font-weight: 500;
+  border-radius: 8px;
+}
+
+.btn-lg {
+  font-size: 0.95rem;
+  padding: 0.75rem 1.5rem;
+}
+
+/* Back Button */
+.btn-outline-secondary {
+  font-size: 0.85rem;
+}
+
+/* Loading Spinner */
+.spinner-border {
+  width: 50px !important;
+  height: 50px !important;
+}
+
+/* Fixed Notifications Container */
+.fixed-notifications {
+  padding-top: 3rem;
+}
+
+/* Cards General */
+.card {
+  border-radius: 10px;
+}
+
+.card-body {
+  padding: 1.25rem;
+}
+
+.card-header {
+  padding: 1rem 1.25rem;
+}
+
+.card-header h5 {
+  font-size: 1.1rem;
+}
+
+.card-header p {
+  font-size: 0.8rem;
+}
+
+/* Badges General */
+.badge {
+  font-weight: 500;
+}
+
+/* Text Muted */
+.text-muted {
+  font-size: 0.85rem;
+}
+
+/* Small Text */
+.small {
+  font-size: 0.8rem !important;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .notifications-header-card .card-body {
+    padding: 1.25rem !important;
+  }
+
+  .notifications-header-card h3 {
+    font-size: 1.2rem;
+  }
+
+  .percentage-input-wrapper {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  .percentage-input-large {
+    width: 100% !important;
+  }
+
+  .stream-icon-large {
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+  }
+
+  .stream-selection-card h6 {
+    font-size: 0.85rem;
+  }
+
+  .course-icon-large {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
+
+  .course-card h6 {
+    font-size: 0.85rem;
+  }
+
+  .guidance-card h5,
+  .instructions-card h4 {
+    font-size: 1rem;
+  }
+
+  h5 {
+    font-size: 1rem;
+  }
+
+  .btn-lg {
+    font-size: 0.9rem;
+    padding: 0.6rem 1.25rem;
+  }
+
+  .nav-tabs .nav-link {
+    font-size: 0.8rem;
+    padding: 0.6rem 0.75rem;
+  }
+
+  .modal-title {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .notifications-header-card h3 {
+    font-size: 1.1rem;
+  }
+
+  .notifications-header-card p {
+    font-size: 0.8rem;
+  }
+
+  .stream-icon-large {
+    width: 45px;
+    height: 45px;
+    font-size: 22px;
+  }
+
+  .stream-selection-card h6 {
+    font-size: 0.8rem;
+  }
+
+  .stream-selection-card small {
+    font-size: 0.7rem;
+  }
+
+  .course-icon-large {
+    width: 38px;
+    height: 38px;
+    font-size: 16px;
+  }
+
+  .course-card h6 {
+    font-size: 0.8rem;
+  }
+
+  .course-card p {
+    font-size: 0.75rem;
+  }
+
+  .guidance-card h5,
+  .instructions-card h4 {
+    font-size: 0.95rem;
+  }
+
+  .guidance-card li,
+  .instructions-card li {
+    font-size: 0.75rem;
+  }
+
+  h5 {
+    font-size: 0.95rem;
+  }
+
+  .btn {
+    font-size: 0.8rem;
+  }
+
+  .btn-lg {
+    font-size: 0.85rem;
+    padding: 0.5rem 1rem;
+  }
+
+  .nav-tabs .nav-link {
+    font-size: 0.75rem;
+    padding: 0.5rem 0.6rem;
+  }
+
+  .modal-title {
+    font-size: 1rem;
+  }
+
+  .modal-body h6 {
+    font-size: 0.85rem;
+  }
+
+  .modal-body p {
+    font-size: 0.8rem;
+  }
+
+  .alert {
+    font-size: 0.8rem;
+  }
+
+  .card-body {
+    padding: 1rem;
+  }
+
+  .card-header {
+    padding: 0.75rem 1rem;
+  }
+}

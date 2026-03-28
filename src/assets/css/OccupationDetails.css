@@ -1,0 +1,437 @@
+/* OccupationDetails.css - Occupation Details Page */
+
+/* Header Card */
+.occupation-header-card {
+  background: linear-gradient(90deg, #13539d 0%, #1d71ce);
+  color: white;
+  box-shadow: 0 4px 15px rgba(19, 83, 157, 0.3);
+}
+
+.occupation-header-card .text-muted {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.occupation-header-card h2 {
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.occupation-header-card p {
+  font-size: 0.85rem;
+}
+
+/* Occupation Icon Large */
+.occupation-icon-large {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.2);
+  font-size: 32px;
+  flex-shrink: 0;
+}
+
+/* Quick Stats Cards */
+.quick-stats-card {
+  transition: all 0.3s ease;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.quick-stats-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.quick-stats-card .icon-wrapper {
+  width: 55px;
+  height: 55px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 0.75rem;
+  font-size: 24px;
+}
+
+.quick-stats-card .icon-wrapper.success {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+}
+
+.quick-stats-card .icon-wrapper.info {
+  background: linear-gradient(135deg, #17a2b8 0%, #6f42c1 100%);
+  color: white;
+}
+
+.quick-stats-card .icon-wrapper.warning {
+  background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+  color: white;
+}
+
+.quick-stats-card h5 {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.quick-stats-card p {
+  font-size: 0.8rem;
+}
+
+/* Step Cards */
+.step-card {
+  transition: all 0.3s ease;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.step-card:hover {
+  transform: translateX(5px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.step-number {
+  flex-shrink: 0;
+}
+
+.step-number .badge {
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.step-card h6 {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.step-card p {
+  font-size: 0.8rem;
+}
+
+.step-card li {
+  font-size: 0.75rem;
+}
+
+/* Career Level Cards */
+.career-level-card {
+  transition: all 0.3s ease;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.career-level-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.career-level-card .icon-wrapper {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 0.5rem;
+  font-size: 20px;
+  background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+  color: white;
+}
+
+.career-level-card h6 {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.career-level-card small {
+  font-size: 0.75rem;
+}
+
+/* College Cards */
+.college-card {
+  transition: all 0.3s ease;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.college-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.college-card h6 {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.college-card small {
+  font-size: 0.75rem;
+}
+
+/* Skills Badges */
+.skills-badge {
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 0.4rem 0.9rem;
+  border-radius: 20px;
+}
+
+/* Section Headers */
+.section-header h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.section-header p {
+  font-size: 0.8rem;
+}
+
+/* Accordion Styles */
+.accordion-button {
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.accordion-body {
+  font-size: 0.8rem;
+}
+
+.accordion-body small {
+  font-size: 0.75rem;
+}
+
+/* Action Buttons */
+.action-buttons .btn {
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0.6rem 1.25rem;
+  border-radius: 8px;
+}
+
+/* Badges General */
+.badge {
+  font-weight: 500;
+}
+
+/* Text Muted */
+.text-muted {
+  font-size: 0.8rem;
+}
+
+/* Small Text */
+.small {
+  font-size: 0.75rem !important;
+}
+
+/* Cards General */
+.card {
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.card-body {
+  padding: 1rem;
+}
+
+.card-header {
+  padding: 0.75rem 1rem;
+}
+
+.card-header h4 {
+  font-size: 1.1rem;
+}
+
+.card-header p {
+  font-size: 0.8rem;
+}
+
+/* Exam Cards */
+.exam-card {
+  transition: all 0.3s ease;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.exam-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.exam-card h6 {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.exam-card small {
+  font-size: 0.75rem;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .occupation-header-card .card-body {
+    padding: 1rem !important;
+  }
+
+  .occupation-header-card h2 {
+    font-size: 1.2rem;
+  }
+
+  .occupation-icon-large {
+    width: 55px;
+    height: 55px;
+    font-size: 26px;
+  }
+
+  .quick-stats-card .icon-wrapper {
+    width: 48px;
+    height: 48px;
+    font-size: 22px;
+  }
+
+  .quick-stats-card h5 {
+    font-size: 0.85rem;
+  }
+
+  .step-number .badge {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+
+  .step-card h6 {
+    font-size: 0.85rem;
+  }
+
+  .career-level-card .icon-wrapper {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
+
+  .career-level-card h6 {
+    font-size: 0.8rem;
+  }
+
+  .section-header h4 {
+    font-size: 1rem;
+  }
+
+  .action-buttons .btn {
+    font-size: 0.8rem;
+    padding: 0.5rem 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .occupation-header-card h2 {
+    font-size: 1.1rem;
+  }
+
+  .occupation-header-card p {
+    font-size: 0.8rem;
+  }
+
+  .occupation-icon-large {
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+  }
+
+  .quick-stats-card .icon-wrapper {
+    width: 42px;
+    height: 42px;
+    font-size: 20px;
+  }
+
+  .quick-stats-card h5 {
+    font-size: 0.8rem;
+  }
+
+  .quick-stats-card p {
+    font-size: 0.75rem;
+  }
+
+  .step-number .badge {
+    width: 36px;
+    height: 36px;
+    font-size: 0.9rem;
+  }
+
+  .step-card h6 {
+    font-size: 0.8rem;
+  }
+
+  .step-card p {
+    font-size: 0.75rem;
+  }
+
+  .step-card li {
+    font-size: 0.7rem;
+  }
+
+  .career-level-card .icon-wrapper {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+  }
+
+  .career-level-card h6 {
+    font-size: 0.75rem;
+  }
+
+  .career-level-card small {
+    font-size: 0.7rem;
+  }
+
+  .college-card h6 {
+    font-size: 0.8rem;
+  }
+
+  .college-card small {
+    font-size: 0.7rem;
+  }
+
+  .skills-badge {
+    font-size: 0.75rem;
+    padding: 0.35rem 0.7rem;
+  }
+
+  .section-header h4 {
+    font-size: 0.95rem;
+  }
+
+  .section-header p {
+    font-size: 0.75rem;
+  }
+
+  .accordion-button {
+    font-size: 0.8rem;
+  }
+
+  .accordion-body {
+    font-size: 0.75rem;
+  }
+
+  .action-buttons .btn {
+    font-size: 0.75rem;
+    padding: 0.45rem 0.9rem;
+  }
+
+  .card-body {
+    padding: 0.75rem;
+  }
+
+  .card-header {
+    padding: 0.6rem 0.75rem;
+  }
+
+  .card-header h4 {
+    font-size: 1rem;
+  }
+}

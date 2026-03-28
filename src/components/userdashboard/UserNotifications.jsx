@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import UserTopNav from './UserTopNav'
 import UseLeftNav from './UseLeftNav'
 import { FaArrowLeft, FaGraduationCap, FaChartLine, FaLightbulb, FaRocket, FaBook, FaCode, FaPalette, FaCalculator, FaLanguage, FaMusic, FaHeartbeat, FaBusinessTime, FaPercentage, FaUniversity, FaTools, FaLaptopMedical, FaBriefcase, FaCog, FaFlask, FaBalanceScale, FaNewspaper, FaChalkboardTeacher, FaUserTie, FaPaintBrush, FaGuitar, FaRunning, FaHome, FaWrench, FaIndustry, FaPlane, FaCar, FaBuilding, FaHospital, FaSeedling, FaMicrochip, FaNetworkWired, FaDatabase, FaShieldAlt, FaRobot, FaBrain, FaChartBar, FaProjectDiagram, FaBookOpen, FaBolt, FaDna, FaCheckCircle, FaInfoCircle } from 'react-icons/fa'
+import '../../assets/css/UserNotifications.css'
 
   const UserNotifications = () => {
   const { uniqueId, userRoleType } = useAuth()
@@ -1153,7 +1154,7 @@ import { FaArrowLeft, FaGraduationCap, FaChartLine, FaLightbulb, FaRocket, FaBoo
           setShowOffcanvas={setShowOffcanvas} 
         />
         
-        <div className="flex-grow-1" style={{ marginLeft: isMobile ? '0px' : '280px', padding: isMobile ? '10px' : '20px', minHeight: 'calc(100vh - 70px)' }}>
+        <div className="flex-grow-1" style={{ marginLeft: isMobile ? '0px' : '220px', padding: isMobile ? '10px' : '20px', minHeight: 'calc(100vh - 70px)' }}>
           <Container fluid className='fixed-notifications'>
             {/* Back Button */}
             <div className="mb-4">
@@ -1206,7 +1207,6 @@ import { FaArrowLeft, FaGraduationCap, FaChartLine, FaLightbulb, FaRocket, FaBoo
                           <Card 
                             className={`h-100 border stream-selection-card ${selectedStream === stream.id ? 'selected' : ''}`}
                             style={{ 
-                              borderRadius: '10px',
                               cursor: 'pointer',
                               borderColor: selectedStream === stream.id ? '#667eea' : '#dee2e6',
                               backgroundColor: selectedStream === stream.id ? '#f0f4ff' : 'white'
@@ -1335,7 +1335,7 @@ import { FaArrowLeft, FaGraduationCap, FaChartLine, FaLightbulb, FaRocket, FaBoo
                                   <Col lg={4} md={6} className="mb-4" key={index}>
                                     <Card 
                                       className="h-100 border course-card"
-                                      style={{ borderRadius: '10px', cursor: 'pointer' }}
+                                      style={{ cursor: 'pointer' }}
                                       onClick={() => handleCourseClick(course)}
                                     >
                                       <Card.Body className="p-4">
@@ -1371,7 +1371,7 @@ import { FaArrowLeft, FaGraduationCap, FaChartLine, FaLightbulb, FaRocket, FaBoo
                                   <Col lg={4} md={6} className="mb-4" key={index}>
                                     <Card 
                                       className="h-100 border course-card"
-                                      style={{ borderRadius: '10px', cursor: 'pointer' }}
+                                      style={{ cursor: 'pointer' }}
                                       onClick={() => handleCourseClick(course)}
                                     >
                                       <Card.Body className="p-4">
@@ -1552,117 +1552,7 @@ import { FaArrowLeft, FaGraduationCap, FaChartLine, FaLightbulb, FaRocket, FaBoo
         </Modal.Footer>
       </Modal>
 
-      {/* Styles */}
-      <style jsx>{`
-        .notifications-header-card {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
-        }
-        
-        .notifications-header-card .text-muted {
-          color: rgba(255, 255, 255, 0.8) !important;
-        }
-        
-        .stream-selection-card {
-          transition: all 0.3s ease;
-        }
-        
-        .stream-selection-card:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
-        }
-        
-        .stream-selection-card.selected {
-          border-width: 2px !important;
-        }
-        
-        .stream-icon-large {
-          font-size: 36px;
-        }
-        
-        .percentage-input-wrapper {
-          position: relative;
-          display: flex;
-          align-items: center;
-        }
-        
-        .percentage-input-large {
-          padding-right: 40px;
-          font-weight: 600;
-          font-size: 1.2rem;
-          height: 50px;
-        }
-        
-        .percentage-icon-large {
-          position: absolute;
-          right: 15px;
-          color: #6c757d;
-          font-size: 1.2rem;
-        }
-        
-        .course-card {
-          transition: all 0.3s ease;
-        }
-        
-        .course-card:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
-        }
-        
-        .course-icon-large {
-          width: 50px;
-          height: 50px;
-          border-radius: 12px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
-          font-size: 24px;
-          flex-shrink: 0;
-        }
-        
-        .guidance-card {
-          background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-        }
-        
-        .instructions-card {
-          background: linear-gradient(135deg, #fff9e6 0%, #fff3cd 100%);
-        }
-        
-        .career-path-card {
-          transition: all 0.3s ease;
-        }
-        
-        .career-path-card:hover {
-          transform: translateY(-3px);
-          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        .career-path-card.selected {
-          border-color: #667eea !important;
-          background-color: #f0f4ff;
-        }
-        
-        @media (max-width: 768px) {
-          .notifications-header-card .card-body {
-            padding: 1.5rem !important;
-          }
-          
-          .percentage-input-wrapper {
-            width: 100%;
-            margin-bottom: 1rem;
-          }
-          
-          .percentage-input-large {
-            width: 100% !important;
-          }
-          
-          .stream-icon-large {
-            font-size: 28px;
-          }
-        }
-      `}</style>
+
     </div>
   )
 }

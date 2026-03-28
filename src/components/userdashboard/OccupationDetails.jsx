@@ -5,6 +5,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import UserTopNav from './UserTopNav'
 import UseLeftNav from './UseLeftNav'
 import { FaArrowLeft, FaGraduationCap, FaChalkboardTeacher, FaBalanceScale, FaNewspaper, FaPaintBrush, FaHeartbeat, FaCog, FaHospital, FaFlask, FaLaptopMedical, FaSeedling, FaDna, FaBriefcase, FaUserTie, FaBuilding, FaChartBar, FaCode, FaMicrochip, FaNetworkWired, FaDatabase, FaRobot, FaCheckCircle, FaInfoCircle, FaLightbulb, FaBook, FaAward, FaCertificate, FaClock, FaRupeeSign, FaChartLine, FaUsers, FaBookOpen, FaClipboardList, FaStar, FaTrophy, FaRocket } from 'react-icons/fa'
+import '../../assets/css/OccupationDetails.css'
 
 const OccupationDetails = () => {
   const { uniqueId, userRoleType } = useAuth()
@@ -315,7 +316,7 @@ const OccupationDetails = () => {
       title: occupationName,
       icon: <FaGraduationCap className="text-primary" />,
       description: `Detailed information about ${occupationName} career path.`,
-      salaryRange: 'Varies',
+     
       growthPotential: 'High',
       demandLevel: 'High',
       steps: [
@@ -344,7 +345,7 @@ const OccupationDetails = () => {
         <UserTopNav onMenuToggle={handleMenuToggle} isMobile={isMobile} />
         <div className="d-flex flex-1">
           <UseLeftNav showOffcanvas={showOffcanvas} setShowOffcanvas={setShowOffcanvas} />
-          <div className="flex-grow-1" style={{ marginLeft: isMobile ? '0px' : '280px', padding: isMobile ? '10px' : '20px', minHeight: 'calc(100vh - 70px)' }}>
+          <div className="flex-grow-1" style={{ marginLeft: isMobile ? '0px' : '220px', padding: isMobile ? '10px' : '20px', minHeight: 'calc(100vh - 70px)' }}>
             <Container fluid>
               <Alert variant="warning">
                 <FaInfoCircle className="me-2" />
@@ -367,8 +368,9 @@ const OccupationDetails = () => {
       <div className="d-flex flex-1">
         <UseLeftNav showOffcanvas={showOffcanvas} setShowOffcanvas={setShowOffcanvas} />
         
-        <div className="flex-grow-1" style={{ marginLeft: isMobile ? '0px' : '280px', padding: isMobile ? '10px' : '20px', minHeight: 'calc(100vh - 70px)' }}>
+        <div className="flex-grow-1" style={{ marginLeft: isMobile ? '0px' : '220px', padding: isMobile ? '10px' : '20px', minHeight: 'calc(100vh - 70px)' }}>
           <Container fluid>
+            
             {/* Back Button */}
             <div className="mb-4">
               <Button 
@@ -420,27 +422,33 @@ const OccupationDetails = () => {
                 {/* Quick Stats */}
                 <Row className="mb-4">
                   <Col md={4}>
-                    <Card className="shadow-sm border-0 h-100" style={{ borderRadius: '10px' }}>
+                    <Card className="shadow-sm border-0 h-100 quick-stats-card">
                       <Card.Body className="p-4 text-center">
-                        <FaRupeeSign className="text-success mb-3" style={{ fontSize: '36px' }} />
+                        <div className="icon-wrapper success">
+                          <FaRupeeSign />
+                        </div>
                         <h5>Salary Range</h5>
                         <p className="text-muted mb-0">{occupationDetails.salaryRange}</p>
                       </Card.Body>
                     </Card>
                   </Col>
                   <Col md={4}>
-                    <Card className="shadow-sm border-0 h-100" style={{ borderRadius: '10px' }}>
+                    <Card className="shadow-sm border-0 h-100 quick-stats-card">
                       <Card.Body className="p-4 text-center">
-                        <FaChartLine className="text-info mb-3" style={{ fontSize: '36px' }} />
+                        <div className="icon-wrapper info">
+                          <FaChartLine />
+                        </div>
                         <h5>Growth Potential</h5>
                         <p className="text-muted mb-0">{occupationDetails.growthPotential}</p>
                       </Card.Body>
                     </Card>
                   </Col>
                   <Col md={4}>
-                    <Card className="shadow-sm border-0 h-100" style={{ borderRadius: '10px' }}>
+                    <Card className="shadow-sm border-0 h-100 quick-stats-card">
                       <Card.Body className="p-4 text-center">
-                        <FaUsers className="text-warning mb-3" style={{ fontSize: '36px' }} />
+                        <div className="icon-wrapper warning">
+                          <FaUsers />
+                        </div>
                         <h5>Demand Level</h5>
                         <p className="text-muted mb-0">{occupationDetails.demandLevel}</p>
                       </Card.Body>
@@ -450,11 +458,11 @@ const OccupationDetails = () => {
 
                 {/* Step-by-Step Guide */}
                 <Card className="shadow-sm mb-4 border-0" style={{ borderRadius: '10px' }}>
-                  <Card.Header className="bg-white border-0 pt-4 pb-0">
-                    <h4 className="mb-0">
-                      <FaRocket className="me-2 text-primary" />
-                      Step-by-Step Career Path
-                    </h4>
+                  <Card.Header className="bg-white border-0 pt-4 pb-0 section-header">
+                    <div className="d-flex align-items-center gap-2">
+                      <FaRocket className="text-primary" />
+                      <h4 className="mb-0">Step-by-Step Career Path</h4>
+                    </div>
                     <p className="text-muted mb-0">Follow these steps to become a {occupationDetails.title}</p>
                   </Card.Header>
                   <Card.Body className="p-4">
@@ -465,7 +473,7 @@ const OccupationDetails = () => {
                             <Card.Body className="p-3">
                               <div className="d-flex align-items-start gap-3">
                                 <div className="step-number">
-                                  <Badge bg="primary" className="rounded-circle p-3" style={{ width: '50px', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                  <Badge bg="primary" className="rounded-circle p-3">
                                     {step.step}
                                   </Badge>
                                 </div>
@@ -492,10 +500,10 @@ const OccupationDetails = () => {
                 {/* Required Skills */}
                 <Card className="shadow-sm mb-4 border-0" style={{ borderRadius: '10px' }}>
                   <Card.Header className="bg-white border-0 pt-4 pb-0">
-                    <h4 className="mb-0">
-                      <FaStar className="me-2 text-warning" />
-                      Required Skills
-                    </h4>
+                    <div className="d-flex align-items-center gap-2">
+                      <FaStar className="text-warning" />
+                      <h4 className="mb-0">Required Skills</h4>
+                    </div>
                   </Card.Header>
                   <Card.Body className="p-4">
                     <div className="d-flex flex-wrap gap-2">
@@ -511,11 +519,11 @@ const OccupationDetails = () => {
 
                 {/* Career Path */}
                 <Card className="shadow-sm mb-4 border-0" style={{ borderRadius: '10px' }}>
-                  <Card.Header className="bg-white border-0 pt-4 pb-0">
-                    <h4 className="mb-0">
-                      <FaChartLine className="me-2 text-success" />
-                      Career Progression
-                    </h4>
+                  <Card.Header className="bg-white border-0 pt-4 pb-0 section-header">
+                    <div className="d-flex align-items-center gap-2">
+                      <FaChartLine className="text-success" />
+                      <h4 className="mb-0">Career Progression</h4>
+                    </div>
                   </Card.Header>
                   <Card.Body className="p-4">
                     <Row>
@@ -523,7 +531,9 @@ const OccupationDetails = () => {
                         <Col md={4} key={index} className="mb-3">
                           <Card className="h-100 border career-level-card">
                             <Card.Body className="p-3 text-center">
-                              <FaTrophy className="text-warning mb-2" style={{ fontSize: '24px' }} />
+                              <div className="icon-wrapper">
+                                <FaTrophy />
+                              </div>
                               <h6 className="mb-1">{level.level}</h6>
                               <small className="text-muted d-block mb-2">{level.experience}</small>
                               <Badge bg="success">{level.salary}</Badge>
@@ -539,10 +549,10 @@ const OccupationDetails = () => {
                 {occupationDetails.exams.length > 0 && (
                   <Card className="shadow-sm mb-4 border-0" style={{ borderRadius: '10px' }}>
                     <Card.Header className="bg-white border-0 pt-4 pb-0">
-                      <h4 className="mb-0">
-                        <FaClipboardList className="me-2 text-info" />
-                        Entrance Exams
-                      </h4>
+                      <div className="d-flex align-items-center gap-2">
+                        <FaClipboardList className="text-info" />
+                        <h4 className="mb-0">Entrance Exams</h4>
+                      </div>
                     </Card.Header>
                     <Card.Body className="p-4">
                       <Accordion>
@@ -581,10 +591,10 @@ const OccupationDetails = () => {
                 {occupationDetails.topColleges.length > 0 && (
                   <Card className="shadow-sm mb-4 border-0" style={{ borderRadius: '10px' }}>
                     <Card.Header className="bg-white border-0 pt-4 pb-0">
-                      <h4 className="mb-0">
-                        <FaUniversity className="me-2 text-primary" />
-                        Top Colleges
-                      </h4>
+                      <div className="d-flex align-items-center gap-2">
+                        <FaUniversity className="text-primary" />
+                        <h4 className="mb-0">Top Colleges</h4>
+                      </div>
                     </Card.Header>
                     <Card.Body className="p-4">
                       <Row>
@@ -633,71 +643,7 @@ const OccupationDetails = () => {
         </div>
       </div>
 
-      {/* Styles */}
-      <style jsx>{`
-        .occupation-header-card {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
-        }
-        
-        .occupation-header-card .text-muted {
-          color: rgba(255, 255, 255, 0.8) !important;
-        }
-        
-        .occupation-icon-large {
-          width: 80px;
-          height: 80px;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: rgba(255, 255, 255, 0.2);
-          font-size: 36px;
-        }
-        
-        .step-card {
-          transition: all 0.3s ease;
-        }
-        
-        .step-card:hover {
-          transform: translateX(5px);
-          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        .step-number {
-          flex-shrink: 0;
-        }
-        
-        .career-level-card {
-          transition: all 0.3s ease;
-        }
-        
-        .career-level-card:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        .college-card {
-          transition: all 0.3s ease;
-        }
-        
-        .college-card:hover {
-          transform: translateY(-3px);
-          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        @media (max-width: 768px) {
-          .occupation-header-card .card-body {
-            padding: 1.5rem !important;
-          }
-          
-          .occupation-icon-large {
-            width: 60px;
-            height: 60px;
-            font-size: 28px;
-          }
-        }
-      `}</style>
+
     </div>
   )
 }

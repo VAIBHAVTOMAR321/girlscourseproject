@@ -165,7 +165,7 @@ const UserProfile = () => {
           setShowOffcanvas={setShowOffcanvas} 
         />
         
-        <div className="flex-grow-1" style={{ marginLeft: isMobile ? '0px' : '280px', padding: isMobile ? '10px' : '20px', minHeight: 'calc(100vh - 70px)' }}>
+        <div className="flex-grow-1" style={{ marginLeft: isMobile ? '0px' : '220px', padding: isMobile ? '10px' : '20px', minHeight: 'calc(100vh - 70px)' }}>
           <Container fluid className='fixed-profile'>
             {/* Success Alert */}
             {/* Back Button */}
