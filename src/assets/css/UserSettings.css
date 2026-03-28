@@ -165,12 +165,13 @@
 
 /* Notifications Header Card */
 .notifications-header-card {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    background-color: #fff;
+     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+    color: #000;
 }
 
 .notifications-header-card h3 {
-    color: white;
+    color: #000;
 }
 
 .notifications-header-card p {

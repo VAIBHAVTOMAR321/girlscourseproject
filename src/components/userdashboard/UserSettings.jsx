@@ -486,7 +486,20 @@ const UserSettings = () => {
             </div>
 
             {/* Header Card */}
-            <Card className="shadow-sm mb-4 border-0 notifications-header-card" style={{ borderRadius: '10px' }}>
+          
+
+            {loading ? (
+              <div className="text-center py-5">
+                <div className="spinner-border text-primary" role="status" style={{ width: '60px', height: '60px' }}>
+                  <span className="visually-hidden">Loading...</span>
+                </div>
+                <p className="mt-3">Loading guidance...</p>
+              </div>
+            ) : (
+              <>
+                {/* Step 1: Select Stream */}
+                <Card className="shadow-sm mb-4 border-0" style={{ borderRadius: '10px' }}>
+                    <Card className="shadow-sm mb-4 border-0 notifications-header-card" style={{ borderRadius: '10px' }}>
               <Card.Body className=" card-mobile">
                 <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
                   <div>
@@ -501,18 +514,6 @@ const UserSettings = () => {
                 </div>
               </Card.Body>
             </Card>
-
-            {loading ? (
-              <div className="text-center py-5">
-                <div className="spinner-border text-primary" role="status" style={{ width: '60px', height: '60px' }}>
-                  <span className="visually-hidden">Loading...</span>
-                </div>
-                <p className="mt-3">Loading guidance...</p>
-              </div>
-            ) : (
-              <>
-                {/* Step 1: Select Stream */}
-                <Card className="shadow-sm mb-4 border-0" style={{ borderRadius: '10px' }}>
                   <Card.Body className="card-mobile">
                     <h5 className="mb-3">
                       <Badge bg="primary" className="me-2">Step 1</Badge>
@@ -767,6 +768,7 @@ const UserSettings = () => {
                         </Card>
                       </>
                     )}
+                    
                   </div>
                 )}
 
