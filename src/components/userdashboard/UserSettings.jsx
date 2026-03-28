@@ -4,6 +4,7 @@ import { FaGraduationCap, FaLightbulb, FaArrowLeft, FaFlask, FaCalculator, FaBoo
 import { useNavigate } from 'react-router-dom'
 import UseLeftNav from './UseLeftNav'
 import UserTopNav from './UserTopNav'
+import '../../assets/css/UserSettings.css'
 
 const UserSettings = () => {
   const navigate = useNavigate()
@@ -448,7 +449,18 @@ const UserSettings = () => {
     return allStreamsData[streamKey] || []
   }
   
-  const allEleventhStreams = showResults ? getAllEleventhStreamsForTenthStream(selectedStream) : []
+  // Get all 11th streams from all streams (not just selected stream)
+  const getAllEleventhStreams = () => {
+    // Get all streams from all streams
+    return [
+      ...getAllEleventhStreamsForTenthStream('science'),
+      ...getAllEleventhStreamsForTenthStream('commerce'),
+      ...getAllEleventhStreamsForTenthStream('arts'),
+      ...getAllEleventhStreamsForTenthStream('vocational')
+    ]
+  }
+  
+  const allEleventhStreams = showResults ? getAllEleventhStreams() : []
 
   return (
     <div className="d-flex flex-column">
@@ -475,7 +487,7 @@ const UserSettings = () => {
 
             {/* Header Card */}
             <Card className="shadow-sm mb-4 border-0 notifications-header-card" style={{ borderRadius: '10px' }}>
-              <Card.Body className="p-4">
+              <Card.Body className=" card-mobile">
                 <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
                   <div>
                     <h3 className="mb-2">
@@ -501,7 +513,7 @@ const UserSettings = () => {
               <>
                 {/* Step 1: Select Stream */}
                 <Card className="shadow-sm mb-4 border-0" style={{ borderRadius: '10px' }}>
-                  <Card.Body className="p-4">
+                  <Card.Body className="card-mobile">
                     <h5 className="mb-3">
                       <Badge bg="primary" className="me-2">Step 1</Badge>
                       Select Your 10th Stream
@@ -540,7 +552,7 @@ const UserSettings = () => {
                 {/* Step 2: Enter Percentage */}
                 {selectedStream && (
                   <Card className="shadow-sm mb-4 border-0" style={{ borderRadius: '10px' }}>
-                    <Card.Body className="p-4">
+                    <Card.Body className="">
                       <h5 className="mb-3">
                         <Badge bg="primary" className="me-2">Step 2</Badge>
                         Enter Your 10th Percentage
@@ -560,7 +572,7 @@ const UserSettings = () => {
                             <FaPercentage className="percentage-icon-large" />
                           </div>
                         </Col>
-                        <Col md={6}>
+                        <Col md={6} className='mobile-btn-sty'>
                           <Button 
                             variant="primary" 
                             size="lg"
@@ -582,7 +594,7 @@ const UserSettings = () => {
                   <div ref={resultsRef}>
                     {eleventhStreams.length === 0 ? (
                       <Card className="shadow-sm mb-4 border-0" style={{ borderRadius: '10px' }}>
-                        <Card.Body className="p-4 text-center">
+                        <Card.Body className=" text-center">
                           <FaInfoCircle className="text-warning mb-3" style={{ fontSize: '48px' }} />
                           <h4>No Recommendations Found</h4>
                           <p className="text-muted mb-0">
@@ -595,7 +607,7 @@ const UserSettings = () => {
                       <>
                         {/* Performance Summary */}
                         <Card className="shadow-sm mb-4 border-0" style={{ borderRadius: '10px' }}>
-                          <Card.Body className="p-4">
+                          <Card.Body className="">
                             <div className="d-flex justify-content-between align-items-center">
                               <div>
                                 <h5 className="mb-1">Your Performance</h5>
@@ -630,7 +642,7 @@ const UserSettings = () => {
                               Browse recommended 11th streams based on your percentage and all available streams for your 10th stream
                             </p>
                           </Card.Header>
-                          <Card.Body className="p-4">
+                          <Card.Body className="">
                             <Tab.Container id="streams-tabs" defaultActiveKey="recommended">
                               <Nav variant="tabs" className="mb-4">
                                 <Nav.Item>
@@ -656,7 +668,7 @@ const UserSettings = () => {
                                           style={{ cursor: 'pointer' }}
                                           onClick={() => handleCourseClick(stream)}
                                         >
-                                          <Card.Body className="p-4">
+                                          <Card.Body className="">
                                             <div className="d-flex align-items-start gap-3 mb-3">
                                               <div className="course-icon-large">
                                                 {stream.icon}
@@ -692,7 +704,7 @@ const UserSettings = () => {
                                           style={{ cursor: 'pointer' }}
                                           onClick={() => handleCourseClick(stream)}
                                         >
-                                          <Card.Body className="p-4">
+                                          <Card.Body className="">
                                             <div className="d-flex align-items-start gap-3 mb-3">
                                               <div className="course-icon-large">
                                                 {stream.icon}
@@ -726,7 +738,7 @@ const UserSettings = () => {
 
                         {/* Additional Guidance */}
                         <Card className="shadow-sm border-0 guidance-card" style={{ borderRadius: '10px' }}>
-                          <Card.Body className="p-4">
+                          <Card.Body className="">
                             <h5 className="mb-3">
                               <FaLightbulb className="me-2 text-warning" />
                               Additional Guidance
@@ -761,7 +773,7 @@ const UserSettings = () => {
                 {/* Instructions */}
                 {!selectedStream && (
                   <Card className="shadow-sm border-0 instructions-card" style={{ borderRadius: '10px' }}>
-                    <Card.Body className="p-4 text-center">
+                    <Card.Body className=" text-center">
                       <FaLightbulb className="text-warning mb-3" style={{ fontSize: '48px' }} />
                       <h4>How to Get 11th Stream Guidance</h4>
                       <p className="text-muted mb-0">

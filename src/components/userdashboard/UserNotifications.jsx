@@ -1170,7 +1170,7 @@ import '../../assets/css/UserNotifications.css'
 
             {/* Header Card */}
             <Card className="shadow-sm mb-4 border-0 notifications-header-card" style={{ borderRadius: '10px' }}>
-              <Card.Body className="p-4">
+              <Card.Body className="">
                 <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
                   <div>
                     <h3 className="mb-2">
@@ -1196,7 +1196,7 @@ import '../../assets/css/UserNotifications.css'
               <>
                 {/* Step 1: Select Stream */}
                 <Card className="shadow-sm mb-4 border-0" style={{ borderRadius: '10px' }}>
-                  <Card.Body className="p-4">
+                  <Card.Body className="">
                     <h5 className="mb-3">
                       <Badge bg="primary" className="me-2">Step 1</Badge>
                       Select Your 12th Stream

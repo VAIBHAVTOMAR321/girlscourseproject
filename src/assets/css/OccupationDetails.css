@@ -112,7 +112,8 @@
 }
 
 .step-card p {
-  font-size: 0.8rem;
+  font-size: 1.1rem;
+  font-weight: 600;
 }
 
 .step-card li {
@@ -277,7 +278,9 @@
   .occupation-header-card .card-body {
     padding: 1rem !important;
   }
-
+.mobile-btn-sty{
+  margin-top: 12px;
+}
   .occupation-header-card h2 {
     font-size: 1.2rem;
   }

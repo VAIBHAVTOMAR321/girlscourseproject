@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { Container, Row, Col, Card, Button, Badge, ProgressBar, Alert, Accordion } from 'react-bootstrap'
+import { Container, Row, Col, Card, Button, Badge, ProgressBar, Alert, Accordion, Tab, Nav } from 'react-bootstrap'
 import { useAuth } from '../../contexts/AuthContext'
 import { useNavigate, useLocation } from 'react-router-dom'
 import UserTopNav from './UserTopNav'
 import UseLeftNav from './UseLeftNav'
-import { FaArrowLeft, FaGraduationCap, FaChalkboardTeacher, FaBalanceScale, FaNewspaper, FaPaintBrush, FaHeartbeat, FaCog, FaHospital, FaFlask, FaLaptopMedical, FaSeedling, FaDna, FaBriefcase, FaUserTie, FaBuilding, FaChartBar, FaCode, FaMicrochip, FaNetworkWired, FaDatabase, FaRobot, FaCheckCircle, FaInfoCircle, FaLightbulb, FaBook, FaAward, FaCertificate, FaClock, FaRupeeSign, FaChartLine, FaUsers, FaBookOpen, FaClipboardList, FaStar, FaTrophy, FaRocket } from 'react-icons/fa'
+import { FaArrowLeft, FaGraduationCap, FaChalkboardTeacher, FaBalanceScale, FaNewspaper, FaPaintBrush, FaHeartbeat, FaCog, FaHospital, FaFlask, FaLaptopMedical, FaSeedling, FaDna, FaBriefcase, FaUserTie, FaBuilding, FaChartBar, FaCode, FaMicrochip, FaNetworkWired, FaDatabase, FaRobot, FaCheckCircle, FaInfoCircle, FaLightbulb, FaBook, FaAward, FaCertificate, FaClock, FaRupeeSign, FaChartLine, FaUsers, FaBookOpen, FaClipboardList, FaStar, FaTrophy, FaRocket, FaUniversity, FaMapMarkerAlt } from 'react-icons/fa'
 import '../../assets/css/OccupationDetails.css'
 
 const OccupationDetails = () => {
@@ -316,7 +316,7 @@ const OccupationDetails = () => {
       title: occupationName,
       icon: <FaGraduationCap className="text-primary" />,
       description: `Detailed information about ${occupationName} career path.`,
-     
+      salaryRange: 'Varies',
       growthPotential: 'High',
       demandLevel: 'High',
       steps: [
@@ -419,169 +419,256 @@ const OccupationDetails = () => {
                   </Card.Body>
                 </Card>
 
-
-
-                {/* Step-by-Step Guide */}
+                {/* Tabs for Career Opportunities and Step-by-Step Guide */}
                 <Card className="shadow-sm mb-4 border-0" style={{ borderRadius: '10px' }}>
-                  <Card.Header className="bg-white border-0 pt-4 pb-0 section-header">
-                    <div className="d-flex align-items-center gap-2">
-                      <FaRocket className="text-primary" />
-                      <h4 className="mb-0">Step-by-Step Career Path</h4>
-                    </div>
-                    <p className="text-muted mb-0">Follow these steps to become a {occupationDetails.title}</p>
-                  </Card.Header>
                   <Card.Body className="p-4">
-                    <Row>
-                      {occupationDetails.steps.map((step, index) => (
-                        <Col md={6} key={index}>
-                          <Card className="mb-3 border step-card">
-                            <Card.Body className="p-3">
-                              <div className="d-flex align-items-start gap-3">
-                                <div className="step-number">
-                                  <Badge bg="primary" className="rounded-circle p-3">
-                                    {step.step}
-                                  </Badge>
-                                </div>
-                                <div className="flex-grow-1">
-                                  <p className="text-muted mb-2">{step.description}</p>
-                                  <div className="mt-2">
-                                    <small className="text-muted d-block mb-1">Tips:</small>
-                                    <ul className="mb-0 ps-3">
-                                      {step.tips.map((tip, idx) => (
-                                        <li key={idx} className="small text-muted">{tip}</li>
+                    <Tab.Container id="occupation-tabs" defaultActiveKey="career-opportunities">
+                      <Nav variant="tabs" className="mb-4">
+                        <Nav.Item>
+                          <Nav.Link eventKey="career-opportunities">
+                            <FaRocket className="me-2" />
+                            Career Opportunities
+                          </Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item>
+                          <Nav.Link eventKey="step-by-step">
+                            <FaClipboardList className="me-2" />
+                            Step-by-Step Guidance
+                          </Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item>
+                          <Nav.Link eventKey="skills-exams">
+                            <FaStar className="me-2" />
+                            Skills & Exams
+                          </Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item>
+                          <Nav.Link eventKey="colleges">
+                            <FaUniversity className="me-2" />
+                            Top Colleges
+                          </Nav.Link>
+                        </Nav.Item>
+                      </Nav>
+
+                      <Tab.Content>
+                        {/* Career Opportunities Tab */}
+                        <Tab.Pane eventKey="career-opportunities">
+                          <div className="mb-4">
+                            <h5 className="mb-3">
+                              <FaChartLine className="me-2 text-success" />
+                              Career Progression Path
+                            </h5>
+                            <Row>
+                              {occupationDetails.careerPath.map((level, index) => (
+                                <Col md={4} key={index} className="mb-3">
+                                  <Card 
+                                    className="h-100 border career-level-card" 
+                                    style={{ cursor: 'pointer', transition: 'all 0.3s ease' }}
+                                    onClick={() => navigate('/UserNotifications')}
+                                  >
+                                    <Card.Body className="p-3 text-center">
+                                      <div className="icon-wrapper">
+                                        <FaTrophy />
+                                      </div>
+                                      <h6 className="mb-1">{level.level}</h6>
+                                      <small className="text-muted d-block mb-2">{level.experience}</small>
+                                      <Badge bg="success">{level.salary}</Badge>
+                                    </Card.Body>
+                                  </Card>
+                                </Col>
+                              ))}
+                            </Row>
+                          </div>
+
+                          <div className="mb-4">
+                            <h5 className="mb-3">
+                              <FaLightbulb className="me-2 text-warning" />
+                              Recommended Career Paths
+                            </h5>
+                            <Row>
+                              {occupationDetails.careerPath.slice(0, 3).map((level, index) => (
+                                <Col md={4} key={index} className="mb-3">
+                                  <Card 
+                                    className="h-100 border recommended-career-card"
+                                    style={{ cursor: 'pointer', transition: 'all 0.3s ease', borderColor: '#667eea' }}
+                                    onClick={() => navigate('/UserNotifications')}
+                                  >
+                                    <Card.Body className="p-3">
+                                      <div className="d-flex align-items-center gap-2 mb-2">
+                                        <FaCheckCircle className="text-success" />
+                                        <h6 className="mb-0">{level.level}</h6>
+                                      </div>
+                                      <p className="small text-muted mb-2">{level.experience}</p>
+                                      <Badge bg="primary">{level.salary}</Badge>
+                                    </Card.Body>
+                                  </Card>
+                                </Col>
+                              ))}
+                            </Row>
+                          </div>
+                        </Tab.Pane>
+
+                        {/* Step-by-Step Guidance Tab */}
+                        <Tab.Pane eventKey="step-by-step">
+                          <h5 className="mb-3">
+                            <FaRocket className="me-2 text-primary" />
+                            Step-by-Step Career Path
+                          </h5>
+                          <p className="text-muted mb-4">Follow these steps to become a {occupationDetails.title}</p>
+                          <Row>
+                            {occupationDetails.steps.map((step, index) => (
+                              <Col md={6} key={index}>
+                                <Card 
+                                  className="mb-3 border step-card"
+                                  style={{ cursor: 'pointer', transition: 'all 0.3s ease' }}
+                                  onClick={() => navigate('/UserNotifications')}
+                                >
+                                  <Card.Body className="p-3">
+                                    <div className="d-flex align-items-start gap-3">
+                                      <div className="step-number">
+                                        <Badge bg="primary" className="rounded-circle p-3">
+                                          {step.step}
+                                        </Badge>
+                                      </div>
+                                      <div className="flex-grow-1">
+                                        <h6 className="mb-1">{step.title}</h6>
+                                        <p className="mb-2 fw-bold" style={{ fontSize: '1.1rem' }}>{step.description}</p>
+                                        <Badge bg="info" className="mb-2">{step.duration}</Badge>
+                                        <div className="mt-2">
+                                          <small className="text-muted d-block mb-1">Tips:</small>
+                                          <ul className="mb-0 ps-3">
+                                            {step.tips.map((tip, idx) => (
+                                              <li key={idx} className="small text-muted">{tip}</li>
+                                            ))}
+                                          </ul>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </Card.Body>
+                                </Card>
+                              </Col>
+                            ))}
+                          </Row>
+                        </Tab.Pane>
+
+                        {/* Skills & Exams Tab */}
+                        <Tab.Pane eventKey="skills-exams">
+                          <Row>
+                            <Col md={6}>
+                              <Card className="shadow-sm mb-4 border-0" style={{ borderRadius: '10px' }}>
+                                <Card.Header className="bg-white border-0 pt-4 pb-0">
+                                  <div className="d-flex align-items-center gap-2">
+                                    <FaStar className="text-warning" />
+                                    <h5 className="mb-0">Required Skills</h5>
+                                  </div>
+                                </Card.Header>
+                                <Card.Body className="p-4">
+                                  <div className="d-flex flex-wrap gap-2">
+                                    {occupationDetails.skills.map((skill, index) => (
+                                      <Badge 
+                                        key={index} 
+                                        bg="light" 
+                                        text="dark" 
+                                        className="p-2 fs-6"
+                                        style={{ cursor: 'pointer', transition: 'all 0.3s ease' }}
+                                        onClick={() => navigate('/UserNotifications')}
+                                      >
+                                        <FaCheckCircle className="me-1 text-success" />
+                                        {skill}
+                                      </Badge>
+                                    ))}
+                                  </div>
+                                </Card.Body>
+                              </Card>
+                            </Col>
+                            <Col md={6}>
+                              {occupationDetails.exams.length > 0 && (
+                                <Card className="shadow-sm mb-4 border-0" style={{ borderRadius: '10px' }}>
+                                  <Card.Header className="bg-white border-0 pt-4 pb-0">
+                                    <div className="d-flex align-items-center gap-2">
+                                      <FaClipboardList className="text-info" />
+                                      <h5 className="mb-0">Entrance Exams</h5>
+                                    </div>
+                                  </Card.Header>
+                                  <Card.Body className="p-4">
+                                    <Accordion>
+                                      {occupationDetails.exams.map((exam, index) => (
+                                        <Accordion.Item key={index} eventKey={index.toString()}>
+                                          <Accordion.Header>
+                                            <div className="d-flex justify-content-between align-items-center w-100 me-3">
+                                              <span>{exam.name}</span>
+                                              <Badge bg="info">{exam.difficulty}</Badge>
+                                            </div>
+                                          </Accordion.Header>
+                                          <Accordion.Body>
+                                            <Row>
+                                              <Col md={4}>
+                                                <small className="text-muted">Eligibility</small>
+                                                <p className="mb-0">{exam.eligibility}</p>
+                                              </Col>
+                                              <Col md={4}>
+                                                <small className="text-muted">Frequency</small>
+                                                <p className="mb-0">{exam.frequency}</p>
+                                              </Col>
+                                              <Col md={4}>
+                                                <small className="text-muted">Difficulty</small>
+                                                <p className="mb-0">{exam.difficulty}</p>
+                                              </Col>
+                                            </Row>
+                                          </Accordion.Body>
+                                        </Accordion.Item>
                                       ))}
-                                    </ul>
-                                  </div>
+                                    </Accordion>
+                                  </Card.Body>
+                                </Card>
+                              )}
+                            </Col>
+                          </Row>
+                        </Tab.Pane>
+
+                        {/* Top Colleges Tab */}
+                        <Tab.Pane eventKey="colleges">
+                          {occupationDetails.topColleges.length > 0 && (
+                            <Card className="shadow-sm mb-4 border-0" style={{ borderRadius: '10px' }}>
+                              <Card.Header className="bg-white border-0 pt-4 pb-0">
+                                <div className="d-flex align-items-center gap-2">
+                                  <FaUniversity className="text-primary" />
+                                  <h5 className="mb-0">Top Colleges</h5>
                                 </div>
-                              </div>
-                            </Card.Body>
-                          </Card>
-                        </Col>
-                      ))}
-                    </Row>
-                  </Card.Body>
-                </Card>
-
-                {/* Required Skills */}
-                <Card className="shadow-sm mb-4 border-0" style={{ borderRadius: '10px' }}>
-                  <Card.Header className="bg-white border-0 pt-4 pb-0">
-                    <div className="d-flex align-items-center gap-2">
-                      <FaStar className="text-warning" />
-                      <h4 className="mb-0">Required Skills</h4>
-                    </div>
-                  </Card.Header>
-                  <Card.Body className="p-4">
-                    <div className="d-flex flex-wrap gap-2">
-                      {occupationDetails.skills.map((skill, index) => (
-                        <Badge key={index} bg="light" text="dark" className="p-2 fs-6">
-                          <FaCheckCircle className="me-1 text-success" />
-                          {skill}
-                        </Badge>
-                      ))}
-                    </div>
-                  </Card.Body>
-                </Card>
-
-                {/* Career Path */}
-                <Card className="shadow-sm mb-4 border-0" style={{ borderRadius: '10px' }}>
-                  <Card.Header className="bg-white border-0 pt-4 pb-0 section-header">
-                    <div className="d-flex align-items-center gap-2">
-                      <FaChartLine className="text-success" />
-                      <h4 className="mb-0">Career Progression</h4>
-                    </div>
-                  </Card.Header>
-                  <Card.Body className="p-4">
-                    <Row>
-                      {occupationDetails.careerPath.map((level, index) => (
-                        <Col md={4} key={index} className="mb-3">
-                          <Card className="h-100 border career-level-card">
-                            <Card.Body className="p-3 text-center">
-                              <div className="icon-wrapper">
-                                <FaTrophy />
-                              </div>
-                              <h6 className="mb-1">{level.level}</h6>
-                              <small className="text-muted d-block mb-2">{level.experience}</small>
-                              <Badge bg="success">{level.salary}</Badge>
-                            </Card.Body>
-                          </Card>
-                        </Col>
-                      ))}
-                    </Row>
-                  </Card.Body>
-                </Card>
-
-                {/* Entrance Exams */}
-                {occupationDetails.exams.length > 0 && (
-                  <Card className="shadow-sm mb-4 border-0" style={{ borderRadius: '10px' }}>
-                    <Card.Header className="bg-white border-0 pt-4 pb-0">
-                      <div className="d-flex align-items-center gap-2">
-                        <FaClipboardList className="text-info" />
-                        <h4 className="mb-0">Entrance Exams</h4>
-                      </div>
-                    </Card.Header>
-                    <Card.Body className="p-4">
-                      <Accordion>
-                        {occupationDetails.exams.map((exam, index) => (
-                          <Accordion.Item key={index} eventKey={index.toString()}>
-                            <Accordion.Header>
-                              <div className="d-flex justify-content-between align-items-center w-100 me-3">
-                                <span>{exam.name}</span>
-                                <Badge bg="info">{exam.difficulty}</Badge>
-                              </div>
-                            </Accordion.Header>
-                            <Accordion.Body>
-                              <Row>
-                                <Col md={4}>
-                                  <small className="text-muted">Eligibility</small>
-                                  <p className="mb-0">{exam.eligibility}</p>
-                                </Col>
-                                <Col md={4}>
-                                  <small className="text-muted">Frequency</small>
-                                  <p className="mb-0">{exam.frequency}</p>
-                                </Col>
-                                <Col md={4}>
-                                  <small className="text-muted">Difficulty</small>
-                                  <p className="mb-0">{exam.difficulty}</p>
-                                </Col>
-                              </Row>
-                            </Accordion.Body>
-                          </Accordion.Item>
-                        ))}
-                      </Accordion>
-                    </Card.Body>
-                  </Card>
-                )}
-
-                {/* Top Colleges */}
-                {occupationDetails.topColleges.length > 0 && (
-                  <Card className="shadow-sm mb-4 border-0" style={{ borderRadius: '10px' }}>
-                    <Card.Header className="bg-white border-0 pt-4 pb-0">
-                      <div className="d-flex align-items-center gap-2">
-                        <FaUniversity className="text-primary" />
-                        <h4 className="mb-0">Top Colleges</h4>
-                      </div>
-                    </Card.Header>
-                    <Card.Body className="p-4">
-                      <Row>
-                        {occupationDetails.topColleges.map((college, index) => (
-                          <Col md={6} key={index} className="mb-3">
-                            <Card className="h-100 border college-card">
-                              <Card.Body className="p-3">
-                                <div className="d-flex justify-content-between align-items-start">
-                                  <div>
-                                    <h6 className="mb-1">{college.name}</h6>
-                                    <small className="text-muted">{college.location}</small>
-                                  </div>
-                                  <Badge bg="warning">{college.ranking}</Badge>
-                                </div>
+                              </Card.Header>
+                              <Card.Body className="p-4">
+                                <Row>
+                                  {occupationDetails.topColleges.map((college, index) => (
+                                    <Col md={6} key={index} className="mb-3">
+                                      <Card 
+                                        className="h-100 border college-card"
+                                        style={{ cursor: 'pointer', transition: 'all 0.3s ease' }}
+                                        onClick={() => navigate('/UserNotifications')}
+                                      >
+                                        <Card.Body className="p-3">
+                                          <div className="d-flex justify-content-between align-items-start">
+                                            <div>
+                                              <h6 className="mb-1">{college.name}</h6>
+                                              <small className="text-muted">
+                                                <FaMapMarkerAlt className="me-1" />
+                                                {college.location}
+                                              </small>
+                                            </div>
+                                            <Badge bg="warning">{college.ranking}</Badge>
+                                          </div>
+                                        </Card.Body>
+                                      </Card>
+                                    </Col>
+                                  ))}
+                                </Row>
                               </Card.Body>
                             </Card>
-                          </Col>
-                        ))}
-                      </Row>
-                    </Card.Body>
-                  </Card>
-                )}
+                          )}
+                        </Tab.Pane>
+                      </Tab.Content>
+                    </Tab.Container>
+                  </Card.Body>
+                </Card>
 
                 {/* Action Buttons */}
                 <Card className="shadow-sm border-0" style={{ borderRadius: '10px' }}>

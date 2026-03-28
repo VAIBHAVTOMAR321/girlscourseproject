@@ -1,7 +1,7 @@
-/* UserNotifications.css - Custom styles for UserNotifications page */
+/* UserSettings.css - Custom styles for UserSettings page */
 
 /* Tab Navigation Styles */
-#courses-tabs .nav-tabs {
+#streams-tabs .nav-tabs {
     border-bottom: 2px solid #e9ecef;
     margin-bottom: 1.5rem;
     flex-wrap: nowrap;
@@ -12,11 +12,11 @@
     -ms-overflow-style: none;
 }
 
-#courses-tabs .nav-tabs::-webkit-scrollbar {
+#streams-tabs .nav-tabs::-webkit-scrollbar {
     display: none;
 }
 
-#courses-tabs .nav-tabs .nav-link {
+#streams-tabs .nav-tabs .nav-link {
     border: none;
     border-bottom: 3px solid transparent;
     color: #6c757d;
@@ -32,20 +32,20 @@
     flex-shrink: 0;
 }
 
-#courses-tabs .nav-tabs .nav-link:hover {
+#streams-tabs .nav-tabs .nav-link:hover {
     color: #495057;
     border-bottom-color: #dee2e6;
     background: #e9ecef;
 }
 
-#courses-tabs .nav-tabs .nav-link.active {
+#streams-tabs .nav-tabs .nav-link.active {
     color: #fff;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     border-bottom: 3px solid transparent;
     font-weight: 600;
 }
 
-#courses-tabs .nav-tabs .nav-link.active::after {
+#streams-tabs .nav-tabs .nav-link.active::after {
     content: '';
     position: absolute;
     bottom: -3px;
@@ -56,17 +56,17 @@
     border-radius: 2px 2px 0 0;
 }
 
-#courses-tabs .nav-tabs .nav-link svg {
+#streams-tabs .nav-tabs .nav-link svg {
     margin-right: 0.5rem;
     font-size: 1rem;
 }
 
 /* Tab Content Styles */
-#courses-tabs .tab-content {
+#streams-tabs .tab-content {
     padding: 1rem 0;
 }
 
-#courses-tabs .tab-pane {
+#streams-tabs .tab-pane {
     animation: fadeIn 0.3s ease-in-out;
 }
 
@@ -79,20 +79,6 @@
         opacity: 1;
         transform: translateY(0);
     }
-}
-
-/* Header Card */
-.notifications-header-card {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-}
-
-.notifications-header-card h3 {
-    color: white;
-}
-
-.notifications-header-card p {
-    color: rgba(255, 255, 255, 0.9);
 }
 
 /* Stream Selection Card Styles */
@@ -177,9 +163,23 @@
     font-size: 1.25rem;
 }
 
+/* Notifications Header Card */
+.notifications-header-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.notifications-header-card h3 {
+    color: white;
+}
+
+.notifications-header-card p {
+    color: rgba(255, 255, 255, 0.9);
+}
+
 /* Responsive Styles */
 @media (max-width: 768px) {
-    #courses-tabs .nav-tabs .nav-link {
+    #streams-tabs .nav-tabs .nav-link {
         padding: 0.75rem 1rem;
         font-size: 0.9rem;
     }
@@ -211,12 +211,12 @@
 }
 
 @media (max-width: 576px) {
-    #courses-tabs .nav-tabs .nav-link {
+    #streams-tabs .nav-tabs .nav-link {
         padding: 0.6rem 0.75rem;
         font-size: 0.85rem;
     }
 
-    #courses-tabs .nav-tabs .nav-link svg {
+    #streams-tabs .nav-tabs .nav-link svg {
         margin-right: 0.25rem;
         font-size: 0.9rem;
     }
