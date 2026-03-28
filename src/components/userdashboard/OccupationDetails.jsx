@@ -419,42 +419,7 @@ const OccupationDetails = () => {
                   </Card.Body>
                 </Card>
 
-                {/* Quick Stats */}
-                <Row className="mb-4">
-                  <Col md={4}>
-                    <Card className="shadow-sm border-0 h-100 quick-stats-card">
-                      <Card.Body className="p-4 text-center">
-                        <div className="icon-wrapper success">
-                          <FaRupeeSign />
-                        </div>
-                        <h5>Salary Range</h5>
-                        <p className="text-muted mb-0">{occupationDetails.salaryRange}</p>
-                      </Card.Body>
-                    </Card>
-                  </Col>
-                  <Col md={4}>
-                    <Card className="shadow-sm border-0 h-100 quick-stats-card">
-                      <Card.Body className="p-4 text-center">
-                        <div className="icon-wrapper info">
-                          <FaChartLine />
-                        </div>
-                        <h5>Growth Potential</h5>
-                        <p className="text-muted mb-0">{occupationDetails.growthPotential}</p>
-                      </Card.Body>
-                    </Card>
-                  </Col>
-                  <Col md={4}>
-                    <Card className="shadow-sm border-0 h-100 quick-stats-card">
-                      <Card.Body className="p-4 text-center">
-                        <div className="icon-wrapper warning">
-                          <FaUsers />
-                        </div>
-                        <h5>Demand Level</h5>
-                        <p className="text-muted mb-0">{occupationDetails.demandLevel}</p>
-                      </Card.Body>
-                    </Card>
-                  </Col>
-                </Row>
+
 
                 {/* Step-by-Step Guide */}
                 <Card className="shadow-sm mb-4 border-0" style={{ borderRadius: '10px' }}>
