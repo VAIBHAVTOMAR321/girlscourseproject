@@ -39,7 +39,7 @@
 
 .in-prohrace{
     position: absolute;
-    left: 96px !important;
+    left: 73px !important;
     bottom: -12px;
     font-size: 8px !important;
 
@@ -85,6 +85,9 @@ font-size: 20px;
   .title-h h4 {
     font-size: 12px !important;
   }
+  .fixed-notifications{
+    padding: 0px !important;
+  }
   .button-view {
     font-size: 12px !important;
   }
@@ -98,6 +101,13 @@ font-size: 20px;
   .button-view {
     font-size: 12px !important;
   }
+  .in-prohrace{
+    position: absolute !important;
+    left: 73px !important;
+    bottom: -12px;
+    font-size: 8px !important;
+
+}
 }
 
 /* OR for a range around 568px */
@@ -108,4 +118,13 @@ font-size: 20px;
   .button-view {
     font-size: 12px !important;
   }
+}
+@media (min-width: 500px) and (max-width: 844px) {
+    .in-prohrace{
+    position: absolute !important;
+    left: 55px !important;
+    bottom: -12px;
+    font-size: 8px !important;
+
+}
 }

@@ -168,7 +168,9 @@
   .user-top-nav .navbar-brand {
     padding: 0.5rem 0.75rem;
   }
-
+.user-top-nav .user-dropdown .dropdown-toggle{
+background-color: #13539d !important;
+  }
   .user-top-nav .user-logo-img {
     height: 40px;
   }

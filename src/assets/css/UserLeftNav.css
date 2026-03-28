@@ -180,7 +180,13 @@ padding: 6px;
     z-index: 1000;
     height: 100vh;
   }
-
+ 
+  .offcanvas-body{
+padding: 0px !important;
+  }
+.user-left-nav .mobile-menu{
+padding: 0px !important;
+}
   .user-left-nav.open {
     left: 0;
   }

@@ -509,9 +509,7 @@ const UserProfile = () => {
         }
 
         @media (max-width: 768px) {
-          .profile-header-card .card-body {
-            padding: 1.5rem !important;
-          }
+        
 
           .profile-details-card .card-body {
             padding: 1.5rem !important;
