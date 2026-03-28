@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Container, Card, Button, Row, Col, Badge, Form, ProgressBar, Modal, Alert, Tab, Nav } from 'react-bootstrap'
 import { FaGraduationCap, FaLightbulb, FaArrowLeft, FaFlask, FaCalculator, FaBook, FaBalanceScale, FaBrain, FaUserTie, FaWrench, FaCog, FaCertificate, FaCheckCircle, FaInfoCircle, FaUniversity, FaBusinessTime, FaCode, FaDna, FaBookOpen, FaPercentage } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
@@ -16,7 +16,7 @@ const UserSettings = () => {
   const [selectedCourse, setSelectedCourse] = useState(null)
   const [selectedCareerPath, setSelectedCareerPath] = useState(null)
   const [loading, setLoading] = useState(false)
-  const resultsRef = React.createRef()
+  const resultsRef = useRef()
 
   useEffect(() => {
     const handleResize = () => {
