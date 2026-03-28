@@ -218,6 +218,7 @@
 /* Badges General */
 .badge {
   font-weight: 500;
+
 }
 
 /* Text Muted */
@@ -233,6 +234,7 @@
 /* Cards General */
 .card {
   border-radius: 10px;
+  margin-bottom: 0px !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
@@ -281,10 +283,20 @@
 .mobile-btn-sty{
   margin-top: 12px;
 }
+.mobile-btn-get{
+  padding: 8px !important;
+  font-size: 12px;
+}
+.card-body{
+  padding: 12px !important;
+}
   .occupation-header-card h2 {
     font-size: 1.2rem;
   }
-
+.badge{
+font-size: 12px !important;
+padding: 8px !important;
+}
   .occupation-icon-large {
     width: 55px;
     height: 55px;
@@ -304,7 +316,7 @@
   .step-number .badge {
     width: 40px;
     height: 40px;
-    font-size: 1rem;
+    font-size: 12 !important;
   }
 
   .step-card h6 {

@@ -455,8 +455,50 @@ const OccupationDetails = () => {
                         <Tab.Pane eventKey="career-opportunities">
                           <div className="mb-4">
                             <h5 className="mb-3">
+                              <FaRocket className="me-2 text-primary" />
+                              Available Career Opportunities
+                            </h5>
+                            <p className="text-muted mb-4">Explore different career paths and find the one that suits you best</p>
+                            <Row>
+                              {['Teacher', 'Lawyer', 'Software Engineer', 'Doctor'].filter(occ => occ !== occupation).map((occ, index) => {
+                                const details = getOccupationDetails(occ)
+                                return (
+                                  <Col md={4} key={index} className="mb-3">
+                                    <Card 
+                                      className="h-100 border career-opportunity-card" 
+                                      style={{ cursor: 'pointer', transition: 'all 0.3s ease' }}
+                                      onClick={() => navigate('/OccupationDetails', { state: { occupation: occ, stream, percentage } })}
+                                    >
+                                      <Card.Body className="p-3">
+                                        <div className="d-flex align-items-center gap-2 mb-2">
+                                          <div className="icon-wrapper">
+                                            {details.icon}
+                                          </div>
+                                          <h6 className="mb-0">{details.title}</h6>
+                                        </div>
+                                        <p className="small text-muted mb-2">{details.description.substring(0, 80)}...</p>
+                                        <div className="d-flex justify-content-between align-items-center">
+                                          <Badge bg="success">
+                                            <FaRupeeSign className="me-1" />
+                                            {details.salaryRange}
+                                          </Badge>
+                                          <Badge bg="info">
+                                            <FaChartLine className="me-1" />
+                                            {details.growthPotential}
+                                          </Badge>
+                                        </div>
+                                      </Card.Body>
+                                    </Card>
+                                  </Col>
+                                )
+                              })}
+                            </Row>
+                          </div>
+
+                          <div className="mb-4">
+                            <h5 className="mb-3">
                               <FaChartLine className="me-2 text-success" />
-                              Career Progression Path
+                              Career Progression Path for {occupationDetails.title}
                             </h5>
                             <Row>
                               {occupationDetails.careerPath.map((level, index) => (
@@ -473,33 +515,6 @@ const OccupationDetails = () => {
                                       <h6 className="mb-1">{level.level}</h6>
                                       <small className="text-muted d-block mb-2">{level.experience}</small>
                                       <Badge bg="success">{level.salary}</Badge>
-                                    </Card.Body>
-                                  </Card>
-                                </Col>
-                              ))}
-                            </Row>
-                          </div>
-
-                          <div className="mb-4">
-                            <h5 className="mb-3">
-                              <FaLightbulb className="me-2 text-warning" />
-                              Recommended Career Paths
-                            </h5>
-                            <Row>
-                              {occupationDetails.careerPath.slice(0, 3).map((level, index) => (
-                                <Col md={4} key={index} className="mb-3">
-                                  <Card 
-                                    className="h-100 border recommended-career-card"
-                                    style={{ cursor: 'pointer', transition: 'all 0.3s ease', borderColor: '#667eea' }}
-                                    onClick={() => navigate('/UserNotifications')}
-                                  >
-                                    <Card.Body className="p-3">
-                                      <div className="d-flex align-items-center gap-2 mb-2">
-                                        <FaCheckCircle className="text-success" />
-                                        <h6 className="mb-0">{level.level}</h6>
-                                      </div>
-                                      <p className="small text-muted mb-2">{level.experience}</p>
-                                      <Badge bg="primary">{level.salary}</Badge>
                                     </Card.Body>
                                   </Card>
                                 </Col>

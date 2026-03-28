@@ -1255,13 +1255,13 @@ import '../../assets/css/UserNotifications.css'
                             <FaPercentage className="percentage-icon-large" />
                           </div>
                         </Col>
-                        <Col md={6}>
+                        <Col md={6} className='mobile-btn-sty'>
                           <Button 
                             variant="primary" 
                             size="lg"
                             onClick={handleGetGuidance}
                             disabled={!percentage}
-                            className="w-100"
+                            className="w-100 mobile-btn-get"
                           >
                             <FaLightbulb className="me-2" />
                             Get Course Guidance
@@ -1491,10 +1491,10 @@ import '../../assets/css/UserNotifications.css'
                       <Col md={6} key={index} className="mb-3">
                         <Card 
                           className={`h-100 border career-path-card ${selectedCareerPath === path ? 'selected' : ''}`}
-                          style={{ cursor: 'pointer', borderRadius: '8px' }}
+                          style={{ cursor: 'pointer', borderRadius: '8px', overflow: 'hidden' }}
                           onClick={() => handleCareerPathClick(path, selectedCourse?.name)}
                         >
-                          <Card.Body className="p-3">
+                          <Card.Body className="p-3" style={{ maxHeight: selectedCareerPath === path ? '400px' : 'auto', overflowY: selectedCareerPath === path ? 'auto' : 'visible' }}>
                             <h6 className="mb-2 text-primary">{path.path}</h6>
                             <div className="d-flex justify-content-between mb-2">
                               <Badge bg="success">{path.salary}</Badge>
