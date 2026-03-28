@@ -94,7 +94,33 @@ const UserDashboard = () => {
       )
       
       if (response.data.success && Array.isArray(response.data.data)) {
-        setCourses(response.data.data)
+        // Also fetch all courses to get start_date and end_date
+        let coursesWithDates = response.data.data
+        
+        try {
+          const allCoursesResponse = await axios.get(
+            'https://brjobsedu.com/girls_course/girls_course_backend/api/course-items/'
+          )
+          
+          if (allCoursesResponse.data.success && Array.isArray(allCoursesResponse.data.data)) {
+            // Merge start_date and end_date from allCourses to enrolled courses
+            coursesWithDates = response.data.data.map(enrolledCourse => {
+              const courseDetails = allCoursesResponse.data.data.find(
+                c => c.course_id === enrolledCourse.course_id
+              )
+              return {
+                ...enrolledCourse,
+                start_date: courseDetails?.start_date || null,
+                end_date: courseDetails?.end_date || null
+              }
+            })
+          }
+        } catch (courseError) {
+          // Use original data if course-items fetch fails
+          console.warn('Could not fetch course details for dates')
+        }
+        
+        setCourses(coursesWithDates)
       } else {
         setError(response.data.message || 'Failed to fetch courses')
         setCourses([])
@@ -414,6 +440,53 @@ const UserDashboard = () => {
       // Handle error silently
     } finally {
       setProgressLoading(false)
+    }
+  }
+
+  // Calculate time remaining until course end date
+  const calculateTimeRemaining = (startDate, endDate) => {
+    if (!startDate || !endDate) return null
+    
+    const now = new Date()
+    const end = new Date(endDate)
+    const start = new Date(startDate)
+    
+    // If course has already ended
+    if (now > end) {
+      return { status: 'expired', text: 'Course Expired' }
+    }
+    
+    // If course hasn't started yet
+    if (now < start) {
+      return { status: 'upcoming', text: 'Starts on ' + start.toLocaleDateString() }
+    }
+    
+    // Calculate time remaining
+    const diffTime = end - now
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+    
+    const months = Math.floor(diffDays / 30)
+    const weeks = Math.floor((diffDays % 30) / 7)
+    const days = diffDays % 7
+    
+    let timeText = ''
+    if (months > 0) {
+      timeText += `${months} month${months > 1 ? 's' : ''} `
+    }
+    if (weeks > 0) {
+      timeText += `${weeks} week${weeks > 1 ? 's' : ''} `
+    }
+    if (days > 0 || (months === 0 && weeks === 0)) {
+      timeText += `${days} day${days !== 1 ? 's' : ''}`
+    }
+    
+    return { 
+      status: 'active', 
+      text: timeText.trim(),
+      days: diffDays,
+      months,
+      weeks,
+      daysLeft: days
     }
   }
 
@@ -1225,7 +1298,7 @@ const UserDashboard = () => {
                           className="fw-semibold"
                         >
                           <FaGraduationCap className="me-2" />
-                          Free Courses ({allCourses.filter(c => c.course_status === 'unpaid').length})
+                          All Courses ({allCourses.filter(c => c.course_status === 'unpaid').length})
                         </Button>
                       )}
                     </div>
@@ -1294,6 +1367,20 @@ const UserDashboard = () => {
                                           {course.enrolled_at ? new Date(course.enrolled_at).toLocaleDateString() : 'N/A'}
                                         </span>
                                       </div>
+                                      {/* Time Remaining - calculated from start_date to end_date */}
+                                      {course.start_date && course.end_date && (
+                                        <div className="d-flex justify-content-between align-items-center mb-2">
+                                          <span className="text-muted small">
+                                            <FaClock className="me-1" /> Time Remaining
+                                          </span>
+                                          <span className={`fw-semibold ${(() => {
+                                            const time = calculateTimeRemaining(course.start_date, course.end_date);
+                                            return time?.status === 'expired' ? 'text-danger' : time?.status === 'upcoming' ? 'text-info' : 'text-success';
+                                          })()}`}>
+                                            {calculateTimeRemaining(course.start_date, course.end_date)?.text || 'N/A'}
+                                          </span>
+                                        </div>
+                                      )}
                                       {isAllModulesCompleted(course) && course.completed_at && (
                                         <div className="d-flex justify-content-between align-items-center mb-2">
                                           <span className="text-muted small">
@@ -1387,7 +1474,7 @@ const UserDashboard = () => {
                     {/* All Courses Tab - Only visible to unpaid users */}
                     {activeTab === 'all-courses' && userRoleType === 'student-unpaid' && (
                       <div>
-                        <h4 className="mb-3">All Free Courses</h4>
+                        <h4 className="mb-3">All Courses</h4>
                         
                         {allCoursesLoading ? (
                           <div className="text-center py-5">
@@ -1426,10 +1513,22 @@ const UserDashboard = () => {
                                     <Card.Body className="p-4">
                                       <div className="mb-3">
                                         <h6 className="mb-2 course-title">{renderContentWithLineBreaks(course.course_name)}</h6>
-                                        <Badge bg={course.course_status === 'paid' ? 'success' : 'primary'} className="mb-2">
-                                          {course.course_status === 'paid' ? `₹ ${course.price}` : 'Free'}
-                                        </Badge>
                                       </div>
+                                      
+                                      {/* Time Remaining - calculated from start_date to end_date */}
+                                      {course.start_date && course.end_date && (
+                                        <div className="mb-2 p-2 bg-light rounded d-flex justify-content-between align-items-center">
+                                          <span className="text-muted small">
+                                            <FaClock className="me-1" /> Duration
+                                          </span>
+                                          <span className={`fw-semibold ${(() => {
+                                            const time = calculateTimeRemaining(course.start_date, course.end_date);
+                                            return time?.status === 'expired' ? 'text-danger' : time?.status === 'upcoming' ? 'text-info' : 'text-success';
+                                          })()}`}>
+                                            {calculateTimeRemaining(course.start_date, course.end_date)?.text || 'N/A'}
+                                          </span>
+                                        </div>
+                                      )}
                                       
                                       {course.course_description && (
                                         <p className="text-muted small mb-3">{course.course_description.substring(0, 100)}...</p>

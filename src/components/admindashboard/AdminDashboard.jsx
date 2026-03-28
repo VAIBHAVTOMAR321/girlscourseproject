@@ -41,7 +41,9 @@ const AdminDashboard = () => {
 
   // State for Simple Course Form
   const [courseFormData, setCourseFormData] = useState({
-    course_name: ''
+    course_name: '',
+    start_date: '',
+    end_date: ''
   })
   
   // Prevent double submission
@@ -170,7 +172,7 @@ const AdminDashboard = () => {
     fetchData() // Refresh data when returning to dashboard
   }
   const handleAddCourseClick = () => {
-    setCourseFormData({ course_name: '' })
+    setCourseFormData({ course_name: '', start_date: '', end_date: '' })
     setCurrentView('form')
   }
   const handleViewCourse = async (course) => {
@@ -189,7 +191,9 @@ const AdminDashboard = () => {
   const handleEditCourse = (course) => {
     setCourseFormData({
       course_id: course.course_id,
-      course_name: course.course_name
+      course_name: course.course_name,
+      start_date: course.start_date || '',
+      end_date: course.end_date || ''
     })
     setCurrentView('form')
   }
@@ -681,14 +685,19 @@ const AdminDashboard = () => {
         // Update existing course
         await axios.put('https://brjobsedu.com/girls_course/girls_course_backend/api/course-items/', {
           course_id: courseFormData.course_id,
-          course_name: courseFormData.course_name
+          course_name: courseFormData.course_name,
+          course_status: courseFormData.course_status || 'unpaid',
+          start_date: courseFormData.start_date,
+          end_date: courseFormData.end_date
         }, config)
         alert('Course updated successfully!')
       } else {
         // Create new course - only create unpaid courses
         await axios.post('https://brjobsedu.com/girls_course/girls_course_backend/api/course-items/', {
           course_name: courseFormData.course_name,
-          course_status: 'unpaid' // Explicitly set to unpaid
+          course_status: 'unpaid', // Explicitly set to unpaid
+          start_date: courseFormData.start_date,
+          end_date: courseFormData.end_date
         }, config)
         alert('Unpaid course created successfully!')
       }
@@ -828,6 +837,12 @@ const AdminDashboard = () => {
                             {course.course_status === 'paid' ? 'Paid' : 'Free'}
                           </Badge>
                         </div>
+                        {course.start_date && course.end_date && (
+                          <div className="mb-2 text-muted small">
+                            <i className="far fa-calendar-alt me-1"></i>
+                            {course.start_date} to {course.end_date}
+                          </div>
+                        )}
                         <Card.Title className="fw-bold">{renderContentWithLineBreaks(course.course_name)}</Card.Title>
                       </div>
                       <div className="mt-auto pt-3 border-top">
@@ -1014,6 +1029,28 @@ const AdminDashboard = () => {
                 value={courseFormData.course_name}
                 onChange={(e) => setCourseFormData({...courseFormData, course_name: e.target.value})}
                 placeholder="e.g. Python Full Stack"
+                required 
+                disabled={submitting}
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-4">
+              <Form.Label>Start Date</Form.Label>
+              <Form.Control 
+                type="date" 
+                value={courseFormData.start_date}
+                onChange={(e) => setCourseFormData({...courseFormData, start_date: e.target.value})}
+                required 
+                disabled={submitting}
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-4">
+              <Form.Label>End Date</Form.Label>
+              <Form.Control 
+                type="date" 
+                value={courseFormData.end_date}
+                onChange={(e) => setCourseFormData({...courseFormData, end_date: e.target.value})}
                 required 
                 disabled={submitting}
               />
