@@ -33,6 +33,20 @@ const UserDashboard = () => {
   const [exerciseFeedback, setExerciseFeedback] = useState({ type: '', message: '' })
   const [shuffledTargets, setShuffledTargets] = useState({})
 
+  // Course feedback state
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false)
+  const [feedbackCourse, setFeedbackCourse] = useState(null)
+  const [feedbackData, setFeedbackData] = useState({
+    question_1: '',
+    question_2: '',
+    question_3: '',
+    question_4: '',
+    question_5: '',
+    comment: ''
+  })
+  const [feedbackSubmitting, setFeedbackSubmitting] = useState(false)
+  const [feedbackError, setFeedbackError] = useState(null)
+
   const location = useLocation()
   const navigate = useNavigate()
   const { uniqueId, accessToken, isAuthenticated, userRoleType } = useAuth()
@@ -495,6 +509,94 @@ const UserDashboard = () => {
     if (!course.start_date || !course.end_date) return false
     const time = calculateTimeRemaining(course.start_date, course.end_date)
     return time?.status === 'expired'
+  }
+
+  // Open feedback modal
+  const handleOpenFeedbackModal = (course) => {
+    setFeedbackCourse(course)
+    setFeedbackData({
+      question_1: '',
+      question_2: '',
+      question_3: '',
+      question_4: '',
+      question_5: '',
+      comment: ''
+    })
+    setFeedbackError(null)
+    setShowFeedbackModal(true)
+  }
+
+  // Close feedback modal
+  const handleCloseFeedbackModal = () => {
+    setShowFeedbackModal(false)
+    setFeedbackCourse(null)
+    setFeedbackData({
+      question_1: '',
+      question_2: '',
+      question_3: '',
+      question_4: '',
+      question_5: '',
+      comment: ''
+    })
+    setFeedbackError(null)
+  }
+
+  // Handle feedback form input change
+  const handleFeedbackChange = (field, value) => {
+    setFeedbackData(prev => ({
+      ...prev,
+      [field]: value
+    }))
+  }
+
+  // Submit feedback
+  const handleSubmitFeedback = async () => {
+    if (!feedbackCourse) return
+    
+    // Validate all fields are filled
+    if (!feedbackData.question_1 || !feedbackData.question_2 || !feedbackData.question_3 || 
+        !feedbackData.question_4 || !feedbackData.question_5) {
+      setFeedbackError('Please answer all questions')
+      return
+    }
+    
+    try {
+      setFeedbackSubmitting(true)
+      setFeedbackError(null)
+      
+      const response = await axios.post(
+        'https://brjobsedu.com/girls_course/girls_course_backend/api/course-feedback/',
+        {
+          course_id: feedbackCourse.course_id,
+          student_id: uniqueId,
+          full_name: userData?.full_name || 'Student',
+          course_name: feedbackCourse.course_name,
+          question_1: feedbackData.question_1,
+          question_2: feedbackData.question_2,
+          question_3: feedbackData.question_3,
+          question_4: feedbackData.question_4,
+          question_5: feedbackData.question_5,
+          comment: feedbackData.comment
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      )
+      
+      if (response.data.success) {
+        alert('Thank you for your feedback!')
+        handleCloseFeedbackModal()
+      } else {
+        setFeedbackError(response.data.message || 'Failed to submit feedback')
+      }
+    } catch (error) {
+      setFeedbackError('Failed to submit feedback. Please try again.')
+    } finally {
+      setFeedbackSubmitting(false)
+    }
   }
 
   // Compute the first incomplete module index based on user progress
@@ -1483,6 +1585,17 @@ const UserDashboard = () => {
                                             Refund Pending
                                           </Badge>
                                         )}
+                                        {/* Feedback Button - Only show when course is completed */}
+                                        {isAllModulesCompleted(course) && (
+                                          <Button 
+                                            variant="outline-primary" 
+                                            onClick={() => handleOpenFeedbackModal(course)}
+                                            className="d-flex align-items-center"
+                                          >
+                                            <FaStar className="me-2" />
+                                            Feedback
+                                          </Button>
+                                        )}
                                       </div>
                                     </div>
                                   </Card.Body>
@@ -1628,6 +1741,169 @@ const UserDashboard = () => {
       </div>
     </div>
     {showExerciseView && renderExerciseView()}
+    
+    {/* Course Feedback Modal */}
+    {showFeedbackModal && feedbackCourse && (
+      <div className="modal fade show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+        <div className="modal-dialog modal-lg modal-dialog-centered">
+          <div className="modal-content" style={{ borderRadius: '12px', overflow: 'hidden' }}>
+            <div className="modal-header" style={{ background: 'linear-gradient(135deg, #667eea, #667eea)', border: 'none' }}>
+              <h5 className="modal-title text-white">
+                <FaStar className="me-2" />
+                Course Feedback
+              </h5>
+              <button 
+                type="button" 
+                className="btn-close btn-close-white" 
+                onClick={handleCloseFeedbackModal}
+                disabled={feedbackSubmitting}
+              ></button>
+            </div>
+            <div className="modal-body p-4">
+              {feedbackError && (
+                <Alert variant="danger" className="mb-3">
+                  {feedbackError}
+                </Alert>
+              )}
+              
+              <div className="mb-4">
+                <h6 className="fw-bold text-primary mb-3">Course: {feedbackCourse.course_name}</h6>
+                <p className="text-muted small">Please rate your experience with this course.</p>
+              </div>
+              
+              {/* Question 1 */}
+              <div className="mb-3">
+                <label className="form-label fw-semibold">1. How would you rate the overall course content?</label>
+                <select 
+                  className="form-select"
+                  value={feedbackData.question_1}
+                  onChange={(e) => handleFeedbackChange('question_1', e.target.value)}
+                  disabled={feedbackSubmitting}
+                >
+                  <option value="">Select rating</option>
+                  <option value="Excellent">Excellent</option>
+                  <option value="Good">Good</option>
+                  <option value="Average">Average</option>
+                  <option value="Poor">Poor</option>
+                </select>
+              </div>
+              
+              {/* Question 2 */}
+              <div className="mb-3">
+                <label className="form-label fw-semibold">2. How would you rate the course materials and resources?</label>
+                <select 
+                  className="form-select"
+                  value={feedbackData.question_2}
+                  onChange={(e) => handleFeedbackChange('question_2', e.target.value)}
+                  disabled={feedbackSubmitting}
+                >
+                  <option value="">Select rating</option>
+                  <option value="Excellent">Excellent</option>
+                  <option value="Good">Good</option>
+                  <option value="Average">Average</option>
+                  <option value="Poor">Poor</option>
+                </select>
+              </div>
+              
+              {/* Question 3 */}
+              <div className="mb-3">
+                <label className="form-label fw-semibold">3. How would you rate the instructor's teaching quality?</label>
+                <select 
+                  className="form-select"
+                  value={feedbackData.question_3}
+                  onChange={(e) => handleFeedbackChange('question_3', e.target.value)}
+                  disabled={feedbackSubmitting}
+                >
+                  <option value="">Select rating</option>
+                  <option value="Excellent">Excellent</option>
+                  <option value="Good">Good</option>
+                  <option value="Average">Average</option>
+                  <option value="Poor">Poor</option>
+                </select>
+              </div>
+              
+              {/* Question 4 */}
+              <div className="mb-3">
+                <label className="form-label fw-semibold">4. How would you rate the course difficulty level?</label>
+                <select 
+                  className="form-select"
+                  value={feedbackData.question_4}
+                  onChange={(e) => handleFeedbackChange('question_4', e.target.value)}
+                  disabled={feedbackSubmitting}
+                >
+                  <option value="">Select rating</option>
+                  <option value="Excellent">Excellent</option>
+                  <option value="Good">Good</option>
+                  <option value="Average">Average</option>
+                  <option value="Poor">Poor</option>
+                </select>
+              </div>
+              
+              {/* Question 5 */}
+              <div className="mb-3">
+                <label className="form-label fw-semibold">5. How likely are you to recommend this course to others?</label>
+                <select 
+                  className="form-select"
+                  value={feedbackData.question_5}
+                  onChange={(e) => handleFeedbackChange('question_5', e.target.value)}
+                  disabled={feedbackSubmitting}
+                >
+                  <option value="">Select rating</option>
+                  <option value="Excellent">Excellent</option>
+                  <option value="Good">Good</option>
+                  <option value="Average">Average</option>
+                  <option value="Poor">Poor</option>
+                </select>
+              </div>
+              
+              {/* Comment */}
+              <div className="mb-3">
+                <label className="form-label fw-semibold">Additional Comments (Optional)</label>
+                <textarea 
+                  className="form-control" 
+                  rows="4"
+                  placeholder="Share your thoughts about the course..."
+                  value={feedbackData.comment}
+                  onChange={(e) => handleFeedbackChange('comment', e.target.value)}
+                  disabled={feedbackSubmitting}
+                ></textarea>
+              </div>
+            </div>
+            <div className="modal-footer" style={{ borderTop: '1px solid #e0e0e0' }}>
+              <Button 
+                variant="secondary" 
+                onClick={handleCloseFeedbackModal}
+                disabled={feedbackSubmitting}
+              >
+                Cancel
+              </Button>
+              <Button 
+                variant="primary" 
+                onClick={handleSubmitFeedback}
+                disabled={feedbackSubmitting}
+                style={{
+                  background: 'linear-gradient(135deg, #667eea, #667eea)',
+                  border: 'none'
+                }}
+              >
+                {feedbackSubmitting ? (
+                  <>
+                    <Spinner animation="border" size="sm" className="me-2" />
+                    Submitting...
+                  </>
+                ) : (
+                  <>
+                    <FaCheckCircle className="me-2" />
+                    Submit Feedback
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    )}
+    
     </div>
   )
 
