@@ -279,7 +279,7 @@ const Registration = () => {
 
     // Required field validation
     const requiredFields = ['full_name', 'aadhaar_no',  'associate_wings', 
-                          'phone', 'district', 'block', 'state', 'password', 'confirm_password'];
+                          'district', 'block', 'state', 'password', 'confirm_password'];
 
     requiredFields.forEach(field => {
       if (!formData[field] || (typeof formData[field] === 'string' && formData[field].trim() === "")) {
@@ -718,7 +718,7 @@ const Registration = () => {
                 <Row className="mb-3">
                   <Col md={6}>
                     <Form.Group>
-                      <Form.Label className="form-label-gov">Phone<span className="red-color">*</span></Form.Label>
+                      <Form.Label className="form-label-gov">Phone</Form.Label>
                       <Form.Control
                         type="tel"
                         name="phone"
@@ -726,13 +726,11 @@ const Registration = () => {
                         value={formData.phone}
                         onChange={handleChange}
                         className="form-control-gov"
-                        isInvalid={!!fieldErrors.phone || !!errors.phone}
+                       
                         maxLength={10}
                         required
                       />
-                      <Form.Control.Feedback type="invalid">
-                        {fieldErrors.phone || errors.phone}
-                      </Form.Control.Feedback>
+                     
                     </Form.Group>
                   </Col>
 
