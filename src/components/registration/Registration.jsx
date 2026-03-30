@@ -463,7 +463,7 @@ const Registration = () => {
       {/* Main Content with Padding-top to account for fixed header */}
         <Container className="mt-5 main-content-wrapper">
          <Row className="align-items-center p-4 shadow rounded bg-white official-card">
-            <h1>National Education</h1>
+            {/* <h1>National Education</h1> */}
           <Col lg={6} md={6} sm={12} className="course-marquee-container-box">
           
             <div className="course-marquee-header">

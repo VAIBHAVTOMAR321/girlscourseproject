@@ -311,7 +311,7 @@ const Login = () => {
       
       <Container className="mt-5 main-content-wrapper">
         <Row className="align-items-center shadow rounded bg-white official-card">
-          <h1 className="text-center">National Education Portal</h1>
+          {/* <h1 className="text-center">National Education Portal</h1> */}
           
           {/* Courses Section */}
         <Col lg={6} md={6} sm={12} className="course-marquee-container">
