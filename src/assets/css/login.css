@@ -5,7 +5,7 @@
 }
 
 .main-content-wrapper {
-  padding-top: 100px;
+  padding-top: 28px;
 }
 
 .official-card {
@@ -635,7 +635,10 @@
 
 @media (max-width: 576px) {
   .official-card {
-    margin: 0 10px;
+    margin: 0 !important;
+  }
+  .main-content-wrapper{
+    padding: 0px !important;
   }
   
   .course-grid {

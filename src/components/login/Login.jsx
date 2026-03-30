@@ -310,8 +310,8 @@ const Login = () => {
       <NavBar />
       
       <Container className="mt-5 main-content-wrapper">
-        <Row className="align-items-center p-4 shadow rounded bg-white official-card">
-          <h1 className="text-center mb-4">National Education Portal</h1>
+        <Row className="align-items-center shadow rounded bg-white official-card">
+          <h1 className="text-center">National Education Portal</h1>
           
           {/* Courses Section */}
         <Col lg={6} md={6} sm={12} className="course-marquee-container">
