@@ -46,6 +46,7 @@ const UserDashboard = () => {
   })
   const [feedbackSubmitting, setFeedbackSubmitting] = useState(false)
   const [feedbackError, setFeedbackError] = useState(null)
+  const [submittedFeedbackCourses, setSubmittedFeedbackCourses] = useState([])
 
   const location = useLocation()
   const navigate = useNavigate()
@@ -190,6 +191,33 @@ const UserDashboard = () => {
     }
   }
 
+  // Fetch submitted feedback courses for the user
+  const fetchFeedbackData = async () => {
+    if (!uniqueId || !accessToken) {
+      return
+    }
+
+    try {
+      const response = await axios.get(
+        `https://brjobsedu.com/girls_course/girls_course_backend/api/course-feedback/?student_id=${uniqueId}`,
+        {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      )
+      
+      if (response.data.success && Array.isArray(response.data.data)) {
+        // Extract course IDs from submitted feedback
+        const submittedCourseIds = response.data.data.map(feedback => feedback.course_id)
+        setSubmittedFeedbackCourses(submittedCourseIds)
+      }
+    } catch (error) {
+      console.error('Error fetching feedback data:', error)
+    }
+  }
+
   // Fetch courses, module progress, refund requests, and all courses when component mounts or uniqueId/accessToken changes
   useEffect(() => {
     const fetchData = async () => {
@@ -197,6 +225,7 @@ const UserDashboard = () => {
       await fetchModuleProgress()
       await fetchRefundRequests()
       await fetchAllCourses()
+      await fetchFeedbackData()
     }
     
     fetchData()
@@ -588,6 +617,8 @@ const UserDashboard = () => {
       
       if (response.data.success) {
         alert('Thank you for your feedback!')
+        // Add the course_id to submittedFeedbackCourses to disable the button
+        setSubmittedFeedbackCourses(prev => [...prev, feedbackCourse.course_id])
         handleCloseFeedbackModal()
       } else {
         setFeedbackError(response.data.message || 'Failed to submit feedback')
@@ -1588,12 +1619,22 @@ const UserDashboard = () => {
                                         {/* Feedback Button - Only show when course is completed */}
                                         {isAllModulesCompleted(course) && (
                                           <Button 
-                                            variant="outline-primary" 
+                                            variant={submittedFeedbackCourses.includes(course.course_id) ? "outline-success" : "outline-primary"} 
                                             onClick={() => handleOpenFeedbackModal(course)}
                                             className="d-flex align-items-center"
+                                            disabled={submittedFeedbackCourses.includes(course.course_id)}
                                           >
-                                            <FaStar className="me-2" />
-                                            Feedback
+                                            {submittedFeedbackCourses.includes(course.course_id) ? (
+                                              <>
+                                                <FaCheckCircle className="me-2" />
+                                                Feedback Submitted
+                                              </>
+                                            ) : (
+                                              <>
+                                                <FaStar className="me-2" />
+                                                Feedback
+                                              </>
+                                            )}
                                           </Button>
                                         )}
                                       </div>
@@ -1768,7 +1809,14 @@ const UserDashboard = () => {
               
               <div className="mb-4">
                 <h6 className="fw-bold text-primary mb-3">Course: {feedbackCourse.course_name}</h6>
-                <p className="text-muted small">Please rate your experience with this course.</p>
+                {submittedFeedbackCourses.includes(feedbackCourse.course_id) ? (
+                  <Alert variant="success" className="mb-3">
+                    <FaCheckCircle className="me-2" />
+                    <strong>Feedback Already Submitted!</strong> You have already submitted feedback for this course.
+                  </Alert>
+                ) : (
+                  <p className="text-muted small">Please rate your experience with this course.</p>
+                )}
               </div>
               
               {/* Question 1 */}
@@ -1880,7 +1928,7 @@ const UserDashboard = () => {
               <Button 
                 variant="primary" 
                 onClick={handleSubmitFeedback}
-                disabled={feedbackSubmitting}
+                disabled={feedbackSubmitting || submittedFeedbackCourses.includes(feedbackCourse.course_id)}
                 style={{
                   background: 'linear-gradient(135deg, #667eea, #667eea)',
                   border: 'none'
@@ -1890,6 +1938,11 @@ const UserDashboard = () => {
                   <>
                     <Spinner animation="border" size="sm" className="me-2" />
                     Submitting...
+                  </>
+                ) : submittedFeedbackCourses.includes(feedbackCourse.course_id) ? (
+                  <>
+                    <FaCheckCircle className="me-2" />
+                    Already Submitted
                   </>
                 ) : (
                   <>
