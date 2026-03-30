@@ -278,7 +278,7 @@ const Registration = () => {
     let newErrors = {};
 
     // Required field validation
-    const requiredFields = ['full_name', 'aadhaar_no', 'adharcard_file', 'associate_wings', 
+    const requiredFields = ['full_name', 'aadhaar_no',  'associate_wings', 
                           'phone', 'district', 'block', 'state', 'password', 'confirm_password'];
 
     requiredFields.forEach(field => {
@@ -756,22 +756,19 @@ const Registration = () => {
                 </Row>
 
                 <Form.Group className="mb-3">
-                  <Form.Label className="form-label-gov">Aadhaar Card File <span className="red-color">*</span></Form.Label>
+                  <Form.Label className="form-label-gov">Aadhaar Card File </Form.Label>
                   <Form.Control
                     type="file"
                     name="adharcard_file"
                     onChange={handleChange}
                     className="form-control-gov"
-                    isInvalid={!!fieldErrors.adharcard_file}
                     accept="image/*,.pdf"
                     required
                   />
                   <Form.Text className="file-size">
                     Upload JPG, PNG or PDF (Max 5MB)
                   </Form.Text>
-                  <Form.Control.Feedback type="invalid">
-                    {fieldErrors.adharcard_file}
-                  </Form.Control.Feedback>
+                 
                 </Form.Group>
 
                 <Row className="mb-3">
