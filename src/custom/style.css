@@ -6,7 +6,12 @@
 .admin-left-nav{
   position: fixed;
 }
-
+.accordion-body{
+  padding: 0px !important;
+}
+.container-top-fixed{
+  padding: 0px !important;
+}
 .official-card {
  
   

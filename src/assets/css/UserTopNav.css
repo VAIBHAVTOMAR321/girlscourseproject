@@ -200,7 +200,11 @@ background-color: #13539d !important;
   .user-top-nav .navbar-brand h5 {
     font-size: 1.1rem;
   }
-
+.user-top-nav .navbar-brand {
+  padding: 0px !important;
+  display: flex;
+  align-items: center;
+}
   .user-top-nav .user-details {
     display: block;
   }
