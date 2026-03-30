@@ -64,6 +64,10 @@ const AdminLeftNav = ({ show, setShow }) => {
               <i className="bi bi-person-lines-fill nav-icon"></i>
               <span className="nav-text">Enrollments</span>
             </Nav.Link>
+            <Nav.Link as={Link} to="/Feedback" className="nav-link-custom ">
+              <i className="bi bi-chat-square-text nav-icon"></i>
+              <span className="nav-text">Feedback</span>
+            </Nav.Link>
           </Nav>
         </div>
       )}
@@ -85,6 +89,9 @@ const AdminLeftNav = ({ show, setShow }) => {
             </Nav.Link>
             <Nav.Link as={Link} to="/Enrollments" className="nav-link-custom" onClick={() => setShowOffcanvas(false)}>
               <i className="bi bi-person-lines-fill nav-icon me-2"></i> Enrollments
+            </Nav.Link>
+            <Nav.Link as={Link} to="/Feedback" className="nav-link-custom" onClick={() => setShowOffcanvas(false)}>
+              <i className="bi bi-chat-square-text nav-icon me-2"></i> Feedback
             </Nav.Link>
           </Nav>
         </Offcanvas.Body>

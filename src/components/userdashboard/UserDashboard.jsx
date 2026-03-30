@@ -427,22 +427,38 @@ const UserDashboard = () => {
 
   // Check if all modules of a course are completed
   const isAllModulesCompleted = (course) => {
-    // Check if we have module progress data for this course
+    // First, check if we have module progress data for this course
     const courseModuleProgress = moduleProgress.filter(
       progress => progress.course_id === course.course_id
     )
     
-    // If no progress data available, course is not completed
-    if (courseModuleProgress.length === 0) {
-      return false
+    // If we have progress data, check if all modules are completed or passed
+    if (courseModuleProgress.length > 0) {
+      const allModulesCompleted = courseModuleProgress.every(progress => {
+        return progress.module_status === 'completed' || progress.test_status === 'passed'
+      })
+      if (allModulesCompleted) return true
     }
     
-    // Check if all modules for this course are completed or passed the test
-    const allModulesCompleted = courseModuleProgress.every(progress => {
-      return progress.module_status === 'completed' || progress.test_status === 'passed'
-    })
+    // Also check local completedModules state if we have courseModules loaded
+    if (courseModules && courseModules.modules && selectedCourse?.course_id === course.course_id) {
+      const allLocalModulesCompleted = courseModules.modules.every((module, moduleIndex) => {
+        const moduleProgressData = moduleProgress.find(
+          progress => 
+            progress.course_id === course.course_id && 
+            progress.module === module.module_id
+        )
+        const isModuleCompleted = completedModules.includes(moduleIndex)
+        const isTestPassed = moduleProgressData?.test_status === 'passed'
+        return isModuleCompleted || isTestPassed
+      })
+      if (allLocalModulesCompleted) return true
+    }
     
-    return allModulesCompleted
+    // If no progress data and no courseModules loaded, check if course has is_completed flag
+    if (course.is_completed) return true
+    
+    return false
   }
 
   // View certificate
@@ -931,7 +947,7 @@ const UserDashboard = () => {
                        ) : (
                          <Button 
                            variant="primary" 
-                           onClick={generateCertificate}
+                           onClick={async () => await generateCertificate()}
                            disabled={!areAllModulesCompleted()}
                            className="d-flex align-items-center button-view"
                          >
@@ -1544,15 +1560,11 @@ const UserDashboard = () => {
                                         </div>
                                       </div>
                                       <div className="d-flex gap-2">
-                                        {isCourseExpired(course) ? (
+                                        {course.certificate_file ? (
                                           <Button 
                                             variant="success" 
                                             onClick={() => {
-                                              if (course.certificate_file) {
-                                                window.open(`https://brjobsedu.com/girls_course/girls_course_backend${course.certificate_file}`, '_blank')
-                                              } else {
-                                                alert('Certificate not available yet')
-                                              }
+                                              window.open(`https://brjobsedu.com/girls_course/girls_course_backend${course.certificate_file}`, '_blank')
                                             }}
                                             className="d-flex align-items-center btn-custom"
                                             style={{
@@ -1562,6 +1574,22 @@ const UserDashboard = () => {
                                           >
                                             <FaCertificate className="me-2" />
                                             View Certificate
+                                          </Button>
+                                        ) : isAllModulesCompleted(course) ? (
+                                          <Button 
+                                            variant="success" 
+                                            onClick={async () => {
+                                              setSelectedCourse(course)
+                                              await generateCertificate()
+                                            }}
+                                            className="d-flex align-items-center btn-custom"
+                                            style={{
+                                              background: 'linear-gradient(135deg, #10b981, #059669)',
+                                              border: 'none'
+                                            }}
+                                          >
+                                            <FaCertificate className="me-2" />
+                                            Generate Certificate
                                           </Button>
                                         ) : (
                                           <Button 
@@ -1719,25 +1747,56 @@ const UserDashboard = () => {
                                       <div className="d-flex gap-2 mt-3">
                                         {isEnrolled ? (
                                           isCourseExpired(course) ? (
-                                            <Button 
-                                              variant="success" 
-                                              onClick={() => {
-                                                const enrolledCourse = courses.find(ec => ec.course_id === course.course_id)
-                                                if (enrolledCourse && enrolledCourse.certificate_file) {
-                                                  window.open(`https://brjobsedu.com/girls_course/girls_course_backend${enrolledCourse.certificate_file}`, '_blank')
-                                                } else {
-                                                  alert('Certificate not available yet')
-                                                }
-                                              }}
-                                              className="w-100 d-flex align-items-center justify-content-center"
-                                              style={{
-                                                background: 'linear-gradient(135deg, #10b981, #059669)',
-                                                border: 'none'
-                                              }}
-                                            >
-                                              <FaCertificate className="me-2" />
-                                              View Certificate
-                                            </Button>
+                                            (() => {
+                                              const enrolledCourse = courses.find(ec => ec.course_id === course.course_id)
+                                              if (enrolledCourse && enrolledCourse.certificate_file) {
+                                                return (
+                                                  <Button 
+                                                    variant="success" 
+                                                    onClick={() => {
+                                                      window.open(`https://brjobsedu.com/girls_course/girls_course_backend${enrolledCourse.certificate_file}`, '_blank')
+                                                    }}
+                                                    className="w-100 d-flex align-items-center justify-content-center"
+                                                    style={{
+                                                      background: 'linear-gradient(135deg, #10b981, #059669)',
+                                                      border: 'none'
+                                                    }}
+                                                  >
+                                                    <FaCertificate className="me-2" />
+                                                    View Certificate
+                                                  </Button>
+                                                )
+                                              } else if (isAllModulesCompleted(enrolledCourse)) {
+                                                return (
+                                                  <Button 
+                                                    variant="success" 
+                                                    onClick={async () => {
+                                                      setSelectedCourse(enrolledCourse)
+                                                      await generateCertificate()
+                                                    }}
+                                                    className="w-100 d-flex align-items-center justify-content-center"
+                                                    style={{
+                                                      background: 'linear-gradient(135deg, #10b981, #059669)',
+                                                      border: 'none'
+                                                    }}
+                                                  >
+                                                    <FaCertificate className="me-2" />
+                                                    Generate Certificate
+                                                  </Button>
+                                                )
+                                              } else {
+                                                return (
+                                                  <Button 
+                                                    variant="success" 
+                                                    onClick={() => handleViewCourse(enrolledCourse)}
+                                                    className="w-100 d-flex align-items-center justify-content-center"
+                                                  >
+                                                    <FaPlay className="me-2" />
+                                                    Continue Learning
+                                                  </Button>
+                                                )
+                                              }
+                                            })()
                                           ) : (
                                             <Button 
                                               variant="success" 
