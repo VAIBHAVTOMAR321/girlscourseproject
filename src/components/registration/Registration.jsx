@@ -278,8 +278,8 @@ const Registration = () => {
     let newErrors = {};
 
     // Required field validation
-    const requiredFields = ['full_name', 'aadhaar_no', 'adharcard_file', 'associate_wings', 
-                          'phone', 'district', 'block', 'state', 'password', 'confirm_password'];
+    const requiredFields = ['full_name', 'aadhaar_no',  'associate_wings', 
+                          'district', 'block', 'state', 'password', 'confirm_password'];
 
     requiredFields.forEach(field => {
       if (!formData[field] || (typeof formData[field] === 'string' && formData[field].trim() === "")) {
@@ -463,7 +463,7 @@ const Registration = () => {
       {/* Main Content with Padding-top to account for fixed header */}
         <Container className="mt-5 main-content-wrapper">
          <Row className="align-items-center p-4 shadow rounded bg-white official-card">
-            <h1>National Education</h1>
+            {/* <h1>National Education</h1> */}
           <Col lg={6} md={6} sm={12} className="course-marquee-container-box">
           
             <div className="course-marquee-header">
@@ -718,7 +718,7 @@ const Registration = () => {
                 <Row className="mb-3">
                   <Col md={6}>
                     <Form.Group>
-                      <Form.Label className="form-label-gov">Phone<span className="red-color">*</span></Form.Label>
+                      <Form.Label className="form-label-gov">Phone</Form.Label>
                       <Form.Control
                         type="tel"
                         name="phone"
@@ -726,13 +726,11 @@ const Registration = () => {
                         value={formData.phone}
                         onChange={handleChange}
                         className="form-control-gov"
-                        isInvalid={!!fieldErrors.phone || !!errors.phone}
+                       
                         maxLength={10}
                         required
                       />
-                      <Form.Control.Feedback type="invalid">
-                        {fieldErrors.phone || errors.phone}
-                      </Form.Control.Feedback>
+                     
                     </Form.Group>
                   </Col>
 
@@ -756,22 +754,19 @@ const Registration = () => {
                 </Row>
 
                 <Form.Group className="mb-3">
-                  <Form.Label className="form-label-gov">Aadhaar Card File <span className="red-color">*</span></Form.Label>
+                  <Form.Label className="form-label-gov">Aadhaar Card File </Form.Label>
                   <Form.Control
                     type="file"
                     name="adharcard_file"
                     onChange={handleChange}
                     className="form-control-gov"
-                    isInvalid={!!fieldErrors.adharcard_file}
                     accept="image/*,.pdf"
                     required
                   />
                   <Form.Text className="file-size">
                     Upload JPG, PNG or PDF (Max 5MB)
                   </Form.Text>
-                  <Form.Control.Feedback type="invalid">
-                    {fieldErrors.adharcard_file}
-                  </Form.Control.Feedback>
+                 
                 </Form.Group>
 
                 <Row className="mb-3">

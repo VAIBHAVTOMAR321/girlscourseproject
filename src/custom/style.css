@@ -84,6 +84,8 @@ font-size: 20px;
 .refund-btn{
   font-size: 12px;
 }
+
+
 /* This CSS applies ONLY when the viewport is exactly 500px wide */
 /* For screens up to 568px (mobile-first approach) */
 @media (max-width: 568px) {
@@ -96,6 +98,8 @@ font-size: 20px;
   .button-view {
     font-size: 12px !important;
   }
+ 
+  
 }
 
 /* OR for screens 568px and wider */
