@@ -327,9 +327,7 @@ const UserDashboard = () => {
       return true
     }
     
-    // Check if previous module is accessible and either:
-    // 1. Completed via complete button
-    // 2. Test is passed
+    // Get the previous module
     const previousModule = courseModules.modules[moduleIndex - 1]
     const previousModuleProgress = moduleProgress.find(
       progress => 
@@ -337,10 +335,14 @@ const UserDashboard = () => {
         progress.module === previousModule.module_id
     )
     
-    const isPreviousModuleCompleted = completedModules.includes(moduleIndex - 1)
+    // Check if previous module is completed (status is 'completed')
+    const isPreviousModuleCompleted = completedModules.includes(moduleIndex - 1) || previousModuleProgress?.module_status === 'completed'
+    
+    // Check if previous module test is passed
     const isPreviousModuleTestPassed = previousModuleProgress?.test_status === 'passed'
     
-    return isPreviousModuleCompleted || isPreviousModuleTestPassed
+    // Both conditions must be true: module status is completed AND test is passed
+    return isPreviousModuleCompleted && isPreviousModuleTestPassed
   }
 
   // Navigate to module test
@@ -393,7 +395,7 @@ const UserDashboard = () => {
   }
 
   // Generate certificate
-  const generateCertificate = async () => {
+  const generateCertificate = async (course) => {
     try {
       const endpoint = userRoleType === 'student-unpaid' 
         ? 'https://brjobsedu.com/girls_course/girls_course_backend/api/enrollment-unpaid/'
@@ -403,7 +405,7 @@ const UserDashboard = () => {
         endpoint,
         {
           student_id: uniqueId,
-          course_id: selectedCourse.course_id
+          course_id: course.course_id
         },
         {
           headers: {
@@ -414,13 +416,29 @@ const UserDashboard = () => {
       )
 
       if (response.data.success) {
-        // Refresh courses data to get the certificate file
-        await fetchCourses()
-        alert('Certificate generated successfully!')
+        // Check if certificate was returned in the response
+        const certificateFile = response.data.data?.certificate_file || response.data.certificate_file
+        
+        if (certificateFile) {
+          // Refresh courses data to get the updated data
+          await fetchCourses()
+          alert('Certificate generated successfully!')
+          // Open certificate in new tab
+          window.open(`https://brjobsedu.com/girls_course/girls_course_backend${certificateFile}`, '_blank')
+        } else if (response.data.message && response.data.message.includes('already')) {
+          // Certificate already exists
+          await fetchCourses()
+          alert(response.data.message || 'Certificate already exists!')
+        } else {
+          // Refresh courses data to get the updated data
+          await fetchCourses()
+          alert('Certificate generated successfully!')
+        }
       } else {
-        alert('Failed to generate certificate')
+        alert(response.data.message || 'Failed to generate certificate')
       }
     } catch (error) {
+      console.error('Certificate generation error:', error)
       alert('Failed to generate certificate. Please try again.')
     }
   }
@@ -947,7 +965,7 @@ const UserDashboard = () => {
                        ) : (
                          <Button 
                            variant="primary" 
-                           onClick={async () => await generateCertificate()}
+                           onClick={async () => await generateCertificate(selectedCourse)}
                            disabled={!areAllModulesCompleted()}
                            className="d-flex align-items-center button-view"
                          >
@@ -1454,7 +1472,7 @@ const UserDashboard = () => {
                           className="fw-semibold"
                         >
                           <FaGraduationCap className="me-2" />
-                          All Courses ({allCourses.filter(c => c.course_status === 'unpaid').length})
+                          All Courses ({allCourses.filter(c => c.course_status === 'unpaid' && !isCourseExpired(c)).length})
                         </Button>
                       )}
                     </div>
@@ -1560,7 +1578,47 @@ const UserDashboard = () => {
                                         </div>
                                       </div>
                                       <div className="d-flex gap-2">
-                                        {course.certificate_file ? (
+                                        {/* Check if course is expired */}
+                                        {isCourseExpired(course) ? (
+                                          (() => {
+                                            if (course.certificate_file) {
+                                              return (
+                                                <Button 
+                                                  variant="success" 
+                                                  onClick={() => {
+                                                    window.open(`https://brjobsedu.com/girls_course/girls_course_backend${course.certificate_file}`, '_blank')
+                                                  }}
+                                                  className="d-flex align-items-center btn-custom"
+                                                  style={{
+                                                    background: 'linear-gradient(135deg, #10b981, #059669)',
+                                                    border: 'none'
+                                                  }}
+                                                >
+                                                  <FaCertificate className="me-2" />
+                                                  View Certificate
+                                                </Button>
+                                              )
+                                            } else {
+                                              // For expired courses without certificate, always show Generate Certificate button
+                                              return (
+                                                <Button 
+                                                  variant="success" 
+                                                  onClick={async () => {
+                                                    await generateCertificate(course)
+                                                  }}
+                                                  className="d-flex align-items-center btn-custom"
+                                                  style={{
+                                                    background: 'linear-gradient(135deg, #10b981, #059669)',
+                                                    border: 'none'
+                                                  }}
+                                                >
+                                                  <FaCertificate className="me-2" />
+                                                  Generate Certificate
+                                                </Button>
+                                              )
+                                            }
+                                          })()
+                                        ) : course.certificate_file ? (
                                           <Button 
                                             variant="success" 
                                             onClick={() => {
@@ -1579,8 +1637,7 @@ const UserDashboard = () => {
                                           <Button 
                                             variant="success" 
                                             onClick={async () => {
-                                              setSelectedCourse(course)
-                                              await generateCertificate()
+                                              await generateCertificate(course)
                                             }}
                                             className="d-flex align-items-center btn-custom"
                                             style={{
@@ -1691,9 +1748,9 @@ const UserDashboard = () => {
                             <Spinner animation="border" variant="primary" style={{ width: '60px', height: '60px' }} />
                             <p className="mt-3">Loading all courses...</p>
                           </div>
-                        ) : allCourses.filter(c => c.course_status === 'unpaid').length > 0 ? (
+                        ) : allCourses.filter(c => c.course_status === 'unpaid' && !isCourseExpired(c)).length > 0 ? (
                           <Row>
-                            {allCourses.filter(c => c.course_status === 'unpaid').map((course, index) => {
+                            {allCourses.filter(c => c.course_status === 'unpaid' && !isCourseExpired(c)).map((course, index) => {
                               const isEnrolled = courses.some(ec => ec.course_id === course.course_id)
                               return (
                                 <Col md={6} lg={4} key={course.id || index} className="mb-4">
@@ -1766,13 +1823,13 @@ const UserDashboard = () => {
                                                     View Certificate
                                                   </Button>
                                                 )
-                                              } else if (isAllModulesCompleted(enrolledCourse)) {
+                                              } else {
+                                                // For expired courses without certificate, show Generate Certificate button
                                                 return (
                                                   <Button 
                                                     variant="success" 
                                                     onClick={async () => {
-                                                      setSelectedCourse(enrolledCourse)
-                                                      await generateCertificate()
+                                                      await generateCertificate(enrolledCourse)
                                                     }}
                                                     className="w-100 d-flex align-items-center justify-content-center"
                                                     style={{
@@ -1782,17 +1839,6 @@ const UserDashboard = () => {
                                                   >
                                                     <FaCertificate className="me-2" />
                                                     Generate Certificate
-                                                  </Button>
-                                                )
-                                              } else {
-                                                return (
-                                                  <Button 
-                                                    variant="success" 
-                                                    onClick={() => handleViewCourse(enrolledCourse)}
-                                                    className="w-100 d-flex align-items-center justify-content-center"
-                                                  >
-                                                    <FaPlay className="me-2" />
-                                                    Continue Learning
                                                   </Button>
                                                 )
                                               }
@@ -1827,7 +1873,7 @@ const UserDashboard = () => {
                         ) : (
                           <div className="text-center py-5">
                             <FaGraduationCap className="text-muted mb-3" style={{ fontSize: '48px' }} />
-                            <p className="text-muted fs-4">No free courses available</p>
+                            <p className="text-muted fs-4">No courses available</p>
                           </div>
                         )}
                       </div>
