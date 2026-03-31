@@ -63,13 +63,12 @@ const UserDashboard = () => {
   useEffect(() => {
     if (location.state && location.state.testCompleted) {
       const { moduleIndex } = location.state
-      if (!completedModules.includes(moduleIndex)) {
-        setCompletedModules([...completedModules, moduleIndex])
-      }
+      // Refresh module progress from API to get the updated test_status
+      fetchModuleProgress()
       // Clear the state to prevent re-processing on refresh
       window.history.replaceState({}, document.title)
     }
-  }, [location.state, completedModules])
+  }, [location.state])
 
   // Check mobile view
   useEffect(() => {
@@ -323,6 +322,11 @@ const UserDashboard = () => {
 
   // Check if module is accessible
   const isModuleAccessible = (moduleIndex) => {
+    // Safety check - return false if courseModules is not available
+    if (!courseModules || !courseModules.modules || !selectedCourse) {
+      return moduleIndex === 0 // Only first module is accessible if no data
+    }
+    
     if (moduleIndex === 0) {
       return true
     }
@@ -335,18 +339,22 @@ const UserDashboard = () => {
         progress.module === previousModule.module_id
     )
     
-    // Check if previous module is completed (status is 'completed')
-    const isPreviousModuleCompleted = completedModules.includes(moduleIndex - 1) || previousModuleProgress?.module_status === 'completed'
-    
-    // Check if previous module test is passed
+    // Check if previous module test is passed - this is the only requirement
+    // User must complete the module (click Complete button) AND pass the test
+    // Module is considered complete when test_status is 'passed'
     const isPreviousModuleTestPassed = previousModuleProgress?.test_status === 'passed'
     
-    // Both conditions must be true: module status is completed AND test is passed
-    return isPreviousModuleCompleted && isPreviousModuleTestPassed
+    // Module is accessible only if previous module test is passed
+    return isPreviousModuleTestPassed
   }
 
   // Navigate to module test
   const handleTestClick = (moduleIndex) => {
+    // Safety check
+    if (!courseModules || !courseModules.modules || !selectedCourse) {
+      return
+    }
+    
     const currentModule = courseModules.modules[moduleIndex]
     const isLastModule = moduleIndex === courseModules.modules.length - 1
     
@@ -381,10 +389,10 @@ const UserDashboard = () => {
           progress.module === module.module_id
       )
       
-      const isModuleCompleted = completedModules.includes(moduleIndex)
+      // Only check if test is passed - that's the only criteria for module completion
       const isTestPassed = moduleProgressData?.test_status === 'passed'
       
-      return isModuleCompleted || isTestPassed
+      return isTestPassed
     })
   }
 
@@ -450,27 +458,26 @@ const UserDashboard = () => {
       progress => progress.course_id === course.course_id
     )
     
-    // If we have progress data, check if all modules are completed or passed
+    // If we have progress data, check if all modules have test passed
     if (courseModuleProgress.length > 0) {
-      const allModulesCompleted = courseModuleProgress.every(progress => {
-        return progress.module_status === 'completed' || progress.test_status === 'passed'
+      const allModulesPassed = courseModuleProgress.every(progress => {
+        return progress.test_status === 'passed'
       })
-      if (allModulesCompleted) return true
+      if (allModulesPassed) return true
     }
     
-    // Also check local completedModules state if we have courseModules loaded
+    // Also check local courseModules if loaded for this specific course
     if (courseModules && courseModules.modules && selectedCourse?.course_id === course.course_id) {
-      const allLocalModulesCompleted = courseModules.modules.every((module, moduleIndex) => {
+      const allLocalModulesPassed = courseModules.modules.every((module) => {
         const moduleProgressData = moduleProgress.find(
           progress => 
             progress.course_id === course.course_id && 
             progress.module === module.module_id
         )
-        const isModuleCompleted = completedModules.includes(moduleIndex)
         const isTestPassed = moduleProgressData?.test_status === 'passed'
-        return isModuleCompleted || isTestPassed
+        return isTestPassed
       })
-      if (allLocalModulesCompleted) return true
+      if (allLocalModulesPassed) return true
     }
     
     // If no progress data and no courseModules loaded, check if course has is_completed flag
@@ -673,10 +680,8 @@ const UserDashboard = () => {
     for (let i = 0; i < courseModules.modules.length; i++) {
       const module = courseModules.modules[i]
       
-      // Check if module is completed via local state
-      const isLocalCompleted = completedModules.includes(i)
-      
       // Check if module test is passed from API progress
+      // This is the ONLY criteria - module is only complete when test is passed
       const moduleProgressData = moduleProgress.find(
         progress => 
           progress.course_id === selectedCourse?.course_id && 
@@ -684,13 +689,13 @@ const UserDashboard = () => {
       )
       const isTestPassed = moduleProgressData?.test_status === 'passed'
       
-      // If neither completed nor test passed, this is the first incomplete module
-      if (!isLocalCompleted && !isTestPassed) {
+      // If test is not passed, this is the first incomplete module
+      if (!isTestPassed) {
         return i.toString()
       }
     }
     
-    // All modules are completed, return the last module index
+    // All modules are completed (test passed), return the last module index
     return (courseModules.modules.length - 1).toString()
   }
 
@@ -828,14 +833,11 @@ const UserDashboard = () => {
       )
 
       if (response.data.success) {
-        // Update module progress state
+        // Refresh module progress from API
         await fetchModuleProgress()
-        // Also update local completed modules state for UI
-        if (!completedModules.includes(moduleIndex)) {
-          setCompletedModules([...completedModules, moduleIndex])
-        }
-        // Show success alert
-        alert('Module marked as complete successfully!')
+        // Show success alert - module is marked as ongoing, but NOT added to completedModules
+        // Module will only be marked as completed after passing the test
+        alert('Module marked as in progress! Please take the test to complete this module.')
       }
     } catch (error) {
       // Show failure alert
@@ -997,11 +999,18 @@ const UserDashboard = () => {
                       <div>
                         <Accordion activeKey={activeAccordionKey} onSelect={(key) => setActiveAccordionKey(key)} className="course-accordion">
                           {courseModules.modules.map((module, moduleIndex) => {
+                            const currentModule = courseModules.modules[moduleIndex]
                             const isAccessible = isModuleAccessible(moduleIndex)
-                            const isCompleted = completedModules.includes(moduleIndex)
+                            // Module is completed only if test is passed
+                            const moduleProgressDataForDisplay = moduleProgress.find(
+                              progress => 
+                                progress.course_id === selectedCourse.course_id && 
+                                progress.module === currentModule.module_id
+                            )
+                            const isTestPassed = moduleProgressDataForDisplay?.test_status === 'passed'
+                            const isCompleted = isTestPassed
                             
                              // Check if module is in ongoing status
-                             const currentModule = courseModules.modules[moduleIndex]
                              const isOngoing = moduleProgress.some(
                                progress => 
                                  progress.course_id === selectedCourse.course_id && 
@@ -1009,23 +1018,21 @@ const UserDashboard = () => {
                                  progress.module_status === 'ongoing'
                              )
 
-                             // Get module progress data for current module
+                            // Get module progress data for current module
                              const moduleProgressData = moduleProgress.find(
                                progress => 
                                  progress.course_id === selectedCourse.course_id && 
                                  progress.module === currentModule.module_id
                              )
 
-                             // Determine if test button should be disabled
-                             let isTestDisabled = false
-                             let testButtonText = "Take Test"
+                              let isTestDisabled = false
+                              let testButtonText = "Take Test"
                              let testButtonVariant = "primary"
-                             let isTestPassed = false
 
                              if (moduleProgressData) {
                                // Check if test status is passed
                                if (moduleProgressData.test_status === 'passed') {
-                                 isTestPassed = true
+                                 // Test is passed - module is completed
                                } else {
                                  // Check if attempt count has reached maximum (3 attempts)
                                  if (moduleProgressData.attempt_count >= 3) {
@@ -1059,7 +1066,7 @@ const UserDashboard = () => {
                                   key={module.module_id} 
                                   eventKey={moduleIndex.toString()}
                                   disabled={!isAccessible}
-                                  className={isCompleted || isTestPassed ? 'completed-module' : ''}
+                                  className={isTestPassed ? 'completed-module' : ''}
                                 >
                                   <Accordion.Header className="fw-bold">
                                     <div className="d-flex align-items-center w-100">
@@ -1408,7 +1415,7 @@ const UserDashboard = () => {
                                                   variant={testButtonVariant} 
                                                   onClick={() => handleTestClick(moduleIndex)}
                                                   className="d-flex align-items-center px-3 py-1"
-                                                  disabled={!isCompleted && !isOngoing || isTestDisabled}
+                                                  disabled={!isOngoing || isTestDisabled}
                                                   size="sm"
                                                 >
                                                   <FaQuestionCircle className="me-2" />
