@@ -8,6 +8,7 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas }) => {
   const { userRoleType } = useAuth()
   const [show, setShow] = useState(true)
   const [isMobile, setIsMobile] = useState(false)
+  const [showGuidelines, setShowGuidelines] = useState(false)
 
   useEffect(() => {
     const checkMobile = () => {
@@ -84,15 +85,26 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas }) => {
                      </Nav.Link>
                    )}
                    
-                   <Dropdown>
-                     <Dropdown.Toggle variant="dark" className="text-white text-decoration-none w-100 text-start d-flex align-items-center justify-content-between">
-                       <span><i className="bi bi-book me-2"></i> Guidelines</span>
-                     </Dropdown.Toggle>
-                     <Dropdown.Menu className="w-100">
-                       <Dropdown.Item as={Link} to="/UserNotifications">12th</Dropdown.Item>
-                       <Dropdown.Item as={Link} to="/UserSettings">10th</Dropdown.Item>
-                     </Dropdown.Menu>
-                   </Dropdown>
+                   <div className="guidelines-menu">
+                     <div 
+                       className="text-white text-decoration-none w-100 text-start d-flex align-items-center justify-content-between cursor-pointer py-2"
+                       onClick={() => setShowGuidelines(!showGuidelines)}
+                       style={{ cursor: 'pointer' }}
+                     >
+                       <span className='mx-3'><i className="bi bi-book me-2"></i> Guidelines</span>
+                       <i className={`bi bi-chevron-${showGuidelines ? 'up' : 'down'}`}></i>
+                     </div>
+                     {showGuidelines && (
+                       <div className="guidelines-submenu ps-4">
+                         <Nav.Link as={Link} to="/UserNotifications" className="text-white py-1">
+                           <i className="bi bi-chevron-right me-2"></i> 12th
+                         </Nav.Link>
+                         <Nav.Link as={Link} to="/UserSettings" className="text-white py-1">
+                           <i className="bi bi-chevron-right me-2"></i> 10th
+                         </Nav.Link>
+                       </div>
+                     )}
+                   </div>
                   
                    {/* <Nav.Link as={Link} to="/UserTest" className="text-white">
                     <i className="bi bi-clipboard-check me-2"></i> Test Dashboard
@@ -169,15 +181,26 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas }) => {
                     <i className="bi bi-currency-exchange me-2"></i> Refund Request
                   </Nav.Link>
                 )}
-                <Dropdown>
-                  <Dropdown.Toggle variant="dark" className="text-white text-decoration-none w-100 text-start d-flex align-items-center justify-content-between">
-                    <span><i className="bi bi-book me-2"></i> Guidelines</span>
-                  </Dropdown.Toggle>
-                  <Dropdown.Menu className="w-100">
-                    <Dropdown.Item as={Link} to="/UserNotifications" onClick={() => setShowOffcanvas(false)}>12th</Dropdown.Item>
-                    <Dropdown.Item as={Link} to="/UserSettings" onClick={() => setShowOffcanvas(false)}>10th</Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
+                <div className="guidelines-menu">
+                  <div 
+                    className="text-white text-decoration-none w-100 text-start d-flex align-items-center justify-content-between cursor-pointer py-2"
+                    onClick={() => setShowGuidelines(!showGuidelines)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <span className='mx-3'><i className="bi bi-book me-2"></i> Guidelines</span>
+                  <i className={`bi bi-chevron-${showGuidelines ? 'up' : 'down'} ms-auto me-3`}></i>
+                  </div>
+                  {showGuidelines && (
+                    <div className="guidelines-submenu">
+                      <Nav.Link as={Link} to="/UserNotifications" className="text-white py-1" onClick={() => setShowOffcanvas(false)}>
+                        <i className="bi bi-chevron-right me-2"></i> 12th
+                      </Nav.Link>
+                      <Nav.Link as={Link} to="/UserSettings" className="text-white py-1" onClick={() => setShowOffcanvas(false)}>
+                        <i className="bi bi-chevron-right me-2"></i> 10th
+                      </Nav.Link>
+                    </div>
+                  )}
+                </div>
                 {/* <Nav.Link as={Link} to="/UserTest" className="text-white" onClick={() => setShowOffcanvas(false)}>
                   <i className="bi bi-clipboard-check me-2"></i> Test Dashboard
                 </Nav.Link> */}
