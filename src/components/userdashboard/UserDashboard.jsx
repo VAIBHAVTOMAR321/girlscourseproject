@@ -1534,7 +1534,7 @@ const UserDashboard = () => {
                                       </div>
                                     )}
                                   </div>
-                                  <Card.Body className="p-4">
+                                  <Card.Body className="">
                                     <div className="text-center mb-2">
                                       <h6 className="mb-1 course-title">{renderContentWithLineBreaks(course.course_name)}</h6>
                                     </div>
@@ -1713,12 +1713,12 @@ const UserDashboard = () => {
                                           <Button 
                                             variant={submittedFeedbackCourses.includes(course.course_id) ? "outline-success" : "outline-primary"} 
                                             onClick={() => handleOpenFeedbackModal(course)}
-                                            className="d-flex align-items-center"
+                                            className="d-flex align-items-center feedback-submitted-btn"
                                             disabled={submittedFeedbackCourses.includes(course.course_id)}
                                           >
                                             {submittedFeedbackCourses.includes(course.course_id) ? (
                                               <>
-                                                <FaCheckCircle className="me-2" />
+                                                
                                                 Feedback Submitted
                                               </>
                                             ) : (
@@ -1784,7 +1784,7 @@ const UserDashboard = () => {
                                         <FaBook className="text-white" style={{ fontSize: '48px' }} />
                                       )}
                                     </div>
-                                    <Card.Body className="p-4">
+                                    <Card.Body className="">
                                       <div className="mb-3">
                                         <h6 className="mb-2 course-title">{renderContentWithLineBreaks(course.course_name)}</h6>
                                       </div>

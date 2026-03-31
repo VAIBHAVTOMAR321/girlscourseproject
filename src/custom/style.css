@@ -86,6 +86,13 @@ font-size: 20px;
 }
 
 
+
+
+.feedback-submitted-btn {
+  font-size: 12px !important;
+  padding: 4px !important;
+}
+
 /* This CSS applies ONLY when the viewport is exactly 500px wide */
 /* For screens up to 568px (mobile-first approach) */
 @media (max-width: 568px) {
