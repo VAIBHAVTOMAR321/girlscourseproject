@@ -436,7 +436,7 @@ const Enrollments = () => {
                     <div className="d-lg-none">
                       {currentRecords.map((enrollment) => (
                         <Card key={enrollment.id} className="mb-3 mx-2 enrollment-card">
-                          <Card.Body className="p-3">
+                          <Card.Body className="p-3 card-box-mob">
                             <div className="d-flex justify-content-between align-items-start mb-2">
                               <div>
                                 <h6 className="mb-1 fw-semibold">

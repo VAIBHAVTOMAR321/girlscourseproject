@@ -94,7 +94,7 @@
 }
 
 .enrollments-table-card .card-body {
-  padding: 0;
+  padding: 8px 0px 8px 0px !important;
 }
 
 .custom-table {
@@ -440,7 +440,7 @@
 }
 
 .enrollment-card .card-body {
-  padding: 1rem;
+  padding: 1rem !important;
 }
 
 .enrollment-card h6 {
@@ -476,7 +476,7 @@
 }
 
 .query-card .card-body {
-  padding: 1rem;
+  padding: 8px !important;
 }
 
 .query-card h6 {

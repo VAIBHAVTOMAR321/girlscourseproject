@@ -722,7 +722,7 @@ const AdminDashboard = () => {
       <Row className="g-4 mob-top-view">
         <Col xs={12} sm={6} md={3} lg={3}>
           <Card className="stat-card h-100 shadow-sm border-0" onClick={() => handleEnrollmentsClick('paid')}>
-            <Card.Body className="d-flex align-items-center">
+            <Card.Body className="d-flex align-items-center card-box-mob" >
               <div className="stat-icon-wrapper users me-3">
                 <FaUsers className="stat-icon" />
               </div>

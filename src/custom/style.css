@@ -96,7 +96,9 @@ font-size: 20px;
   .title-h h4 {
     font-size: 12px !important;
   }
- 
+ .card-box-mob{
+  padding: 0px !important;
+ }
   .fixed-notifications{
     padding: 0px !important;
   }
