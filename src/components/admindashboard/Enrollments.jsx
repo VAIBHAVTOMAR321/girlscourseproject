@@ -236,7 +236,7 @@ const Enrollments = () => {
           <div className={`admin-main-content flex-grow-1 ${!showSidebar ? 'sidebar-compact' : ''}`}>
             <AdminTopNav />
             <div className="content-area">
-              <Container fluid>
+              <Container>
                 <div className="d-flex align-items-center justify-content-center h-100">
                   <Spinner animation="border" variant="primary" style={{ width: '3rem', height: '3rem' }} />
                 </div>
@@ -255,7 +255,7 @@ const Enrollments = () => {
         <div className={`admin-main-content flex-grow-1 ${!showSidebar ? 'sidebar-compact' : ''}`}>
           <AdminTopNav />
           <div className="content-area">
-            <Container>
+            <Container className="mob-top-view">
               <div className="d-flex justify-content-between align-items-center mb-4 page-header">
                 <div className="d-flex align-items-center all-en-box gap-3">
                   <Button variant="outline-secondary back-btn" size="sm" onClick={() => navigate('/AdminDashboard')} className="me-2">
@@ -332,7 +332,7 @@ const Enrollments = () => {
                       Showing {indexOfFirstRecord + 1} to {Math.min(indexOfLastRecord, filteredEnrollments.length)} of {filteredEnrollments.length} records
                     </span>
                   </Card.Header>
-                  <Card.Body className="p-0">
+                  <Card.Body className="">
                     {/* Desktop Table View */}
                     <div className="table-responsive d-none d-lg-block">
                       <Table hover className="custom-table align-middle mb-0">

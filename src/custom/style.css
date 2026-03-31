@@ -96,8 +96,13 @@ font-size: 20px;
   .title-h h4 {
     font-size: 12px !important;
   }
+ 
   .fixed-notifications{
     padding: 0px !important;
+  }
+  .mob-top-view{
+margin-top: 22px !important;
+padding: 0px !important;
   }
   .button-view {
     font-size: 12px !important;
@@ -108,9 +113,7 @@ font-size: 20px;
 
 /* OR for screens 568px and wider */
 @media (min-width: 568px) {
-  .mob-top-view{
-    margin-top: 30px !important;
-  }
+
   .title-h h4 {
     font-size: 12px !important;
   }
