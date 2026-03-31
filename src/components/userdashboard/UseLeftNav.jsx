@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Nav, Button, Offcanvas } from 'react-bootstrap'
+import { Nav, Button, Offcanvas, Dropdown } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import '../../assets/css/UserLeftNav.css'
 import { useAuth } from '../../contexts/AuthContext'
@@ -73,6 +73,9 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas }) => {
                    <Nav.Link as={Link} to="/UserProfile" className="text-white">
                     <i className="bi bi-person-circle me-2"></i> User Profile
                   </Nav.Link>
+                  <Nav.Link as={Link} to="/UserQuery" className="text-white">
+                    <i className="bi bi-person-circle me-2"></i> Query
+                  </Nav.Link>
                   
                    {/* Refund Request only visible to paid users */}
                    {userRoleType !== 'student-unpaid' && (
@@ -81,13 +84,15 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas }) => {
                      </Nav.Link>
                    )}
                    
-                   <Nav.Link as={Link} to="/UserNotifications" className="text-white">
-                     <i className="bi bi-bell me-2"></i>12th guidelines
-                   </Nav.Link>
-                   
-                   <Nav.Link as={Link} to="/UserSettings" className="text-white">
-                     <i className="bi bi-gear me-2"></i> 10th guidelines
-                   </Nav.Link>
+                   <Dropdown>
+                     <Dropdown.Toggle variant="dark" className="text-white text-decoration-none w-100 text-start d-flex align-items-center justify-content-between">
+                       <span><i className="bi bi-book me-2"></i> Guidelines</span>
+                     </Dropdown.Toggle>
+                     <Dropdown.Menu className="w-100">
+                       <Dropdown.Item as={Link} to="/UserNotifications">12th</Dropdown.Item>
+                       <Dropdown.Item as={Link} to="/UserSettings">10th</Dropdown.Item>
+                     </Dropdown.Menu>
+                   </Dropdown>
                   
                    {/* <Nav.Link as={Link} to="/UserTest" className="text-white">
                     <i className="bi bi-clipboard-check me-2"></i> Test Dashboard
@@ -155,18 +160,24 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas }) => {
                 <Nav.Link as={Link} to="/UserProfile" className="text-white" onClick={() => setShowOffcanvas(false)}>
                   <i className="bi bi-person-circle me-2"></i> User Profile
                 </Nav.Link>
+                  <Nav.Link as={Link} to="/UserQuery" className="text-white" onClick={() => setShowOffcanvas(false)}>
+                  <i className="bi bi-person-circle me-2"></i> Query
+                </Nav.Link>
                 {/* Refund Request only visible to paid users */}
                 {userRoleType !== 'student-unpaid' && (
                   <Nav.Link as={Link} to="/RefundRequest" className="text-white" onClick={() => setShowOffcanvas(false)}>
                     <i className="bi bi-currency-exchange me-2"></i> Refund Request
                   </Nav.Link>
                 )}
-                <Nav.Link as={Link} to="/UserNotifications" className="text-white" onClick={() => setShowOffcanvas(false)}>
-                  <i className="bi bi-bell me-2"></i> 12th guidelines
-                </Nav.Link>
-                <Nav.Link as={Link} to="/UserSettings" className="text-white" onClick={() => setShowOffcanvas(false)}>
-                  <i className="bi bi-gear me-2"></i> 10th guidelines
-                </Nav.Link>
+                <Dropdown>
+                  <Dropdown.Toggle variant="dark" className="text-white text-decoration-none w-100 text-start d-flex align-items-center justify-content-between">
+                    <span><i className="bi bi-book me-2"></i> Guidelines</span>
+                  </Dropdown.Toggle>
+                  <Dropdown.Menu className="w-100">
+                    <Dropdown.Item as={Link} to="/UserNotifications" onClick={() => setShowOffcanvas(false)}>12th</Dropdown.Item>
+                    <Dropdown.Item as={Link} to="/UserSettings" onClick={() => setShowOffcanvas(false)}>10th</Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
                 {/* <Nav.Link as={Link} to="/UserTest" className="text-white" onClick={() => setShowOffcanvas(false)}>
                   <i className="bi bi-clipboard-check me-2"></i> Test Dashboard
                 </Nav.Link> */}

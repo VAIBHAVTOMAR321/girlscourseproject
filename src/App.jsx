@@ -28,11 +28,12 @@ import RefundRequest from "./components/userdashboard/RefundRequest.jsx";
 import UserSettings from "./components/userdashboard/UserSettings.jsx";
 import UserNotifications from "./components/userdashboard/UserNotifications.jsx";
 import OccupationDetails from "./components/userdashboard/OccupationDetails.jsx";
+import UserQuery from "./components/userdashboard/UserQuery.jsx";
 
 function AppContent() {
   const location = useLocation();
-  const hideFooter = location.pathname.includes("/AdminDashboard") || location.pathname.includes("/UserDashboard") || location.pathname.includes("/UserProfile") || location.pathname.includes("/UserTest") || location.pathname.includes("/Enrollments") || location.pathname.includes("/RefundRequest") || location.pathname.includes("/UserSettings") || location.pathname.includes("/UserNotifications") || location.pathname.includes("/OccupationDetails") || location.pathname.includes("/Feedback");
-  const hideNavBar = location.pathname.includes("/AdminDashboard") || location.pathname.includes("/UserDashboard") || location.pathname.includes("/UserProfile") || location.pathname.includes("/UserTest") || location.pathname.includes("/Enrollments") || location.pathname.includes("/RefundRequest") || location.pathname.includes("/UserSettings") || location.pathname.includes("/UserNotifications") || location.pathname.includes("/OccupationDetails") || location.pathname.includes("/Feedback");
+  const hideFooter = location.pathname.includes("/AdminDashboard") || location.pathname.includes("/UserDashboard") || location.pathname.includes("/UserProfile") || location.pathname.includes("/UserTest") || location.pathname.includes("/Enrollments") || location.pathname.includes("/RefundRequest") || location.pathname.includes("/UserSettings") || location.pathname.includes("/UserNotifications") || location.pathname.includes("/OccupationDetails") || location.pathname.includes("/Feedback") || location.pathname.includes("/UserQuery");
+  const hideNavBar = location.pathname.includes("/AdminDashboard") || location.pathname.includes("/UserDashboard") || location.pathname.includes("/UserProfile") || location.pathname.includes("/UserTest") || location.pathname.includes("/Enrollments") || location.pathname.includes("/RefundRequest") || location.pathname.includes("/UserSettings") || location.pathname.includes("/UserNotifications") || location.pathname.includes("/OccupationDetails") || location.pathname.includes("/Feedback") || location.pathname.includes("/UserQuery");
 
   return (
     <>
@@ -99,6 +100,14 @@ function AppContent() {
             element={
               <ProtectedRoute>
                 <UserSettings />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/UserQuery"
+            element={
+              <ProtectedRoute>
+                <UserQuery />
               </ProtectedRoute>
             }
           />
