@@ -1933,7 +1933,7 @@ const UserDashboard = () => {
               
               {/* Question 1 */}
               <div className="mb-3">
-                <label className="form-label fw-semibold">1. How would you rate the overall course content?</label>
+                <label className="form-label fw-semibold">1. How was your overall experience?</label>
                 <select 
                   className="form-select"
                   value={feedbackData.question_1}
@@ -1941,16 +1941,15 @@ const UserDashboard = () => {
                   disabled={feedbackSubmitting}
                 >
                   <option value="">Select rating</option>
-                  <option value="Excellent">Excellent</option>
+                  <option value="Very Good">Very Good</option>
                   <option value="Good">Good</option>
-                  <option value="Average">Average</option>
-                  <option value="Poor">Poor</option>
+                  <option value="Needs Improvement">Needs Improvement</option>
                 </select>
               </div>
               
               {/* Question 2 */}
               <div className="mb-3">
-                <label className="form-label fw-semibold">2. How would you rate the course materials and resources?</label>
+                <label className="form-label fw-semibold">2. Was the course easy to understand?</label>
                 <select 
                   className="form-select"
                   value={feedbackData.question_2}
@@ -1958,16 +1957,15 @@ const UserDashboard = () => {
                   disabled={feedbackSubmitting}
                 >
                   <option value="">Select rating</option>
-                  <option value="Excellent">Excellent</option>
-                  <option value="Good">Good</option>
-                  <option value="Average">Average</option>
-                  <option value="Poor">Poor</option>
+                  <option value="Very Easy">Very Easy</option>
+                  <option value="Easy">Easy</option>
+                  <option value="Can be Improved">Can be Improved</option>
                 </select>
               </div>
               
               {/* Question 3 */}
               <div className="mb-3">
-                <label className="form-label fw-semibold">3. How would you rate the instructor's teaching quality?</label>
+                <label className="form-label fw-semibold">3. How useful was this course for you?</label>
                 <select 
                   className="form-select"
                   value={feedbackData.question_3}
@@ -1975,16 +1973,15 @@ const UserDashboard = () => {
                   disabled={feedbackSubmitting}
                 >
                   <option value="">Select rating</option>
-                  <option value="Excellent">Excellent</option>
-                  <option value="Good">Good</option>
-                  <option value="Average">Average</option>
-                  <option value="Poor">Poor</option>
+                  <option value="Very Useful">Very Useful</option>
+                  <option value="Useful">Useful</option>
+                  <option value="Needs More Value">Needs More Value</option>
                 </select>
               </div>
               
               {/* Question 4 */}
               <div className="mb-3">
-                <label className="form-label fw-semibold">4. How would you rate the course difficulty level?</label>
+                <label className="form-label fw-semibold">4. How was the course content quality?</label>
                 <select 
                   className="form-select"
                   value={feedbackData.question_4}
@@ -1994,14 +1991,13 @@ const UserDashboard = () => {
                   <option value="">Select rating</option>
                   <option value="Excellent">Excellent</option>
                   <option value="Good">Good</option>
-                  <option value="Average">Average</option>
-                  <option value="Poor">Poor</option>
+                  <option value="Can be Better">Can be Better</option>
                 </select>
               </div>
               
               {/* Question 5 */}
               <div className="mb-3">
-                <label className="form-label fw-semibold">5. How likely are you to recommend this course to others?</label>
+                <label className="form-label fw-semibold">5. Would you like to continue learning with us?</label>
                 <select 
                   className="form-select"
                   value={feedbackData.question_5}
@@ -2009,10 +2005,9 @@ const UserDashboard = () => {
                   disabled={feedbackSubmitting}
                 >
                   <option value="">Select rating</option>
-                  <option value="Excellent">Excellent</option>
-                  <option value="Good">Good</option>
-                  <option value="Average">Average</option>
-                  <option value="Poor">Poor</option>
+                  <option value="Definitely Yes">Definitely Yes</option>
+                  <option value="Yes">Yes</option>
+                  <option value="Not Sure Yet">Not Sure Yet</option>
                 </select>
               </div>
               
