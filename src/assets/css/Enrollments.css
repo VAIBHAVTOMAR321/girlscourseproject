@@ -389,3 +389,140 @@
     font-size: 0.7rem;
   }
 }
+
+/* Feedback Card Styles for Mobile */
+.feedback-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+.feedback-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.feedback-card .card-body {
+  padding: 1rem;
+}
+
+.feedback-card h6 {
+  color: #2c3e50;
+  font-size: 0.95rem;
+}
+
+.feedback-card .badge {
+  font-size: 0.7rem;
+  padding: 0.35em 0.65em;
+}
+
+.feedback-card .btn-link {
+  color: #4f46e5;
+  font-size: 0.8rem;
+}
+
+.feedback-card .btn-link:hover {
+  color: #3730a3;
+}
+
+/* Enrollment Card Styles for Mobile */
+.enrollment-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+.enrollment-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.enrollment-card .card-body {
+  padding: 1rem;
+}
+
+.enrollment-card h6 {
+  color: #2c3e50;
+  font-size: 0.95rem;
+}
+
+.enrollment-card .badge {
+  font-size: 0.7rem;
+  padding: 0.35em 0.65em;
+}
+
+.enrollment-card .btn-link {
+  color: #4f46e5;
+  font-size: 0.8rem;
+}
+
+.enrollment-card .btn-link:hover {
+  color: #3730a3;
+}
+
+/* Query Card Styles for Mobile */
+.query-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+.query-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.query-card .card-body {
+  padding: 1rem;
+}
+
+.query-card h6 {
+  color: #2c3e50;
+  font-size: 0.95rem;
+}
+
+.query-card .badge {
+  font-size: 0.7rem;
+  padding: 0.35em 0.65em;
+}
+
+.query-card .btn-link {
+  color: #4f46e5;
+  font-size: 0.8rem;
+}
+
+.query-card .btn-link:hover {
+  color: #3730a3;
+}
+
+/* Mobile Filter Adjustments */
+@media (max-width: 767px) {
+  .enrollments-table-card .card-header {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 0.5rem;
+  }
+  
+  .enrollments-table-card .card-header .text-muted {
+    width: 100%;
+    text-align: left !important;
+  }
+  
+  /* Mobile pagination adjustments */
+  .pagination {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .pagination .page-item {
+    margin-bottom: 0.25rem;
+  }
+  
+  .pagination .page-link {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+  }
+}

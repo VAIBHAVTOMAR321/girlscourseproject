@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { Container, Row, Col, Card, Table, Button, Spinner, Modal, Form, Nav } from 'react-bootstrap'
+import { Container, Row, Col, Card, Table, Button, Spinner, Modal, Form, Nav, Badge } from 'react-bootstrap'
 import AdminLeftNav from './AdminLeftNav'
 import AdminTopNav from './AdminTopNav'
 import axios from 'axios'
 import '../../assets/css/Enrollments.css' 
 import { useAuth } from '../../contexts/AuthContext'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { FaArrowLeft } from 'react-icons/fa'
+import { FaArrowLeft, FaEye, FaKey, FaTrash, FaChevronDown, FaChevronUp } from 'react-icons/fa'
 
 const Enrollments = () => {
   const { accessToken } = useAuth()
@@ -24,6 +24,7 @@ const Enrollments = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const [recordsPerPage] = useState(50)
   const [selectedEnrollments, setSelectedEnrollments] = useState([])
+  const [expandedCards, setExpandedCards] = useState({})
 
   useEffect(() => {
     fetchEnrollments()
@@ -60,7 +61,7 @@ const Enrollments = () => {
      try {
        setLoading(true)
        let response
-       
+        
         const config = {
           headers: {}
         }
@@ -204,6 +205,29 @@ const Enrollments = () => {
     }
   }
 
+  const toggleCardExpansion = (id) => {
+    setExpandedCards(prev => ({
+      ...prev,
+      [id]: !prev[id]
+    }))
+  }
+
+  const getPaymentStatusBadgeClass = (status) => {
+    switch(status) {
+      case 'completed': return 'bg-success'
+      case 'pending': return 'bg-warning text-dark'
+      default: return 'bg-danger'
+    }
+  }
+
+  const getCourseStatusBadgeClass = (status) => {
+    switch(status) {
+      case 'active': return 'bg-success'
+      case 'pending': return 'bg-warning text-dark'
+      default: return 'bg-secondary'
+    }
+  }
+
   if (loading) {
     return (
       <div className="admin-layout">
@@ -211,7 +235,7 @@ const Enrollments = () => {
           <AdminLeftNav show={showSidebar} setShow={setShowSidebar} />
           <div className={`admin-main-content flex-grow-1 ${!showSidebar ? 'sidebar-compact' : ''}`}>
             <AdminTopNav />
-            <div className="content-area p-4">
+            <div className="content-area">
               <Container fluid>
                 <div className="d-flex align-items-center justify-content-center h-100">
                   <Spinner animation="border" variant="primary" style={{ width: '3rem', height: '3rem' }} />
@@ -230,8 +254,8 @@ const Enrollments = () => {
         <AdminLeftNav show={showSidebar} setShow={setShowSidebar} />
         <div className={`admin-main-content flex-grow-1 ${!showSidebar ? 'sidebar-compact' : ''}`}>
           <AdminTopNav />
-          <div className="content-area p-4">
-            <Container fluid>
+          <div className="content-area">
+            <Container>
               <div className="d-flex justify-content-between align-items-center mb-4 page-header">
                 <div className="d-flex align-items-center all-en-box gap-3">
                   <Button variant="outline-secondary back-btn" size="sm" onClick={() => navigate('/AdminDashboard')} className="me-2">
@@ -239,7 +263,7 @@ const Enrollments = () => {
                   </Button>
                   <h4 className="mb-0">All Enrollments</h4>
                 </div>
-                <div className="search-section" style={{ width: '400px' }}>
+                <div className="search-section d-none d-md-block" style={{ width: '400px' }}>
                   <Form.Group controlId="searchTerm" className="mb-0">
                     <Form.Control 
                       type="text" 
@@ -252,6 +276,21 @@ const Enrollments = () => {
                   </Form.Group>
                 </div>
               </div>
+              
+              {/* Mobile Search */}
+              <div className="d-md-none mb-3">
+                <Form.Group controlId="searchTermMobile" className="mb-0">
+                  <Form.Control 
+                    type="text" 
+                    placeholder="Search by student name, ID, phone, or email..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="search-input"
+                    size="sm"
+                  />
+                </Form.Group>
+              </div>
+              
             <Row>
               <Col xs={12}>
                  {/* Search and Filter Section */}
@@ -294,7 +333,8 @@ const Enrollments = () => {
                     </span>
                   </Card.Header>
                   <Card.Body className="p-0">
-                    <div className="table-responsive">
+                    {/* Desktop Table View */}
+                    <div className="table-responsive d-none d-lg-block">
                       <Table hover className="custom-table align-middle mb-0">
                         <thead className="table-light custom-table">
                           <tr>
@@ -344,7 +384,7 @@ const Enrollments = () => {
                               )}
                               {enrollmentType === 'paid' && (
                                 <td>
-                                  <span className={`status-badge ${enrollment.payment_status === 'completed' ? 'bg-success' : enrollment.payment_status === 'pending' ? 'bg-warning text-dark' : 'bg-danger'}`}>
+                                  <span className={`status-badge ${getPaymentStatusBadgeClass(enrollment.payment_status)}`}>
                                     {enrollment.payment_status}
                                   </span>
                                 </td>
@@ -352,7 +392,7 @@ const Enrollments = () => {
                               {enrollmentType === 'unpaid' && <td className="small">{enrollment.district}</td>}
                               {enrollmentType === 'unpaid' && <td className="small">{enrollment.state}</td>}
                               <td>
-                                <span className={`status-badge ${enrollment.course_status === 'active' || enrollment.status === 'active' ? 'bg-success' : 'bg-warning text-dark'}`}>
+                                <span className={`status-badge ${getCourseStatusBadgeClass(enrollment.course_status || enrollment.status)}`}>
                                   {enrollment.course_status || enrollment.status}
                                 </span>
                               </td>
@@ -390,6 +430,124 @@ const Enrollments = () => {
                           ))}
                         </tbody>
                       </Table>
+                    </div>
+
+                    {/* Mobile Card View */}
+                    <div className="d-lg-none">
+                      {currentRecords.map((enrollment) => (
+                        <Card key={enrollment.id} className="mb-3 mx-2 enrollment-card">
+                          <Card.Body className="p-3">
+                            <div className="d-flex justify-content-between align-items-start mb-2">
+                              <div>
+                                <h6 className="mb-1 fw-semibold">
+                                  {enrollmentType === 'paid' ? (enrollment.candidate_name || enrollment.applicant_id) : enrollment.full_name}
+                                </h6>
+                                <small className="text-muted">ID: {enrollment.applicant_id || enrollment.student_id}</small>
+                              </div>
+                              <Form.Check 
+                                type="checkbox"
+                                checked={selectedEnrollments.includes(enrollment.student_id)}
+                                onChange={() => handleSelectEnrollment(enrollment.student_id)}
+                                size="sm"
+                              />
+                            </div>
+                            
+                            <div className="mb-2">
+                              <small className="text-muted d-block">Phone:</small>
+                              <span className="small fw-medium">
+                                {enrollmentType === 'paid' ? (enrollment.mobile_no || 'N/A') : enrollment.phone}
+                              </span>
+                            </div>
+
+                            <div className="mb-2">
+                              <small className="text-muted d-block">Email:</small>
+                              <span className="small text-muted">{enrollment.email}</span>
+                            </div>
+
+                            <div className="mb-2">
+                              <small className="text-muted d-block">Status:</small>
+                              <span className={`badge ${getCourseStatusBadgeClass(enrollment.course_status || enrollment.status)} small`}>
+                                {enrollment.course_status || enrollment.status}
+                              </span>
+                            </div>
+
+                            {/* Expandable Details */}
+                            <div className="mt-3">
+                              <Button 
+                                variant="link" 
+                                className="p-0 text-decoration-none d-flex align-items-center gap-1"
+                                onClick={() => toggleCardExpansion(enrollment.id)}
+                              >
+                                {expandedCards[enrollment.id] ? <FaChevronUp /> : <FaChevronDown />}
+                                <small>{expandedCards[enrollment.id] ? 'Hide Details' : 'Show Details'}</small>
+                              </Button>
+                              
+                              {expandedCards[enrollment.id] && (
+                                <div className="mt-3 pt-3 border-top">
+                                  <Row className="g-2">
+                                    {enrollmentType === 'paid' && (
+                                      <>
+                                        <Col xs={6}>
+                                          <small className="text-muted d-block">Course Fee:</small>
+                                          <span className="small fw-medium">₹{parseFloat(enrollment.course_fee || 0).toFixed(2)}</span>
+                                        </Col>
+                                        <Col xs={6}>
+                                          <small className="text-muted d-block">Payment Status:</small>
+                                          <span className={`badge ${getPaymentStatusBadgeClass(enrollment.payment_status)} small`}>
+                                            {enrollment.payment_status}
+                                          </span>
+                                        </Col>
+                                      </>
+                                    )}
+                                    {enrollmentType === 'unpaid' && (
+                                      <>
+                                        <Col xs={6}>
+                                          <small className="text-muted d-block">District:</small>
+                                          <span className="small">{enrollment.district}</span>
+                                        </Col>
+                                        <Col xs={6}>
+                                          <small className="text-muted d-block">State:</small>
+                                          <span className="small">{enrollment.state}</span>
+                                        </Col>
+                                      </>
+                                    )}
+                                  </Row>
+                                </div>
+                              )}
+                            </div>
+
+                            {/* Action Buttons */}
+                            <div className="d-flex gap-2 mt-3 pt-3 border-top">
+                              <Button
+                                variant="outline-primary"
+                                size="sm"
+                                className="flex-fill"
+                                onClick={() => handleView(enrollment)}
+                              >
+                                <FaEye className="me-1" /> View
+                              </Button>
+                              <Button
+                                variant="outline-warning"
+                                size="sm"
+                                className="flex-fill"
+                                onClick={() => handleResetPassword(enrollment)}
+                              >
+                                <FaKey className="me-1" /> Reset
+                              </Button>
+                              {enrollmentType === 'unpaid' && (
+                                <Button
+                                  variant="outline-danger"
+                                  size="sm"
+                                  className="flex-fill"
+                                  onClick={() => handleDelete(enrollment)}
+                                >
+                                  <FaTrash className="me-1" /> Delete
+                                </Button>
+                              )}
+                            </div>
+                          </Card.Body>
+                        </Card>
+                      ))}
                     </div>
                   </Card.Body>
                   
@@ -559,7 +717,7 @@ const Enrollments = () => {
                   <div className="detail-item">
                     <span className="detail-label">Payment Status</span>
                     <span className="detail-value">
-                      <span className={`badge ${selectedEnrollment.payment_status === 'completed' ? 'bg-success' : selectedEnrollment.payment_status === 'pending' ? 'bg-warning text-dark' : 'bg-danger'}`}>
+                      <span className={`badge ${getPaymentStatusBadgeClass(selectedEnrollment.payment_status)}`}>
                         {selectedEnrollment.payment_status}
                       </span>
                     </span>
@@ -575,7 +733,7 @@ const Enrollments = () => {
                   <div className="detail-item">
                     <span className="detail-label">Course Status</span>
                     <span className="detail-value">
-                       <span className={`badge ${selectedEnrollment.course_status === 'pending' ? 'bg-warning text-dark' : 'bg-success'}`}>
+                       <span className={`badge ${getCourseStatusBadgeClass(selectedEnrollment.course_status)}`}>
                         {selectedEnrollment.course_status}
                       </span>
                     </span>
@@ -627,7 +785,7 @@ const Enrollments = () => {
                   <div className="detail-item">
                     <span className="detail-label">Status</span>
                     <span className="detail-value">
-                       <span className={`badge ${selectedEnrollment.status === 'active' ? 'bg-success' : 'bg-warning text-dark'}`}>
+                       <span className={`badge ${getCourseStatusBadgeClass(selectedEnrollment.status)}`}>
                         {selectedEnrollment.status}
                       </span>
                     </span>

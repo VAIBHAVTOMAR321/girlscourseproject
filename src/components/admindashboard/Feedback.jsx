@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { Container, Row, Col, Card, Table, Button, Spinner, Modal, Form, Nav } from 'react-bootstrap'
+import { Container, Row, Col, Card, Table, Button, Spinner, Modal, Form, Nav, Badge } from 'react-bootstrap'
 import AdminLeftNav from './AdminLeftNav'
 import AdminTopNav from './AdminTopNav'
 import axios from 'axios'
 import '../../assets/css/Enrollments.css'
 import { useAuth } from '../../contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
-import { FaArrowLeft } from 'react-icons/fa'
+import { FaArrowLeft, FaEye, FaTrash, FaChevronDown, FaChevronUp } from 'react-icons/fa'
 
 const Feedback = () => {
   const { accessToken } = useAuth()
@@ -24,6 +24,7 @@ const Feedback = () => {
   const [filterCourse, setFilterCourse] = useState('all')
   const [filterRating, setFilterRating] = useState('all')
   const [courses, setCourses] = useState([])
+  const [expandedCards, setExpandedCards] = useState({})
 
   useEffect(() => {
     fetchFeedbacks()
@@ -130,6 +131,13 @@ const Feedback = () => {
     setFilterRating('all')
   }
 
+  const toggleCardExpansion = (id) => {
+    setExpandedCards(prev => ({
+      ...prev,
+      [id]: !prev[id]
+    }))
+  }
+
   const confirmDelete = async () => {
     try {
       const payload = {
@@ -165,6 +173,16 @@ const Feedback = () => {
     })
   }
 
+  const getRatingBadgeClass = (rating) => {
+    switch(rating) {
+      case 'Excellent': return 'bg-success'
+      case 'Good': return 'bg-info'
+      case 'Average': return 'bg-warning text-dark'
+      case 'Poor': return 'bg-danger'
+      default: return 'bg-secondary'
+    }
+  }
+
   if (loading) {
     return (
       <div className="admin-layout">
@@ -172,8 +190,8 @@ const Feedback = () => {
           <AdminLeftNav show={showSidebar} setShow={setShowSidebar} />
           <div className={`admin-main-content flex-grow-1 ${!showSidebar ? 'sidebar-compact' : ''}`}>
             <AdminTopNav />
-            <div className="content-area p-4">
-              <Container fluid>
+            <div className="content-area">
+              <Container>
                 <div className="d-flex align-items-center justify-content-center h-100">
                   <Spinner animation="border" variant="primary" style={{ width: '3rem', height: '3rem' }} />
                 </div>
@@ -191,7 +209,7 @@ const Feedback = () => {
         <AdminLeftNav show={showSidebar} setShow={setShowSidebar} />
         <div className={`admin-main-content flex-grow-1 ${!showSidebar ? 'sidebar-compact' : ''}`}>
           <AdminTopNav />
-          <div className="content-area p-4">
+          <div className="content-area">
             <Container fluid>
               <div className="d-flex justify-content-between align-items-center mb-4 page-header">
                 <div className="d-flex align-items-center all-en-box gap-3">
@@ -210,7 +228,7 @@ const Feedback = () => {
                     </Card.Header>
                     <Card.Body className="py-3 px-3">
                       <Row className="g-3">
-                        <Col md={3}>
+                        <Col md={3} xs={12}>
                           <Form.Group controlId="searchTerm">
                             <Form.Label className="small fw-medium mb-1">Search</Form.Label>
                             <Form.Control
@@ -223,7 +241,7 @@ const Feedback = () => {
                             />
                           </Form.Group>
                         </Col>
-                        <Col md={3}>
+                        <Col md={3} xs={6}>
                           <Form.Group controlId="filterCourse">
                             <Form.Label className="small fw-medium mb-1">Course</Form.Label>
                             <Form.Select
@@ -238,7 +256,7 @@ const Feedback = () => {
                             </Form.Select>
                           </Form.Group>
                         </Col>
-                        <Col md={3}>
+                        <Col md={3} xs={6}>
                           <Form.Group controlId="filterRating">
                             <Form.Label className="small fw-medium mb-1">Rating</Form.Label>
                             <Form.Select
@@ -254,7 +272,7 @@ const Feedback = () => {
                             </Form.Select>
                           </Form.Group>
                         </Col>
-                        <Col md={3} className="d-flex align-items-end">
+                        <Col md={3} xs={12} className="d-flex align-items-end">
                           <Button
                             variant="outline-secondary"
                             size="sm"
@@ -280,7 +298,8 @@ const Feedback = () => {
                       </span>
                     </Card.Header>
                     <Card.Body className="p-0">
-                      <div className="table-responsive">
+                      {/* Desktop Table View */}
+                      <div className="table-responsive d-none d-lg-block">
                         <Table hover className="custom-table align-middle mb-0">
                           <thead className="table-light custom-table">
                             <tr>
@@ -308,27 +327,27 @@ const Feedback = () => {
                                 <td className="small">{feedback.course_name}</td>
                                 <td className="small">{feedback.course_id}</td>
                                 <td className="small">
-                                  <span className={`status-badge ${feedback.question_1 === 'Excellent' ? 'bg-success' : feedback.question_1 === 'Good' ? 'bg-info' : feedback.question_1 === 'Average' ? 'bg-warning text-dark' : ''}`}>
+                                  <span className={`status-badge ${getRatingBadgeClass(feedback.question_1)}`}>
                                     {feedback.question_1}
                                   </span>
                                 </td>
                                 <td className="small">
-                                  <span className={`status-badge ${feedback.question_2 === 'Excellent' ? 'bg-success' : feedback.question_2 === 'Good' ? 'bg-info' : feedback.question_2 === 'Average' ? 'bg-warning text-dark' : ''}`}>
+                                  <span className={`status-badge ${getRatingBadgeClass(feedback.question_2)}`}>
                                     {feedback.question_2}
                                   </span>
                                 </td>
                                 <td className="small">
-                                  <span className={`status-badge ${feedback.question_3 === 'Excellent' ? 'bg-success' : feedback.question_3 === 'Good' ? 'bg-info' : feedback.question_3 === 'Average' ? 'bg-warning text-dark' : ''}`}>
+                                  <span className={`status-badge ${getRatingBadgeClass(feedback.question_3)}`}>
                                     {feedback.question_3}
                                   </span>
                                 </td>
                                 <td className="small">
-                                  <span className={`status-badge ${feedback.question_4 === 'Excellent' ? 'bg-success' : feedback.question_4 === 'Good' ? 'bg-info' : feedback.question_4 === 'Average' ? 'bg-warning text-dark' : ''}`}>
+                                  <span className={`status-badge ${getRatingBadgeClass(feedback.question_4)}`}>
                                     {feedback.question_4}
                                   </span>
                                 </td>
                                 <td className="small">
-                                  <span className={`status-badge ${feedback.question_5 === 'Excellent' ? 'bg-success' : feedback.question_5 === 'Good' ? 'bg-info' : feedback.question_5 === 'Average' ? 'bg-warning text-dark' : ''}`}>
+                                  <span className={`status-badge ${getRatingBadgeClass(feedback.question_5)}`}>
                                     {feedback.question_5}
                                   </span>
                                 </td>
@@ -360,6 +379,109 @@ const Feedback = () => {
                             ))}
                           </tbody>
                         </Table>
+                      </div>
+
+                      {/* Mobile Card View */}
+                      <div className="d-lg-none">
+                        {currentRecords.map((feedback) => (
+                          <Card key={feedback.id} className="mb-3 mx-2 feedback-card">
+                            <Card.Body className="p-3">
+                              <div className="d-flex justify-content-between align-items-start mb-2">
+                                <div>
+                                  <h6 className="mb-1 fw-semibold">{feedback.full_name}</h6>
+                                  <small className="text-muted">ID: {feedback.student_id}</small>
+                                </div>
+                                <Badge bg="secondary" className="small">#{feedback.id}</Badge>
+                              </div>
+                              
+                              <div className="mb-2">
+                                <small className="text-muted d-block">Course:</small>
+                                <span className="small fw-medium">{feedback.course_name}</span>
+                                <small className="text-muted ms-2">({feedback.course_id})</small>
+                              </div>
+
+                              <div className="mb-2">
+                                <small className="text-muted d-block">Date:</small>
+                                <span className="small">{formatDate(feedback.created_at)}</span>
+                              </div>
+
+                              {/* Expandable Details */}
+                              <div className="mt-3">
+                                <Button 
+                                  variant="link" 
+                                  className="p-0 text-decoration-none d-flex align-items-center gap-1"
+                                  onClick={() => toggleCardExpansion(feedback.id)}
+                                >
+                                  {expandedCards[feedback.id] ? <FaChevronUp /> : <FaChevronDown />}
+                                  <small>{expandedCards[feedback.id] ? 'Hide Details' : 'Show Details'}</small>
+                                </Button>
+                                
+                                {expandedCards[feedback.id] && (
+                                  <div className="mt-3 pt-3 border-top">
+                                    <Row className="g-2">
+                                      <Col xs={6}>
+                                        <small className="text-muted d-block">Overall Experience:</small>
+                                        <span className={`badge ${getRatingBadgeClass(feedback.question_1)} small`}>
+                                          {feedback.question_1}
+                                        </span>
+                                      </Col>
+                                      <Col xs={6}>
+                                        <small className="text-muted d-block">Easy to Understand:</small>
+                                        <span className={`badge ${getRatingBadgeClass(feedback.question_2)} small`}>
+                                          {feedback.question_2}
+                                        </span>
+                                      </Col>
+                                      <Col xs={6}>
+                                        <small className="text-muted d-block">Usefulness:</small>
+                                        <span className={`badge ${getRatingBadgeClass(feedback.question_3)} small`}>
+                                          {feedback.question_3}
+                                        </span>
+                                      </Col>
+                                      <Col xs={6}>
+                                        <small className="text-muted d-block">Content Quality:</small>
+                                        <span className={`badge ${getRatingBadgeClass(feedback.question_4)} small`}>
+                                          {feedback.question_4}
+                                        </span>
+                                      </Col>
+                                      <Col xs={12}>
+                                        <small className="text-muted d-block">Continue Learning:</small>
+                                        <span className={`badge ${getRatingBadgeClass(feedback.question_5)} small`}>
+                                          {feedback.question_5}
+                                        </span>
+                                      </Col>
+                                      {feedback.comment && (
+                                        <Col xs={12}>
+                                          <small className="text-muted d-block">Comment:</small>
+                                          <p className="small mb-0 mt-1">{feedback.comment}</p>
+                                        </Col>
+                                      )}
+                                    </Row>
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* Action Buttons */}
+                              <div className="d-flex gap-2 mt-3 pt-3 border-top">
+                                <Button
+                                  variant="outline-primary"
+                                  size="sm"
+                                  className="flex-fill"
+                                  onClick={() => handleView(feedback)}
+                                >
+                                  <FaEye className="me-1" /> View
+                                </Button>
+                                <Button
+                                  variant="outline-danger"
+                                  size="sm"
+                                  className="flex-fill"
+                                  onClick={() => handleDelete(feedback)}
+                                >
+                                  <FaTrash className="me-1" /> Delete
+                                </Button>
+                              </div>
+                            </Card.Body>
+                          </Card>
+                        ))}
                       </div>
                     </Card.Body>
                     {/* Pagination */}
@@ -438,31 +560,31 @@ const Feedback = () => {
           {selectedFeedback && (
             <div>
               <Row className="mb-3">
-                <Col md={6}>
+                <Col md={6} xs={12}>
                   <p className="mb-1"><strong>Student Name:</strong></p>
                   <p className="text-muted">{selectedFeedback.full_name}</p>
                 </Col>
-                <Col md={6}>
+                <Col md={6} xs={12}>
                   <p className="mb-1"><strong>Student ID:</strong></p>
                   <p className="text-muted">{selectedFeedback.student_id}</p>
                 </Col>
               </Row>
               <Row className="mb-3">
-                <Col md={6}>
+                <Col md={6} xs={12}>
                   <p className="mb-1"><strong>Course Name:</strong></p>
                   <p className="text-muted">{selectedFeedback.course_name}</p>
                 </Col>
-                <Col md={6}>
+                <Col md={6} xs={12}>
                   <p className="mb-1"><strong>Course ID:</strong></p>
                   <p className="text-muted">{selectedFeedback.course_id}</p>
                 </Col>
               </Row>
               <Row className="mb-3">
-                <Col md={6}>
+                <Col md={6} xs={12}>
                   <p className="mb-1"><strong>Feedback ID:</strong></p>
                   <p className="text-muted">{selectedFeedback.id}</p>
                 </Col>
-                <Col md={6}>
+                <Col md={6} xs={12}>
                   <p className="mb-1"><strong>Date:</strong></p>
                   <p className="text-muted">{formatDate(selectedFeedback.created_at)}</p>
                 </Col>
@@ -470,35 +592,35 @@ const Feedback = () => {
               <hr />
               <h6 className="fw-semibold mb-3">Feedback Responses</h6>
               <Row className="mb-3">
-                <Col md={4}>
+                <Col md={4} xs={12} className="mb-2 mb-md-0">
                   <p className="mb-1"><strong>1. How was your overall experience?</strong></p>
-                  <span className={`status-badge ${selectedFeedback.question_1 === 'Excellent' ? 'bg-success' : selectedFeedback.question_1 === 'Good' ? 'bg-info' : selectedFeedback.question_1 === 'Average' ? 'bg-warning text-dark' : ''}`}>
+                  <span className={`badge ${getRatingBadgeClass(selectedFeedback.question_1)}`}>
                     {selectedFeedback.question_1}
                   </span>
                 </Col>
-                <Col md={4}>
+                <Col md={4} xs={12} className="mb-2 mb-md-0">
                   <p className="mb-1"><strong>2. Was the course easy to understand?</strong></p>
-                  <span className={`status-badge ${selectedFeedback.question_2 === 'Excellent' ? 'bg-success' : selectedFeedback.question_2 === 'Good' ? 'bg-info' : selectedFeedback.question_2 === 'Average' ? 'bg-warning text-dark' : ''}`}>
+                  <span className={`badge ${getRatingBadgeClass(selectedFeedback.question_2)}`}>
                     {selectedFeedback.question_2}
                   </span>
                 </Col>
-                <Col md={4}>
+                <Col md={4} xs={12}>
                   <p className="mb-1"><strong>3. How useful was this course for you?</strong></p>
-                  <span className={`status-badge ${selectedFeedback.question_3 === 'Excellent' ? 'bg-success' : selectedFeedback.question_3 === 'Good' ? 'bg-info' : selectedFeedback.question_3 === 'Average' ? 'bg-warning text-dark' : ''}`}>
+                  <span className={`badge ${getRatingBadgeClass(selectedFeedback.question_3)}`}>
                     {selectedFeedback.question_3}
                   </span>
                 </Col>
               </Row>
               <Row className="mb-3">
-                <Col md={4}>
+                <Col md={4} xs={12} className="mb-2 mb-md-0">
                   <p className="mb-1"><strong>4. How was the course content quality?</strong></p>
-                  <span className={`status-badge ${selectedFeedback.question_4 === 'Excellent' ? 'bg-success' : selectedFeedback.question_4 === 'Good' ? 'bg-info' : selectedFeedback.question_4 === 'Average' ? 'bg-warning text-dark' : ''}`}>
+                  <span className={`badge ${getRatingBadgeClass(selectedFeedback.question_4)}`}>
                     {selectedFeedback.question_4}
                   </span>
                 </Col>
-                <Col md={4}>
+                <Col md={4} xs={12} className="mb-2 mb-md-0">
                   <p className="mb-1"><strong>5. Would you like to continue learning with us?</strong></p>
-                  <span className={`status-badge ${selectedFeedback.question_5 === 'Excellent' ? 'bg-success' : selectedFeedback.question_5 === 'Good' ? 'bg-info' : selectedFeedback.question_5 === 'Average' ? 'bg-warning text-dark' : ''}`}>
+                  <span className={`badge ${getRatingBadgeClass(selectedFeedback.question_5)}`}>
                     {selectedFeedback.question_5}
                   </span>
                 </Col>
