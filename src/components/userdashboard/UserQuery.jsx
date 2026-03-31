@@ -184,14 +184,14 @@ function UserQuery() {
             <Row>
               <Col lg={12}>
                 {/* Query Form Card */}
-                <Card className="shadow-sm mb-4 border-0" style={{ borderRadius: '10px' }}>
-                  <Card.Header className="bg-white border-bottom-0 pt-3">
+                <div className="mb-4" style={{ borderRadius: '10px', border: '1px solid #dee2e6', backgroundColor: '#fff' }}>
+                  <div className="bg-white border-bottom-0 pt-3 px-3">
                     <h5 className="mb-0 d-flex align-items-center">
                       <FaPaperPlane className="me-2 text-primary" />
                       Raise a Query
                     </h5>
-                  </Card.Header>
-                  <Card.Body>
+                  </div>
+                  <div className="p-3">
                     <Form onSubmit={handleSubmit}>
                       <Row>
                         <Col md={6} className="mb-3">
@@ -207,7 +207,7 @@ function UserQuery() {
                             />
                           </Form.Group>
                         </Col>
-                        <Col md={6} className="mb-3">
+                        {/* <Col md={6} className="mb-3">
                           <Form.Group>
                             <Form.Label>Student ID</Form.Label>
                             <Form.Control
@@ -219,11 +219,11 @@ function UserQuery() {
                               disabled
                             />
                           </Form.Group>
-                        </Col>
-                      </Row>
+                        </Col> */}
                       
-                      <Row>
-                        <Col md={12} className="mb-3">
+                      
+                    
+                        <Col md={6} className="mb-3">
                           <Form.Group>
                             <Form.Label>Title</Form.Label>
                             <Form.Control
@@ -236,10 +236,7 @@ function UserQuery() {
                             />
                           </Form.Group>
                         </Col>
-                      </Row>
-                      
-                      <Row>
-                        <Col md={12} className="mb-3">
+                         <Col md={6} className="mb-3">
                           <Form.Group>
                             <Form.Label>Issue / Query Description</Form.Label>
                             <Form.Control
@@ -254,6 +251,8 @@ function UserQuery() {
                           </Form.Group>
                         </Col>
                       </Row>
+                      
+                     
 
                       {message.text && (
                         <Alert variant={message.type} className="mb-3">
@@ -271,8 +270,8 @@ function UserQuery() {
                         {submitting ? 'Submitting...' : 'Submit Query'}
                       </Button>
                     </Form>
-                  </Card.Body>
-                </Card>
+                  </div>
+                </div>
 
                 {/* Queries Table Card */}
                 <Card className="shadow-sm border-0" style={{ borderRadius: '10px' }}>
