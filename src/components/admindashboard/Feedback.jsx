@@ -289,11 +289,11 @@ const Feedback = () => {
                               <th>Student ID</th>
                               <th>Course Name</th>
                               <th>Course ID</th>
-                              <th>Q1</th>
-                              <th>Q2</th>
-                              <th>Q3</th>
-                              <th>Q4</th>
-                              <th>Q5</th>
+                              <th>Overall Experience</th>
+                              <th>Easy to Understand</th>
+                              <th>Usefulness</th>
+                              <th>Content Quality</th>
+                              <th>Continue Learning</th>
                               <th>Comment</th>
                               <th>Date</th>
                               <th className="text-end pe-3">Actions</th>
@@ -308,27 +308,27 @@ const Feedback = () => {
                                 <td className="small">{feedback.course_name}</td>
                                 <td className="small">{feedback.course_id}</td>
                                 <td className="small">
-                                  <span className={`status-badge ${feedback.question_1 === 'Excellent' ? 'bg-success' : feedback.question_1 === 'Good' ? 'bg-info' : feedback.question_1 === 'Average' ? 'bg-warning text-dark' : 'bg-danger'}`}>
+                                  <span className={`status-badge ${feedback.question_1 === 'Excellent' ? 'bg-success' : feedback.question_1 === 'Good' ? 'bg-info' : feedback.question_1 === 'Average' ? 'bg-warning text-dark' : ''}`}>
                                     {feedback.question_1}
                                   </span>
                                 </td>
                                 <td className="small">
-                                  <span className={`status-badge ${feedback.question_2 === 'Excellent' ? 'bg-success' : feedback.question_2 === 'Good' ? 'bg-info' : feedback.question_2 === 'Average' ? 'bg-warning text-dark' : 'bg-danger'}`}>
+                                  <span className={`status-badge ${feedback.question_2 === 'Excellent' ? 'bg-success' : feedback.question_2 === 'Good' ? 'bg-info' : feedback.question_2 === 'Average' ? 'bg-warning text-dark' : ''}`}>
                                     {feedback.question_2}
                                   </span>
                                 </td>
                                 <td className="small">
-                                  <span className={`status-badge ${feedback.question_3 === 'Excellent' ? 'bg-success' : feedback.question_3 === 'Good' ? 'bg-info' : feedback.question_3 === 'Average' ? 'bg-warning text-dark' : 'bg-danger'}`}>
+                                  <span className={`status-badge ${feedback.question_3 === 'Excellent' ? 'bg-success' : feedback.question_3 === 'Good' ? 'bg-info' : feedback.question_3 === 'Average' ? 'bg-warning text-dark' : ''}`}>
                                     {feedback.question_3}
                                   </span>
                                 </td>
                                 <td className="small">
-                                  <span className={`status-badge ${feedback.question_4 === 'Excellent' ? 'bg-success' : feedback.question_4 === 'Good' ? 'bg-info' : feedback.question_4 === 'Average' ? 'bg-warning text-dark' : 'bg-danger'}`}>
+                                  <span className={`status-badge ${feedback.question_4 === 'Excellent' ? 'bg-success' : feedback.question_4 === 'Good' ? 'bg-info' : feedback.question_4 === 'Average' ? 'bg-warning text-dark' : ''}`}>
                                     {feedback.question_4}
                                   </span>
                                 </td>
                                 <td className="small">
-                                  <span className={`status-badge ${feedback.question_5 === 'Excellent' ? 'bg-success' : feedback.question_5 === 'Good' ? 'bg-info' : feedback.question_5 === 'Average' ? 'bg-warning text-dark' : 'bg-danger'}`}>
+                                  <span className={`status-badge ${feedback.question_5 === 'Excellent' ? 'bg-success' : feedback.question_5 === 'Good' ? 'bg-info' : feedback.question_5 === 'Average' ? 'bg-warning text-dark' : ''}`}>
                                     {feedback.question_5}
                                   </span>
                                 </td>
@@ -471,34 +471,34 @@ const Feedback = () => {
               <h6 className="fw-semibold mb-3">Feedback Responses</h6>
               <Row className="mb-3">
                 <Col md={4}>
-                  <p className="mb-1"><strong>Question 1:</strong></p>
-                  <span className={`status-badge ${selectedFeedback.question_1 === 'Excellent' ? 'bg-success' : selectedFeedback.question_1 === 'Good' ? 'bg-info' : selectedFeedback.question_1 === 'Average' ? 'bg-warning text-dark' : 'bg-danger'}`}>
+                  <p className="mb-1"><strong>1. How was your overall experience?</strong></p>
+                  <span className={`status-badge ${selectedFeedback.question_1 === 'Excellent' ? 'bg-success' : selectedFeedback.question_1 === 'Good' ? 'bg-info' : selectedFeedback.question_1 === 'Average' ? 'bg-warning text-dark' : ''}`}>
                     {selectedFeedback.question_1}
                   </span>
                 </Col>
                 <Col md={4}>
-                  <p className="mb-1"><strong>Question 2:</strong></p>
-                  <span className={`status-badge ${selectedFeedback.question_2 === 'Excellent' ? 'bg-success' : selectedFeedback.question_2 === 'Good' ? 'bg-info' : selectedFeedback.question_2 === 'Average' ? 'bg-warning text-dark' : 'bg-danger'}`}>
+                  <p className="mb-1"><strong>2. Was the course easy to understand?</strong></p>
+                  <span className={`status-badge ${selectedFeedback.question_2 === 'Excellent' ? 'bg-success' : selectedFeedback.question_2 === 'Good' ? 'bg-info' : selectedFeedback.question_2 === 'Average' ? 'bg-warning text-dark' : ''}`}>
                     {selectedFeedback.question_2}
                   </span>
                 </Col>
                 <Col md={4}>
-                  <p className="mb-1"><strong>Question 3:</strong></p>
-                  <span className={`status-badge ${selectedFeedback.question_3 === 'Excellent' ? 'bg-success' : selectedFeedback.question_3 === 'Good' ? 'bg-info' : selectedFeedback.question_3 === 'Average' ? 'bg-warning text-dark' : 'bg-danger'}`}>
+                  <p className="mb-1"><strong>3. How useful was this course for you?</strong></p>
+                  <span className={`status-badge ${selectedFeedback.question_3 === 'Excellent' ? 'bg-success' : selectedFeedback.question_3 === 'Good' ? 'bg-info' : selectedFeedback.question_3 === 'Average' ? 'bg-warning text-dark' : ''}`}>
                     {selectedFeedback.question_3}
                   </span>
                 </Col>
               </Row>
               <Row className="mb-3">
                 <Col md={4}>
-                  <p className="mb-1"><strong>Question 4:</strong></p>
-                  <span className={`status-badge ${selectedFeedback.question_4 === 'Excellent' ? 'bg-success' : selectedFeedback.question_4 === 'Good' ? 'bg-info' : selectedFeedback.question_4 === 'Average' ? 'bg-warning text-dark' : 'bg-danger'}`}>
+                  <p className="mb-1"><strong>4. How was the course content quality?</strong></p>
+                  <span className={`status-badge ${selectedFeedback.question_4 === 'Excellent' ? 'bg-success' : selectedFeedback.question_4 === 'Good' ? 'bg-info' : selectedFeedback.question_4 === 'Average' ? 'bg-warning text-dark' : ''}`}>
                     {selectedFeedback.question_4}
                   </span>
                 </Col>
                 <Col md={4}>
-                  <p className="mb-1"><strong>Question 5:</strong></p>
-                  <span className={`status-badge ${selectedFeedback.question_5 === 'Excellent' ? 'bg-success' : selectedFeedback.question_5 === 'Good' ? 'bg-info' : selectedFeedback.question_5 === 'Average' ? 'bg-warning text-dark' : 'bg-danger'}`}>
+                  <p className="mb-1"><strong>5. Would you like to continue learning with us?</strong></p>
+                  <span className={`status-badge ${selectedFeedback.question_5 === 'Excellent' ? 'bg-success' : selectedFeedback.question_5 === 'Good' ? 'bg-info' : selectedFeedback.question_5 === 'Average' ? 'bg-warning text-dark' : ''}`}>
                     {selectedFeedback.question_5}
                   </span>
                 </Col>

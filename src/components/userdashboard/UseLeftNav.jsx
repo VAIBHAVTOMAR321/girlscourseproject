@@ -82,11 +82,11 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas }) => {
                    )}
                    
                    <Nav.Link as={Link} to="/UserNotifications" className="text-white">
-                     <i className="bi bi-bell me-2"></i>12th
+                     <i className="bi bi-bell me-2"></i>12th guidelines
                    </Nav.Link>
                    
                    <Nav.Link as={Link} to="/UserSettings" className="text-white">
-                     <i className="bi bi-gear me-2"></i> 10th
+                     <i className="bi bi-gear me-2"></i> 10th guidelines
                    </Nav.Link>
                   
                    {/* <Nav.Link as={Link} to="/UserTest" className="text-white">
@@ -162,10 +162,10 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas }) => {
                   </Nav.Link>
                 )}
                 <Nav.Link as={Link} to="/UserNotifications" className="text-white" onClick={() => setShowOffcanvas(false)}>
-                  <i className="bi bi-bell me-2"></i> Notifications
+                  <i className="bi bi-bell me-2"></i> 12th guidelines
                 </Nav.Link>
                 <Nav.Link as={Link} to="/UserSettings" className="text-white" onClick={() => setShowOffcanvas(false)}>
-                  <i className="bi bi-gear me-2"></i> Settings
+                  <i className="bi bi-gear me-2"></i> 10th guidelines
                 </Nav.Link>
                 {/* <Nav.Link as={Link} to="/UserTest" className="text-white" onClick={() => setShowOffcanvas(false)}>
                   <i className="bi bi-clipboard-check me-2"></i> Test Dashboard
