@@ -30,6 +30,7 @@ import UserSettings from "./components/userdashboard/UserSettings.jsx";
 import UserNotifications from "./components/userdashboard/UserNotifications.jsx";
 import OccupationDetails from "./components/userdashboard/OccupationDetails.jsx";
 import UserQuery from "./components/userdashboard/UserQuery.jsx";
+import Home from "./components/home/Home.jsx";
 
 function AppContent() {
   const location = useLocation();
@@ -40,8 +41,8 @@ function AppContent() {
     <>
       {!hideNavBar && <NavBar />}
       <Routes>
-          <Route path="/" element={<Navigate to="/login" />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/Login" element={<Login />} />
           {/* <Route path="/UserDashboard" element={<UserDashboard />} /> */}
           <Route path="/Registration" element={<Registration />} />
           

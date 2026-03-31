@@ -37,7 +37,7 @@ const NavBar = () => {
         
         {/* Desktop menu */}
         <div className="navbar-menu">
-          <Link to="#" className="navbar-link">Home</Link>
+          <Link to="/" className="navbar-link">Home</Link>
         
           {!isLoginPage && (
             <Link to="/login" className="navbar-link navbar-button">Login</Link>
