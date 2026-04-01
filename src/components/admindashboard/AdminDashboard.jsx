@@ -823,7 +823,7 @@ const AdminDashboard = () => {
           </span>
         </Card.Header>
         
-        <Card.Body className="p-4">
+        <Card.Body className="">
           <Row className="g-4">
             {filteredCourses.length > 0 ? (
               filteredCourses.map((course) => (
@@ -1599,8 +1599,8 @@ const AdminDashboard = () => {
         <AdminLeftNav show={showSidebar} setShow={setShowSidebar} />
         <div className={`admin-main-content flex-grow-1 ${!showSidebar ? 'sidebar-compact' : ''}`}>
           <AdminTopNav />
-          <div className="content-area p-4">
-            <Container>
+          <div className="content-area">
+            <Container className='mob-top-view'>
               {currentView === 'dashboard' && renderDashboardView()}
               {currentView === 'list' && renderCoursesListView()}
               {currentView === 'form' && renderCourseForm()}
@@ -1626,7 +1626,7 @@ const AdminDashboard = () => {
 >        <Modal.Header closeButton className="border-bottom py-2">
           <Modal.Title className="fw-bold fs-5">{renderContentWithLineBreaks(selectedCourse?.course_name)}</Modal.Title>
         </Modal.Header>
-        <Modal.Body className="p-4">
+        <Modal.Body className="">
           {selectedCourse && (
             <div>
               <p><strong>Course ID:</strong> {selectedCourse.course_id}</p>
