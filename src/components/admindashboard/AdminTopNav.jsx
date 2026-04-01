@@ -34,8 +34,6 @@ const AdminTopNav = () => {
         <i className="bi bi-box-arrow-right me-1"></i> Logout
       </Button>
       
-      <Navbar.Toggle aria-controls="admin-topnav" className="border-0 shadow-none ms-auto" />
-      
       <Navbar.Collapse id="admin-topnav" className="justify-content-end">
         <Nav className="align-items-center">
           {/* Logout button for desktop view - visible only on md and larger screens */}

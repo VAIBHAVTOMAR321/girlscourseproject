@@ -192,7 +192,9 @@
   .admin-top-nav {
     padding: 0.5rem !important;
   }
-
+.logout-btn{
+  margin-right: 140px !important;
+}
   .admin-logo-text {
     display: none !important;
   }
@@ -239,7 +241,7 @@
   /* Mobile logout button styles */
   .admin-top-nav .logout-btn {
     padding: 0.5rem 0.75rem !important;
-    font-size: 0.875rem !important;
+    font-size: 12px !important;
     border-radius: 8px !important;
     display: flex !important;
     align-items: center !important;
