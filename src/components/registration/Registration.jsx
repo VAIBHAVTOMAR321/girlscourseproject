@@ -567,9 +567,9 @@ const Registration = () => {
                               <div className="course-details">
                                 <h6 className="course-title">{renderContentWithLineBreaks(course.name)}</h6>
                                 <div className="course-meta-info">
-                                  <span className="enrolled-info">
+                                  {/* <span className="enrolled-info">
                                     <i className="fas fa-users"></i> {course.enrolled}
-                                  </span>
+                                  </span> */}
                                   <Badge bg="primary" className="free-badge">
                                     
                                   </Badge>

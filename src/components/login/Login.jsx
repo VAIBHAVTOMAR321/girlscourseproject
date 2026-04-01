@@ -247,9 +247,9 @@ const Login = () => {
           >
             {course.type === "paid" ? "Paid" : ""}
           </Badge>
-          <span className="enrolled-count">
+          {/* <span className="enrolled-count">
             <i className="fas fa-users"></i> {course.enrolled} enrolled
-          </span>
+          </span> */}
         </div>
         {course.type === "paid" && (
           <div className="course-price mt-2">
@@ -391,9 +391,9 @@ const Login = () => {
                     <div className="course-details">
                       <h6 className="course-title">{course.name}</h6>
                       <div className="course-meta-info">
-                        <span className="enrolled-info">
+                        {/* <span className="enrolled-info">
                           <i className="fas fa-users"></i> {course.enrolled}
-                        </span>
+                        </span> */}
                         {course.duration && (
                           <span className="duration-info">
                             <i className="fas fa-clock"></i> {course.duration}
