@@ -1,14 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Container, Row, Col, Card, Button, Form, ProgressBar, Badge, Modal, Alert, Nav, Tab } from 'react-bootstrap'
+import axios from 'axios'
 import { useAuth } from '../../contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import UserTopNav from './UserTopNav'
 import UseLeftNav from './UseLeftNav'
+import CounselingForm from './CounselingForm'
 import { FaArrowLeft, FaGraduationCap, FaChartLine, FaLightbulb, FaRocket, FaBook, FaCode, FaPalette, FaCalculator, FaLanguage, FaMusic, FaHeartbeat, FaBusinessTime, FaPercentage, FaUniversity, FaTools, FaLaptopMedical, FaBriefcase, FaCog, FaFlask, FaBalanceScale, FaNewspaper, FaChalkboardTeacher, FaUserTie, FaPaintBrush, FaGuitar, FaRunning, FaHome, FaWrench, FaIndustry, FaPlane, FaCar, FaBuilding, FaHospital, FaSeedling, FaMicrochip, FaNetworkWired, FaDatabase, FaShieldAlt, FaRobot, FaBrain, FaChartBar, FaProjectDiagram, FaBookOpen, FaBolt, FaDna, FaCheckCircle, FaInfoCircle } from 'react-icons/fa'
 import '../../assets/css/UserNotifications.css'
 
   const UserNotifications = () => {
-  const { uniqueId, userRoleType } = useAuth()
+  const { uniqueId, userRoleType, accessToken } = useAuth()
   const [loading, setLoading] = useState(true)
   const [showOffcanvas, setShowOffcanvas] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
@@ -18,6 +20,8 @@ import '../../assets/css/UserNotifications.css'
   const [selectedCourse, setSelectedCourse] = useState(null)
   const [showModal, setShowModal] = useState(false)
   const [selectedCareerPath, setSelectedCareerPath] = useState(null)
+  const [showCounseling, setShowCounseling] = useState(false)
+  const [userData, setUserData] = useState(null)
   const navigate = useNavigate()
   const resultsRef = useRef(null)
 
@@ -48,6 +52,42 @@ import '../../assets/css/UserNotifications.css'
   const handleMenuToggle = () => {
     setShowOffcanvas(!showOffcanvas)
   }
+
+  // Fetch user data
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        let response
+
+        const config = {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`
+          }
+        }
+
+        // Fetch data based on user role
+        if (userRoleType === 'student-unpaid') {
+          // For unpaid students, fetch from student-unpaid endpoint with student_id
+          response = await axios.get(`https://brjobsedu.com/girls_course/girls_course_backend/api/student-unpaid/?student_id=${uniqueId}`, config)
+        } else {
+          // For regular students, use the existing endpoint
+          response = await axios.get(`https://brjobsedu.com/girls_course/girls_course_backend/api/all-registration/?student_id=${uniqueId}`)
+        }
+
+        const { data } = response
+
+        if (data.success) {
+          setUserData(data.data)
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error)
+      }
+    }
+
+    if (uniqueId) {
+      fetchUserData()
+    }
+  }, [uniqueId, userRoleType, accessToken])
 
   // Simulate loading
   useEffect(() => {
@@ -764,6 +804,45 @@ import '../../assets/css/UserNotifications.css'
     return { level: 'Average', color: 'danger', icon: <FaInfoCircle /> }
   }
 
+  // Handle counseling form submission
+  const handleCounselingSubmit = async (counselingData) => {
+    try {
+      console.log('Counseling data submitted:', counselingData)
+
+      // Send counseling request to backend
+      const response = await axios.post(
+        'https://brjobsedu.com/girls_course/girls_course_backend/api/student-cousult/',
+        {
+          ...counselingData,
+          student_id: uniqueId, // Ensure student_id is from auth
+          mobile: counselingData.phone, // Map phone to mobile
+          other_category: counselingData.otherCategory || '',
+          category: counselingData.category_consulting.join(', '), // Join the array
+          message: `Career counseling request from student dashboard - Category: ${counselingData.category_consulting.join(', ')}`,
+          student_name: userData?.full_name || userData?.candidate_name || 'Student',
+          stream: selectedStream || 'Not specified',
+          percentage: percentage || 'Not specified'
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      )
+
+      if (response.data.success) {
+        // Success is handled in the CounselingForm component
+        return true
+      } else {
+        throw new Error(response.data.message || 'Failed to submit counseling request')
+      }
+    } catch (error) {
+      console.error('Counseling submission error:', error)
+      throw error // Re-throw to let CounselingForm handle the error
+    }
+  }
+
   const courses = showResults ? getCoursesByStreamAndPercentage(selectedStream, percentage) : []
   const performance = showResults ? getPerformanceLevel() : null
   
@@ -1193,7 +1272,9 @@ import '../../assets/css/UserNotifications.css'
                     <p className="text-muted mb-0">
                       Select your 12th stream and enter your percentage to get personalized course and career guidance
                     </p>
+
                   </div>
+                  
                 </div>
               </Card.Body>
             </Card>
@@ -1443,7 +1524,7 @@ import '../../assets/css/UserNotifications.css'
                 {!selectedStream && (
                   <Card className="shadow-sm border-0 instructions-card" style={{ borderRadius: '10px' }}>
                     <Card.Body className="p-4">
-                     
+
                       <h4>How to Get Course Guidance</h4>
                       <p className="text-muted mb-0">
                         <strong>Step 1:</strong> Select your 12th stream from the options above<br />
@@ -1453,6 +1534,17 @@ import '../../assets/css/UserNotifications.css'
                     </Card.Body>
                   </Card>
                 )}
+
+                {/* Counseling Form */}
+                <CounselingForm
+                  onSubmit={handleCounselingSubmit}
+                  showForm={showCounseling}
+                  onToggle={setShowCounseling}
+                  initialData={{
+                    email: userData?.email,
+                    mobile: userData?.mobile_no || userData?.phone
+                  }}
+                />
               </>
             )}
           </Container>

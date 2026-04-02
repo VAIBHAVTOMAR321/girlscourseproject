@@ -1095,8 +1095,30 @@ const UserDashboard = () => {
                                      )}
                                    </div>
                                  </Accordion.Header>
-                                 <Accordion.Body>
-                                   {module.sub_modules && module.sub_modules.length > 0 ? (
+                                   <Accordion.Body>
+                                     {/* Video Section */}
+                                     <Row className="mb-4">
+                                       <Col md={6}>
+                                         <div className="p-3 bg-light rounded h-100">
+                                           <h6 className="mb-3 fw-semibold">
+                                             <FaPlay className="me-2 text-primary" /> Module Video
+                                           </h6>
+                                           <div className="video-container">
+                                             <iframe
+                                               width="100%"
+                                               height="315"
+                                               src={(module.video_link || 'https://www.youtube.com/embed/dQw4w9WgXcQ').replace('watch?v=', 'embed/')}
+                                               title="Module Video"
+                                               frameBorder="0"
+                                               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                               allowFullScreen
+                                             ></iframe>
+                                           </div>
+                                         </div>
+                                       </Col>
+                                     </Row>
+
+                                    {module.sub_modules && module.sub_modules.length > 0 ? (
                                      <div className="sub-modules-container">
                                         {module.sub_modules.map((subModule, subModuleIndex) => (
                                          <div key={subModule.sub_module_id} className="book-card mb-4">

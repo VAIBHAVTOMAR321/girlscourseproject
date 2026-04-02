@@ -54,7 +54,8 @@ const AdminDashboard = () => {
   const [modules, setModules] = useState([])
   const [moduleFormData, setModuleFormData] = useState({
     mod_title: '',
-    order: 1
+    order: 1,
+    video_link: ''
   })
   const [loadingModules, setLoadingModules] = useState(false)
 
@@ -253,7 +254,8 @@ const AdminDashboard = () => {
       const dataToSend = {
         course_id: moduleViewData.course.course_id,
         mod_title: moduleFormData.mod_title,
-        order: moduleFormData.order
+        order: moduleFormData.order,
+        video_link: moduleFormData.video_link
       }
 
       if (moduleFormData.module_id) {
@@ -272,7 +274,8 @@ const AdminDashboard = () => {
       // Reset form and fetch updated modules
       setModuleFormData({
         mod_title: '',
-        order: 0 // Will be updated in fetchModules
+        order: 0, // Will be updated in fetchModules
+        video_link: ''
       })
       fetchModules(moduleViewData.course.course_id)
     } catch (error) {
@@ -288,7 +291,8 @@ const AdminDashboard = () => {
     setModuleFormData({
       module_id: module.module_id,
       mod_title: module.mod_title,
-      order: module.order
+      order: module.order,
+      video_link: module.video_link || ''
     })
     // Scroll to top of the page
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -929,6 +933,18 @@ const AdminDashboard = () => {
               />
             </Form.Group>
 
+            {moduleViewData?.course?.course_status === 'unpaid' && (
+              <Form.Group className="mb-3">
+                <Form.Label>Video Link</Form.Label>
+                <Form.Control
+                  type="url"
+                  value={moduleFormData.video_link}
+                  onChange={(e) => setModuleFormData({ ...moduleFormData, video_link: e.target.value })}
+                  placeholder="e.g. https://youtube.com/watch?v=..."
+                />
+              </Form.Group>
+            )}
+
             <Button variant="primary" type="submit">
               <FaPlus className="me-2" /> {moduleFormData.module_id ? 'Update Module' : 'Add Module'}
             </Button>
@@ -957,12 +973,19 @@ const AdminDashboard = () => {
               {modules.map((module, index) => (
                 <Card key={module.id} className="mb-3 border-left-primary">
                   <Card.Body>
-                    <div className="d-flex justify-content-between align-items-start mb-3">
-                      <h6 className="fw-bold mb-0">
-                        Module {module.order}: {renderContentWithLineBreaks(module.mod_title)}
-                      </h6>
-                      <Badge bg="secondary">ID: {module.module_id}</Badge>
-                    </div>
+                     <div className="d-flex justify-content-between align-items-start mb-3">
+                       <h6 className="fw-bold mb-0">
+                         Module {module.order}: {renderContentWithLineBreaks(module.mod_title)}
+                       </h6>
+                       <Badge bg="secondary">ID: {module.module_id}</Badge>
+                     </div>
+                     {module.video_link && (
+                       <div className="mb-2">
+                         <a href={module.video_link} target="_blank" rel="noopener noreferrer" className="text-info small">
+                           <FaEye className="me-1" /> Watch Video
+                         </a>
+                       </div>
+                     )}
                     <div className="d-flex gap-2">
                       <Button 
                         variant="outline-info" 
