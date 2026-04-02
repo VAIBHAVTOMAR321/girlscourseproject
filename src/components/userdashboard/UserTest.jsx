@@ -465,20 +465,31 @@ const UserTest = () => {
                         
                         {/* Current Question */}
                         <div className="mb-3">
-                          <h6 className="mb-1">{questions[currentQuestionIndex].question_text}</h6>
+                          <div className="mb-2">
+                            <span className="fw-bold">Q{currentQuestionIndex + 1}. </span>
+                            <span>{questions[currentQuestionIndex].question_text}</span>
+                          </div>
+                          {questions[currentQuestionIndex].question_text_hindi && (
+                            <div className="mb-3 text-muted small fst-italic">
+                              प्र{currentQuestionIndex + 1}. {questions[currentQuestionIndex].question_text_hindi}
+                            </div>
+                          )}
                           <div className="space-y-3">
                             {questions[currentQuestionIndex].options.map((option, index) => (
-                              <div key={index} className="form-check">
+                              <div key={index} className="form-check d-flex align-items-start mb-2">
                                 <input 
                                   type="radio" 
-                                  className="form-check-input" 
+                                  className="form-check-input mt-1" 
                                   id={`q${currentQuestionIndex}a${index}`} 
                                   name={`q${currentQuestionIndex}`}
                                   checked={userAnswers[currentQuestionIndex] === index}
                                   onChange={() => handleAnswerSelect(index)}
                                 />
-                                <label className="form-check-label" for={`q${currentQuestionIndex}a${index}`}>
-                                  {option}
+                                <label className="form-check-label ms-2" htmlFor={`q${currentQuestionIndex}a${index}`}>
+                                  <span className="fw-bold">{String.fromCharCode(65 + index)}.</span> {option}
+                                  {questions[currentQuestionIndex].options_hindi && questions[currentQuestionIndex].options_hindi[index] && (
+                                    <span className="text-muted small fst-italic ms-1">({questions[currentQuestionIndex].options_hindi[index]})</span>
+                                  )}
                                 </label>
                               </div>
                             ))}
