@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Card, Button, Form, Row, Col, Alert } from 'react-bootstrap'
 import { FaLightbulb } from 'react-icons/fa'
 
-const CounselingForm = ({ onSubmit, initialData = {}, showForm: propShowForm, onToggle }) => {
+const CounselingForm = ({ onSubmit, initialData = {}, showForm: propShowForm, onToggle, userRoleType }) => {
   const [internalShowForm, setInternalShowForm] = useState(false)
   const showForm = propShowForm !== undefined ? propShowForm : internalShowForm
   const setShowForm = (value) => {
@@ -14,15 +14,20 @@ const CounselingForm = ({ onSubmit, initialData = {}, showForm: propShowForm, on
   }
   
   const [formData, setFormData] = useState({
-    student_id: initialData.student_id || '',
-    full_name: initialData.full_name || '',
+    student_id: initialData.student_id || initialData.student_id || '',
+    full_name: initialData.full_name || initialData.candidate_name || '',
     aadhaar_no: initialData.aadhaar_no || '',
     associate_wings: initialData.associate_wings || '',
-    phone: initialData.phone || initialData.mobile || '',
+    phone: initialData.phone || initialData.mobile_no || '',
     email: initialData.email || '',
     district: initialData.district || '',
     block: initialData.block || '',
     state: initialData.state || '',
+    guardian_name: initialData.guardian_name || '',
+    date_of_birth: initialData.date_of_birth || '',
+    highest_education: initialData.highest_education || '',
+    address: initialData.address || '',
+    created_at: initialData.created_at || '',
     category_consulting: initialData.category_consulting || [],
     otherCategory: initialData.otherCategory || '',
     status: 'pending' // Default status
@@ -76,14 +81,8 @@ const CounselingForm = ({ onSubmit, initialData = {}, showForm: propShowForm, on
 
     // Validate email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!formData.email) {
-      alert('Please enter your email address')
-      return
-    }
-    if (!emailRegex.test(formData.email)) {
-      alert('Please enter a valid email address')
-      return
-    }
+  
+   
 
     // Validate aadhaar if provided
     if (formData.aadhaar_no && !/^\d{12}$/.test(formData.aadhaar_no.replace(/\s+/g, ''))) {
@@ -121,20 +120,24 @@ const CounselingForm = ({ onSubmit, initialData = {}, showForm: propShowForm, on
       // Show success message and reset form
       setSubmitted(true)
       setFormData({
-        student_id: '',
-        full_name: '',
-        aadhaar_no: '',
-        associate_wings: '',
-        phone: '',
-        email: '',
-        district: '',
-        block: '',
-        state: '',
+        student_id: initialData.student_id || initialData.student_id || '',
+        full_name: initialData.full_name || initialData.candidate_name || '',
+        aadhaar_no: initialData.aadhaar_no || '',
+        associate_wings: initialData.associate_wings || '',
+        phone: initialData.phone || initialData.mobile_no || '',
+        email: initialData.email || '',
+        district: initialData.district || '',
+        block: initialData.block || '',
+        state: initialData.state || '',
+        guardian_name: initialData.guardian_name || '',
+        date_of_birth: initialData.date_of_birth || '',
+        highest_education: initialData.highest_education || '',
+        address: initialData.address || '',
+        created_at: initialData.created_at || '',
         category_consulting: [],
         otherCategory: '',
         status: 'pending'
       })
-      setShowForm(false)
 
       // Hide success message after 3 seconds
       setTimeout(() => setSubmitted(false), 3000)
@@ -147,17 +150,12 @@ const CounselingForm = ({ onSubmit, initialData = {}, showForm: propShowForm, on
 
   return (
     <>
-      {/* Success Alert */}
-      {submitted && (
-        <Alert variant="success" className="mb-4">
-          <strong>Success!</strong> Your counseling request has been submitted. Our team will contact you soon.
-        </Alert>
-      )}
+    
 
       {/* Error Alert */}
       {error && (
-        <Alert variant="danger" className="mb-4">
-          <strong>Error!</strong> {error}
+        <Alert variant="success" className="mb-4">
+          <strong></strong> {error}
         </Alert>
       )}
 
@@ -182,7 +180,7 @@ const CounselingForm = ({ onSubmit, initialData = {}, showForm: propShowForm, on
           {showForm && (
             <Form onSubmit={handleSubmit}>
               <Row className="g-3">
-                <Col md={6}>
+                {/* <Col md={6}>
                   <Form.Group>
                     <Form.Label>Student ID *</Form.Label>
                     <Form.Control
@@ -191,10 +189,11 @@ const CounselingForm = ({ onSubmit, initialData = {}, showForm: propShowForm, on
                       onChange={(e) => handleChange('student_id', e.target.value)}
                       placeholder="Enter your student ID"
                       required
+                      disabled
                     />
                   </Form.Group>
-                </Col>
-                <Col md={6}>
+                </Col> */}
+                {/* <Col md={6}>
                   <Form.Group>
                     <Form.Label>Full Name *</Form.Label>
                     <Form.Control
@@ -203,6 +202,7 @@ const CounselingForm = ({ onSubmit, initialData = {}, showForm: propShowForm, on
                       onChange={(e) => handleChange('full_name', e.target.value)}
                       placeholder="Enter your full name"
                       required
+                      disabled
                     />
                   </Form.Group>
                 </Col>
@@ -215,23 +215,91 @@ const CounselingForm = ({ onSubmit, initialData = {}, showForm: propShowForm, on
                       onChange={(e) => handleChange('aadhaar_no', e.target.value.replace(/\D/g, '').slice(0, 12))}
                       placeholder="Enter 12-digit Aadhaar number"
                       maxLength="12"
+                      disabled
                     />
                     <Form.Text className="text-muted">
                       Optional: Enter 12-digit Aadhaar number
                     </Form.Text>
                   </Form.Group>
-                </Col>
-                <Col md={6}>
-                  <Form.Group>
-                    <Form.Label>Associate Wings</Form.Label>
-                    <Form.Control
-                      type="text"
-                      value={formData.associate_wings}
-                      onChange={(e) => handleChange('associate_wings', e.target.value)}
-                      placeholder="Enter associate wings"
-                    />
-                  </Form.Group>
-                </Col>
+                </Col> */}
+                {/* {userRoleType === 'student-unpaid' && (
+                  <Col md={6}>
+                    <Form.Group>
+                      <Form.Label>Associate Wings</Form.Label>
+                      <Form.Control
+                        type="text"
+                        value={formData.associate_wings}
+                        onChange={(e) => handleChange('associate_wings', e.target.value)}
+                        placeholder="Enter associate wings"
+                        disabled
+                      />
+                    </Form.Group>
+                  </Col>
+                )}
+                {userRoleType !== 'student-unpaid' && (
+                  <>
+                    <Col md={6}>
+                      <Form.Group>
+                        <Form.Label>Guardian Name</Form.Label>
+                        <Form.Control
+                          type="text"
+                          value={formData.guardian_name}
+                          onChange={(e) => handleChange('guardian_name', e.target.value)}
+                          placeholder="Enter guardian name"
+                          disabled
+                        />
+                      </Form.Group>
+                    </Col>
+                    <Col md={6}>
+                      <Form.Group>
+                        <Form.Label>Date of Birth</Form.Label>
+                        <Form.Control
+                          type="text"
+                          value={formData.date_of_birth}
+                          onChange={(e) => handleChange('date_of_birth', e.target.value)}
+                          placeholder="Enter date of birth"
+                          disabled
+                        />
+                      </Form.Group>
+                    </Col>
+                    <Col md={6}>
+                      <Form.Group>
+                        <Form.Label>Highest Education</Form.Label>
+                        <Form.Control
+                          type="text"
+                          value={formData.highest_education}
+                          onChange={(e) => handleChange('highest_education', e.target.value)}
+                          placeholder="Enter highest education"
+                          disabled
+                        />
+                      </Form.Group>
+                    </Col>
+                    <Col md={6}>
+                      <Form.Group>
+                        <Form.Label>Address</Form.Label>
+                        <Form.Control
+                          type="text"
+                          value={formData.address}
+                          onChange={(e) => handleChange('address', e.target.value)}
+                          placeholder="Enter address"
+                          disabled
+                        />
+                      </Form.Group>
+                    </Col>
+                    <Col md={6}>
+                      <Form.Group>
+                        <Form.Label>Joined Date</Form.Label>
+                        <Form.Control
+                          type="text"
+                          value={formData.created_at ? new Date(formData.created_at).toLocaleDateString() : ''}
+                          onChange={(e) => handleChange('created_at', e.target.value)}
+                          placeholder="Joined date"
+                          disabled
+                        />
+                      </Form.Group>
+                    </Col>
+                  </>
+                )}
                 <Col md={6}>
                   <Form.Group>
                     <Form.Label>Phone Number *</Form.Label>
@@ -242,13 +310,14 @@ const CounselingForm = ({ onSubmit, initialData = {}, showForm: propShowForm, on
                       placeholder="Enter 10-digit phone number"
                       maxLength="10"
                       required
+                      disabled
                     />
                     <Form.Text className="text-muted">
                       Enter 10-digit phone number (e.g., 9876543210)
                     </Form.Text>
                   </Form.Group>
-                </Col>
-                <Col md={6}>
+                </Col> */}
+                {/* <Col md={6}>
                   <Form.Group>
                     <Form.Label>Email Address *</Form.Label>
                     <Form.Control
@@ -256,7 +325,8 @@ const CounselingForm = ({ onSubmit, initialData = {}, showForm: propShowForm, on
                       value={formData.email}
                       onChange={(e) => handleChange('email', e.target.value)}
                       placeholder="Enter your email address"
-                      required
+                      
+                      disabled
                     />
                     <Form.Text className="text-muted">
                       We'll use this to contact you regarding your counseling request
@@ -271,10 +341,11 @@ const CounselingForm = ({ onSubmit, initialData = {}, showForm: propShowForm, on
                       value={formData.state}
                       onChange={(e) => handleChange('state', e.target.value)}
                       placeholder="Enter your state"
+                      disabled
                     />
                   </Form.Group>
-                </Col>
-                <Col md={4}>
+                </Col> */}
+                {/* <Col md={4}>
                   <Form.Group>
                     <Form.Label>District</Form.Label>
                     <Form.Control
@@ -282,6 +353,7 @@ const CounselingForm = ({ onSubmit, initialData = {}, showForm: propShowForm, on
                       value={formData.district}
                       onChange={(e) => handleChange('district', e.target.value)}
                       placeholder="Enter your district"
+                      disabled
                     />
                   </Form.Group>
                 </Col>
@@ -293,9 +365,10 @@ const CounselingForm = ({ onSubmit, initialData = {}, showForm: propShowForm, on
                       value={formData.block}
                       onChange={(e) => handleChange('block', e.target.value)}
                       placeholder="Enter your block"
+                      disabled
                     />
                   </Form.Group>
-                </Col>
+                </Col> */}
                 <Col md={12}>
                   <Form.Group>
                     <Form.Label>Counseling Category * (Select all that apply)</Form.Label>
@@ -350,16 +423,18 @@ const CounselingForm = ({ onSubmit, initialData = {}, showForm: propShowForm, on
                 )}
                 <Col xs={12}>
                   <Button
-                    variant="primary"
+                    variant={submitted ? "success" : "primary"}
                     type="submit"
-                    className="w-100"
-                    disabled={submitting}
+                    className=""
+                    disabled={submitting || submitted}
                   >
                     {submitting ? (
                       <>
                         <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
                         Submitting...
                       </>
+                    ) : submitted ? (
+                      'Submitted'
                     ) : (
                       'Submit Counseling Request'
                     )}
