@@ -1277,12 +1277,21 @@ import '../../assets/css/UserNotifications.css'
                   
                 </div>
               </Card.Body>
+               {/* Counseling Form */}
+                <CounselingForm
+                  onSubmit={handleCounselingSubmit}
+                  showForm={showCounseling}
+                  onToggle={setShowCounseling}
+                  initialData={userData}
+                  userRoleType={userRoleType}
+                />
             </Card>
                   <Card.Body className="">
                     <h5 className="mb-3">
                       <Badge bg="primary" className="me-2">Step 1</Badge>
                       Select Your 12th Stream
                     </h5>
+
                     <Row>
                       {streams.map((stream) => (
                         <Col lg={3} md={6} className="mb-3" key={stream.id}>
@@ -1535,14 +1544,7 @@ import '../../assets/css/UserNotifications.css'
                   </Card>
                 )}
 
-                {/* Counseling Form */}
-                <CounselingForm
-                  onSubmit={handleCounselingSubmit}
-                  showForm={showCounseling}
-                  onToggle={setShowCounseling}
-                  initialData={userData}
-                  userRoleType={userRoleType}
-                />
+               
               </>
             )}
           </Container>
