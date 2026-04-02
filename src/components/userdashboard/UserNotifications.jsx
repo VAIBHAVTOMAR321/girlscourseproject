@@ -1540,10 +1540,8 @@ import '../../assets/css/UserNotifications.css'
                   onSubmit={handleCounselingSubmit}
                   showForm={showCounseling}
                   onToggle={setShowCounseling}
-                  initialData={{
-                    email: userData?.email,
-                    mobile: userData?.mobile_no || userData?.phone
-                  }}
+                  initialData={userData}
+                  userRoleType={userRoleType}
                 />
               </>
             )}
