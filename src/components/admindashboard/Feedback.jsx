@@ -6,7 +6,7 @@ import axios from 'axios'
 import '../../assets/css/Enrollments.css'
 import { useAuth } from '../../contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
-import { FaArrowLeft, FaEye, FaTrash, FaChevronDown, FaChevronUp } from 'react-icons/fa'
+import { FaArrowLeft, FaEye, FaTrash, FaChevronDown, FaChevronUp, FaStar } from 'react-icons/fa'
 
 const Feedback = () => {
   const { accessToken } = useAuth()
@@ -183,6 +183,24 @@ const Feedback = () => {
     }
   }
 
+  const renderStars = (rating) => {
+    const numRating = parseInt(rating) || 0
+    return (
+      <div className="d-flex gap-1">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <FaStar
+            key={star}
+            size={16}
+            style={{
+              color: numRating >= star ? '#28a745' : '#ccc',
+              transition: 'color 0.2s ease'
+            }}
+          />
+        ))}
+      </div>
+    )
+  }
+
   if (loading) {
     return (
       <div className="admin-layout">
@@ -265,10 +283,11 @@ const Feedback = () => {
                               size="sm"
                             >
                               <option value="all">All Ratings</option>
-                              <option value="Excellent">Excellent</option>
-                              <option value="Good">Good</option>
-                              <option value="Average">Average</option>
-                              <option value="Poor">Poor</option>
+                              <option value="5">5 Stars</option>
+                              <option value="4">4 Stars</option>
+                              <option value="3">3 Stars</option>
+                              <option value="2">2 Stars</option>
+                              <option value="1">1 Star</option>
                             </Form.Select>
                           </Form.Group>
                         </Col>
@@ -327,29 +346,19 @@ const Feedback = () => {
                                 <td className="small">{feedback.course_name}</td>
                                 <td className="small">{feedback.course_id}</td>
                                 <td className="small">
-                                  <span className={`status-badge ${getRatingBadgeClass(feedback.question_1)}`}>
-                                    {feedback.question_1}
-                                  </span>
+                                  {renderStars(feedback.question_1)}
                                 </td>
                                 <td className="small">
-                                  <span className={`status-badge ${getRatingBadgeClass(feedback.question_2)}`}>
-                                    {feedback.question_2}
-                                  </span>
+                                  {renderStars(feedback.question_2)}
                                 </td>
                                 <td className="small">
-                                  <span className={`status-badge ${getRatingBadgeClass(feedback.question_3)}`}>
-                                    {feedback.question_3}
-                                  </span>
+                                  {renderStars(feedback.question_3)}
                                 </td>
                                 <td className="small">
-                                  <span className={`status-badge ${getRatingBadgeClass(feedback.question_4)}`}>
-                                    {feedback.question_4}
-                                  </span>
+                                  {renderStars(feedback.question_4)}
                                 </td>
                                 <td className="small">
-                                  <span className={`status-badge ${getRatingBadgeClass(feedback.question_5)}`}>
-                                    {feedback.question_5}
-                                  </span>
+                                  {renderStars(feedback.question_5)}
                                 </td>
                                 <td className="small text-muted" style={{ maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                                   {feedback.comment || '-'}
@@ -421,33 +430,23 @@ const Feedback = () => {
                                     <Row className="g-2">
                                       <Col xs={6}>
                                         <small className="text-muted d-block">Overall Experience:</small>
-                                        <span className={`badge ${getRatingBadgeClass(feedback.question_1)} small`}>
-                                          {feedback.question_1}
-                                        </span>
+                                        {renderStars(feedback.question_1)}
                                       </Col>
                                       <Col xs={6}>
                                         <small className="text-muted d-block">Easy to Understand:</small>
-                                        <span className={`badge ${getRatingBadgeClass(feedback.question_2)} small`}>
-                                          {feedback.question_2}
-                                        </span>
+                                        {renderStars(feedback.question_2)}
                                       </Col>
                                       <Col xs={6}>
                                         <small className="text-muted d-block">Usefulness:</small>
-                                        <span className={`badge ${getRatingBadgeClass(feedback.question_3)} small`}>
-                                          {feedback.question_3}
-                                        </span>
+                                        {renderStars(feedback.question_3)}
                                       </Col>
                                       <Col xs={6}>
                                         <small className="text-muted d-block">Content Quality:</small>
-                                        <span className={`badge ${getRatingBadgeClass(feedback.question_4)} small`}>
-                                          {feedback.question_4}
-                                        </span>
+                                        {renderStars(feedback.question_4)}
                                       </Col>
                                       <Col xs={12}>
                                         <small className="text-muted d-block">Continue Learning:</small>
-                                        <span className={`badge ${getRatingBadgeClass(feedback.question_5)} small`}>
-                                          {feedback.question_5}
-                                        </span>
+                                        {renderStars(feedback.question_5)}
                                       </Col>
                                       {feedback.comment && (
                                         <Col xs={12}>
@@ -594,35 +593,25 @@ const Feedback = () => {
               <Row className="mb-3">
                 <Col md={4} xs={12} className="mb-2 mb-md-0">
                   <p className="mb-1"><strong>1. How was your overall experience?</strong></p>
-                  <span className={`badge ${getRatingBadgeClass(selectedFeedback.question_1)}`}>
-                    {selectedFeedback.question_1}
-                  </span>
+                  {renderStars(selectedFeedback.question_1)}
                 </Col>
                 <Col md={4} xs={12} className="mb-2 mb-md-0">
                   <p className="mb-1"><strong>2. Was the course easy to understand?</strong></p>
-                  <span className={`badge ${getRatingBadgeClass(selectedFeedback.question_2)}`}>
-                    {selectedFeedback.question_2}
-                  </span>
+                  {renderStars(selectedFeedback.question_2)}
                 </Col>
                 <Col md={4} xs={12}>
                   <p className="mb-1"><strong>3. How useful was this course for you?</strong></p>
-                  <span className={`badge ${getRatingBadgeClass(selectedFeedback.question_3)}`}>
-                    {selectedFeedback.question_3}
-                  </span>
+                  {renderStars(selectedFeedback.question_3)}
                 </Col>
               </Row>
               <Row className="mb-3">
                 <Col md={4} xs={12} className="mb-2 mb-md-0">
                   <p className="mb-1"><strong>4. How was the course content quality?</strong></p>
-                  <span className={`badge ${getRatingBadgeClass(selectedFeedback.question_4)}`}>
-                    {selectedFeedback.question_4}
-                  </span>
+                  {renderStars(selectedFeedback.question_4)}
                 </Col>
                 <Col md={4} xs={12} className="mb-2 mb-md-0">
                   <p className="mb-1"><strong>5. Would you like to continue learning with us?</strong></p>
-                  <span className={`badge ${getRatingBadgeClass(selectedFeedback.question_5)}`}>
-                    {selectedFeedback.question_5}
-                  </span>
+                  {renderStars(selectedFeedback.question_5)}
                 </Col>
               </Row>
               {selectedFeedback.comment && (

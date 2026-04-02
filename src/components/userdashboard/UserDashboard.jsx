@@ -1934,81 +1934,121 @@ const UserDashboard = () => {
               {/* Question 1 */}
               <div className="mb-3">
                 <label className="form-label fw-semibold">1. How was your overall experience?</label>
-                <select 
-                  className="form-select"
-                  value={feedbackData.question_1}
-                  onChange={(e) => handleFeedbackChange('question_1', e.target.value)}
-                  disabled={feedbackSubmitting}
-                >
-                  <option value="">Select rating</option>
-                  <option value="Very Good">Very Good</option>
-                  <option value="Good">Good</option>
-                  <option value="Needs Improvement">Needs Improvement</option>
-                </select>
+                <div className="star-rating d-flex gap-1">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <FaStar
+                      key={star}
+                      size={28}
+                      className="cursor-pointer"
+                      style={{
+                        color: feedbackData.question_1 && parseInt(feedbackData.question_1) >= star ? '#28a745' : '#ccc',
+                        cursor: feedbackSubmitting ? 'not-allowed' : 'pointer',
+                        transition: 'color 0.2s ease'
+                      }}
+                      onClick={() => {
+                        if (!feedbackSubmitting) {
+                          handleFeedbackChange('question_1', star.toString())
+                        }
+                      }}
+                    />
+                  ))}
+                </div>
               </div>
               
               {/* Question 2 */}
               <div className="mb-3">
                 <label className="form-label fw-semibold">2. Was the course easy to understand?</label>
-                <select 
-                  className="form-select"
-                  value={feedbackData.question_2}
-                  onChange={(e) => handleFeedbackChange('question_2', e.target.value)}
-                  disabled={feedbackSubmitting}
-                >
-                  <option value="">Select rating</option>
-                  <option value="Very Easy">Very Easy</option>
-                  <option value="Easy">Easy</option>
-                  <option value="Can be Improved">Can be Improved</option>
-                </select>
+                <div className="star-rating d-flex gap-1">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <FaStar
+                      key={star}
+                      size={28}
+                      className="cursor-pointer"
+                      style={{
+                        color: feedbackData.question_2 && parseInt(feedbackData.question_2) >= star ? '#28a745' : '#ccc',
+                        cursor: feedbackSubmitting ? 'not-allowed' : 'pointer',
+                        transition: 'color 0.2s ease'
+                      }}
+                      onClick={() => {
+                        if (!feedbackSubmitting) {
+                          handleFeedbackChange('question_2', star.toString())
+                        }
+                      }}
+                    />
+                  ))}
+                </div>
               </div>
               
               {/* Question 3 */}
               <div className="mb-3">
                 <label className="form-label fw-semibold">3. How useful was this course for you?</label>
-                <select 
-                  className="form-select"
-                  value={feedbackData.question_3}
-                  onChange={(e) => handleFeedbackChange('question_3', e.target.value)}
-                  disabled={feedbackSubmitting}
-                >
-                  <option value="">Select rating</option>
-                  <option value="Very Useful">Very Useful</option>
-                  <option value="Useful">Useful</option>
-                  <option value="Needs More Value">Needs More Value</option>
-                </select>
+                <div className="star-rating d-flex gap-1">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <FaStar
+                      key={star}
+                      size={28}
+                      className="cursor-pointer"
+                      style={{
+                        color: feedbackData.question_3 && parseInt(feedbackData.question_3) >= star ? '#28a745' : '#ccc',
+                        cursor: feedbackSubmitting ? 'not-allowed' : 'pointer',
+                        transition: 'color 0.2s ease'
+                      }}
+                      onClick={() => {
+                        if (!feedbackSubmitting) {
+                          handleFeedbackChange('question_3', star.toString())
+                        }
+                      }}
+                    />
+                  ))}
+                </div>
               </div>
               
               {/* Question 4 */}
               <div className="mb-3">
                 <label className="form-label fw-semibold">4. How was the course content quality?</label>
-                <select 
-                  className="form-select"
-                  value={feedbackData.question_4}
-                  onChange={(e) => handleFeedbackChange('question_4', e.target.value)}
-                  disabled={feedbackSubmitting}
-                >
-                  <option value="">Select rating</option>
-                  <option value="Excellent">Excellent</option>
-                  <option value="Good">Good</option>
-                  <option value="Can be Better">Can be Better</option>
-                </select>
+                <div className="star-rating d-flex gap-1">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <FaStar
+                      key={star}
+                      size={28}
+                      className="cursor-pointer"
+                      style={{
+                        color: feedbackData.question_4 && parseInt(feedbackData.question_4) >= star ? '#28a745' : '#ccc',
+                        cursor: feedbackSubmitting ? 'not-allowed' : 'pointer',
+                        transition: 'color 0.2s ease'
+                      }}
+                      onClick={() => {
+                        if (!feedbackSubmitting) {
+                          handleFeedbackChange('question_4', star.toString())
+                        }
+                      }}
+                    />
+                  ))}
+                </div>
               </div>
               
               {/* Question 5 */}
               <div className="mb-3">
                 <label className="form-label fw-semibold">5. Would you like to continue learning with us?</label>
-                <select 
-                  className="form-select"
-                  value={feedbackData.question_5}
-                  onChange={(e) => handleFeedbackChange('question_5', e.target.value)}
-                  disabled={feedbackSubmitting}
-                >
-                  <option value="">Select rating</option>
-                  <option value="Definitely Yes">Definitely Yes</option>
-                  <option value="Yes">Yes</option>
-                  <option value="Not Sure Yet">Not Sure Yet</option>
-                </select>
+                <div className="star-rating d-flex gap-1">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <FaStar
+                      key={star}
+                      size={28}
+                      className="cursor-pointer"
+                      style={{
+                        color: feedbackData.question_5 && parseInt(feedbackData.question_5) >= star ? '#28a745' : '#ccc',
+                        cursor: feedbackSubmitting ? 'not-allowed' : 'pointer',
+                        transition: 'color 0.2s ease'
+                      }}
+                      onClick={() => {
+                        if (!feedbackSubmitting) {
+                          handleFeedbackChange('question_5', star.toString())
+                        }
+                      }}
+                    />
+                  ))}
+                </div>
               </div>
               
               {/* Comment */}

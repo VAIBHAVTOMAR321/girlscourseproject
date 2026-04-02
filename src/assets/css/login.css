@@ -552,7 +552,9 @@
 /* Mobile Responsive */
 @media (max-width: 992px) {
   .course-grid.two-column {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    max-height: 280px;
+    overflow: hidden;
   }
   
   .gov-role-option {

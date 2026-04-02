@@ -11,7 +11,7 @@ function Footer() {
         <Row className='g-4 py-5'>
           <Col lg={6} md={6} sm={12} className='d-flex flex-column justify-content-center'>
             <div className='footer-widget about-us'>
-              <a href="/home">
+              <a href="/Home">
                 <div className='footer-logo mb-4'>
                   <img src={Logo} alt="logo" className="logo-wecd" />
                 </div>
