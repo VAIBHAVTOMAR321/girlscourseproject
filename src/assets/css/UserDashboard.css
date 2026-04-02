@@ -844,6 +844,26 @@ padding: 4px !important;
   border-top-right-radius: 12px;
 }
 
+/* Highlight effect for scrolled submodules */
+@keyframes highlightPulse {
+  0% {
+    background-color: rgba(102, 126, 234, 0.1);
+    box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.4);
+  }
+  50% {
+    background-color: rgba(102, 126, 234, 0.2);
+    box-shadow: 0 0 0 10px rgba(102, 126, 234, 0.2);
+  }
+  100% {
+    background-color: transparent;
+    box-shadow: 0 0 0 0 rgba(102, 126, 234, 0);
+  }
+}
+
+.highlight-submodule {
+  animation: highlightPulse 2s ease-out;
+}
+
 .card-header-gradient::after {
   content: '';
   position: absolute;

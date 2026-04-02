@@ -54,6 +54,7 @@ const AdminDashboard = () => {
   const [modules, setModules] = useState([])
   const [moduleFormData, setModuleFormData] = useState({
     mod_title: '',
+    mod_title_hindi: '',
     order: 1,
     video_link: ''
   })
@@ -64,8 +65,11 @@ const AdminDashboard = () => {
   const [submodules, setSubmodules] = useState([])
   const [submoduleFormData, setSubmoduleFormData] = useState({
     sub_modu_title: '',
+    sub_modu_title_hindi: '',
     sub_modu_description: '',
+    sub_modu_description_hindi: '',
     sub_mod: [{ title: '', description: '' }],
+    sub_mod_hindi: [{ title: '', description: '' }],
     image: null,
     order: 1
   })
@@ -227,9 +231,9 @@ const AdminDashboard = () => {
     setLoadingModules(true)
     try {
       const config = getAuthConfig()
-      const response = await axios.get(`https://brjobsedu.com/girls_course/girls_course_backend/api/module-items/?course_id=${course_id}`, config)
+      const response = await axios.get(`https://brjobsedu.com/girls_course/girls_course_backend/api/course-module/?course_id=${course_id}`, config)
       if (response.data && response.data.success) {
-        const fetchedModules = response.data.data
+        const fetchedModules = response.data.data.modules || []
         setModules(fetchedModules)
         // Set initial order to next sequential number
         setModuleFormData(prev => ({
@@ -256,19 +260,20 @@ const AdminDashboard = () => {
       const dataToSend = {
         course_id: moduleViewData.course.course_id,
         mod_title: moduleFormData.mod_title,
+        mod_title_hindi: moduleFormData.mod_title_hindi,
         order: moduleFormData.order,
         video_link: moduleFormData.video_link
       }
 
       if (moduleFormData.module_id) {
-        // Update existing module
+        // Update existing module (PUT request)
         await axios.put('https://brjobsedu.com/girls_course/girls_course_backend/api/module-items/', {
           ...dataToSend,
           module_id: moduleFormData.module_id
         }, config)
         alert('Module updated successfully!')
       } else {
-        // Create new module
+        // Create new module (POST request)
         await axios.post('https://brjobsedu.com/girls_course/girls_course_backend/api/module-items/', dataToSend, config)
         alert('Module added successfully!')
       }
@@ -276,7 +281,8 @@ const AdminDashboard = () => {
       // Reset form and fetch updated modules
       setModuleFormData({
         mod_title: '',
-        order: 0, // Will be updated in fetchModules
+        mod_title_hindi: '',
+        order: 1,
         video_link: ''
       })
       fetchModules(moduleViewData.course.course_id)
@@ -293,6 +299,7 @@ const AdminDashboard = () => {
     setModuleFormData({
       module_id: module.module_id,
       mod_title: module.mod_title,
+      mod_title_hindi: module.mod_title_hindi || '',
       order: module.order,
       video_link: module.video_link || ''
     })
@@ -321,10 +328,13 @@ const AdminDashboard = () => {
     setSubmodules([])
     setSubmoduleFormData({
       sub_modu_title: '',
+      sub_modu_title_hindi: '',
       sub_modu_description: '',
-      sub_mod: [{ title: '', description: '', topics: [] }],
+      sub_modu_description_hindi: '',
+      sub_mod: [{ title: '', description: '' }],
+      sub_mod_hindi: [{ title: '', description: '' }],
       image: null,
-      order: 0 // Will be updated in fetchSubmodules
+      order: 1
     })
     fetchSubmodules(course.course_id, module.module_id)
   }
@@ -333,12 +343,15 @@ const AdminDashboard = () => {
     setLoadingSubmodules(true)
     try {
       const config = getAuthConfig()
-      const response = await axios.get(`https://brjobsedu.com/girls_course/girls_course_backend/api/submodule-items/?course_id=${course_id}&module_id=${module_id}`, config)
+      const response = await axios.get(`https://brjobsedu.com/girls_course/girls_course_backend/api/course-module/?course_id=${course_id}`, config)
       if (response.data && response.data.success) {
-        const parsedSubmodules = response.data.data.map(submodule => ({
+        // Find the module and get its submodules
+        const targetModule = response.data.data.modules.find(m => m.module_id === module_id)
+        const parsedSubmodules = targetModule?.sub_modules?.map(submodule => ({
           ...submodule,
-          sub_mod: typeof submodule.sub_mod === 'string' ? JSON.parse(submodule.sub_mod) : submodule.sub_mod
-        }))
+          sub_mod: typeof submodule.sub_mod === 'string' ? JSON.parse(submodule.sub_mod) : (submodule.sub_mod || []),
+          sub_mod_hindi: typeof submodule.sub_mod_hindi === 'string' ? JSON.parse(submodule.sub_mod_hindi) : (submodule.sub_mod_hindi || [])
+        })) || []
         setSubmodules(parsedSubmodules)
         // Set initial order to next sequential number
         setSubmoduleFormData(prev => ({
@@ -368,8 +381,11 @@ const AdminDashboard = () => {
       formData.append('course_id', submodulesViewData.course.course_id)
       formData.append('module_id', submodulesViewData.module.module_id)
       formData.append('sub_modu_title', submoduleFormData.sub_modu_title)
+      formData.append('sub_modu_title_hindi', submoduleFormData.sub_modu_title_hindi)
       formData.append('sub_modu_description', submoduleFormData.sub_modu_description)
+      formData.append('sub_modu_description_hindi', submoduleFormData.sub_modu_description_hindi)
       formData.append('sub_mod', JSON.stringify(submoduleFormData.sub_mod))
+      formData.append('sub_mod_hindi', JSON.stringify(submoduleFormData.sub_mod_hindi))
       formData.append('order', submoduleFormData.order)
       if (submoduleFormData.image) {
         formData.append('image', submoduleFormData.image)
@@ -379,7 +395,7 @@ const AdminDashboard = () => {
       }
 
       if (submoduleFormData.sub_module_id) {
-        // Update existing submodule
+        // Update existing submodule (PUT request)
         await axios.put('https://brjobsedu.com/girls_course/girls_course_backend/api/submodule-items/', formData, {
           ...config,
           headers: {
@@ -387,8 +403,9 @@ const AdminDashboard = () => {
             'Content-Type': 'multipart/form-data'
           }
         })
+        alert('Submodule updated successfully!')
       } else {
-        // Create new submodule
+        // Create new submodule (POST request)
         await axios.post('https://brjobsedu.com/girls_course/girls_course_backend/api/submodule-items/', formData, {
           ...config,
           headers: {
@@ -396,18 +413,21 @@ const AdminDashboard = () => {
             'Content-Type': 'multipart/form-data'
           }
         })
+        alert('Submodule added successfully!')
       }
       
       // Reset form and fetch updated submodules
       setSubmoduleFormData({
         sub_modu_title: '',
+        sub_modu_title_hindi: '',
         sub_modu_description: '',
-        sub_mod: [{ title: '', description: '', topics: [] }],
+        sub_modu_description_hindi: '',
+        sub_mod: [{ title: '', description: '' }],
+        sub_mod_hindi: [{ title: '', description: '' }],
         image: null,
-        order: 0 // Will be updated in fetchSubmodules
+        order: 1
       })
       fetchSubmodules(submodulesViewData.course.course_id, submodulesViewData.module.module_id)
-      alert(submoduleFormData.sub_module_id ? 'Submodule updated successfully!' : 'Submodule added successfully!')
     } catch (error) {
       if (error.response) {
         alert(`Failed: ${error.response.data.message || error.response.data.detail || 'Check console for details'}`)
@@ -421,8 +441,11 @@ const AdminDashboard = () => {
     setSubmoduleFormData({
       sub_module_id: submodule.sub_module_id,
       sub_modu_title: submodule.sub_modu_title,
+      sub_modu_title_hindi: submodule.sub_modu_title_hindi || '',
       sub_modu_description: submodule.sub_modu_description,
-      sub_mod: submodule.sub_mod || [{ title: '', description: '', topics: [] }],
+      sub_modu_description_hindi: submodule.sub_modu_description_hindi || '',
+      sub_mod: submodule.sub_mod || [{ title: '', description: '' }],
+      sub_mod_hindi: submodule.sub_mod_hindi || [{ title: '', description: '' }],
       image: null,
       order: submodule.order
     })
@@ -448,7 +471,8 @@ const AdminDashboard = () => {
   const handleAddSubModSection = () => {
     setSubmoduleFormData({
       ...submoduleFormData,
-      sub_mod: [...submoduleFormData.sub_mod, { title: '', description: '' }]
+      sub_mod: [...submoduleFormData.sub_mod, { title: '', description: '' }],
+      sub_mod_hindi: [...(submoduleFormData.sub_mod_hindi || []), { title: '', description: '' }]
     })
   }
 
@@ -456,9 +480,12 @@ const AdminDashboard = () => {
     if (submoduleFormData.sub_mod.length > 1) {
       const newSubMod = [...submoduleFormData.sub_mod]
       newSubMod.splice(index, 1)
+      const newSubModHindi = [...(submoduleFormData.sub_mod_hindi || [])]
+      newSubModHindi.splice(index, 1)
       setSubmoduleFormData({
         ...submoduleFormData,
-        sub_mod: newSubMod
+        sub_mod: newSubMod,
+        sub_mod_hindi: newSubModHindi
       })
     }
   }
@@ -955,12 +982,23 @@ const AdminDashboard = () => {
         <Card.Body>
           <Form onSubmit={handleAddModuleSubmit}>
             <Form.Group className="mb-3">
-              <Form.Label>Module Title</Form.Label>
+              <Form.Label>Module Title (English)</Form.Label>
               <Form.Control
                 type="text"
                 value={moduleFormData.mod_title}
                 onChange={(e) => setModuleFormData({ ...moduleFormData, mod_title: e.target.value })}
                 placeholder="e.g. Introduction to Python"
+                required
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Module Title (Hindi)</Form.Label>
+              <Form.Control
+                type="text"
+                value={moduleFormData.mod_title_hindi}
+                onChange={(e) => setModuleFormData({ ...moduleFormData, mod_title_hindi: e.target.value })}
+                placeholder="e.g. पायथन का परिचय"
                 required
               />
             </Form.Group>
@@ -1014,12 +1052,19 @@ const AdminDashboard = () => {
           ) : (
             <div className="modules-list">
               {modules.map((module, index) => (
-                <Card key={module.id} className="mb-3 border-left-primary">
+                <Card key={module.module_id} className="mb-3 border-left-primary">
                   <Card.Body>
                      <div className="d-flex justify-content-between align-items-start mb-3">
-                       <h6 className="fw-bold mb-0">
-                         Module {module.order}: {renderContentWithLineBreaks(module.mod_title)}
-                       </h6>
+                       <div className="flex-grow-1">
+                         <h6 className="fw-bold mb-1">
+                           Module {module.order}: {renderContentWithLineBreaks(module.mod_title)}
+                         </h6>
+                         {module.mod_title_hindi && (
+                           <p className="small text-muted mb-0 fst-italic">
+                             {renderContentWithLineBreaks(module.mod_title_hindi)}
+                           </p>
+                         )}
+                       </div>
                        <Badge bg="secondary">ID: {module.module_id}</Badge>
                      </div>
                      {module.video_link && (
@@ -1027,6 +1072,23 @@ const AdminDashboard = () => {
                          <a href={module.video_link} target="_blank" rel="noopener noreferrer" className="text-info small">
                            <FaEye className="me-1" /> Watch Video
                          </a>
+                       </div>
+                     )}
+                     {module.sub_modules && module.sub_modules.length > 0 && (
+                       <div className="mb-3 p-2 border rounded bg-light">
+                         <h6 className="small fw-bold mb-2">Submodules ({module.sub_modules.length})</h6>
+                         {module.sub_modules.map((submod, subIndex) => (
+                           <div key={subIndex} className="mb-2 p-2 border rounded bg-white">
+                             <p className="small fw-bold mb-1">{renderContentWithLineBreaks(submod.sub_modu_title)}</p>
+                             {submod.sub_modu_title_hindi && (
+                               <p className="small text-muted mb-1 fst-italic">{renderContentWithLineBreaks(submod.sub_modu_title_hindi)}</p>
+                             )}
+                             <p className="small mb-1">{renderContentWithLineBreaks(submod.sub_modu_description)}</p>
+                             {submod.sub_modu_description_hindi && (
+                               <p className="small text-muted mb-2 fst-italic">{renderContentWithLineBreaks(submod.sub_modu_description_hindi)}</p>
+                             )}
+                           </div>
+                         ))}
                        </div>
                      )}
                     <div className="d-flex gap-2">
@@ -1165,7 +1227,7 @@ const AdminDashboard = () => {
         <Card.Body>
           <Form onSubmit={handleAddSubmoduleSubmit}>
             <Form.Group className="mb-3">
-              <Form.Label>Submodule Title</Form.Label>
+              <Form.Label>Submodule Title (English)</Form.Label>
               <Form.Control
                 type="text"
                 value={submoduleFormData.sub_modu_title}
@@ -1176,13 +1238,36 @@ const AdminDashboard = () => {
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label>Submodule Description</Form.Label>
+              <Form.Label>Submodule Title (Hindi)</Form.Label>
+              <Form.Control
+                type="text"
+                value={submoduleFormData.sub_modu_title_hindi}
+                onChange={(e) => setSubmoduleFormData({ ...submoduleFormData, sub_modu_title_hindi: e.target.value })}
+                placeholder="e.g. परिचय"
+                required
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Submodule Description (English)</Form.Label>
               <Form.Control
                 as="textarea"
                 rows={6}
                 value={submoduleFormData.sub_modu_description}
                 onChange={(e) => setSubmoduleFormData({ ...submoduleFormData, sub_modu_description: e.target.value })}
                 placeholder="e.g. Basic concepts"
+                required
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Submodule Description (Hindi)</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={6}
+                value={submoduleFormData.sub_modu_description_hindi}
+                onChange={(e) => setSubmoduleFormData({ ...submoduleFormData, sub_modu_description_hindi: e.target.value })}
+                placeholder="e.g. मूल अवधारणाएं"
                 required
               />
             </Form.Group>
@@ -1225,7 +1310,7 @@ const AdminDashboard = () => {
                   </div>
                   
                   <Form.Group className="mb-3">
-                    <Form.Label className="small">Section Title</Form.Label>
+                    <Form.Label className="small">Section Title (English)</Form.Label>
                     <Form.Control
                       type="text"
                       placeholder="e.g. Introduction to Python"
@@ -1233,15 +1318,50 @@ const AdminDashboard = () => {
                       onChange={(e) => handleSubModSectionChange(sectionIndex, 'title', e.target.value)}
                     />
                   </Form.Group>
+
+                  <Form.Group className="mb-3">
+                    <Form.Label className="small">Section Title (Hindi)</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="e.g. पायथन का परिचय"
+                      value={submoduleFormData.sub_mod_hindi && submoduleFormData.sub_mod_hindi[sectionIndex]?.title || ''}
+                      onChange={(e) => {
+                        const newSubModHindi = [...(submoduleFormData.sub_mod_hindi || [])]
+                        if (!newSubModHindi[sectionIndex]) {
+                          newSubModHindi[sectionIndex] = { title: '', description: '' }
+                        }
+                        newSubModHindi[sectionIndex].title = e.target.value
+                        setSubmoduleFormData({ ...submoduleFormData, sub_mod_hindi: newSubModHindi })
+                      }}
+                    />
+                  </Form.Group>
                   
                   <Form.Group className="mb-3">
-                    <Form.Label className="small">Section Description</Form.Label>
+                    <Form.Label className="small">Section Description (English)</Form.Label>
                     <Form.Control
                       as="textarea"
-                       rows={10}
+                      rows={6}
                       placeholder="e.g. Basic concepts and fundamentals"
                       value={section.description}
                       onChange={(e) => handleSubModSectionChange(sectionIndex, 'description', e.target.value)}
+                    />
+                  </Form.Group>
+
+                  <Form.Group className="mb-3">
+                    <Form.Label className="small">Section Description (Hindi)</Form.Label>
+                    <Form.Control
+                      as="textarea"
+                      rows={6}
+                      placeholder="e.g. मूल अवधारणाएं और बुनियादी बातें"
+                      value={submoduleFormData.sub_mod_hindi && submoduleFormData.sub_mod_hindi[sectionIndex]?.description || ''}
+                      onChange={(e) => {
+                        const newSubModHindi = [...(submoduleFormData.sub_mod_hindi || [])]
+                        if (!newSubModHindi[sectionIndex]) {
+                          newSubModHindi[sectionIndex] = { title: '', description: '' }
+                        }
+                        newSubModHindi[sectionIndex].description = e.target.value
+                        setSubmoduleFormData({ ...submoduleFormData, sub_mod_hindi: newSubModHindi })
+                      }}
                     />
                   </Form.Group>
                 </div>
@@ -1294,30 +1414,61 @@ const AdminDashboard = () => {
           ) : (
             <div className="submodules-list">
               {submodules.map((submodule, index) => (
-                <Card key={submodule.id} className="mb-3 border-left-primary">
+                <Card key={submodule.sub_module_id} className="mb-3 border-left-primary">
                   <Card.Body>
                     <div className="d-flex justify-content-between align-items-start mb-3">
-                      <h6 className="fw-bold mb-0">
-                        Submodule {submodule.order}: {renderContentWithLineBreaks(submodule.sub_modu_title)}
-                      </h6>
+                      <div className="flex-grow-1">
+                        <h6 className="fw-bold mb-1">
+                          Submodule {submodule.order}: {renderContentWithLineBreaks(submodule.sub_modu_title)}
+                        </h6>
+                        {submodule.sub_modu_title_hindi && (
+                          <p className="small text-muted mb-0 fst-italic">{renderContentWithLineBreaks(submodule.sub_modu_title_hindi)}</p>
+                        )}
+                      </div>
                       <Badge bg="secondary">ID: {submodule.sub_module_id}</Badge>
                     </div>
-                    <p className="mb-3">{renderContentWithLineBreaks(submodule.sub_modu_description)}</p>
+                    
                     <div className="mb-3">
-                      <h6 className="small fw-bold">Sections:</h6>
-                      {submodule.sub_mod.map((section, sectionIndex) => (
-                        <div key={sectionIndex} className="mb-3 p-2 border rounded bg-light">
-                          <div className="d-flex justify-content-between align-items-start mb-2">
-                            <h6 className="small fw-bold mb-0">
+                      <p className="mb-1">{renderContentWithLineBreaks(submodule.sub_modu_description)}</p>
+                      {submodule.sub_modu_description_hindi && (
+                        <p className="text-muted small fst-italic mb-0">{renderContentWithLineBreaks(submodule.sub_modu_description_hindi)}</p>
+                      )}
+                    </div>
+                    
+                    <div className="mb-3">
+                      <h6 className="small fw-bold mb-2">Sections (English):</h6>
+                      {submodule.sub_mod && submodule.sub_mod.length > 0 ? (
+                        submodule.sub_mod.map((section, sectionIndex) => (
+                          <div key={sectionIndex} className="mb-2 p-2 border rounded bg-light">
+                            <h6 className="small fw-bold mb-1">
                               Section {sectionIndex + 1}: {renderContentWithLineBreaks(section.title || 'Untitled Section')}
                             </h6>
+                            {section.description && (
+                              <p className="small mb-0">{renderContentWithLineBreaks(section.description)}</p>
+                            )}
                           </div>
-                          {section.description && (
-                            <p className="small mb-2">{renderContentWithLineBreaks(section.description)}</p>
-                          )}
-                        </div>
-                      ))}
+                        ))
+                      ) : (
+                        <p className="small text-muted">No English sections found</p>
+                      )}
                     </div>
+
+                    {submodule.sub_mod_hindi && submodule.sub_mod_hindi.length > 0 && (
+                      <div className="mb-3">
+                        <h6 className="small fw-bold mb-2">Sections (हिंदी):</h6>
+                        {submodule.sub_mod_hindi.map((section, sectionIndex) => (
+                          <div key={sectionIndex} className="mb-2 p-2 border rounded bg-light">
+                            <h6 className="small fw-bold mb-1">
+                              Section {sectionIndex + 1}: {renderContentWithLineBreaks(section.title || 'Untitled Section')}
+                            </h6>
+                            {section.description && (
+                              <p className="small mb-0">{renderContentWithLineBreaks(section.description)}</p>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    
                     {submodule.image && (
                       <div className="mb-3">
                         <Image 
@@ -1759,10 +1910,13 @@ const AdminDashboard = () => {
                   <div className="modules-list">
                     {selectedCourse.modules.map((mod, index) => (
                       <div key={index} className="module-item mb-4 p-3 border rounded">
-                        <h6 className="fw-bold mb-2">
+                        <h6 className="fw-bold mb-1">
                           Module {mod.order}: {renderContentWithLineBreaks(mod.mod_title)}
                           <Badge bg="secondary" className="ms-2">ID: {mod.module_id}</Badge>
                         </h6>
+                        {mod.mod_title_hindi && (
+                          <p className="small text-muted mb-2 fst-italic">{renderContentWithLineBreaks(mod.mod_title_hindi)}</p>
+                        )}
                         
                         {mod.sub_modules && mod.sub_modules.length > 0 && (
                           <div className="mt-3">
@@ -1770,13 +1924,19 @@ const AdminDashboard = () => {
                             <div className="submodules-list mt-2">
                               {mod.sub_modules.map((subMod, subIndex) => (
                                 <div key={subIndex} className="submodule-item mb-3 p-2 border rounded bg-light">
-                                  <h7 className="fw-bold">
-                                    Submodule {subMod.order}: {renderContentWithLineBreaks(subMod.sub_modu_title)}
+                                  <h7 className="fw-bold mb-1">
+                                    {renderContentWithLineBreaks(subMod.sub_modu_title)}
                                     <Badge bg="secondary" className="ms-2">ID: {subMod.sub_module_id}</Badge>
                                   </h7>
+                                  {subMod.sub_modu_title_hindi && (
+                                    <p className="small text-muted mb-1 fst-italic">{renderContentWithLineBreaks(subMod.sub_modu_title_hindi)}</p>
+                                  )}
                                   
                                   {subMod.sub_modu_description && (
                                     <p className="small mt-1">{renderContentWithLineBreaks(subMod.sub_modu_description)}</p>
+                                  )}
+                                  {subMod.sub_modu_description_hindi && (
+                                    <p className="small text-muted fst-italic mt-1">{renderContentWithLineBreaks(subMod.sub_modu_description_hindi)}</p>
                                   )}
                                   
                                   {subMod.image && (
@@ -1793,27 +1953,33 @@ const AdminDashboard = () => {
                                   
                                   {subMod.sub_mod && subMod.sub_mod.length > 0 && (
                                     <div className="mt-2">
-                                      <h8 className="fw-bold text-muted small">Sections:</h8>
+                                      <h8 className="fw-bold text-muted small">Sections (English):</h8>
                                       <div className="sections-list mt-1">
                                         {subMod.sub_mod.map((section, sectionIndex) => (
                                           <div key={sectionIndex} className="section-item mb-2 p-1 border rounded">
                                             <h8 className="fw-bold small">
-                                              Section {sectionIndex + 1}: {renderContentWithLineBreaks(section.title || 'Untitled Section')}
+                                              {renderContentWithLineBreaks(section.title || 'Untitled Section')}
                                             </h8>
                                             {section.description && (
                                               <p className="small mt-1">{renderContentWithLineBreaks(section.description)}</p>
                                             )}
-                                            {section.topics && section.topics.length > 0 && (
-                                              <div className="mt-1">
-                                                <small className="text-muted">Topics:</small>
-                                                <ul className="list-inline small mt-1">
-                                                  {section.topics.map((topic, topicIndex) => (
-                                                    <li key={topicIndex} className="list-inline-item">
-                                                      <Badge bg="info">{topic}</Badge>
-                                                    </li>
-                                                  ))}
-                                                </ul>
-                                              </div>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  )}
+
+                                  {subMod.sub_mod_hindi && subMod.sub_mod_hindi.length > 0 && (
+                                    <div className="mt-2">
+                                      <h8 className="fw-bold text-muted small">Sections (हिंदी):</h8>
+                                      <div className="sections-list mt-1">
+                                        {subMod.sub_mod_hindi.map((section, sectionIndex) => (
+                                          <div key={sectionIndex} className="section-item mb-2 p-1 border rounded">
+                                            <h8 className="fw-bold small">
+                                              {renderContentWithLineBreaks(section.title || 'Untitled Section')}
+                                            </h8>
+                                            {section.description && (
+                                              <p className="small mt-1">{renderContentWithLineBreaks(section.description)}</p>
                                             )}
                                           </div>
                                         ))}

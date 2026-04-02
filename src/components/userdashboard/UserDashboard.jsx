@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Container, Row, Col, Card, Button, Badge, Spinner, Accordion, Alert } from 'react-bootstrap'
 import { useAuth } from '../../contexts/AuthContext'
 import UserTopNav from './UserTopNav'
 import UseLeftNav from './UseLeftNav'
 import "../../assets/css/UserDashboard.css"
 import { renderContentWithLineBreaks } from '../../utils/contentRenderer'
-import { FaBook, FaCheckCircle, FaClock, FaEye, FaLock, FaUnlock, FaQuestionCircle, FaArrowLeft, FaFileAlt, FaImage, FaGraduationCap, FaChalkboardTeacher, FaCertificate, FaStar, FaPlay, FaAward, FaCalendarCheck, FaCrown } from 'react-icons/fa'
+import { FaBook, FaCheckCircle, FaClock, FaEye, FaLock, FaUnlock, FaQuestionCircle, FaArrowLeft, FaFileAlt, FaImage, FaGraduationCap, FaChalkboardTeacher, FaCertificate, FaStar, FaPlay, FaAward, FaCalendarCheck, FaCrown, FaLayerGroup } from 'react-icons/fa'
 import { useLocation, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
@@ -47,6 +47,9 @@ const UserDashboard = () => {
   const [feedbackSubmitting, setFeedbackSubmitting] = useState(false)
   const [feedbackError, setFeedbackError] = useState(null)
   const [submittedFeedbackCourses, setSubmittedFeedbackCourses] = useState([])
+
+  // Course language preference state (default: hindi)
+  const [courseLanguage, setCourseLanguage] = useState('hindi')
 
   const location = useLocation()
   const navigate = useNavigate()
@@ -318,6 +321,7 @@ const UserDashboard = () => {
     setCompletedModules([])
     setError(null)
     setActiveAccordionKey('0') // Reset accordion to first module
+    setCourseLanguage('hindi') // Reset language to default
   }
 
   // Check if module is accessible
@@ -491,6 +495,23 @@ const UserDashboard = () => {
     const course = courses.find(c => c.course_id === selectedCourse.course_id)
     if (course && course.certificate_file) {
       window.open(`https://brjobsedu.com/girls_course/girls_course_backend${course.certificate_file}`, '_blank')
+    }
+  }
+
+  // Scroll to specific submodule when clicked from the list
+  const scrollToSubmodule = (submoduleIndex, moduleIndex) => {
+    const elementId = `submodule-${moduleIndex}-${submoduleIndex}`
+    const element = document.getElementById(elementId)
+    
+    if (element) {
+      // Use smooth scroll behavior
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      
+      // Optional: Add highlight effect
+      element.classList.add('highlight-submodule')
+      setTimeout(() => {
+        element.classList.remove('highlight-submodule')
+      }, 2000)
     }
   }
 
@@ -954,27 +975,49 @@ const UserDashboard = () => {
                           {renderContentWithLineBreaks(selectedCourse.course_name)} - Modules
                         </h4>
                        
-                       {/* Certificate Button */}
-                       {isCertificateGenerated() ? (
-                         <Button 
-                           variant="success" 
-                           onClick={viewCertificate}
-                           className="d-flex align-items-center view-certificate-btn "
-                         >
-                           <FaCertificate className="me-2" />
-                           View Certificate
-                         </Button>
-                       ) : (
-                         <Button 
-                           variant="primary" 
-                           onClick={async () => await generateCertificate(selectedCourse)}
-                           disabled={!areAllModulesCompleted()}
-                           className="d-flex align-items-center button-view"
-                         >
-                           <FaCertificate className="me-2" />
-                           Generate Certificate
-                         </Button>
-                       )}
+                       <div className="d-flex align-items-center gap-2">
+                         {/* Language Toggle */}
+                         <div className="btn-group" role="group">
+                           <Button 
+                             variant={courseLanguage === 'hindi' ? 'primary' : 'outline-primary'}
+                             size="sm"
+                             onClick={() => setCourseLanguage('hindi')}
+                             className="fw-semibold"
+                           >
+                             हिंदी
+                           </Button>
+                           <Button 
+                             variant={courseLanguage === 'english' ? 'primary' : 'outline-primary'}
+                             size="sm"
+                             onClick={() => setCourseLanguage('english')}
+                             className="fw-semibold"
+                           >
+                             English
+                           </Button>
+                         </div>
+
+                         {/* Certificate Button */}
+                         {isCertificateGenerated() ? (
+                           <Button 
+                             variant="success" 
+                             onClick={viewCertificate}
+                             className="d-flex align-items-center view-certificate-btn "
+                           >
+                             <FaCertificate className="me-2" />
+                             View Certificate
+                           </Button>
+                         ) : (
+                           <Button 
+                             variant="primary" 
+                             onClick={async () => await generateCertificate(selectedCourse)}
+                             disabled={!areAllModulesCompleted()}
+                             className="d-flex align-items-center button-view"
+                           >
+                             <FaCertificate className="me-2" />
+                             Generate Certificate
+                           </Button>
+                         )}
+                       </div>
                      </div>
 
                      {/* Course Completed Message */}
@@ -1086,7 +1129,11 @@ const UserDashboard = () => {
                                         </div>
                                       )}
                                      <span className={!isAccessible ? 'text-gray-300' : 'text-white'}>
-                                       Module {module.order}: {renderContentWithLineBreaks(module.mod_title)}
+                                       Module {module.order}: {renderContentWithLineBreaks(
+                                         courseLanguage === 'english' 
+                                           ? module.mod_title 
+                                           : (module.mod_title_hindi || module.mod_title)
+                                       )}
                                      </span>
                                      {!isAccessible && (
                                        <span className="ms-auto text-sm text-gray-300">
@@ -1116,12 +1163,49 @@ const UserDashboard = () => {
                                            </div>
                                          </div>
                                        </Col>
+
+                                       {/* Submodules List */}
+                                       <Col md={6}>
+                                         <div className="p-3 bg-light rounded h-100">
+                                           <h6 className="mb-3 fw-semibold">
+                                             <FaLayerGroup className="me-2 text-primary" /> Submodules
+                                           </h6>
+                                           {module.sub_modules && module.sub_modules.length > 0 ? (
+                                             <div className="submodules-list">
+                                               {module.sub_modules.map((submod, subIndex) => (
+                                                 <div 
+                                                   key={submod.sub_module_id} 
+                                                   className="submodule-item p-2 mb-2 bg-white rounded border-left border-primary"
+                                                   onClick={() => scrollToSubmodule(subIndex, moduleIndex)}
+                                                   style={{ cursor: 'pointer', transition: 'all 0.3s ease' }}
+                                                   onMouseEnter={(e) => e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)'}
+                                                   onMouseLeave={(e) => e.currentTarget.style.boxShadow = 'none'}
+                                                 >
+                                                   <h6 className="mb-1 fw-semibold text-dark">
+                                                     <span className="badge bg-primary me-2">{subIndex + 1}</span>
+                                                     {renderContentWithLineBreaks(
+                                                       courseLanguage === 'english' 
+                                                         ? submod.sub_modu_title 
+                                                         : (submod.sub_modu_title_hindi || submod.sub_modu_title)
+                                                     )}
+                                                   </h6>
+                                                 </div>
+                                               ))}
+                                             </div>
+                                           ) : (
+                                             <p className="text-muted text-center py-3 small">No submodules available</p>
+                                           )}
+                                         </div>
+                                       </Col>
                                      </Row>
 
                                     {module.sub_modules && module.sub_modules.length > 0 ? (
                                      <div className="sub-modules-container">
                                         {module.sub_modules.map((subModule, subModuleIndex) => (
-                                         <div key={subModule.sub_module_id} className="book-card mb-4">
+                                         <div 
+                                           key={subModule.sub_module_id} 
+                                           id={`submodule-${moduleIndex}-${subModuleIndex}`}
+                                           className="book-card mb-4">
                                            <div className="book-header d-flex align-items-center mb-3">
                                              <div className="book-icon me-3">
                                                {subModuleIndex % 3 === 0 ? (
@@ -1134,11 +1218,22 @@ const UserDashboard = () => {
                                              </div>
                                              <div className="book-title flex-grow-1">
                                                <h5 className="mb-1 fw-bold text-primary">
-                                              {subModule.order}: {renderContentWithLineBreaks(subModule.sub_modu_title)}
+                                              {subModule.order}: {renderContentWithLineBreaks(
+                                                courseLanguage === 'english' 
+                                                  ? subModule.sub_modu_title 
+                                                  : (subModule.sub_modu_title_hindi || subModule.sub_modu_title)
+                                              )}
                                                </h5>
-                                               {subModule.sub_modu_description && (
+                                               {(courseLanguage === 'english' 
+                                                 ? subModule.sub_modu_description 
+                                                 : (subModule.sub_modu_description_hindi || subModule.sub_modu_description)
+                                               ) && (
                                                  <p className="mb-0 text-muted small">
-                                                   {renderContentWithLineBreaks(subModule.sub_modu_description)}
+                                                   {renderContentWithLineBreaks(
+                                                     courseLanguage === 'english' 
+                                                       ? subModule.sub_modu_description 
+                                                       : (subModule.sub_modu_description_hindi || subModule.sub_modu_description)
+                                                   )}
                                                  </p>
                                                )}
                                              </div>
@@ -1166,14 +1261,14 @@ const UserDashboard = () => {
                                                const contentElement = (
                                                  <Col lg={contentCol} md={12}>
                                                    <div className="content-wrapper">
-                                                     {subModule.sub_mod && subModule.sub_mod.length > 0 ? (
+                                                     {((courseLanguage === 'english' ? subModule.sub_mod : subModule.sub_mod_hindi) || []).length > 0 ? (
                                                        <div className="content-section">
                                                          <div className="section-header d-flex align-items-center mb-3">
                                                            <FaFileAlt className="me-2 text-primary" />
                                                            <h6 className="mb-0 fw-semibold">📖 Course Content</h6>
                                                          </div>
                                                          <div className="content-items">
-                                                           {subModule.sub_mod.map((item, itemIndex) => (
+                                                           {(courseLanguage === 'english' ? subModule.sub_mod : subModule.sub_mod_hindi).map((item, itemIndex) => (
                                                              <div key={itemIndex} className="content-item p-3 mb-3 bg-white rounded-3 shadow-sm border-l-4 border-primary">
                                                                {Array.isArray(item) && item.length === 2 ? (
                                                                  <div className="content-pair">
