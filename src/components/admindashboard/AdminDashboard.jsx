@@ -76,7 +76,9 @@ const AdminDashboard = () => {
   const [questions, setQuestions] = useState([])
   const [questionFormData, setQuestionFormData] = useState({
     question_text: '',
+    question_text_hindi: '',
     options: ['', '', '', ''],
+    options_hindi: ['', '', '', ''],
     correct_answer: 0,
     marks: 1
   })
@@ -484,7 +486,9 @@ const AdminDashboard = () => {
     setQuestions([])
     setQuestionFormData({
       question_text: '',
+      question_text_hindi: '',
       options: ['', '', '', ''],
+      options_hindi: ['', '', '', ''],
       correct_answer: 0,
       marks: 1
     })
@@ -651,27 +655,66 @@ const AdminDashboard = () => {
         course_id: questionsViewData.course.course_id,
         module_id: questionsViewData.module.module_id,
         question_text: questionFormData.question_text,
+        question_text_hindi: questionFormData.question_text_hindi,
         options: questionFormData.options,
+        options_hindi: questionFormData.options_hindi,
         correct_answer: questionFormData.correct_answer,
         marks: questionFormData.marks
       }
 
-      await axios.post('https://brjobsedu.com/girls_course/girls_course_backend/api/module-questions/', dataToSend, config)
+      if (questionFormData.id) {
+        dataToSend.id = questionFormData.id
+        await axios.put('https://brjobsedu.com/girls_course/girls_course_backend/api/module-questions/', dataToSend, config)
+        alert('Question updated successfully!')
+      } else {
+        await axios.post('https://brjobsedu.com/girls_course/girls_course_backend/api/module-questions/', dataToSend, config)
+        alert('Question added successfully!')
+      }
       
       // Reset form and fetch updated questions
       setQuestionFormData({
         question_text: '',
+        question_text_hindi: '',
         options: ['', '', '', ''],
+        options_hindi: ['', '', '', ''],
         correct_answer: 0,
         marks: 1
       })
       fetchQuestions(questionsViewData.course.course_id, questionsViewData.module.module_id)
-      alert('Question added successfully!')
     } catch (error) {
       if (error.response) {
         alert(`Failed: ${error.response.data.message || error.response.data.detail || 'Check console for details'}`)
       } else {
         alert('Failed: ' + error.message)
+      }
+    }
+  }
+
+  const handleEditQuestion = (question) => {
+    setQuestionFormData({
+      id: question.id,
+      question_text: question.question_text,
+      question_text_hindi: question.question_text_hindi || '',
+      options: question.options || ['', '', '', ''],
+      options_hindi: question.options_hindi || ['', '', '', ''],
+      correct_answer: question.correct_answer,
+      marks: question.marks
+    })
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const handleDeleteQuestion = async (question) => {
+    if (window.confirm('Are you sure you want to delete this question?')) {
+      try {
+        const config = getAuthConfig()
+        await axios.delete('https://brjobsedu.com/girls_course/girls_course_backend/api/module-questions/', {
+          data: { id: question.id },
+          ...config
+        })
+        fetchQuestions(questionsViewData.course.course_id, questionsViewData.module.module_id)
+        alert('Question deleted successfully!')
+      } catch (error) {
+        alert('Failed to delete question. Please check the console for details.')
       }
     }
   }
@@ -1486,13 +1529,13 @@ const AdminDashboard = () => {
         <>
           {/* Add Question Form */}
           <Card className="shadow-sm border-0 mb-4">
-            <Card.Header className="bg-primary text-white">
-              <FaPlus className="me-2" /> Add New Question
+              <Card.Header className="bg-primary text-white">
+              <FaPlus className="me-2" /> {questionFormData.id ? 'Edit Question' : 'Add New Question'}
             </Card.Header>
             <Card.Body>
               <Form onSubmit={handleAddQuestion}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Question Text</Form.Label>
+                  <Form.Label>Question Text (English)</Form.Label>
                   <Form.Control
                     as="textarea"
                     rows={3}
@@ -1503,8 +1546,20 @@ const AdminDashboard = () => {
                   />
                 </Form.Group>
 
+                <Form.Group className="mb-3">
+                  <Form.Label>Question Text (Hindi)</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    rows={3}
+                    value={questionFormData.question_text_hindi}
+                    onChange={(e) => setQuestionFormData({ ...questionFormData, question_text_hindi: e.target.value })}
+                    placeholder="अपना प्रश्न यहाँ दर्ज करें..."
+                    required
+                  />
+                </Form.Group>
+
                 <div className="mb-3">
-                  <Form.Label>Options</Form.Label>
+                  <Form.Label>Options (English)</Form.Label>
                   {questionFormData.options.map((option, index) => (
                     <Form.Group key={index} className="mb-2">
                       <InputGroup>
@@ -1518,6 +1573,28 @@ const AdminDashboard = () => {
                             setQuestionFormData({ ...questionFormData, options: newOptions })
                           }}
                           placeholder={`Option ${String.fromCharCode(65 + index)}`}
+                          required
+                        />
+                      </InputGroup>
+                    </Form.Group>
+                  ))}
+                </div>
+
+                <div className="mb-3">
+                  <Form.Label>Options (Hindi)</Form.Label>
+                  {questionFormData.options_hindi.map((option, index) => (
+                    <Form.Group key={index} className="mb-2">
+                      <InputGroup>
+                        <InputGroup.Text>{String.fromCharCode(65 + index)}</InputGroup.Text>
+                        <Form.Control
+                          type="text"
+                          value={option}
+                          onChange={(e) => {
+                            const newOptions = [...questionFormData.options_hindi]
+                            newOptions[index] = e.target.value
+                            setQuestionFormData({ ...questionFormData, options_hindi: newOptions })
+                          }}
+                          placeholder={`विकल्प ${String.fromCharCode(65 + index)}`}
                           required
                         />
                       </InputGroup>
@@ -1552,7 +1629,7 @@ const AdminDashboard = () => {
                 </Form.Group>
 
                 <Button variant="primary" type="submit">
-                  <FaPlus className="me-2" /> Add Question
+                  <FaPlus className="me-2" /> {questionFormData.id ? 'Update Question' : 'Add Question'}
                 </Button>
               </Form>
             </Card.Body>
@@ -1584,7 +1661,10 @@ const AdminDashboard = () => {
                             Question {index + 1} ({question.marks} mark{question.marks > 1 ? 's' : ''})
                           </h6>
                         </div>
-                        <p className="mb-3">{question.question_text}</p>
+                        <p className="mb-1 fw-bold">{question.question_text}</p>
+                        {question.question_text_hindi && (
+                          <p className="mb-3 text-muted small fst-italic">{question.question_text_hindi}</p>
+                        )}
                         <div className="mb-3">
                           {question.options.map((option, optIndex) => (
                             <div key={optIndex} className="mb-2">
@@ -1596,13 +1676,32 @@ const AdminDashboard = () => {
                                 {String.fromCharCode(65 + optIndex)}. 
                               </div>
                               <span className="ms-2">{option}</span>
+                              {question.options_hindi && question.options_hindi[optIndex] && (
+                                <span className="ms-2 text-muted small fst-italic">({question.options_hindi[optIndex]})</span>
+                              )}
                             </div>
                           ))}
                         </div>
-                        <div className="text-muted small">
+                        <div className="text-muted small mb-2">
                           Correct Answer: <span className="fw-bold text-success">
                             {String.fromCharCode(65 + question.correct_answer)}
                           </span>
+                        </div>
+                        <div className="d-flex gap-2">
+                          <Button 
+                            variant="outline-warning" 
+                            size="sm"
+                            onClick={() => handleEditQuestion(question)}
+                          >
+                            <FaEdit className="me-1" /> Edit
+                          </Button>
+                          <Button 
+                            variant="outline-danger" 
+                            size="sm"
+                            onClick={() => handleDeleteQuestion(question)}
+                          >
+                            <FaTrash className="me-1" /> Delete
+                          </Button>
                         </div>
                       </Card.Body>
                     </Card>
