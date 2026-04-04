@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react'
 import { Container, Row, Col, Card, Spinner, Button, Modal, Form, Alert, Badge, Tooltip, OverlayTrigger } from 'react-bootstrap'
 import axios from 'axios'
 import { useAuth } from '../../contexts/AuthContext'
+import { useLanguage } from '../../contexts/LanguageContext'
 import { useNavigate } from 'react-router-dom'
 import UserTopNav from './UserTopNav'
 import UseLeftNav from './UseLeftNav'
+import TransText from '../TransText'
 import { FaCopy, FaArrowLeft, FaCheck, FaEnvelope, FaPhone, FaMapMarkerAlt, FaIdCard, FaCalendarAlt, FaBuilding, FaUserShield, FaUser } from 'react-icons/fa'
 
 const UserProfile = () => {
@@ -176,21 +178,21 @@ const UserProfile = () => {
                 className="d-flex align-items-center"
               >
                 <FaArrowLeft className="me-2" />
-                Back to Dashboard
+                <TransText k="profile.backToDashboard" as="span" />
               </Button>
             </div>
             
             {updateSuccess && (
               <Alert variant="success" className="mb-4 animate-fade-in">
                 <FaCheck className="me-2" />
-                Profile updated successfully!
+                <TransText k="profile.profileUpdated" as="span" />
               </Alert>
             )}
 
             {loading ? (
               <div className="text-center py-5">
                 <Spinner animation="border" variant="primary" style={{ width: '60px', height: '60px' }} />
-                <p className="mt-3">Loading profile...</p>
+                <p className="mt-3"><TransText k="profile.loading" as="span" /></p>
               </div>
             ) : userData ? (
               <Row>
@@ -234,7 +236,7 @@ const UserProfile = () => {
                                  onClick={() => window.open(`https://brjobsedu.com/girls_course/girls_course_backend${userData.adharcard_file}`, '_blank')}
                                >
                                  <FaIdCard className="me-2" />
-                                 View Aadhaar
+                                 <TransText k="profile.viewAadhaar" as="span" />
                                </Button>
                              )}
                              {userRoleType !== 'student-unpaid' && (
@@ -252,7 +254,7 @@ const UserProfile = () => {
                                    onClick={() => document.getElementById('profilePhotoInput').click()}
                                  >
                                    <FaUser className="me-2" />
-                                   {selectedFile ? 'Change Photo' : 'Update Photo'}
+                                   <TransText k={selectedFile ? "profile.changePhoto" : "profile.updatePhoto"} as="span" />
                                  </Button>
                                  {selectedFile && (
                                    <Button 
@@ -261,7 +263,7 @@ const UserProfile = () => {
                                      onClick={handleUpload}
                                      disabled={uploading}
                                    >
-                                     {uploading ? 'Uploading...' : 'Upload'}
+                                     <TransText k={uploading ? "profile.uploading" : "profile.upload"} as="span" />
                                    </Button>
                                  )}
                                </>
@@ -271,7 +273,7 @@ const UserProfile = () => {
                      </Card.Body>
                       <Card className="shadow-sm border-0 profile-details-card" style={{ borderRadius: '10px' }}>
                     <Card.Header className="bg-white border-bottom-0 pt-3">
-                      <h6 className="mb-0">Profile Information</h6>
+                      <h6 className="mb-0"><TransText k="profile.information" as="span" /></h6>
                     </Card.Header>
                      <Card.Body className="p-3">
                       <Row>
@@ -282,7 +284,7 @@ const UserProfile = () => {
                               <div className="info-item">
                                 <div className="info-label small">
                                   <FaIdCard className="me-2 text-muted" />
-                                  Student ID
+                                  <TransText k="profile.studentId" as="span" />
                                 </div>
                                 <div className="info-value small">{userData.student_id}</div>
                               </div>
@@ -291,7 +293,7 @@ const UserProfile = () => {
                               <div className="info-item">
                                 <div className="info-label small">
                                   <FaIdCard className="me-2 text-muted" />
-                                  Aadhaar Number
+                                  <TransText k="profile.aadhaarNumber" as="span" />
                                 </div>
                                 <div className="info-value small">{userData.aadhaar_no}</div>
                               </div>
@@ -300,7 +302,7 @@ const UserProfile = () => {
                               <div className="info-item">
                                 <div className="info-label small">
                                   <FaEnvelope className="me-2 text-muted" />
-                                  Email Address
+                                  <TransText k="profile.emailAddress" as="span" />
                                 </div>
                                 <div className="info-value small">{userData.email}</div>
                               </div>
@@ -309,7 +311,7 @@ const UserProfile = () => {
                               <div className="info-item">
                                 <div className="info-label small">
                                   <FaPhone className="me-2 text-muted" />
-                                  Mobile Number
+                                  <TransText k="profile.mobileNumber" as="span" />
                                 </div>
                                 <div className="info-value small">{userData.phone}</div>
                               </div>
@@ -318,7 +320,7 @@ const UserProfile = () => {
                               <div className="info-item">
                                 <div className="info-label small">
                                   <FaMapMarkerAlt className="me-2 text-muted" />
-                                  District
+                                  <TransText k="profile.district" as="span" />
                                 </div>
                                 <div className="info-value small">{userData.district}</div>
                               </div>
@@ -327,7 +329,7 @@ const UserProfile = () => {
                               <div className="info-item">
                                 <div className="info-label small">
                                   <FaMapMarkerAlt className="me-2 text-muted" />
-                                  Block
+                                  <TransText k="profile.block" as="span" />
                                 </div>
                                 <div className="info-value small">{userData.block}</div>
                               </div>
@@ -336,7 +338,7 @@ const UserProfile = () => {
                               <div className="info-item">
                                 <div className="info-label small">
                                   <FaMapMarkerAlt className="me-2 text-muted" />
-                                  State
+                                  <TransText k="profile.state" as="span" />
                                 </div>
                                 <div className="info-value small">{userData.state}</div>
                               </div>
@@ -345,7 +347,7 @@ const UserProfile = () => {
                               <div className="info-item">
                                 <div className="info-label small">
                                   <FaBuilding className="me-2 text-muted" />
-                                  Associate Wings
+                                  <TransText k="profile.associateWings" as="span" />
                                 </div>
                                 <div className="info-value small">{userData.associate_wings}</div>
                               </div>
@@ -358,7 +360,7 @@ const UserProfile = () => {
                               <div className="info-item">
                                 <div className="info-label small">
                                   <FaEnvelope className="me-2 text-muted" />
-                                  Email Address
+                                  <TransText k="profile.emailAddress" as="span" />
                                 </div>
                                 <div className="info-value small">{userData.email}</div>
                               </div>
@@ -367,7 +369,7 @@ const UserProfile = () => {
                               <div className="info-item">
                                 <div className="info-label small">
                                   <FaPhone className="me-2 text-muted" />
-                                  Mobile Number
+                                  <TransText k="profile.mobileNumber" as="span" />
                                 </div>
                                 <div className="info-value small">{userData.mobile_no}</div>
                               </div>
@@ -376,7 +378,7 @@ const UserProfile = () => {
                               <div className="info-item">
                                 <div className="info-label small">
                                   <FaUserShield className="me-2 text-muted" />
-                                  Guardian Name
+                                  <TransText k="profile.guardianName" as="span" />
                                 </div>
                                 <div className="info-value small">{userData.guardian_name}</div>
                               </div>
@@ -385,7 +387,7 @@ const UserProfile = () => {
                               <div className="info-item">
                                 <div className="info-label small">
                                   <FaCalendarAlt className="me-2 text-muted" />
-                                  Date of Birth
+                                  <TransText k="profile.dateOfBirth" as="span" />
                                 </div>
                                 <div className="info-value small">{userData.date_of_birth}</div>
                               </div>
@@ -394,7 +396,7 @@ const UserProfile = () => {
                               <div className="info-item">
                                 <div className="info-label small">
                                   <FaBuilding className="me-2 text-muted" />
-                                  Highest Education
+                                  <TransText k="profile.highestEducation" as="span" />
                                 </div>
                                 <div className="info-value small">{userData.highest_education}</div>
                               </div>
@@ -403,7 +405,7 @@ const UserProfile = () => {
                               <div className="info-item">
                                 <div className="info-label small">
                                   <FaMapMarkerAlt className="me-2 text-muted" />
-                                  Address
+                                  <TransText k="profile.address" as="span" />
                                 </div>
                                 <div className="info-value small">{userData.address}</div>
                               </div>
@@ -412,7 +414,7 @@ const UserProfile = () => {
                               <div className="info-item">
                                 <div className="info-label">
                                   <FaCalendarAlt className="me-2 text-muted" />
-                                  Joined Date
+                                  <TransText k="profile.joinedDate" as="span" />
                                 </div>
                                 <div className="info-value">{new Date(userData.created_at).toLocaleDateString()}</div>
                               </div>
@@ -430,7 +432,7 @@ const UserProfile = () => {
               </Row>
             ) : (
               <div className="text-center py-5">
-                <p className="text-muted fs-4">No profile data found</p>
+                <p className="text-muted fs-4"><TransText k="profile.noProfileData" as="span" /></p>
               </div>
             )}
           </Container>

@@ -1663,30 +1663,30 @@ const UserDashboard = () => {
                                     <div className="course-stats mb-4">
                                       <div className="d-flex justify-content-between align-items-center mb-2">
                                         <span className="text-muted small">
-                                          <FaCalendarCheck className="me-1" /> Enrolled
+                                          <FaCalendarCheck className="me-1" /> <TransText k="course.enrolled" as="span" />
                                         </span>
                                         <span className="fw-semibold">
-                                          {course.enrolled_at ? new Date(course.enrolled_at).toLocaleDateString() : 'N/A'}
+                                          {course.enrolled_at ? new Date(course.enrolled_at).toLocaleDateString() : <TransText k="course.na" as="span" />}
                                         </span>
                                       </div>
                                       {/* Time Remaining - calculated from start_date to end_date */}
                                       {course.start_date && course.end_date && (
                                         <div className="d-flex justify-content-between align-items-center mb-2">
                                           <span className="text-muted small">
-                                            <FaClock className="me-1" /> Time Remaining
+                                            <FaClock className="me-1" /> <TransText k="course.timeRemaining" as="span" />
                                           </span>
                                           <span className={`fw-semibold ${(() => {
                                             const time = calculateTimeRemaining(course.start_date, course.end_date);
                                             return time?.status === 'expired' ? 'text-danger' : time?.status === 'upcoming' ? 'text-info' : 'text-success';
                                           })()}`}>
-                                            {calculateTimeRemaining(course.start_date, course.end_date)?.text || 'N/A'}
+                                            {calculateTimeRemaining(course.start_date, course.end_date)?.text || <TransText k="course.na" as="span" />}
                                           </span>
                                         </div>
                                       )}
                                       {isAllModulesCompleted(course) && course.completed_at && (
                                         <div className="d-flex justify-content-between align-items-center mb-2">
                                           <span className="text-muted small">
-                                            <FaAward className="me-1" /> Completed
+                                            <FaAward className="me-1" /> <TransText k="course.completed" as="span" />
                                           </span>
                                           <span className="fw-semibold text-success">
                                             {new Date(course.completed_at).toLocaleDateString()}
@@ -1702,7 +1702,7 @@ const UserDashboard = () => {
                                         </div>
                                         <div className="">
                                           <p className="mb-0 fw-semibold">{course.student_name || 'Student'}</p>
-                                          <small className="text-muted">Learner</small>
+                                          <small className="text-muted"><TransText k="course.learner" as="span" /></small>
                                         </div>
                                       </div>
                                       <div className="d-flex gap-2">
@@ -1723,7 +1723,7 @@ const UserDashboard = () => {
                                                   }}
                                                 >
                                                   <FaCertificate className="me-2" />
-                                                  View Certificate
+                                                  <TransText k="course.viewCertificate" as="span" />
                                                 </Button>
                                               )
                                             } else {
@@ -1741,7 +1741,7 @@ const UserDashboard = () => {
                                                   }}
                                                 >
                                                   <FaCertificate className="me-2" />
-                                                  Generate Certificate
+                                                  <TransText k="course.generateCertificate" as="span" />
                                                 </Button>
                                               )
                                             }
@@ -1759,7 +1759,7 @@ const UserDashboard = () => {
                                             }}
                                           >
                                             <FaCertificate className="me-2" />
-                                            View Certificate
+                                            <TransText k="course.viewCertificate" as="span" />
                                           </Button>
                                         ) : isAllModulesCompleted(course) ? (
                                           <Button 
@@ -1789,12 +1789,12 @@ const UserDashboard = () => {
                                             {isAllModulesCompleted(course) ? (
                                               <>
                                                 <FaCheckCircle className="me-2" />
-                                                Completed
+                                                <TransText k="course.completed" as="span" />
                                               </>
                                             ) : (
                                               <>
                                                 <FaPlay className="me-2" />
-                                                Start
+                                                <TransText k="course.start" as="span" />
                                               </>
                                             )}
                                           </Button>
@@ -1819,14 +1819,14 @@ const UserDashboard = () => {
                                             className="d-flex align-items-center"
                                           >
                                             <i className="bi bi-currency-exchange me-2"></i>
-                                            Refund
+                                            <TransText k="course.refund" as="span" />
                                           </Button>
                                         )}
                                         {/* Show pending status if refund request is pending */}
                                         {refundRequests.some(req => req.status === 'pending') && (
                                           <Badge bg="warning" className="d-flex align-items-center p-2">
                                             <i className="bi bi-clock me-2"></i>
-                                            Refund Pending
+                                            <TransText k="course.refundPending" as="span" />
                                           </Badge>
                                         )}
                                         {/* Feedback Button - Only show when course is completed */}
@@ -1840,12 +1840,12 @@ const UserDashboard = () => {
                                             {submittedFeedbackCourses.includes(course.course_id) ? (
                                               <>
                                                 
-                                                Feedback Submitted
+                                                <TransText k="course.feedbackSubmitted" as="span" />
                                               </>
                                             ) : (
                                               <>
                                                 <FaStar className="me-2" />
-                                                Feedback
+                                                <TransText k="course.feedback" as="span" />
                                               </>
                                             )}
                                           </Button>
@@ -1899,7 +1899,7 @@ const UserDashboard = () => {
                                       {isEnrolled ? (
                                         <div className="text-center">
                                           <FaCertificate className="text-white" style={{ fontSize: '40px', marginBottom: '8px' }} />
-                                          <p className="text-white fw-bold mb-0">Already Enrolled</p>
+                                          <p className="text-white fw-bold mb-0"><TransText k="course.alreadyEnrolled" as="span" /></p>
                                         </div>
                                       ) : (
                                         <FaBook className="text-white" style={{ fontSize: '48px' }} />
@@ -1914,7 +1914,7 @@ const UserDashboard = () => {
                                       {course.start_date && course.end_date && (
                                         <div className="mb-2 p-2 bg-light rounded d-flex justify-content-between align-items-center">
                                           <span className="text-muted small">
-                                            <FaClock className="me-1" /> Duration
+                                            <FaClock className="me-1" /> <TransText k="course.duration" as="span" />
                                           </span>
                                           <span className={`fw-semibold ${(() => {
                                             const time = calculateTimeRemaining(course.start_date, course.end_date);
@@ -1948,7 +1948,7 @@ const UserDashboard = () => {
                                                     }}
                                                   >
                                                     <FaCertificate className="me-2" />
-                                                    View Certificate
+                                                    <TransText k="course.viewCertificate" as="span" />
                                                   </Button>
                                                 )
                                               } else {
@@ -1966,7 +1966,7 @@ const UserDashboard = () => {
                                                     }}
                                                   >
                                                     <FaCertificate className="me-2" />
-                                                    Generate Certificate
+                                                    <TransText k="course.generateCertificate" as="span" />
                                                   </Button>
                                                 )
                                               }
@@ -1978,7 +1978,7 @@ const UserDashboard = () => {
                                               className="w-100 d-flex align-items-center justify-content-center"
                                             >
                                               <FaPlay className="me-2" />
-                                              Continue Learning
+                                              <TransText k="course.continueLearning" as="span" />
                                             </Button>
                                           )
                                         ) : (
@@ -1988,7 +1988,7 @@ const UserDashboard = () => {
                                             className="w-100 d-flex align-items-center justify-content-center"
                                           >
                                             <FaCheckCircle className="me-2" />
-                                            Enroll Now
+                                            <TransText k="course.enrollNow" as="span" />
                                           </Button>
                                         )}
                                       </div>
@@ -2024,7 +2024,7 @@ const UserDashboard = () => {
             <div className="modal-header" style={{ background: 'linear-gradient(135deg, #667eea, #667eea)', border: 'none' }}>
               <h5 className="modal-title text-white">
                 <FaStar className="me-2" />
-                Course Feedback
+                <TransText k="feedback.title" as="span" />
               </h5>
               <button 
                 type="button" 
@@ -2041,11 +2041,13 @@ const UserDashboard = () => {
               )}
               
               <div className="mb-4">
-                <h6 className="fw-bold text-primary mb-3">Course: {feedbackCourse.course_name}</h6>
+                <h6 className="fw-bold text-primary mb-3">
+                  <TransText k="feedback.courseLabel" as="span" />: {feedbackCourse.course_name}
+                </h6>
                 {submittedFeedbackCourses.includes(feedbackCourse.course_id) ? (
                   <Alert variant="success" className="mb-3">
                     <FaCheckCircle className="me-2" />
-                    <strong>Feedback Already Submitted!</strong> You have already submitted feedback for this course.
+                    <strong><TransText k="feedback.alreadySubmitted" as="span" /></strong> <TransText k="feedback.alreadySubmittedDesc" as="span" />
                   </Alert>
                 ) : (
                   <p className="text-muted small">Please rate your experience with this course.</p>
@@ -2054,7 +2056,7 @@ const UserDashboard = () => {
               
               {/* Question 1 */}
               <div className="mb-3">
-                <label className="form-label fw-semibold">1. How was your overall experience?</label>
+                <label className="form-label fw-semibold"><TransText k="feedback.q1" as="span" /></label>
                 <div className="star-rating d-flex gap-1">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <FaStar
@@ -2078,7 +2080,7 @@ const UserDashboard = () => {
               
               {/* Question 2 */}
               <div className="mb-3">
-                <label className="form-label fw-semibold">2. Was the course easy to understand?</label>
+                <label className="form-label fw-semibold"><TransText k="feedback.q2" as="span" /></label>
                 <div className="star-rating d-flex gap-1">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <FaStar
@@ -2102,7 +2104,7 @@ const UserDashboard = () => {
               
               {/* Question 3 */}
               <div className="mb-3">
-                <label className="form-label fw-semibold">3. How useful was this course for you?</label>
+                <label className="form-label fw-semibold"><TransText k="feedback.q3" as="span" /></label>
                 <div className="star-rating d-flex gap-1">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <FaStar
@@ -2126,7 +2128,7 @@ const UserDashboard = () => {
               
               {/* Question 4 */}
               <div className="mb-3">
-                <label className="form-label fw-semibold">4. How was the course content quality?</label>
+                <label className="form-label fw-semibold"><TransText k="feedback.q4" as="span" /></label>
                 <div className="star-rating d-flex gap-1">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <FaStar
@@ -2150,7 +2152,7 @@ const UserDashboard = () => {
               
               {/* Question 5 */}
               <div className="mb-3">
-                <label className="form-label fw-semibold">5. Would you like to continue learning with us?</label>
+                <label className="form-label fw-semibold"><TransText k="feedback.q5" as="span" /></label>
                 <div className="star-rating d-flex gap-1">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <FaStar
@@ -2174,7 +2176,7 @@ const UserDashboard = () => {
               
               {/* Comment */}
               <div className="mb-3">
-                <label className="form-label fw-semibold">Additional Comments (Optional)</label>
+                <label className="form-label fw-semibold"><TransText k="feedback.additionalComments" as="span" /></label>
                 <textarea 
                   className="form-control" 
                   rows="4"
