@@ -163,8 +163,6 @@ const UserQuiz = () => {
   }
 
   const confirmSubmitQuiz = () => {
-    setShowSubmitModal(false)
-
     // Calculate score
     let correctCount = 0
     let totalMarks = 0
@@ -414,18 +412,29 @@ const UserQuiz = () => {
                         </div>
 
                         <div className="options mb-4">
-                          {(language === 'hi' && currentQuestion.options_hindi ? currentQuestion.options_hindi : currentQuestion.options).map((option, idx) => (
-                            <div key={idx} className="mb-2">
-                              <Button 
-                                variant={answers[currentQuestionIndex] === idx ? 'primary' : 'outline-primary'}
-                                className="w-100 text-start option-button"
-                                onClick={() => handleAnswerSelect(idx)}
-                              >
-                                <span className="option-letter me-2">{String.fromCharCode(65 + idx)}</span>
-                                {option}
-                              </Button>
-                            </div>
-                          ))}
+                          {(language === 'hi' && currentQuestion.options_hindi ? currentQuestion.options_hindi : currentQuestion.options).map((option, idx) => {
+                            const isSelected = answers[currentQuestionIndex] === idx
+                            return (
+                              <div key={idx} className="mb-2">
+                                <Button 
+                                  variant={isSelected ? 'primary' : 'outline-primary'}
+                                  className="w-100 text-start option-button"
+                                  onClick={() => handleAnswerSelect(idx)}
+                                  style={isSelected ? { 
+                                    backgroundColor: '#0d6efd',
+                                    borderColor: '#0d6efd',
+                                    boxShadow: '0 0 0 3px rgba(13, 110, 253, 0.25)',
+                                    fontWeight: '600'
+                                  } : {
+                                    borderWidth: '2px'
+                                  }}
+                                >
+                                  <span className="option-letter me-2">{String.fromCharCode(65 + idx)}</span>
+                                  {option}
+                                </Button>
+                              </div>
+                            )
+                          })}
                         </div>
                       </Card.Body>
                     </Card>
