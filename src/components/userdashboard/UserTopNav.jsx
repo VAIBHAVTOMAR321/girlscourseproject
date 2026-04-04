@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react'
 import { Navbar, Nav, Dropdown, Button } from 'react-bootstrap'
 import axios from 'axios'
 import { useAuth } from '../../contexts/AuthContext'
+import { useLanguage } from '../../contexts/LanguageContext'
 import { useNavigate } from 'react-router-dom'
 import '../../assets/css/UserTopNav.css'
 import Logo from '../../assets/brainrock_logo.png'
 
 const UserTopNav = ({ onMenuToggle, isMobile }) => {
   const { userRole, userRoleType, uniqueId, logout, isAuthenticated, accessToken, profilePhoto, updateProfilePhoto } = useAuth()
+  const { language, toggleLanguage } = useLanguage()
   const navigate = useNavigate()
   const [showDropdown, setShowDropdown] = useState(false)
   const [userData, setUserData] = useState(null)
@@ -92,6 +94,27 @@ const UserTopNav = ({ onMenuToggle, isMobile }) => {
       
       <Navbar.Collapse id="admin-topnav" className="justify-content-end">
         <Nav className="align-items-center">
+          {/* Language Toggle Button */}
+          <Button
+            variant="light"
+            onClick={toggleLanguage}
+            className="me-3 d-flex align-items-center"
+            style={{
+              borderRadius: '8px',
+              padding: '0.5rem 1rem',
+              background: 'rgba(102, 126, 234, 0.1)',
+              border: '1px solid rgba(102, 126, 234, 0.3)',
+              color: '#667eea',
+              fontWeight: '500',
+              transition: 'all 0.3s ease',
+              cursor: 'pointer'
+            }}
+            title={language === 'en' ? 'Switch to Hindi' : 'Switch to English'}
+          >
+            <i className="bi bi-globe me-2"></i>
+            {language === 'en' ? 'EN' : 'HI'}
+          </Button>
+
           <Dropdown 
             show={showDropdown}
             onToggle={(isOpen) => setShowDropdown(isOpen)}

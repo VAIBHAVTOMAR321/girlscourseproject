@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Container, Row, Col, Card, Button, Badge, Spinner, Accordion, Alert } from 'react-bootstrap'
 import { useAuth } from '../../contexts/AuthContext'
+import { useLanguage } from '../../contexts/LanguageContext'
 import UserTopNav from './UserTopNav'
 import UseLeftNav from './UseLeftNav'
+import TransText from '../TransText'
 import "../../assets/css/UserDashboard.css"
 import { renderContentWithLineBreaks } from '../../utils/contentRenderer'
 import { FaBook, FaCheckCircle, FaClock, FaEye, FaLock, FaUnlock, FaQuestionCircle, FaArrowLeft, FaFileAlt, FaImage, FaGraduationCap, FaChalkboardTeacher, FaCertificate, FaStar, FaPlay, FaAward, FaCalendarCheck, FaCrown, FaLayerGroup } from 'react-icons/fa'
@@ -966,13 +968,13 @@ const UserDashboard = () => {
                       className="mb-4 d-flex align-items-center back-btn"
                     >
                       <FaArrowLeft className="me-2" />
-                      Back to My Courses
+                      <TransText k="button.back" as="span" />
                     </Button>
                     
                      <div className="d-flex justify-content-between align-items-center title-h mb-3">
                         <h4 className="mb-0">
                           <FaBook className="me-2 text-primary" />
-                          {renderContentWithLineBreaks(selectedCourse.course_name)} - Modules
+                          {renderContentWithLineBreaks(selectedCourse.course_name)} - <TransText k="module.title" as="span" />
                         </h4>
                        
                        <div className="d-flex align-items-center gap-2">
@@ -1587,7 +1589,8 @@ const UserDashboard = () => {
                         className="fw-semibold"
                       >
                         <FaBook className="me-2" />
-                        My Courses ({courses.length})
+                        <TransText k="dashboard.myCourses" as="span" />
+                        ({courses.length})
                       </Button>
                       {userRoleType === 'student-unpaid' && (
                         <Button 
@@ -1596,7 +1599,8 @@ const UserDashboard = () => {
                           className="fw-semibold"
                         >
                           <FaGraduationCap className="me-2" />
-                          All Courses ({allCourses.filter(c => c.course_status === 'unpaid' && !isCourseExpired(c)).length})
+                          <TransText k="dashboard.allCourses" as="span" />
+                          ({allCourses.filter(c => c.course_status === 'unpaid' && !isCourseExpired(c)).length})
                         </Button>
                       )}
                     </div>
@@ -1604,12 +1608,12 @@ const UserDashboard = () => {
                     {/* My Courses Tab */}
                     {activeTab === 'my-courses' && (
                       <div>
-                        <h4 className="mb-3">My Courses</h4>
+                        <TransText k="dashboard.myCourses" as="h4" className="mb-3" />
                         
                         {loading ? (
                           <div className="text-center py-5">
                             <Spinner animation="border" variant="primary" style={{ width: '60px', height: '60px' }} />
-                            <p className="mt-3">Loading courses...</p>
+                            <p className="mt-3"><TransText k="status.loading" /></p>
                           </div>
                         ) : courses.length > 0 ? (
                           <Row>
@@ -1639,14 +1643,14 @@ const UserDashboard = () => {
                                     {isAllModulesCompleted(course) && (
                                       <div className=" top-2 end-2">
                                         <Badge bg="success" className="p-2 badge-custom fs-7">
-                                          <FaCheckCircle className="me-1" /> Completed
+                                          <FaCheckCircle className="me-1" /> <TransText k="course.completed" as="span" />
                                         </Badge>
                                       </div>
                                     )}
                                     {!isAllModulesCompleted(course) && (
                                       <div className="position-absolute top-2 start-2">
                                         <Badge bg="warning" className="p-2 badge-custom in-prohrace fs-7">
-                                          <FaClock className="me-1" /> In Progress
+                                          <FaClock className="me-1" /> <TransText k="course.inProgress" as="span" />
                                         </Badge>
                                       </div>
                                     )}
@@ -1856,7 +1860,7 @@ const UserDashboard = () => {
                         ) : (
                           <div className="text-center py-5">
                             <FaBook className="text-muted mb-3" style={{ fontSize: '48px' }} />
-                            <p className="text-muted fs-4">No courses enrolled yet</p>
+                            <TransText k="dashboard.noCoursesEnrolled" as="p" className="text-muted fs-4" />
                           </div>
                         )}
                       </div>
@@ -1865,12 +1869,12 @@ const UserDashboard = () => {
                     {/* All Courses Tab - Only visible to unpaid users */}
                     {activeTab === 'all-courses' && userRoleType === 'student-unpaid' && (
                       <div>
-                        <h4 className="mb-3">All Courses</h4>
+                        <TransText k="dashboard.allCourses" as="h4" className="mb-3" />
                         
                         {allCoursesLoading ? (
                           <div className="text-center py-5">
                             <Spinner animation="border" variant="primary" style={{ width: '60px', height: '60px' }} />
-                            <p className="mt-3">Loading all courses...</p>
+                            <p className="mt-3"><TransText k="status.loading" /></p>
                           </div>
                         ) : allCourses.filter(c => c.course_status === 'unpaid' && !isCourseExpired(c)).length > 0 ? (
                           <Row>
@@ -1997,7 +2001,7 @@ const UserDashboard = () => {
                         ) : (
                           <div className="text-center py-5">
                             <FaGraduationCap className="text-muted mb-3" style={{ fontSize: '48px' }} />
-                            <p className="text-muted fs-4">No courses available</p>
+                            <TransText k="dashboard.enrollNewCourse" as="p" className="text-muted fs-4" />
                           </div>
                         )}
                       </div>

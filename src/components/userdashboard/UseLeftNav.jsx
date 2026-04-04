@@ -3,6 +3,7 @@ import { Nav, Button, Offcanvas, Dropdown } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import '../../assets/css/UserLeftNav.css'
 import { useAuth } from '../../contexts/AuthContext'
+import TransText from '../TransText'
 
 const UseLeftNav = ({ showOffcanvas, setShowOffcanvas }) => {
   const { userRoleType } = useAuth()
@@ -68,20 +69,20 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas }) => {
               </div>
                 <Nav className="flex-column p-3">
                   <Nav.Link as={Link} to="/UserDashboard" className="text-white">
-                    <i className="bi bi-grid-3x3-gap me-2"></i> Dashboard
+                    <i className="bi bi-grid-3x3-gap me-2"></i> <TransText k="dashboard.title" as="span" />
                   </Nav.Link>
                   
                    <Nav.Link as={Link} to="/UserProfile" className="text-white">
-                    <i className="bi bi-person-circle me-2"></i> User Profile
+                    <i className="bi bi-person-circle me-2"></i> <TransText k="menu.profile" as="span" />
                   </Nav.Link>
                   <Nav.Link as={Link} to="/UserQuery" className="text-white">
-                    <i className="bi bi-person-circle me-2"></i> Query
+                    <i className="bi bi-person-circle me-2"></i> <TransText k="menu.query" as="span" />
                   </Nav.Link>
                   
                    {/* Refund Request only visible to paid users */}
                    {userRoleType !== 'student-unpaid' && (
                      <Nav.Link as={Link} to="/RefundRequest" className="text-white">
-                       <i className="bi bi-currency-exchange me-2"></i> Refund Request
+                       <i className="bi bi-currency-exchange me-2"></i> <TransText k="menu.refund" as="span" />
                      </Nav.Link>
                    )}
                    
@@ -91,7 +92,7 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas }) => {
                        onClick={() => setShowGuidelines(!showGuidelines)}
                        style={{ cursor: 'pointer' }}
                      >
-                       <span className='mx-3'><i className="bi bi-book me-2"></i> Guidelines</span>
+                       <span className='mx-3'><i className="bi bi-book me-2"></i> <TransText k="module.lessons" as="span" /></span>
                        <i className={`bi bi-chevron-${showGuidelines ? 'up' : 'down'}`}></i>
                      </div>
                      {showGuidelines && (

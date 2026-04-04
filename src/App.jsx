@@ -20,6 +20,7 @@ import Feedback from "./components/admindashboard/Feedback.jsx";
 import StudentIssues from "./components/admindashboard/StudentIssues.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import { AuthProvider } from "./contexts/AuthContext.jsx";
+import { LanguageProvider } from "./contexts/LanguageContext.jsx";
 import UserProfile from "./components/userdashboard/UserProfile.jsx";
 import UserTest from "./components/userdashboard/UserTest.jsx";
 import Registration from "./components/registration/Registration.jsx";
@@ -215,9 +216,11 @@ function AppContent() {
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <AppContent />
-      </Router>
+      <LanguageProvider>
+        <Router>
+          <AppContent />
+        </Router>
+      </LanguageProvider>
     </AuthProvider>
   );
 }
