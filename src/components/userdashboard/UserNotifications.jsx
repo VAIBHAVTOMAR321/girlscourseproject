@@ -819,15 +819,15 @@ import '../../assets/css/UserNotifications.css'
 
   const handleGetGuidance = () => {
     if (!selectedStream) {
-      alert('Please select your 12th stream first')
+      alert(getTranslation('notifications.alertSelectStream', language))
       return
     }
     if (!percentage || Number(percentage) <= 0) {
-      alert('Please enter a valid percentage greater than 0')
+      alert(getTranslation('notifications.alertValidPercentage', language))
       return
     }
     if (Number(percentage) > 100) {
-      alert('Percentage cannot be more than 100')
+      alert(getTranslation('notifications.alertMaxPercentage', language))
       return
     }
     setShowResults(true)
@@ -1396,7 +1396,7 @@ import '../../assets/css/UserNotifications.css'
                           <div className="percentage-input-wrapper">
                             <Form.Control
                               type="number"
-                              placeholder="Enter your percentage (e.g., 75)"
+                              placeholder={<TransText k="notifications.percentagePlaceholder" as="span" />}
                               value={percentage}
                               onChange={handlePercentageChange}
                               min="0"
@@ -1460,7 +1460,7 @@ import '../../assets/css/UserNotifications.css'
                           <TransText k="notifications.courseRecommendations" as="span" />
                         </h5>
                         <p className="text-muted mb-0">
-                          Browse recommended courses based on your percentage and all available courses in your stream
+                          <TransText k="notifications.coursesBrowseDesc" as="span" />
                         </p>
                       </Card.Header>
                       <Card.Body className="p-4">
@@ -1469,14 +1469,14 @@ import '../../assets/css/UserNotifications.css'
                             <Nav.Item>
                               <Nav.Link eventKey="recommended">
                                 <FaUniversity className="me-2" />
-                                Recommended Courses
+                                <TransText k="notifications.recommendedCourses" as="span" />
                               </Nav.Link>
                             </Nav.Item>
                             <Nav.Item>
-                              <Nav.Link eventKey="all">
-                                <FaBookOpen className="me-2" />
-                                All Courses for {streams.find(s => s.id === selectedStream)?.name}
-                              </Nav.Link>
+<Nav.Link eventKey="all">
+                              <FaBookOpen className="me-2" />
+                              <TransText k="notifications.allCoursesFor" as="span" /> {getStreamName(selectedStream)}
+                            </Nav.Link>
                             </Nav.Item>
                           </Nav>
                           <Tab.Content>
@@ -1501,7 +1501,7 @@ import '../../assets/css/UserNotifications.css'
                                         </div>
                                         <p className="text-muted small mb-3">{getCourseDescription(course.name)}</p>
                                         <div className="mt-auto">
-                                          <small className="text-muted d-block mb-2">Career Opportunities:</small>
+                                          <small className="text-muted d-block mb-2"><TransText k="notifications.careerOpportunities" as="span" /></small>
                                           <div className="d-flex flex-wrap gap-1">
                                             {course.careers.slice(0, 3).map((career, idx) => (
                                               <Badge bg="light" text="dark" key={idx} className="small">
@@ -1566,21 +1566,26 @@ import '../../assets/css/UserNotifications.css'
                         </h5>
                         <Row>
                           <Col md={6}>
-                            <h6><TransText k="notifications.guidanceFor" as="span" /> {getStreamName(selectedStream)} <TransText k="notifications.students" as="span" />:</h6>
+                            <h6>
+                            {selectedStream === 'science' && <TransText k="notifications.guidanceForScience" as="span" />}
+                            {selectedStream === 'commerce' && <TransText k="notifications.guidanceForCommerce" as="span" />}
+                            {selectedStream === 'arts' && <TransText k="notifications.guidanceForArts" as="span" />}
+                            {selectedStream === 'computer' && <TransText k="notifications.guidanceForComputer" as="span" />}
+                          </h6>
                             <ul className="text-muted">
-                              <li>Focus on your core subjects and build strong fundamentals</li>
-                              <li>Participate in extracurricular activities related to your stream</li>
-                              <li>Consider internships and practical experience</li>
-                              <li>Prepare for competitive exams if applicable</li>
+                              <li><TransText k="notifications.guidanceTip1" as="span" /></li>
+                              <li><TransText k="notifications.guidanceTip2" as="span" /></li>
+                              <li><TransText k="notifications.guidanceTip3" as="span" /></li>
+                              <li><TransText k="notifications.guidanceTip4" as="span" /></li>
                             </ul>
                           </Col>
                           <Col md={6}>
                             <h6><TransText k="notifications.careerTips" as="span" />:</h6>
                             <ul className="text-muted">
-                              <li>Research about the courses and their career prospects</li>
-                              <li>Talk to professionals in your field of interest</li>
-                              <li>Build a strong portfolio or resume</li>
-                              <li>Stay updated with industry trends</li>
+                              <li><TransText k="notifications.careerTip1" as="span" /></li>
+                              <li><TransText k="notifications.careerTip2" as="span" /></li>
+                              <li><TransText k="notifications.careerTip3" as="span" /></li>
+                              <li><TransText k="notifications.careerTip4" as="span" /></li>
                             </ul>
                           </Col>
                         </Row>
@@ -1596,9 +1601,9 @@ import '../../assets/css/UserNotifications.css'
 
                       <h4><TransText k="notifications.howToGetGuidance" as="span" /></h4>
                       <p className="text-muted mb-0">
-                        <strong>Step 1:</strong> Select your 12th stream from the options above<br />
-                        <strong>Step 2:</strong> Enter your 12th percentage<br />
-                        <strong>Step 3:</strong> Click "Get Course Guidance" to see personalized course recommendations and career paths
+                        <strong><TransText k="notifications.step1" as="span" />:</strong> <TransText k="notifications.instructionStep1" as="span" /><br />
+                        <strong><TransText k="notifications.step2" as="span" />:</strong> <TransText k="notifications.instructionStep2" as="span" /><br />
+                        <strong><TransText k="notifications.step3" as="span" />:</strong> <TransText k="notifications.instructionStep3" as="span" />
                       </p>
                     </Card.Body>
                   </Card>
@@ -1655,7 +1660,7 @@ import '../../assets/css/UserNotifications.css'
                             </div>
                             {selectedCareerPath === path && (
                               <div className="mt-3">
-                                <h6 className="text-muted mb-2">Steps to Achieve:</h6>
+                                <h6 className="text-muted mb-2"><TransText k="notifications.stepsToAchieve" as="span" /></h6>
                                 <ol className="ps-3 mb-0">
                                   {path.steps.map((step, idx) => (
                                     <li key={idx} className="mb-1 small">{step}</li>
@@ -1687,20 +1692,20 @@ import '../../assets/css/UserNotifications.css'
               
               <Alert variant="info">
                 <FaInfoCircle className="me-2" />
-                <strong>Tip:</strong> Research about the admission process, entrance exams, and top colleges for this course. Start preparing early to secure a seat in a good institution.
+                <TransText k="notifications.tip" as="span" />
               </Alert>
             </div>
           )}
         </Modal.Body>
         <Modal.Footer className="border-0">
           <Button variant="secondary" onClick={() => setShowModal(false)}>
-            Close
+            <TransText k="button.close" as="span" />
           </Button>
           <Button variant="primary" onClick={() => {
             setShowModal(false)
             navigate('/UserDashboard')
           }}>
-            Go to Dashboard
+            <TransText k="settings.toDashboard" as="span" />
           </Button>
         </Modal.Footer>
       </Modal>

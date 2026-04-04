@@ -126,29 +126,35 @@ const UserSettings = () => {
   const streams = [
     { 
       id: 'science', 
-      name: <TransText k="settings.science" as="span" />, 
+      nameKey: 'settings.science', 
       icon: <FaFlask />, 
       subjectsKey: 'settings.scienceSubjects'
     },
     { 
       id: 'commerce', 
-      name: <TransText k="settings.commerce" as="span" />, 
+      nameKey: 'settings.commerce', 
       icon: <FaCalculator />, 
       subjectsKey: 'settings.commerceSubjects'
     },
     { 
       id: 'arts', 
-      name: <TransText k="settings.arts" as="span" />, 
+      nameKey: 'settings.arts', 
       icon: <FaBook />, 
       subjectsKey: 'settings.artsSubjects'
     },
     { 
       id: 'vocational', 
-      name: <TransText k="settings.vocational" as="span" />, 
+      nameKey: 'settings.vocational', 
       icon: <FaWrench />, 
       subjectsKey: 'settings.vocationalSubjects'
     }
   ]
+
+  // Get translated stream name for display
+  const getStreamDisplayName = (streamId) => {
+    const stream = streams.find(s => s.id === streamId)
+    return stream ? getTranslation(stream.nameKey, language) : streamId
+  }
 
   // Stream mapping to handle any ID variations
   const getStreamKey = (streamId) => {
@@ -653,7 +659,7 @@ const UserSettings = () => {
                               <div className="stream-icon-large mb-2">
                                 {stream.icon}
                               </div>
-                              <h6 className="mb-1">{stream.name}</h6>
+                              <h6 className="mb-1">{getStreamDescriptionKey(stream.name) ? getTranslation(getStreamDescriptionKey(stream.name), language) : stream.name}</h6>
                               <small className="text-muted">{getTranslation(stream.subjectsKey, language)}</small>
                               {selectedStream === stream.id && (
                                 <Badge bg="primary" className="mt-2">
@@ -730,7 +736,7 @@ const UserSettings = () => {
                               <div>
                                 <h5 className="mb-1"><TransText k="settings.performanceTitle" as="span" /></h5>
                                 <p className="text-muted mb-0">
-                                  <TransText k="settings.basedOn" as="span" /> {percentage}% <TransText k="settings.in" as="span" /> {streams.find(s => s.id === selectedStream)?.name}
+                                  <TransText k="settings.basedOn" as="span" /> {percentage}% <TransText k="settings.in" as="span" /> {getStreamDisplayName(selectedStream)}
                                 </p>
                               </div>
                               <div className="text-end">
@@ -757,7 +763,7 @@ const UserSettings = () => {
                               <TransText k="settings.eleventhStreamRec" as="span" />
                             </h5>
                             <p className="text-muted mb-0">
-                              Browse recommended 11th streams based on your percentage and all available streams for your 10th stream
+                              <TransText k="settings.streamsBrowseDesc" as="span" />
                             </p>
                           </Card.Header>
                           <Card.Body className="">
@@ -772,7 +778,7 @@ const UserSettings = () => {
                                 <Nav.Item>
                                   <Nav.Link eventKey="all">
                                     <FaBookOpen className="me-2" />
-                                    <TransText k="settings.allStreams" as="span" /> {streams.find(s => s.id === selectedStream)?.name}
+                                    <TransText k="settings.allStreams" as="span" /> {getStreamDisplayName(selectedStream)}
                                   </Nav.Link>
                                 </Nav.Item>
                               </Nav>
@@ -792,7 +798,7 @@ const UserSettings = () => {
                                                 {stream.icon}
                                               </div>
                                               <div>
-                                                <h6 className="mb-1">{stream.name}</h6>
+                                                <h6 className="mb-1">{getStreamDescriptionKey(stream.name) ? getTranslation(getStreamDescriptionKey(stream.name), language) : stream.name}</h6>
                                                 <Badge bg="info">{stream.careers.length} <TransText k="card.careerOptions" as="span" /></Badge>
                                               </div>
                                             </div>
@@ -830,7 +836,7 @@ const UserSettings = () => {
                                                 {stream.icon}
                                               </div>
                                               <div>
-                                                <h6 className="mb-1">{stream.name}</h6>
+                                                <h6 className="mb-1">{getStreamDescriptionKey(stream.name) ? getTranslation(getStreamDescriptionKey(stream.name), language) : stream.name}</h6>
                                                 <Badge bg="info">{stream.careers.length} <TransText k="card.careerOptions" as="span" /></Badge>
                                               </div>
                                             </div>
@@ -868,7 +874,10 @@ const UserSettings = () => {
                             <Row>
                               <Col md={6}>
                                 <h6>
-                                  <TransText k="settings.guidanceFor" as="span" /> {streams.find(s => s.id === selectedStream)?.name} <TransText k="settings.students" as="span" />:
+                                  {selectedStream === 'science' && <TransText k="settings.guidanceForScience" as="span" />}
+                                  {selectedStream === 'commerce' && <TransText k="settings.guidanceForCommerce" as="span" />}
+                                  {selectedStream === 'arts' && <TransText k="settings.guidanceForArts" as="span" />}
+                                  {selectedStream === 'vocational' && <TransText k="settings.guidanceForVocational" as="span" />}
                                 </h6>
                                 <ul className="text-muted">
                                   <li><TransText k="settings.guidanceTip1" as="span" /></li>
