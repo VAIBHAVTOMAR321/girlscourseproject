@@ -5,12 +5,16 @@ import { useNavigate } from 'react-router-dom'
 import UseLeftNav from './UseLeftNav'
 import UserTopNav from './UserTopNav'
 import { useAuth } from '../../contexts/AuthContext'
+import { useLanguage } from '../../contexts/LanguageContext'
+import TransText from '../TransText'
+import { getTranslation } from '../../utils/translations'
 import axios from 'axios'
 import '../../assets/css/UserSettings.css'
 import CounselingForm from './CounselingForm'
 
 const UserSettings = () => {
   const { uniqueId, userRoleType, accessToken } = useAuth()
+  const { language } = useLanguage()
   const navigate = useNavigate()
   const [userData, setUserData] = useState(null)
   const [showCounseling, setShowCounseling] = useState(false)
@@ -122,27 +126,27 @@ const UserSettings = () => {
   const streams = [
     { 
       id: 'science', 
-      name: 'Science', 
+      name: <TransText k="settings.science" as="span" />, 
       icon: <FaFlask />, 
-      subjects: 'Physics, Chemistry, Biology, Mathematics' 
+      subjectsKey: 'settings.scienceSubjects'
     },
     { 
       id: 'commerce', 
-      name: 'Commerce', 
+      name: <TransText k="settings.commerce" as="span" />, 
       icon: <FaCalculator />, 
-      subjects: 'Accountancy, Business Studies, Economics' 
+      subjectsKey: 'settings.commerceSubjects'
     },
     { 
       id: 'arts', 
-      name: 'Arts/Humanities', 
+      name: <TransText k="settings.arts" as="span" />, 
       icon: <FaBook />, 
-      subjects: 'History, Geography, Political Science, Psychology' 
+      subjectsKey: 'settings.artsSubjects'
     },
     { 
       id: 'vocational', 
-      name: 'Vocational', 
+      name: <TransText k="settings.vocational" as="span" />, 
       icon: <FaWrench />, 
-      subjects: 'Technical Skills, Trade Skills, Practical Training' 
+      subjectsKey: 'settings.vocationalSubjects'
     }
   ]
 
@@ -333,6 +337,26 @@ const UserSettings = () => {
     } else {
       return eleventhStreamsData[streamKey].low || []
     }
+  }
+
+  // Get translation key for stream description based on name
+  const getStreamDescriptionKey = (streamName) => {
+    const descriptionMap = {
+      'PCB (Physics, Chemistry, Biology)': 'card.pcbHighDesc',
+      'PCM (Physics, Chemistry, Mathematics)': 'card.pcmHighDesc',
+      'PCMB (Physics, Chemistry, Mathematics, Biology)': 'settings.pcmbDesc',
+      'Commerce with Mathematics': 'card.commerceMathHighDesc',
+      'Commerce with Informatics Practices': 'settings.commerceITDesc',
+      'Commerce with Entrepreneurship': 'settings.commerceEntDesc',
+      'Arts with History': 'settings.artsHistDesc',
+      'Arts with Political Science': 'settings.artsPolyDesc',
+      'Arts with Psychology': 'settings.artsPsychDesc',
+      'Arts with Sociology': 'settings.artsSocDesc',
+      'ITI (Industrial Training Institute)': 'card.itiHighDesc',
+      'Polytechnic Diploma': 'settings.polytechnicDesc',
+      'Certificate Courses': 'settings.certificateDesc',
+    }
+    return descriptionMap[streamName] || null
   }
 
   const handleStreamChange = (e) => {
@@ -567,7 +591,7 @@ const UserSettings = () => {
                 className="d-flex align-items-center"
               >
                 <FaArrowLeft className="me-2" />
-                Back to Dashboard
+                <TransText k="settings.backToDashboard" as="span" />
               </Button>
             </div>
 
@@ -576,7 +600,7 @@ const UserSettings = () => {
                 <div className="spinner-border text-primary" role="status" style={{ width: '60px', height: '60px' }}>
                   <span className="visually-hidden">Loading...</span>
                 </div>
-                <p className="mt-3">Loading guidance...</p>
+                <p className="mt-3"><TransText k="settings.loading" as="span" /></p>
               </div>
             ) : (
               <div>
@@ -587,10 +611,10 @@ const UserSettings = () => {
                       <div>
                         <h3 className="mb-2">
                           <FaGraduationCap className="me-2 text-primary" />
-                          10th Class Stream Guidance
+                          <TransText k="settings.guidanceTitle" as="span" />
                         </h3>
                         <p className="text-muted mb-0">
-                          Select your 10th stream and enter your percentage to get personalized 11th stream recommendations
+                          <TransText k="settings.guidanceSubtitle" as="span" />
                         </p>
                       </div>
                     </div>
@@ -610,8 +634,8 @@ const UserSettings = () => {
                 <Card className="shadow-sm mb-4 border-0" style={{ borderRadius: '10px' }}>
                   <Card.Body className="card-mobile">
                     <h5 className="mb-3">
-                      <Badge bg="primary" className="me-2">Step 1</Badge>
-                      Select Your 10th Stream
+                      <Badge bg="primary" className="me-2"><TransText k="settings.step1" as="span" /></Badge>
+                      <TransText k="settings.selectStream" as="span" />
                     </h5>
                     <Row>
                       {streams.map((stream) => (
@@ -630,10 +654,10 @@ const UserSettings = () => {
                                 {stream.icon}
                               </div>
                               <h6 className="mb-1">{stream.name}</h6>
-                              <small className="text-muted">{stream.subjects}</small>
+                              <small className="text-muted">{getTranslation(stream.subjectsKey, language)}</small>
                               {selectedStream === stream.id && (
                                 <Badge bg="primary" className="mt-2">
-                                  <FaCheckCircle className="me-1" /> Selected
+                                  <FaCheckCircle className="me-1" /> <TransText k="settings.selected" as="span" />
                                 </Badge>
                               )}
                             </Card.Body>
@@ -649,8 +673,8 @@ const UserSettings = () => {
                   <Card className="shadow-sm mb-4 border-0" style={{ borderRadius: '10px' }}>
                     <Card.Body className="">
                       <h5 className="mb-3">
-                        <Badge bg="primary" className="me-2">Step 2</Badge>
-                        Enter Your 10th Percentage
+                        <Badge bg="primary" className="me-2"><TransText k="settings.step2" as="span" /></Badge>
+                        <TransText k="settings.enterPercentage" as="span" />
                       </h5>
                       <Row className="align-items-center">
                         <Col md={6}>
@@ -676,7 +700,7 @@ const UserSettings = () => {
                             className="w-100 mobile-btn-get"
                           >
                             <FaLightbulb className="me-2" />
-                            Get 11th Stream Guidance
+                            <TransText k="settings.getGuidance" as="span" />
                           </Button>
                         </Col>
                       </Row>
@@ -691,10 +715,9 @@ const UserSettings = () => {
                       <Card className="shadow-sm mb-4 border-0" style={{ borderRadius: '10px' }}>
                         <Card.Body className=" text-center">
                           <FaInfoCircle className="text-warning mb-3" style={{ fontSize: '48px' }} />
-                          <h4>No Recommendations Found</h4>
+                          <h4><TransText k="settings.noRecommendations" as="span" /></h4>
                           <p className="text-muted mb-0">
-                            No 11th stream recommendations are available for the selected criteria.
-                            Please try a different stream or percentage.
+                            <TransText k="settings.noRecDesc" as="span" />
                           </p>
                         </Card.Body>
                       </Card>
@@ -705,14 +728,14 @@ const UserSettings = () => {
                           <Card.Body className="">
                             <div className="d-flex justify-content-between align-items-center">
                               <div>
-                                <h5 className="mb-1">Your Performance</h5>
+                                <h5 className="mb-1"><TransText k="settings.performanceTitle" as="span" /></h5>
                                 <p className="text-muted mb-0">
-                                  Based on {percentage}% in {streams.find(s => s.id === selectedStream)?.name}
+                                  <TransText k="settings.basedOn" as="span" /> {percentage}% <TransText k="settings.in" as="span" /> {streams.find(s => s.id === selectedStream)?.name}
                                 </p>
                               </div>
                               <div className="text-end">
                                 <Badge bg={performance.color} className="fs-5 p-3">
-                                  {performance.icon} {performance.level}
+                                  {performance.icon} <TransText k={`settings.${performance.level.toLowerCase()}`} as="span" />
                                 </Badge>
                               </div>
                             </div>
@@ -731,7 +754,7 @@ const UserSettings = () => {
                           <Card.Header className="bg-white border-0 pt-4 pb-0">
                             <h5 className="mb-0">
                               <FaUniversity className="me-2 text-primary" />
-                              11th Stream Recommendations
+                              <TransText k="settings.eleventhStreamRec" as="span" />
                             </h5>
                             <p className="text-muted mb-0">
                               Browse recommended 11th streams based on your percentage and all available streams for your 10th stream
@@ -743,13 +766,13 @@ const UserSettings = () => {
                                 <Nav.Item>
                                   <Nav.Link eventKey="recommended">
                                     <FaUniversity className="me-2" />
-                                    Recommended Streams
+                                    <TransText k="settings.recommendedStreams" as="span" />
                                   </Nav.Link>
                                 </Nav.Item>
                                 <Nav.Item>
                                   <Nav.Link eventKey="all">
                                     <FaBookOpen className="me-2" />
-                                    All Streams for {streams.find(s => s.id === selectedStream)?.name}
+                                    <TransText k="settings.allStreams" as="span" /> {streams.find(s => s.id === selectedStream)?.name}
                                   </Nav.Link>
                                 </Nav.Item>
                               </Nav>
@@ -770,10 +793,12 @@ const UserSettings = () => {
                                               </div>
                                               <div>
                                                 <h6 className="mb-1">{stream.name}</h6>
-                                                <Badge bg="info">{stream.careers.length} Career Options</Badge>
+                                                <Badge bg="info">{stream.careers.length} <TransText k="card.careerOptions" as="span" /></Badge>
                                               </div>
                                             </div>
-                                            <p className="text-muted small mb-3">{stream.description}</p>
+                                            <p className="text-muted small mb-3">
+                                              {getStreamDescriptionKey(stream.name) ? getTranslation(getStreamDescriptionKey(stream.name), language) : stream.description}
+                                            </p>
                                             <div className="mt-auto">
                                               <small className="text-muted d-block mb-2">Career Opportunities:</small>
                                               <div className="d-flex flex-wrap gap-1">
@@ -806,10 +831,12 @@ const UserSettings = () => {
                                               </div>
                                               <div>
                                                 <h6 className="mb-1">{stream.name}</h6>
-                                                <Badge bg="info">{stream.careers.length} Career Options</Badge>
+                                                <Badge bg="info">{stream.careers.length} <TransText k="card.careerOptions" as="span" /></Badge>
                                               </div>
                                             </div>
-                                            <p className="text-muted small mb-3">{stream.description}</p>
+                                            <p className="text-muted small mb-3">
+                                              {getStreamDescriptionKey(stream.name) ? getTranslation(getStreamDescriptionKey(stream.name), language) : stream.description}
+                                            </p>
                                             <div className="mt-auto">
                                               <small className="text-muted d-block mb-2">Career Opportunities:</small>
                                               <div className="d-flex flex-wrap gap-1">
@@ -836,11 +863,11 @@ const UserSettings = () => {
                           <Card.Body className="">
                             <h5 className="mb-3">
                               <FaLightbulb className="me-2 text-warning" />
-                              Additional Guidance
+                              <TransText k="settings.additionalGuidance" as="span" />
                             </h5>
                             <Row>
                               <Col md={6}>
-                                <h6>For {streams.find(s => s.id === selectedStream)?.name} Students:</h6>
+                                <h6><TransText k="settings.guidanceFor" as="span" /> {streams.find(s => s.id === selectedStream)?.name} <TransText k="settings.students" as="span" />:</h6>
                                 <ul className="text-muted">
                                   <li>Focus on your core subjects and build strong fundamentals</li>
                                   <li>Participate in extracurricular activities related to your stream</li>
@@ -849,7 +876,7 @@ const UserSettings = () => {
                                 </ul>
                               </Col>
                               <Col md={6}>
-                                <h6>Career Tips:</h6>
+                                <h6><TransText k="settings.careerTips" as="span" />:</h6>
                                 <ul className="text-muted">
                                   <li>Research about the streams and their career prospects</li>
                                   <li>Talk to professionals in your field of interest</li>
@@ -871,11 +898,11 @@ const UserSettings = () => {
                   <Card className="shadow-sm border-0 instructions-card" style={{ borderRadius: '10px' }}>
                     <Card.Body className="">
                      
-                      <h4>How to Get 11th Stream Guidance</h4>
+                      <h4><TransText k="settings.howToGetGuidance" as="span" /></h4>
                       <p className="text-muted mb-0">
-                        <strong>Step 1:</strong> Select your 10th stream from the options above<br />
-                        <strong>Step 2:</strong> Enter your 10th percentage<br />
-                        <strong>Step 3:</strong> Click "Get 11th Stream Guidance" to see personalized 11th stream recommendations and career paths
+                        <strong><TransText k="settings.step1" as="span" />:</strong> Select your 10th stream from the options above<br />
+                        <strong><TransText k="settings.step2" as="span" />:</strong> Enter your 10th percentage<br />
+                        <strong><TransText k="settings.step3" as="span" />:</strong> Click "<TransText k="settings.getGuidance" as="span" />" to see personalized 11th stream recommendations and career paths
                       </p>
                     </Card.Body>
                   </Card>
@@ -895,11 +922,13 @@ const UserSettings = () => {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {selectedCourse && (
+              {selectedCourse && (
             <div>
               <div className="mb-4">
-                <h6 className="text-muted mb-2">Description</h6>
-                <p>{selectedCourse.description}</p>
+                <h6 className="text-muted mb-2"><TransText k="settings.description" as="span" /></h6>
+                <p>
+                  {getStreamDescriptionKey(selectedCourse.name) ? getTranslation(getStreamDescriptionKey(selectedCourse.name), language) : selectedCourse.description}
+                </p>
               </div>
               
               {/* Career Paths Section */}
@@ -907,7 +936,7 @@ const UserSettings = () => {
                 <div className="mb-4">
                   <h6 className="text-muted mb-3">
                     <FaLightbulb className="me-2 text-warning" />
-                    Step-by-Step Career Guidance
+                    <TransText k="settings.stepByStep" as="span" />
                   </h6>
                   <Row>
                     {selectedCourse.careerPaths.map((path, index) => (
@@ -925,7 +954,7 @@ const UserSettings = () => {
                             </div>
                             {selectedCareerPath === path && (
                               <div className="mt-3">
-                                <h6 className="text-muted mb-2">Steps to Achieve:</h6>
+                                <h6 className="text-muted mb-2"><TransText k="settings.stepsToAchieve" as="span" />:</h6>
                                 <ol className="ps-3 mb-0">
                                   {path.steps.map((step, idx) => (
                                     <li key={idx} className="mb-1 small">{step}</li>
@@ -943,7 +972,7 @@ const UserSettings = () => {
               
               {/* Career Opportunities */}
               <div className="mb-4">
-                <h6 className="text-muted mb-2">Career Opportunities</h6>
+                <h6 className="text-muted mb-2"><TransText k="settings.careerOpportunities" as="span" /></h6>
                 <Row>
                   {selectedCourse.careers.map((career, index) => (
                     <Col md={6} key={index} className="mb-2">
@@ -958,7 +987,7 @@ const UserSettings = () => {
               
               <Alert variant="info">
                 <FaInfoCircle className="me-2" />
-                <strong>Tip:</strong> Research about the admission process, entrance exams, and top colleges for this stream. Start preparing early to secure a seat in a good institution.
+                <strong>Tip:</strong> <TransText k="settings.tip" as="span" />
               </Alert>
             </div>
           )}

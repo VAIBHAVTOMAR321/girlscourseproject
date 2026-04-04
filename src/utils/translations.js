@@ -236,6 +236,227 @@ export const translations = {
     "query.completed": "Completed",
     "query.rejected": "Rejected",
     "query.cancelled": "Cancelled",
+
+    // User Settings/Guidance Page
+    "settings.backToDashboard": "Back to Dashboard",
+    "settings.loading": "Loading guidance...",
+    "settings.guidanceTitle": "10th Class Stream Guidance",
+    "settings.guidanceSubtitle":
+      "Select your 10th stream and enter your percentage to get personalized 11th stream recommendations",
+    "settings.step1": "Step 1",
+    "settings.selectStream": "Select Your 10th Stream",
+    "settings.step2": "Step 2",
+    "settings.enterPercentage": "Enter Your 10th Percentage",
+    "settings.getGuidance": "Get 11th Stream Guidance",
+    "settings.step3": "Step 3",
+    "settings.noRecommendations": "No Recommendations Found",
+    "settings.noRecDesc":
+      "No 11th stream recommendations are available for the selected criteria. Please try a different stream or percentage.",
+    "settings.performanceTitle": "Your Performance",
+    "settings.basedOn": "Based on",
+    "settings.in": "in",
+    "settings.excellent": "Excellent",
+    "settings.good": "Good",
+    "settings.average": "Average",
+    "settings.recommendedStreams": "Recommended Streams",
+    "settings.allStreams": "All Streams for",
+    "settings.eleventhStreamRec": "11th Stream Recommendations",
+    "settings.careerOptions": "Career Options",
+    "settings.careerOpportunities": "Career Opportunities",
+    "settings.stepByStep": "Step-by-Step Career Guidance",
+    "settings.stepsToAchieve": "Steps to Achieve",
+    "settings.additionalGuidance": "Additional Guidance",
+    "settings.guidanceFor": "For",
+    "settings.students": "Students",
+    "settings.careerTips": "Career Tips",
+    "settings.howToGetGuidance": "How to Get 11th Stream Guidance",
+    "settings.instructions":
+      'Step 1: Select your 10th stream from the options above\nStep 2: Enter your 10th percentage\nStep 3: Click "Get 11th Stream Guidance" to see personalized 11th stream recommendations and career paths',
+    "settings.streamDetailsTitle": "Stream Details",
+    "settings.description": "Description",
+    "settings.salary": "Salary",
+    "settings.growth": "Growth",
+    "settings.tip":
+      "Tip: Research about the admission process, entrance exams, and top colleges for this stream. Start preparing early to secure a seat in a good institution.",
+    "settings.toDashboard": "Go to Dashboard",
+    "settings.selected": "Selected",
+    "settings.percentage": "%",
+    "settings.science": "Science",
+    "settings.scienceSubjects": "Physics, Chemistry, Biology, Mathematics",
+    "settings.commerce": "Commerce",
+    "settings.commerceSubjects": "Accountancy, Business Studies, Economics",
+    "settings.arts": "Arts/Humanities",
+    "settings.artsSubjects":
+      "History, Geography, Political Science, Psychology",
+    "settings.vocational": "Vocational",
+    "settings.vocationalSubjects":
+      "Technical Skills, Trade Skills, Practical Training",
+    "settings.pcb": "PCB (Physics, Chemistry, Biology)",
+    "settings.pcbDesc":
+      "For students interested in medical and biological sciences",
+    "settings.pcm": "PCM (Physics, Chemistry, Mathematics)",
+    "settings.pcmDesc": "For students interested in engineering and technology",
+    "settings.pcmb": "PCMB (Physics, Chemistry, Mathematics, Biology)",
+    "settings.pcmbDesc":
+      "For students interested in both medical and engineering fields",
+    "settings.commerceMath": "Commerce with Mathematics",
+    "settings.commerceMathDesc":
+      "For students interested in finance and accounting with strong math skills",
+    "settings.commerceIT": "Commerce with Informatics Practices",
+    "settings.commerceITDesc":
+      "For students interested in business and technology",
+    "settings.commerceEnt": "Commerce with Entrepreneurship",
+    "settings.commerceEntDesc":
+      "For students interested in starting their own business",
+    "settings.artsHist": "Arts with History",
+    "settings.artsHistDesc":
+      "For students interested in history and civil services",
+    "settings.artsPoly": "Arts with Political Science",
+    "settings.artsPolyDesc": "For students interested in politics and law",
+    "settings.artsPsych": "Arts with Psychology",
+    "settings.artsPsychDesc":
+      "For students interested in human behavior and counseling",
+    "settings.artsSoc": "Arts with Sociology",
+    "settings.artsSocDesc":
+      "For students interested in social issues and community work",
+    "settings.iti": "ITI (Industrial Training Institute)",
+    "settings.itiDesc": "For students interested in technical trades",
+    "settings.polytechnic": "Polytechnic Diploma",
+    "settings.polytechnicDesc":
+      "For students interested in engineering diploma",
+    "settings.certificate": "Certificate Courses",
+    "settings.certificateDesc":
+      "For students interested in skill-based training",
+    "settings.doctorCareer": "Doctor",
+    "settings.engineerCareer": "Engineer",
+    "settings.biomedicalCareer": "Biomedical Engineer",
+    "settings.charterAccountant": "Chartered Accountant",
+    "settings.therapist": "Therapist",
+    "settings.lawyer": "Lawyer",
+    "settings.electricianCareer": "Electrician",
+
+    // Occupation Details Page
+    "occupation.backToGuidance": "Back to Guidance",
+    "occupation.loading": "Loading occupation details...",
+    "occupation.noOccupation":
+      "No occupation selected. Please go back and select an occupation.",
+    "occupation.salaryRange": "Salary Range",
+    "occupation.growth": "Growth",
+    "occupation.demandLevel": "Demand Level",
+    "occupation.careerOpportunities": "Career Opportunities",
+    "occupation.stepByStep": "Step-by-Step Guidance",
+    "occupation.skillsExams": "Skills & Exams",
+    "occupation.topColleges": "Top Colleges",
+    "occupation.availableCareerOpps": "Available Career Opportunities",
+    "occupation.explorePaths":
+      "Explore different career paths and find the one that suits you best",
+    "occupation.careerProgressionPath": "Career Progression Path for",
+    "occupation.stepByStepPath": "Step-by-Step Career Path",
+    "occupation.followSteps": "Follow these steps to become a",
+    "occupation.requiredSkills": "Required Skills",
+    "occupation.entranceExams": "Entrance Exams",
+    "occupation.eligibility": "Eligibility",
+    "occupation.frequency": "Frequency",
+    "occupation.difficulty": "Difficulty",
+    "occupation.topCollegesList": "Top Colleges",
+    "occupation.readyToStart": "Ready to Start Your Journey?",
+    "occupation.selectedCareer": "You've selected",
+    "occupation.asCareerPath": "as your career path. Start preparing today!",
+    "occupation.goToDashboard": "Go to Dashboard",
+    "occupation.exploreMoreCareers": "Explore More Careers",
+    "occupation.tips": "Tips",
+    "occupation.duration": "Duration",
+    "occupation.location": "Location",
+    "occupation.ranking": "Ranking",
+    "occupation.teacher": "Teacher",
+    "occupation.lawyer": "Lawyer",
+    "occupation.softwareEngineer": "Software Engineer",
+    "occupation.doctor": "Doctor",
+
+    // Occupation Descriptions
+    "occupation.teacherDesc":
+      "Teachers educate students at various levels, from primary schools to universities. They play a crucial role in shaping the future of students.",
+    "occupation.lawyerDesc":
+      "Lawyers provide legal advice and representation to individuals, businesses, and government agencies. They play a vital role in the justice system.",
+    "occupation.softwareEngineerDesc":
+      "Software engineers design, develop, and maintain software applications. They are the backbone of the IT industry.",
+    "occupation.doctorDesc":
+      "Doctors diagnose and treat illnesses, injuries, and diseases. They are essential healthcare professionals.",
+
+    // Card Content - Stream Descriptions High Performance
+    "card.pcbHighDesc":
+      "For students interested in medical and biological sciences",
+    "card.pcmHighDesc": "For students interested in engineering and technology",
+    "card.commerceMathHighDesc":
+      "For students interested in finance and accounting with strong math skills",
+    "card.artsHistHighDesc":
+      "For students interested in history and civil services",
+    "card.itiHighDesc": "For students interested in technical trades",
+
+    // Card Content - Stream Descriptions Medium Performance
+    "card.pcbMediumDesc":
+      "For students interested in medical and biological sciences",
+    "card.commerceITMediumDesc":
+      "For students interested in business and technology",
+    "card.artsPolyMediumDesc": "For students interested in politics and law",
+    "card.polytechnicMediumDesc":
+      "For students interested in engineering diploma",
+
+    // Card Content - Stream Descriptions Low Performance
+    "card.pcbLowDesc":
+      "For students interested in medical and biological sciences",
+    "card.commerceEntLowDesc":
+      "For students interested in starting their own business",
+    "card.artsHistLowDesc":
+      "For students interested in history and civil services",
+    "card.certificateLowDesc":
+      "For students interested in skill-based training",
+
+    // Career Paths - Salary and Growth
+    "card.salaryRange": "Salary Range",
+    "card.careerGrowth": "Career Growth",
+    "card.doctorSalary": "₹10-50 LPA",
+    "card.doctorGrowth": "Junior Doctor → Senior Doctor → Head of Department",
+    "card.engineerSalary": "₹6-25 LPA",
+    "card.engineerGrowth": "Junior Engineer → Senior Engineer → Tech Lead",
+    "card.lawyerSalary": "₹4-50 LPA",
+    "card.lawyerGrowth": "Junior Lawyer → Senior Lawyer → Senior Advocate",
+    "card.teacherSalary": "₹3-15 LPA",
+    "card.teacherGrowth":
+      "Primary Teacher → TGT → PGT → Vice Principal → Principal",
+    "card.softwareSalary": "₹6-25 LPA",
+    "card.softwareGrowth":
+      "Junior Developer → Senior Developer → Tech Lead → CTO",
+
+    // Exam Details
+    "card.examNEET": "NEET (National Eligibility cum Entrance Test)",
+    "card.examCLAT": "CLAT (Common Law Admission Test)",
+    "card.examGATE": "GATE (Graduate Aptitude Test in Engineering)",
+    "card.examCTET": "CTET (Central Teacher Eligibility Test)",
+    "card.eligibility": "Eligibility",
+    "card.frequency": "Frequency",
+    "card.difficulty": "Difficulty",
+
+    // Skills
+    "card.skillCommunication": "Communication Skills",
+    "card.skillPatience": "Patience",
+    "card.skillSubjectKnowledge": "Subject Knowledge",
+    "card.skillClassroomManagement": "Classroom Management",
+    "card.skillCreativity": "Creativity",
+    "card.skillAnalytical": "Analytical Skills",
+    "card.skillProblemSolving": "Problem Solving",
+    "card.skillNegotiation": "Negotiation Skills",
+
+    // Colleges
+    "card.collegeDelhi": "Delhi University",
+    "card.collegeBHU": "Banaras Hindu University",
+    "card.collegeIITBombay": "IIT Bombay",
+    "card.collegeNLSIU": "National Law School of India University",
+
+    // Additional Labels
+    "card.careerOptions": "Career Options",
+    "card.steps": "Steps",
+    "card.step": "Step",
   },
   hi: {
     // Navigation & Header
@@ -468,6 +689,230 @@ export const translations = {
     "query.completed": "पूर्ण",
     "query.rejected": "अस्वीकृत",
     "query.cancelled": "रद्द",
+
+    // User Settings/Guidance Page
+    "settings.backToDashboard": "डैशबोर्ड पर वापस जाएं",
+    "settings.loading": "मार्गदर्शन लोड हो रहा है...",
+    "settings.guidanceTitle": "10वीं कक्षा स्ट्रीम मार्गदर्शन",
+    "settings.guidanceSubtitle":
+      "अपनी 10वीं स्ट्रीम चुनें और व्यक्तिगत 11वीं स्ट्रीम सिफारिशें प्राप्त करने के लिए अपने इतिहास में प्रवेश करें",
+    "settings.step1": "चरण 1",
+    "settings.selectStream": "अपनी 10वीं स्ट्रीम चुनें",
+    "settings.step2": "चरण 2",
+    "settings.enterPercentage": "अपना 10वीं प्रतिशत दर्ज करें",
+    "settings.getGuidance": "11वीं स्ट्रीम मार्गदर्शन प्राप्त करें",
+    "settings.step3": "चरण 3",
+    "settings.noRecommendations": "कोई सिफारिशें नहीं मिलीं",
+    "settings.noRecDesc":
+      "चयनित मानदंडों के लिए कोई 11वीं स्ट्रीम सिफारिशें उपलब्ध नहीं हैं। कृपया एक अलग स्ट्रीम या प्रतिशत का प्रयास करें।",
+    "settings.performanceTitle": "आपका प्रदर्शन",
+    "settings.basedOn": "के आधार पर",
+    "settings.in": "में",
+    "settings.excellent": "उत्कृष्ट",
+    "settings.good": "अच्छा",
+    "settings.average": "औसत",
+    "settings.recommendedStreams": "अनुशंसित स्ट्रीम",
+    "settings.allStreams": "सभी स्ट्रीम",
+    "settings.eleventhStreamRec": "11वीं स्ट्रीम अनुशंसाएं",
+    "settings.careerOptions": "कैरियर विकल्प",
+    "settings.careerOpportunities": "कैरियर के अवसर",
+    "settings.stepByStep": "चरण-दर-चरण कैरियर मार्गदर्शन",
+    "settings.stepsToAchieve": "प्राप्त करने के चरण",
+    "settings.additionalGuidance": "अतिरिक्त मार्गदर्शन",
+    "settings.guidanceFor": "के लिए",
+    "settings.students": "छात्र",
+    "settings.careerTips": "कैरियर टिप्स",
+    "settings.howToGetGuidance": "11वीं स्ट्रीम मार्गदर्शन कैसे प्राप्त करें",
+    "settings.instructions":
+      'चरण 1: ऊपर दिए गए विकल्पों से अपनी 10वीं स्ट्रीम चुनें\nचरण 2: अपना 10वीं प्रतिशत दर्ज करें\nचरण 3: व्यक्तिगत 11वीं स्ट्रीम सिफारिशें और कैरियर पथ देखने के लिए "11वीं स्ट्रीम मार्गदर्शन प्राप्त करें" पर क्लिक करें',
+    "settings.streamDetailsTitle": "स्ट्रीम विवरण",
+    "settings.description": "विवरण",
+    "settings.salary": "वेतन",
+    "settings.growth": "वृद्धि",
+    "settings.tip":
+      "टिप: इस स्ट्रीम के लिए प्रवेश प्रक्रिया, प्रवेश परीक्षाओं और शीर्ष कॉलेजों के बारे में शोध करें। एक अच्छी संस्था में सीट सुरक्षित करने के लिए जल्दी तैयारी शुरू करें।",
+    "settings.toDashboard": "डैशबोर्ड पर जाएं",
+    "settings.selected": "चयनित",
+    "settings.percentage": "%",
+    "settings.science": "विज्ञान",
+    "settings.scienceSubjects": "भौतिकी, रसायन विज्ञान, जीव विज्ञान, गणित",
+    "settings.commerce": "वाणिज्य",
+    "settings.commerceSubjects": "लेखांकन, व्यावसायिक अध्ययन, अर्थशास्त्र",
+    "settings.arts": "कला/मानविकी",
+    "settings.artsSubjects": "इतिहास, भूगोल, राजनीति विज्ञान, मनोविज्ञान",
+    "settings.vocational": "व्यावसायिक",
+    "settings.vocationalSubjects":
+      "तकनीकी कौशल, व्यापार कौशल, व्यावहारिक प्रशिक्षण",
+    "settings.pcb": "PCB (भौतिकी, रसायन विज्ञान, जीव विज्ञान)",
+    "settings.pcbDesc":
+      "चिकित्सा और जैविक विज्ञान में रुचि रखने वाले छात्रों के लिए",
+    "settings.pcm": "PCM (भौतिकी, रसायन विज्ञान, गणित)",
+    "settings.pcmDesc":
+      "इंजीनियरिंग और प्रौद्योगिकी में रुचि रखने वाले छात्रों के लिए",
+    "settings.pcmb": "PCMB (भौतिकी, रसायन विज्ञान, गणित, जीव विज्ञान)",
+    "settings.pcmbDesc":
+      "चिकित्सा और इंजीनियरिंग दोनों क्षेत्रों में रुचि रखने वाले छात्रों के लिए",
+    "settings.commerceMath": "वाणिज्य गणित के साथ",
+    "settings.commerceMathDesc":
+      "वित्त और लेखांकन में रुचि रखने वाले छात्रों के लिए",
+    "settings.commerceIT": "सूचना प्रौद्योगिकी के साथ वाणिज्य",
+    "settings.commerceITDesc":
+      "व्यवसाय और प्रौद्योगिकी में रुचि रखने वाले छात्रों के लिए",
+    "settings.commerceEnt": "उद्यमिता के साथ वाणिज्य",
+    "settings.commerceEntDesc":
+      "अपना व्यवसाय शुरू करने में रुचि रखने वाले छात्रों के लिए",
+    "settings.artsHist": "इतिहास के साथ कला",
+    "settings.artsHistDesc":
+      "इतिहास और सिविल सेवाओं में रुचि रखने वाले छात्रों के लिए",
+    "settings.artsPoly": "राजनीति विज्ञान के साथ कला",
+    "settings.artsPolyDesc":
+      "राजनीति और कानून में रुचि रखने वाले छात्रों के लिए",
+    "settings.artsPsych": "मनोविज्ञान के साथ कला",
+    "settings.artsPsychDesc":
+      "मानवीय व्यवहार और परामर्श में रुचि रखने वाले छात्रों के लिए",
+    "settings.artsSoc": "समाजशास्त्र के साथ कला",
+    "settings.artsSocDesc":
+      "सामाजिक मुद्दों और सामुदायिक कार्य में रुचि रखने वाले छात्रों के लिए",
+    "settings.iti": "ITI (औद्योगिक प्रशिक्षण संस्थान)",
+    "settings.itiDesc": "तकनीकी व्यापार में रुचि रखने वाले छात्रों के लिए",
+    "settings.polytechnic": "पॉलीटेक्निक डिप्लोमा",
+    "settings.polytechnicDesc":
+      "इंजीनियरिंग डिप्लोमा में रुचि रखने वाले छात्रों के लिए",
+    "settings.certificate": "प्रमाणपत्र पाठ्यक्रम",
+    "settings.certificateDesc":
+      "कौशल-आधारित प्रशिक्षण में रुचि रखने वाले छात्रों के लिए",
+    "settings.doctorCareer": "डॉक्टर",
+    "settings.engineerCareer": "इंजीनियर",
+    "settings.biomedicalCareer": "बायोमेडिकल इंजीनियर",
+    "settings.charterAccountant": "चार्टर्ड अकाउंटेंट",
+    "settings.therapist": "चिकित्सक",
+    "settings.lawyer": "वकील",
+    "settings.electricianCareer": "इलेक्ट्रीशियन",
+
+    // Occupation Details Page
+    "occupation.backToGuidance": "मार्गदर्शन पर वापस जाएं",
+    "occupation.loading": "व्यावसायिक विवरण लोड हो रहा है...",
+    "occupation.noOccupation":
+      "कोई व्यावसायिक चयन नहीं किया गया। कृपया वापस जाएं और एक व्यावसायिक चुनें।",
+    "occupation.salaryRange": "वेतन सीमा",
+    "occupation.growth": "वृद्धि",
+    "occupation.demandLevel": "मांग स्तर",
+    "occupation.careerOpportunities": "कैरियर के अवसर",
+    "occupation.stepByStep": "चरण-दर-चरण मार्गदर्शन",
+    "occupation.skillsExams": "कौशल और परीक्षाएं",
+    "occupation.topColleges": "शीर्ष कॉलेज",
+    "occupation.availableCareerOpps": "उपलब्ध कैरियर अवसर",
+    "occupation.explorePaths":
+      "विभिन्न कैरियर पथ तलाशें और अपने लिए सबसे उपयुक्त खोजें",
+    "occupation.careerProgressionPath": "के लिए कैरियर प्रगति पथ",
+    "occupation.stepByStepPath": "चरण-दर-चरण कैरियर पथ",
+    "occupation.followSteps": "ये चरण अनुसरण करें",
+    "occupation.requiredSkills": "आवश्यक कौशल",
+    "occupation.entranceExams": "प्रवेश परीक्षाएं",
+    "occupation.eligibility": "पात्रता",
+    "occupation.frequency": "आवृत्ति",
+    "occupation.difficulty": "कठिनाई",
+    "occupation.topCollegesList": "शीर्ष कॉलेज",
+    "occupation.readyToStart": "अपनी यात्रा शुरू करने के लिए तैयार हैं?",
+    "occupation.selectedCareer": "आपने चुना है",
+    "occupation.asCareerPath":
+      "अपने कैरियर पथ के रूप में। आज ही तैयारी शुरू करें!",
+    "occupation.goToDashboard": "डैशबोर्ड पर जाएं",
+    "occupation.exploreMoreCareers": "अधिक कैरियर देखें",
+    "occupation.tips": "टिप्स",
+    "occupation.duration": "अवधि",
+    "occupation.location": "स्थान",
+    "occupation.ranking": "रैंकिंग",
+    "occupation.teacher": "शिक्षक",
+    "occupation.lawyer": "वकील",
+    "occupation.softwareEngineer": "सॉफ्टवेयर इंजीनियर",
+    "occupation.doctor": "डॉक्टर",
+
+    // Occupation Descriptions Hindi
+    "occupation.teacherDesc":
+      "शिक्षक विभिन्न स्तरों पर छात्रों को शिक्षित करते हैं, प्राथमिक स्कूल से विश्वविद्यालय तक। वे छात्रों के भविष्य को आकार देने में महत्वपूर्ण भूमिका निभाते हैं।",
+    "occupation.lawyerDesc":
+      "वकील व्यक्तियों, व्यवसायों और सरकारी एजेंसियों को कानूनी सलाह और प्रतिनिधित्व प्रदान करते हैं। वे न्याय प्रणाली में महत्वपूर्ण भूमिका निभाते हैं।",
+    "occupation.softwareEngineerDesc":
+      "सॉफ्टवेयर इंजीनियर सॉफ्टवेयर अनुप्रयोगों को डिजाइन, विकास और रखरखाव करते हैं। वे IT उद्योग की रीढ़ हैं।",
+    "occupation.doctorDesc":
+      "डॉक्टर बीमारियों, चोटों और रोगों का निदान और उपचार करते हैं। वे आवश्यक स्वास्थ्यसेवा पेशेवर हैं।",
+
+    // Card Content - Stream Descriptions High Performance
+    "card.pcbHighDesc":
+      "चिकित्सा और जैविक विज्ञान में रुचि रखने वाले छात्रों के लिए",
+    "card.pcmHighDesc":
+      "इंजीनियरिंग और प्रौद्योगिकी में रुचि रखने वाले छात्रों के लिए",
+    "card.commerceMathHighDesc":
+      "वित्त और लेखांकन में रुचि रखने वाले छात्रों के लिए",
+    "card.artsHistHighDesc":
+      "इतिहास और सिविल सेवाओं में रुचि रखने वाले छात्रों के लिए",
+    "card.itiHighDesc": "तकनीकी व्यापार में रुचि रखने वाले छात्रों के लिए",
+
+    // Card Content - Stream Descriptions Medium Performance
+    "card.pcbMediumDesc":
+      "चिकित्सा और जैविक विज्ञान में रुचि रखने वाले छात्रों के लिए",
+    "card.commerceITMediumDesc":
+      "व्यवसाय और प्रौद्योगिकी में रुचि रखने वाले छात्रों के लिए",
+    "card.artsPolyMediumDesc":
+      "राजनीति और कानून में रुचि रखने वाले छात्रों के लिए",
+    "card.polytechnicMediumDesc":
+      "इंजीनियरिंग डिप्लोमा में रुचि रखने वाले छात्रों के लिए",
+
+    // Card Content - Stream Descriptions Low Performance
+    "card.pcbLowDesc":
+      "चिकित्सा और जैविक विज्ञान में रुचि रखने वाले छात्रों के लिए",
+    "card.commerceEntLowDesc":
+      "अपना व्यवसाय शुरू करने में रुचि रखने वाले छात्रों के लिए",
+    "card.artsHistLowDesc":
+      "इतिहास और सिविल सेवाओं में रुचि रखने वाले छात्रों के लिए",
+    "card.certificateLowDesc":
+      "कौशल-आधारित प्रशिक्षण में रुचि रखने वाले छात्रों के लिए",
+
+    // Career Paths - Salary and Growth
+    "card.salaryRange": "वेतन सीमा",
+    "card.careerGrowth": "कैरियर वृद्धि",
+    "card.doctorSalary": "₹10-50 LPA",
+    "card.doctorGrowth": "जूनियर डॉक्टर → सीनियर डॉक्टर → विभाग प्रमुख",
+    "card.engineerSalary": "₹6-25 LPA",
+    "card.engineerGrowth": "जूनियर इंजीनियर → सीनियर इंजीनियर → टेक लीड",
+    "card.lawyerSalary": "₹4-50 LPA",
+    "card.lawyerGrowth": "जूनियर वकील → सीनियर वकील → वरिष्ठ अधिवक्ता",
+    "card.teacherSalary": "₹3-15 LPA",
+    "card.teacherGrowth":
+      "प्राथमिक शिक्षक → शिक्षक → PGT → उप प्रधानाचार्य → प्रधानाचार्य",
+    "card.softwareSalary": "₹6-25 LPA",
+    "card.softwareGrowth": "जूनियर डेवलपर → सीनियर डेवलपर → टेक लीड → CTO",
+
+    // Exam Details
+    "card.examNEET": "NEET (राष्ट्रीय पात्रता प्रवेश परीक्षा)",
+    "card.examCLAT": "CLAT (सामान्य कानून प्रवेश परीक्षा)",
+    "card.examGATE": "GATE (इंजीनियरिंग में स्नातक योग्यता परीक्षा)",
+    "card.examCTET": "CTET (केंद्रीय शिक्षक पात्रता परीक्षा)",
+    "card.eligibility": "पात्रता",
+    "card.frequency": "आवृत्ति",
+    "card.difficulty": "कठिनाई",
+
+    // Skills
+    "card.skillCommunication": "संचार कौशल",
+    "card.skillPatience": "धैर्य",
+    "card.skillSubjectKnowledge": "विषय ज्ञान",
+    "card.skillClassroomManagement": "कक्षा प्रबंधन",
+    "card.skillCreativity": "रचनात्मकता",
+    "card.skillAnalytical": "विश्लेषणात्मक कौशल",
+    "card.skillProblemSolving": "समस्या समाधान",
+    "card.skillNegotiation": "वार्ता कौशल",
+
+    // Colleges
+    "card.collegeDelhi": "दिल्ली विश्वविद्यालय",
+    "card.collegeBHU": "बनारस हिंदू विश्वविद्यालय",
+    "card.collegeIITBombay": "IIT बॉम्बे",
+    "card.collegeNLSIU": "राष्ट्रीय कानून स्कूल",
+
+    // Additional Labels
+    "card.careerOptions": "कैरियर विकल्प",
+    "card.steps": "चरण",
+    "card.step": "चरण",
   },
 };
 

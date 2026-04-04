@@ -1,20 +1,35 @@
 import React, { useState, useEffect } from 'react'
 import { Container, Row, Col, Card, Button, Badge, ProgressBar, Alert, Accordion, Tab, Nav } from 'react-bootstrap'
 import { useAuth } from '../../contexts/AuthContext'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useLanguage } from '../../contexts/LanguageContext'
 import UserTopNav from './UserTopNav'
 import UseLeftNav from './UseLeftNav'
+import TransText from '../TransText'
+import { getTranslation } from '../../utils/translations'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { FaArrowLeft, FaGraduationCap, FaChalkboardTeacher, FaBalanceScale, FaNewspaper, FaPaintBrush, FaHeartbeat, FaCog, FaHospital, FaFlask, FaLaptopMedical, FaSeedling, FaDna, FaBriefcase, FaUserTie, FaBuilding, FaChartBar, FaCode, FaMicrochip, FaNetworkWired, FaDatabase, FaRobot, FaCheckCircle, FaInfoCircle, FaLightbulb, FaBook, FaAward, FaCertificate, FaClock, FaRupeeSign, FaChartLine, FaUsers, FaBookOpen, FaClipboardList, FaStar, FaTrophy, FaRocket, FaUniversity, FaMapMarkerAlt } from 'react-icons/fa'
 import '../../assets/css/OccupationDetails.css'
 
 const OccupationDetails = () => {
   const { uniqueId, userRoleType } = useAuth()
+  const { language } = useLanguage()
   const [loading, setLoading] = useState(true)
   const [showOffcanvas, setShowOffcanvas] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const navigate = useNavigate()
   const location = useLocation()
   const { occupation, stream, percentage } = location.state || {}
+
+  // Helper function to get translated occupation descriptions
+  const getOccupationTranslationKey = (occupationName) => {
+    const occupationMap = {
+      'Teacher': 'occupation.teacher',
+      'Lawyer': 'occupation.lawyer',
+      'Software Engineer': 'occupation.softwareEngineer',
+      'Doctor': 'occupation.doctor',
+    }
+    return occupationMap[occupationName]
+  }
 
   // Check mobile view
   useEffect(() => {
@@ -379,16 +394,16 @@ const OccupationDetails = () => {
                 className="d-flex align-items-center"
               >
                 <FaArrowLeft className="me-2" />
-                Back to Guidance
+                <TransText k="occupation.backToGuidance" as="span" />
               </Button>
             </div>
 
             {loading ? (
               <div className="text-center py-5">
                 <div className="spinner-border text-primary" role="status" style={{ width: '60px', height: '60px' }}>
-                  <span className="visually-hidden">Loading...</span>
+                  <span className="visually-hidden"><TransText k="occupation.loading" as="span" /></span>
                 </div>
-                <p className="mt-3">Loading occupation details...</p>
+                <p className="mt-3"><TransText k="occupation.loading" as="span" /></p>
               </div>
             ) : occupationDetails && (
               <>
@@ -402,7 +417,9 @@ const OccupationDetails = () => {
                         </div>
                         <div>
                           <h2 className="mb-2">{occupationDetails.title}</h2>
-                          <p className="text-muted mb-0">{occupationDetails.description}</p>
+                          <p className="text-muted mb-0">
+                            {getOccupationTranslationKey(occupation) ? getTranslation(getOccupationTranslationKey(occupation) + 'Desc', language) : occupationDetails.description}
+                          </p>
                         </div>
                       </div>
                       <div className="d-flex gap-2">
@@ -427,25 +444,25 @@ const OccupationDetails = () => {
                         <Nav.Item>
                           <Nav.Link eventKey="career-opportunities">
                             <FaRocket className="me-2" />
-                            Career Opportunities
+                            <TransText k="occupation.careerOpportunities" as="span" />
                           </Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
                           <Nav.Link eventKey="step-by-step">
                             <FaClipboardList className="me-2" />
-                            Step-by-Step Guidance
+                            <TransText k="occupation.stepByStepPath" as="span" />
                           </Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
                           <Nav.Link eventKey="skills-exams">
                             <FaStar className="me-2" />
-                            Skills & Exams
+                            <TransText k="occupation.skillsExams" as="span" />
                           </Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
                           <Nav.Link eventKey="colleges">
                             <FaUniversity className="me-2" />
-                            Top Colleges
+                            <TransText k="occupation.topColleges" as="span" />
                           </Nav.Link>
                         </Nav.Item>
                       </Nav>
@@ -456,9 +473,9 @@ const OccupationDetails = () => {
                           <div className="mb-4">
                             <h5 className="mb-3">
                               <FaRocket className="me-2 text-primary" />
-                              Available Career Opportunities
+                              <TransText k="occupation.availableCareerOpps" as="span" />
                             </h5>
-                            <p className="text-muted mb-4">Explore different career paths and find the one that suits you best</p>
+                            <p className="text-muted mb-4"><TransText k="occupation.explorePaths" as="span" /></p>
                             <Row>
                               {['Teacher', 'Lawyer', 'Software Engineer', 'Doctor'].filter(occ => occ !== occupation).map((occ, index) => {
                                 const details = getOccupationDetails(occ)
@@ -476,7 +493,9 @@ const OccupationDetails = () => {
                                           </div>
                                           <h6 className="mb-0">{details.title}</h6>
                                         </div>
-                                        <p className="small text-muted mb-2">{details.description.substring(0, 80)}...</p>
+                                        <p className="small text-muted mb-2">
+                                          {getOccupationTranslationKey(occ) ? getTranslation(getOccupationTranslationKey(occ) + 'Desc', language) : details.description.substring(0, 80)}...
+                                        </p>
                                         <div className="d-flex justify-content-between align-items-center">
                                           <Badge bg="success">
                                             <FaRupeeSign className="me-1" />
@@ -498,7 +517,7 @@ const OccupationDetails = () => {
                           <div className="mb-4">
                             <h5 className="mb-3">
                               <FaChartLine className="me-2 text-success" />
-                              Career Progression Path for {occupationDetails.title}
+                              <TransText k="occupation.careerProgressionPath" as="span" /> {occupationDetails.title}
                             </h5>
                             <Row>
                               {occupationDetails.careerPath.map((level, index) => (
@@ -527,9 +546,11 @@ const OccupationDetails = () => {
                         <Tab.Pane eventKey="step-by-step">
                           <h5 className="mb-3">
                             <FaRocket className="me-2 text-primary" />
-                            Step-by-Step Career Path
+                            <TransText k="occupation.stepByStepPath" as="span" />
                           </h5>
-                          <p className="text-muted mb-4">Follow these steps to become a {occupationDetails.title}</p>
+                          <p className="text-muted mb-4">
+                            <TransText k="occupation.followSteps" as="span" /> {occupationDetails.title}
+                          </p>
                           <Row>
                             {occupationDetails.steps.map((step, index) => (
                               <Col md={6} key={index}>
@@ -550,7 +571,7 @@ const OccupationDetails = () => {
                                         <p className="mb-2 fw-bold" style={{ fontSize: '1.1rem' }}>{step.description}</p>
                                         <Badge bg="info" className="mb-2">{step.duration}</Badge>
                                         <div className="mt-2">
-                                          <small className="text-muted d-block mb-1">Tips:</small>
+                                          <small className="text-muted d-block mb-1"><TransText k="occupation.tips" as="span" />:</small>
                                           <ul className="mb-0 ps-3">
                                             {step.tips.map((tip, idx) => (
                                               <li key={idx} className="small text-muted">{tip}</li>
@@ -574,7 +595,7 @@ const OccupationDetails = () => {
                                 <Card.Header className="bg-white border-0 pt-4 pb-0">
                                   <div className="d-flex align-items-center gap-2">
                                     <FaStar className="text-warning" />
-                                    <h5 className="mb-0">Required Skills</h5>
+                                    <h5 className="mb-0"><TransText k="occupation.requiredSkills" as="span" /></h5>
                                   </div>
                                 </Card.Header>
                                 <Card.Body className="p-4">
@@ -602,7 +623,7 @@ const OccupationDetails = () => {
                                   <Card.Header className="bg-white border-0 pt-4 pb-0">
                                     <div className="d-flex align-items-center gap-2">
                                       <FaClipboardList className="text-info" />
-                                      <h5 className="mb-0">Entrance Exams</h5>
+                                      <h5 className="mb-0"><TransText k="occupation.entranceExams" as="span" /></h5>
                                     </div>
                                   </Card.Header>
                                   <Card.Body className="p-4">
@@ -618,15 +639,15 @@ const OccupationDetails = () => {
                                           <Accordion.Body>
                                             <Row>
                                               <Col md={4}>
-                                                <small className="text-muted">Eligibility</small>
+                                                <small className="text-muted"><TransText k="occupation.eligibility" as="span" /></small>
                                                 <p className="mb-0">{exam.eligibility}</p>
                                               </Col>
                                               <Col md={4}>
-                                                <small className="text-muted">Frequency</small>
+                                                <small className="text-muted"><TransText k="occupation.frequency" as="span" /></small>
                                                 <p className="mb-0">{exam.frequency}</p>
                                               </Col>
                                               <Col md={4}>
-                                                <small className="text-muted">Difficulty</small>
+                                                <small className="text-muted"><TransText k="occupation.difficulty" as="span" /></small>
                                                 <p className="mb-0">{exam.difficulty}</p>
                                               </Col>
                                             </Row>
@@ -648,7 +669,7 @@ const OccupationDetails = () => {
                               <Card.Header className="bg-white border-0 pt-4 pb-0">
                                 <div className="d-flex align-items-center gap-2">
                                   <FaUniversity className="text-primary" />
-                                  <h5 className="mb-0">Top Colleges</h5>
+                                  <h5 className="mb-0"><TransText k="occupation.topColleges" as="span" /></h5>
                                 </div>
                               </Card.Header>
                               <Card.Body className="p-4">
@@ -688,18 +709,18 @@ const OccupationDetails = () => {
                 {/* Action Buttons */}
                 <Card className="shadow-sm border-0" style={{ borderRadius: '10px' }}>
                   <Card.Body className="p-4 text-center">
-                    <h5 className="mb-3">Ready to Start Your Journey?</h5>
+                    <h5 className="mb-3"><TransText k="occupation.readyToStart" as="span" /></h5>
                     <p className="text-muted mb-4">
-                      You've selected {occupationDetails.title} as your career path. Start preparing today!
+                      <TransText k="occupation.selectedCareer" as="span" /> {occupationDetails.title} <TransText k="occupation.asCareerPath" as="span" />
                     </p>
                     <div className="d-flex justify-content-center gap-3">
                       <Button variant="primary" size="lg" onClick={() => navigate('/UserDashboard')}>
                         <FaRocket className="me-2" />
-                        Go to Dashboard
+                        <TransText k="occupation.goToDashboard" as="span" />
                       </Button>
                       <Button variant="outline-primary" size="lg" onClick={() => navigate('/UserNotifications')}>
                         <FaArrowLeft className="me-2" />
-                        Explore More Careers
+                        <TransText k="occupation.exploreMoreCareers" as="span" />
                       </Button>
                     </div>
                   </Card.Body>
