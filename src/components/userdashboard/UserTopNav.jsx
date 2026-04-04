@@ -72,9 +72,9 @@ const UserTopNav = ({ onMenuToggle, isMobile }) => {
           style={{ 
             borderRadius: '8px',
             padding: '0.5rem 0.75rem',
-            background: 'rgba(102, 126, 234, 0.1)',
+           
             border: '1px solid rgba(102, 126, 234, 0.2)',
-            color: '#667eea',
+            color: '#fff',
             transition: 'all 0.2s ease'
           }}
         >
@@ -102,7 +102,7 @@ const UserTopNav = ({ onMenuToggle, isMobile }) => {
             style={{
               borderRadius: '8px',
               padding: '0.5rem 1rem',
-              background: 'rgba(102, 126, 234, 0.1)',
+             
               border: '1px solid rgba(102, 126, 234, 0.3)',
               color: '#667eea',
               fontWeight: '500',
