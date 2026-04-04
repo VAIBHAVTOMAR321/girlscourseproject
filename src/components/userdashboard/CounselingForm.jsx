@@ -1,8 +1,12 @@
 import React, { useState } from 'react'
 import { Card, Button, Form, Row, Col, Alert } from 'react-bootstrap'
 import { FaLightbulb } from 'react-icons/fa'
+import TransText from '../TransText'
+import { useLanguage } from '../../contexts/LanguageContext'
+import { getTranslation } from '../../utils/translations'
 
 const CounselingForm = ({ onSubmit, initialData = {}, showForm: propShowForm, onToggle, userRoleType }) => {
+  const { language } = useLanguage()
   const [internalShowForm, setInternalShowForm] = useState(false)
   const showForm = propShowForm !== undefined ? propShowForm : internalShowForm
   const setShowForm = (value) => {
@@ -59,44 +63,43 @@ const CounselingForm = ({ onSubmit, initialData = {}, showForm: propShowForm, on
 
     // Validate required fields
     if (!formData.student_id) {
-      alert('Please enter your student ID')
+      alert(getTranslation('counseling.errorStudentId', language))
       return
     }
     
     if (!formData.full_name) {
-      alert('Please enter your full name')
+      alert(getTranslation('counseling.errorFullName', language))
       return
     }
 
     // Validate phone number (basic validation)
     const phoneRegex = /^[6-9]\d{9}$/
     if (!formData.phone) {
-      alert('Please enter your phone number')
+      alert(getTranslation('counseling.errorPhone', language))
       return
     }
     if (!phoneRegex.test(formData.phone.replace(/\s+/g, ''))) {
-      alert('Please enter a valid 10-digit phone number starting with 6-9')
+      alert(getTranslation('counseling.errorPhoneValid', language))
       return
     }
 
     // Validate email
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  
-   
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/  
+ 
 
     // Validate aadhaar if provided
     if (formData.aadhaar_no && !/^\d{12}$/.test(formData.aadhaar_no.replace(/\s+/g, ''))) {
-      alert('Aadhaar number must be 12 digits')
+      alert(getTranslation('counseling.errorAadhaar', language))
       return
     }
 
     if (!formData.category_consulting.length) {
-      alert('Please select at least one counseling category')
+      alert(getTranslation('counseling.errorCategory', language))
       return
     }
 
     if (formData.category_consulting.includes('other') && !formData.otherCategory.trim()) {
-      alert('Please specify the other category')
+      alert(getTranslation('counseling.errorOtherCategory', language))
       return
     }
 
@@ -142,7 +145,7 @@ const CounselingForm = ({ onSubmit, initialData = {}, showForm: propShowForm, on
       // Hide success message after 3 seconds
       setTimeout(() => setSubmitted(false), 3000)
     } catch (error) {
-      setError(error.message || 'Failed to submit counseling request. Please try again.')
+      setError(error.message || getTranslation('counseling.error', language))
     } finally {
       setSubmitting(false)
     }
@@ -165,15 +168,15 @@ const CounselingForm = ({ onSubmit, initialData = {}, showForm: propShowForm, on
             <div>
               <h5 className="mb-0">
                 <FaLightbulb className="me-2 text-warning" />
-                Need Counseling Support?
+                <TransText k="counseling.title" as="span" />
               </h5>
-              <small className="text-muted">Get personalized guidance for your career journey</small>
+              <small className="text-muted"><TransText k="counseling.subtitle" as="span" /></small>
             </div>
             <Button
               variant="outline-primary"
               onClick={() => setShowForm(!showForm)}
             >
-              {showForm ? 'Hide Form' : 'Get Counseling'}
+              {showForm ? <TransText k="counseling.hideForm" as="span" /> : <TransText k="counseling.getCounseling" as="span" />}
             </Button>
           </div>
 
@@ -371,26 +374,26 @@ const CounselingForm = ({ onSubmit, initialData = {}, showForm: propShowForm, on
                 </Col> */}
                 <Col md={12}>
                   <Form.Group>
-                    <Form.Label>Counseling Category * (Select all that apply)</Form.Label>
+                    <Form.Label><TransText k="counseling.categoryLabel" as="span" /></Form.Label>
                     <div className="row">
                       {[
-                        { value: 'career-guidance', label: 'Career Guidance' },
-                        { value: 'course-selection', label: 'Course Selection Help' },
-                        { value: 'admission-process', label: 'Admission Process' },
-                        { value: 'financial-aid', label: 'Financial Aid & Scholarships' },
-                        { value: 'study-abroad', label: 'Study Abroad Guidance' },
-                        { value: 'job-placement', label: 'Job Placement Assistance' },
-                        { value: 'skill-development', label: 'Skill Development' },
-                        { value: 'personal-counseling', label: 'Personal Counseling' },
-                        { value: 'health', label: 'Health Related' },
-                        { value: 'domestic', label: 'Domestic Issues' },
-                        { value: 'other', label: 'Other' }
+                        { value: 'career-guidance', labelKey: 'counseling.categoryCareer' },
+                        { value: 'course-selection', labelKey: 'counseling.categoryCourse' },
+                        { value: 'admission-process', labelKey: 'counseling.categoryAdmission' },
+                        { value: 'financial-aid', labelKey: 'counseling.categoryFinancial' },
+                        { value: 'study-abroad', labelKey: 'counseling.categoryAbroad' },
+                        { value: 'job-placement', labelKey: 'counseling.categoryJob' },
+                        { value: 'skill-development', labelKey: 'counseling.categorySkill' },
+                        { value: 'personal-counseling', labelKey: 'counseling.categoryPersonal' },
+                        { value: 'health', labelKey: 'counseling.categoryHealth' },
+                        { value: 'domestic', labelKey: 'counseling.categoryDomestic' },
+                        { value: 'other', labelKey: 'counseling.categoryOther' }
                       ].map((option) => (
                         <Col key={option.value} md={4} className="mb-2">
                           <Form.Check
                             type="checkbox"
                             id={option.value}
-                            label={option.label}
+                            label={<TransText k={option.labelKey} as="span" />}
                             checked={formData.category_consulting.includes(option.value)}
                             onChange={(e) => {
                               const checked = e.target.checked
@@ -410,12 +413,12 @@ const CounselingForm = ({ onSubmit, initialData = {}, showForm: propShowForm, on
                 {formData.category_consulting.includes('other') && (
                   <Col md={12}>
                     <Form.Group>
-                      <Form.Label>Specify Other Category *</Form.Label>
+                      <Form.Label><TransText k="counseling.otherSpecify" as="span" /></Form.Label>
                       <Form.Control
                         type="text"
                         value={formData.otherCategory}
                         onChange={(e) => handleChange('otherCategory', e.target.value)}
-                        placeholder="Please specify"
+                        placeholder={<TransText k="counseling.otherPlaceholder" as="span" />}
                         required
                       />
                     </Form.Group>
@@ -431,12 +434,12 @@ const CounselingForm = ({ onSubmit, initialData = {}, showForm: propShowForm, on
                     {submitting ? (
                       <>
                         <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                        Submitting...
+                        <TransText k="counseling.submitting" as="span" />
                       </>
                     ) : submitted ? (
-                      'Submitted'
+                      <TransText k="counseling.submitted" as="span" />
                     ) : (
-                      'Submit Counseling Request'
+                      <TransText k="counseling.submit" as="span" />
                     )}
                   </Button>
                 </Col>

@@ -867,21 +867,23 @@ const UserSettings = () => {
                             </h5>
                             <Row>
                               <Col md={6}>
-                                <h6><TransText k="settings.guidanceFor" as="span" /> {streams.find(s => s.id === selectedStream)?.name} <TransText k="settings.students" as="span" />:</h6>
+                                <h6>
+                                  <TransText k="settings.guidanceFor" as="span" /> {streams.find(s => s.id === selectedStream)?.name} <TransText k="settings.students" as="span" />:
+                                </h6>
                                 <ul className="text-muted">
-                                  <li>Focus on your core subjects and build strong fundamentals</li>
-                                  <li>Participate in extracurricular activities related to your stream</li>
-                                  <li>Consider internships and practical experience</li>
-                                  <li>Prepare for competitive exams if applicable</li>
+                                  <li><TransText k="settings.guidanceTip1" as="span" /></li>
+                                  <li><TransText k="settings.guidanceTip2" as="span" /></li>
+                                  <li><TransText k="settings.guidanceTip3" as="span" /></li>
+                                  <li><TransText k="settings.guidanceTip4" as="span" /></li>
                                 </ul>
                               </Col>
                               <Col md={6}>
                                 <h6><TransText k="settings.careerTips" as="span" />:</h6>
                                 <ul className="text-muted">
-                                  <li>Research about the streams and their career prospects</li>
-                                  <li>Talk to professionals in your field of interest</li>
-                                  <li>Build a strong portfolio or resume</li>
-                                  <li>Stay updated with industry trends</li>
+                                  <li><TransText k="settings.careerTip1" as="span" /></li>
+                                  <li><TransText k="settings.careerTip2" as="span" /></li>
+                                  <li><TransText k="settings.careerTip3" as="span" /></li>
+                                  <li><TransText k="settings.careerTip4" as="span" /></li>
                                 </ul>
                               </Col>
                             </Row>
