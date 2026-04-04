@@ -74,6 +74,7 @@ const UserQuiz = () => {
         }
       } catch (error) {
         console.error('Error fetching quizzes:', error)
+        alert('Failed to load quizzes. Please try again.')
       } finally {
         setLoading(false)
       }
@@ -182,12 +183,20 @@ const UserQuiz = () => {
       setTimeRemaining(Math.max(60, Math.min(duration, 3600))) // Between 1 min and 1 hour
     } catch (error) {
       console.error('Error starting quiz:', error)
+      const errorMessage = error.response?.data?.message || error.response?.data?.error || error.message
+      
       if (error.response?.status === 404) {
-        alert('Quiz endpoint not found. Please contact support.')
+        alert('Quiz endpoint not found. ' + errorMessage)
       } else if (error.response?.status === 401) {
-        alert('Unauthorized. Please login again.')
+        alert('Unauthorized. ' + errorMessage)
+      } else if (error.response?.status === 400) {
+        alert(errorMessage)
+      } else if (error.response?.status === 403) {
+        alert('Access denied. ' + errorMessage)
+      } else if (error.response?.status === 500) {
+        alert('Server error. ' + errorMessage)
       } else {
-        alert('Failed to start quiz. Please try again.')
+        alert(errorMessage || 'Failed to start quiz. Please try again.')
       }
       return
     }
@@ -296,10 +305,18 @@ const UserQuiz = () => {
       setTakingQuiz(false)
     } catch (error) {
       console.error('Error submitting quiz:', error)
+      const errorMessage = error.response?.data?.message || error.response?.data?.error || error.message
+      
       if (error.response?.status === 401) {
-        alert('Unauthorized. Please login again.')
+        alert('Unauthorized. ' + errorMessage)
+      } else if (error.response?.status === 400) {
+        alert(errorMessage)
+      } else if (error.response?.status === 404) {
+        alert('Endpoint not found. ' + errorMessage)
+      } else if (error.response?.status === 500) {
+        alert('Server error. ' + errorMessage)
       } else {
-        alert('Failed to submit quiz. Please try again.')
+        alert(errorMessage || 'Failed to submit quiz. Please try again.')
       }
     }
   }

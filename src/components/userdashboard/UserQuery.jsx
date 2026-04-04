@@ -29,7 +29,7 @@ function UserQuery() {
   const [queries, setQueries] = useState([])
   const [loading, setLoading] = useState(false)
   const [submitting, setSubmitting] = useState(false)
-  const [message, setMessage] = useState({ type: '', text: '' })
+
 
   // Check admin role and redirect
   useEffect(() => {
@@ -104,6 +104,7 @@ function UserQuery() {
       }
     } catch (error) {
       console.error('Error fetching queries:', error)
+      alert('Failed to load queries. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -117,7 +118,6 @@ function UserQuery() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setSubmitting(true)
-    setMessage({ type: '', text: '' })
 
     try {
       const response = await fetch(API_URL, {
@@ -130,7 +130,7 @@ function UserQuery() {
       })
 
       if (response.ok) {
-        setMessage({ type: 'success', text: getTranslation('query.querySubmitted', language) })
+        alert(getTranslation('query.querySubmitted', language))
         setFormData({
           full_name: formData.full_name,
           student_id: uniqueId,
@@ -141,11 +141,11 @@ function UserQuery() {
         fetchQueries()
       } else {
         const errorData = await response.json()
-        setMessage({ type: 'danger', text: errorData.message || getTranslation('query.failedSubmit', language) })
+        alert(errorData.message || getTranslation('query.failedSubmit', language))
       }
     } catch (error) {
       console.error('Error submitting query:', error)
-      setMessage({ type: 'danger', text: getTranslation('query.errorOccurred', language) })
+      alert(getTranslation('query.errorOccurred', language))
     } finally {
       setSubmitting(false)
     }
@@ -279,11 +279,7 @@ function UserQuery() {
                       
                      
 
-                      {message.text && (
-                        <Alert variant={message.type} className="mb-3">
-                          {message.text}
-                        </Alert>
-                      )}
+
 
                       <Button 
                         variant="primary" 
