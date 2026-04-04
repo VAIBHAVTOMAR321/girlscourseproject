@@ -115,6 +115,57 @@ import '../../assets/css/UserNotifications.css'
     return stream ? getTranslation(stream.nameKey, language) : 'Unknown'
   }
 
+  // Mapping of course names to their translation keys
+  const courseTranslationMap = {
+    'B.Tech (Bachelor of Technology)': 'course.btech',
+    'MBBS (Bachelor of Medicine)': 'course.mbbs',
+    'B.Sc (Bachelor of Science)': 'course.bsc',
+    'B.Pharma (Bachelor of Pharmacy)': 'course.bpharma',
+    'BDS (Bachelor of Dental Surgery)': 'course.bds',
+    'B.Sc Nursing': 'course.nursing',
+    'B.Sc Agriculture': 'course.agriculture',
+    'B.Sc Biotechnology': 'course.biotech',
+    'Diploma in Engineering': 'course.diploma_eng',
+    'B.Com (Bachelor of Commerce)': 'course.bcom',
+    'BBA (Bachelor of Business Administration)': 'course.bba',
+    'CA (Chartered Accountancy)': 'course.ca',
+    'CS (Company Secretary)': 'course.cs',
+    'CMA (Cost Management Accounting)': 'course.cma',
+    'BBA LLB': 'course.bballb',
+    'B.Com (Hons)': 'course.bcomhons',
+    'BBA (Marketing)': 'course.bbamarketing',
+    'Diploma in Accounting': 'course.diploma_acc',
+    'BA (Bachelor of Arts)': 'course.ba',
+    'LLB (Bachelor of Laws)': 'course.llb',
+    'BJMC (Journalism & Mass Communication)': 'course.bjmc',
+    'B.Ed (Bachelor of Education)': 'course.bed',
+    'BFA (Bachelor of Fine Arts)': 'course.bfa',
+    'BSW (Bachelor of Social Work)': 'course.bsw',
+    'Diploma in Journalism': 'course.diploma_jour',
+    'BCA (Bachelor of Computer Applications)': 'course.bca',
+    'B.Tech CSE (Computer Science)': 'course.btech_cse',
+    'B.Tech IT (Information Technology)': 'course.btech_it',
+    'B.Sc Computer Science': 'course.bsc_cs',
+    'B.Tech AI & ML': 'course.btech_aiml',
+    'B.Tech Data Science': 'course.btech_ds',
+    'B.Sc IT (Information Technology)': 'course.bsc_it',
+    'Diploma in Computer Engineering': 'course.diploma_comp',
+    'Diploma in Computer Applications': 'course.diploma_ca'
+  }
+
+  // Helper function to get course translation key
+  const getCourseName = (courseName) => {
+    const key = courseTranslationMap[courseName]
+    return key ? getTranslation(key, language) : courseName
+  }
+
+  // Helper function to get course description translation key
+  const getCourseDescription = (courseName) => {
+    const key = courseTranslationMap[courseName]
+    const descKey = key ? key + 'Desc' : null
+    return descKey ? getTranslation(descKey, language) : ''
+  }
+
   // Courses based on stream and percentage
   const getCoursesByStreamAndPercentage = (stream, perc) => {
     const userPerc = Number(perc)
@@ -1444,11 +1495,11 @@ import '../../assets/css/UserNotifications.css'
                                             {course.icon}
                                           </div>
                                           <div>
-                                            <h6 className="mb-1">{course.name}</h6>
+                                            <h6 className="mb-1">{getCourseName(course.name)}</h6>
                                             <Badge bg="info">{course.duration}</Badge>
                                           </div>
                                         </div>
-                                        <p className="text-muted small mb-3">{course.description}</p>
+                                        <p className="text-muted small mb-3">{getCourseDescription(course.name)}</p>
                                         <div className="mt-auto">
                                           <small className="text-muted d-block mb-2">Career Opportunities:</small>
                                           <div className="d-flex flex-wrap gap-1">
@@ -1480,11 +1531,11 @@ import '../../assets/css/UserNotifications.css'
                                             {course.icon}
                                           </div>
                                           <div>
-                                            <h6 className="mb-1">{course.name}</h6>
+                                            <h6 className="mb-1">{getCourseName(course.name)}</h6>
                                             <Badge bg="info">{course.duration}</Badge>
                                           </div>
                                         </div>
-                                        <p className="text-muted small mb-3">{course.description}</p>
+                                        <p className="text-muted small mb-3">{getCourseDescription(course.name)}</p>
                                         <div className="mt-auto">
                                           <small className="text-muted d-block mb-2">Career Opportunities:</small>
                                           <div className="d-flex flex-wrap gap-1">
@@ -1565,7 +1616,7 @@ import '../../assets/css/UserNotifications.css'
         <Modal.Header closeButton className="border-0">
           <Modal.Title>
             {selectedCourse?.icon}
-            <span className="ms-2">{selectedCourse?.name}</span>
+            <span className="ms-2">{getCourseName(selectedCourse?.name)}</span>
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -1578,7 +1629,7 @@ import '../../assets/css/UserNotifications.css'
               
               <div className="mb-4">
                 <h6 className="text-muted mb-2"><TransText k="notifications.description" as="span" /></h6>
-                <p>{selectedCourse.description}</p>
+                <p>{getCourseDescription(selectedCourse.name)}</p>
               </div>
               
               {/* Career Paths Section */}
