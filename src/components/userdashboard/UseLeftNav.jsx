@@ -78,6 +78,9 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas }) => {
                   <Nav.Link as={Link} to="/UserQuery" className="text-white">
                     <i className="bi bi-person-circle me-2"></i> <TransText k="menu.query" as="span" />
                   </Nav.Link>
+                  <Nav.Link as={Link} to="/UserQuiz" className="text-white">
+                    <i className="bi bi-clipboard-check me-2"></i> <TransText k="quiz.title" as="span" />
+                  </Nav.Link>
                   
                    {/* Refund Request only visible to paid users */}
                    {userRoleType !== 'student-unpaid' && (
@@ -143,9 +146,9 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas }) => {
                   <Nav.Link as={Link} to="/UserSettings" className="text-white">
                     <i className="bi bi-gear fs-5"></i>
                   </Nav.Link>
-                  {/* <Nav.Link as={Link} to="/UserTest" className="text-white">
+                  <Nav.Link as={Link} to="/UserQuiz" className="text-white">
                     <i className="bi bi-clipboard-check fs-5"></i>
-                  </Nav.Link> */}
+                  </Nav.Link>
                 </Nav>
             </div>
           )}
@@ -175,6 +178,9 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas }) => {
                 </Nav.Link>
                   <Nav.Link as={Link} to="/UserQuery" className="text-white" onClick={() => setShowOffcanvas(false)}>
                   <i className="bi bi-person-circle me-2"></i> Query
+                </Nav.Link>
+                <Nav.Link as={Link} to="/UserQuiz" className="text-white" onClick={() => setShowOffcanvas(false)}>
+                  <i className="bi bi-clipboard-check me-2"></i> <TransText k="quiz.title" as="span" />
                 </Nav.Link>
                 {/* Refund Request only visible to paid users */}
                 {userRoleType !== 'student-unpaid' && (
