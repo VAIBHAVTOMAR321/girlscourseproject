@@ -431,7 +431,7 @@ const UserQuiz = () => {
                     </Card>
                   )}
 
-                  <div className="d-flex justify-content-between gap-2 mb-4">
+                  <div className="d-flex justify-content-between gap-2 mb-4 mt-3">
                     <Button 
                       variant="outline-secondary" 
                       onClick={handlePreviousQuestion}
@@ -463,84 +463,7 @@ const UserQuiz = () => {
         </div>
       </div>
 
-      <style jsx>{`
-        .quiz-card {
-          transition: all 0.3s ease;
-        }
-
-        .quiz-card:not(.disabled):hover {
-          transform: translateY(-4px);
-          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1) !important;
-        }
-
-        .quiz-card.disabled {
-          opacity: 0.6;
-          background-color: #f8f9fa;
-        }
-
-        .quiz-taking-container {
-         margin-top: 20px;
-          margin: 0 auto;
-        }
-
-        .quiz-header {
-          background: white;
-          padding: 20px;
-          border-radius: 12px;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        }
-
-        .option-button {
-          display: flex;
-          align-items: center;
-          padding: 12px 16px;
-          border-radius: 8px;
-          transition: all 0.2s ease;
-          font-weight: 500;
-        }
-
-        .option-button:hover {
-          transform: translateX(4px);
-        }
-
-        .option-letter {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          width: 28px;
-          height: 28px;
-          border-radius: 4px;
-          background-color: rgba(0, 0, 0, 0.1);
-          font-weight: bold;
-          font-size: 0.9rem;
-        }
-
-        .result-item {
-          text-align: center;
-          padding: 20px;
-          background-color: #f8f9fa;
-          border-radius: 8px;
-        }
-
-        .timer {
-          display: flex;
-          align-items: center;
-          padding: 8px 16px;
-          background-color: #f0f3f7;
-          border-radius: 8px;
-        }
-
-        @media (max-width: 768px) {
-          .timer {
-            font-size: 18px;
-            padding: 6px 12px;
-          }
-
-          .quiz-taking-container {
-            padding-top: 10px;
-          }
-        }
-      `}</style>
+   
     </div>
   )
 }
