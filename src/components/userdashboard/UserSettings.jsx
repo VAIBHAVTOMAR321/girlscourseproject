@@ -374,15 +374,15 @@ const UserSettings = () => {
 
   const handleGetGuidance = () => {
     if (!selectedStream) {
-      alert('Please select your 10th stream first')
+      alert(getTranslation('settings.alertSelectStream', language))
       return
     }
     if (!percentage || Number(percentage) <= 0) {
-      alert('Please enter a valid percentage greater than 0')
+      alert(getTranslation('settings.alertValidPercentage', language))
       return
     }
     if (Number(percentage) > 100) {
-      alert('Percentage cannot be more than 100')
+      alert(getTranslation('settings.alertMaxPercentage', language))
       return
     }
     
@@ -416,9 +416,9 @@ const UserSettings = () => {
 
   const getPerformanceLevel = () => {
     const perc = Number(percentage)
-    if (perc >= 75) return { level: 'Excellent', color: 'success', icon: <FaCheckCircle /> }
-    if (perc >= 60) return { level: 'Good', color: 'warning', icon: <FaInfoCircle /> }
-    return { level: 'Average', color: 'danger', icon: <FaInfoCircle /> }
+    if (perc >= 75) return { level: getTranslation('settings.excellent', language), color: 'success', icon: <FaCheckCircle /> }
+    if (perc >= 60) return { level: getTranslation('settings.good', language), color: 'warning', icon: <FaInfoCircle /> }
+    return { level: getTranslation('settings.average', language), color: 'danger', icon: <FaInfoCircle /> }
   }
 
   const eleventhStreams = showResults ? getEleventhStreamsByTenthStreamAndPercentage(selectedStream, percentage) : []
@@ -681,7 +681,7 @@ const UserSettings = () => {
                           <div className="percentage-input-wrapper">
                             <Form.Control
                               type="number"
-                              placeholder="Enter your percentage (e.g., 75)"
+                              placeholder={<TransText k="settings.percentagePlaceholder" as="span" />}
                               value={percentage}
                               onChange={handlePercentageChange}
                               min="0"
@@ -800,7 +800,7 @@ const UserSettings = () => {
                                               {getStreamDescriptionKey(stream.name) ? getTranslation(getStreamDescriptionKey(stream.name), language) : stream.description}
                                             </p>
                                             <div className="mt-auto">
-                                              <small className="text-muted d-block mb-2">Career Opportunities:</small>
+                                              <small className="text-muted d-block mb-2"><TransText k="settings.careerOpportunities" as="span" /></small>
                                               <div className="d-flex flex-wrap gap-1">
                                                 {stream.careers.slice(0, 3).map((career, idx) => (
                                                   <Badge bg="light" text="dark" key={idx} className="small">
@@ -838,7 +838,7 @@ const UserSettings = () => {
                                               {getStreamDescriptionKey(stream.name) ? getTranslation(getStreamDescriptionKey(stream.name), language) : stream.description}
                                             </p>
                                             <div className="mt-auto">
-                                              <small className="text-muted d-block mb-2">Career Opportunities:</small>
+                                              <small className="text-muted d-block mb-2"><TransText k="settings.careerOpportunities" as="span" /></small>
                                               <div className="d-flex flex-wrap gap-1">
                                                 {stream.careers.slice(0, 3).map((career, idx) => (
                                                   <Badge bg="light" text="dark" key={idx} className="small">
@@ -895,16 +895,16 @@ const UserSettings = () => {
                   </div>
                 )}
 
-                {/* Instructions */}
+{/* Instructions */}
                 {!selectedStream && (
                   <Card className="shadow-sm border-0 instructions-card" style={{ borderRadius: '10px' }}>
                     <Card.Body className="">
-                     
+                      
                       <h4><TransText k="settings.howToGetGuidance" as="span" /></h4>
                       <p className="text-muted mb-0">
-                        <strong><TransText k="settings.step1" as="span" />:</strong> Select your 10th stream from the options above<br />
-                        <strong><TransText k="settings.step2" as="span" />:</strong> Enter your 10th percentage<br />
-                        <strong><TransText k="settings.step3" as="span" />:</strong> Click "<TransText k="settings.getGuidance" as="span" />" to see personalized 11th stream recommendations and career paths
+                        <strong><TransText k="settings.step1" as="span" />:</strong> <TransText k="settings.instructionStep1" as="span" /><br />
+                        <strong><TransText k="settings.step2" as="span" />:</strong> <TransText k="settings.instructionStep2" as="span" /><br />
+                        <strong><TransText k="settings.step3" as="span" />:</strong> <TransText k="settings.instructionStep3" as="span" />
                       </p>
                     </Card.Body>
                   </Card>
@@ -996,13 +996,13 @@ const UserSettings = () => {
         </Modal.Body>
         <Modal.Footer className="border-0">
           <Button variant="secondary" onClick={() => setShowModal(false)}>
-            Close
+            <TransText k="button.close" as="span" />
           </Button>
           <Button variant="primary" onClick={() => {
             setShowModal(false)
             navigate('/UserDashboard')
           }}>
-            Go to Dashboard
+            <TransText k="settings.toDashboard" as="span" />
           </Button>
         </Modal.Footer>
       </Modal>
