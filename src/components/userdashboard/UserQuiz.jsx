@@ -27,6 +27,7 @@ const UserQuiz = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [answers, setAnswers] = useState({})
   const [timeRemaining, setTimeRemaining] = useState(null)
+  const [attemptId, setAttemptId] = useState(null)
   
   // Results state
   const [showResults, setShowResults] = useState(false)
@@ -101,31 +102,95 @@ const UserQuiz = () => {
     setShowOffcanvas(!showOffcanvas)
   }
 
-  const startQuiz = (quiz) => {
-    // Check if quiz is available
-    const now = new Date()
-    const startTime = new Date(quiz.start_date_time)
-    const endTime = new Date(quiz.end_date_time)
+  // Format date as dd/mm/yy
+  const formatDateDDMMYY = (date) => {
+    const d = String(date.getDate()).padStart(2, '0')
+    const m = String(date.getMonth() + 1).padStart(2, '0')
+    const y = String(date.getFullYear()).slice(-2)
+    return `${d}/${m}/${y}`
+  }
 
-    if (now < startTime) {
-      alert(`${getTranslation('quiz.quizStartsSoon', language)} ${startTime.toLocaleDateString()}`)
+  const startQuiz = async (quiz) => {
+    try {
+      // Register as quiz participant and fetch questions
+      const participantData = {
+        quiz_id: quiz.quiz_id,
+        student_id: uniqueId
+      }
+
+      console.log('Registering quiz participant:', participantData)
+
+      const participantResponse = await axios.post(
+        'https://brjobsedu.com/girls_course/girls_course_backend/api/quiz-participants/',
+        participantData,
+        {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      )
+
+      console.log('Quiz participant response:', participantResponse.data)
+      const responseData = participantResponse.data
+
+      // Validate response
+      if (!responseData.status) {
+        if (responseData.message && responseData.message.toLowerCase().includes('already')) {
+          alert('Already participated.')
+        } else {
+          alert(responseData.message || 'Failed to start quiz. Please try again.')
+        }
+        return
+      }
+
+      // Extract data from response
+      const now = new Date()
+      const endTime = new Date(quiz.end_date_time)
+
+      const quizData = {
+        id: quiz.quiz_id,
+        quiz_id: quiz.quiz_id,
+        title: quiz.title,
+        description: quiz.description,
+        start_date_time: quiz.start_date_time,
+        end_date_time: quiz.end_date_time,
+        questions: responseData.questions || [],
+        total_questions: responseData.total_questions || (responseData.questions ? responseData.questions.length : 0),
+        attempt_id: responseData.attempt_id
+      }
+
+      console.log('Quiz data loaded:', {
+        quiz_id: quizData.quiz_id,
+        student_id: uniqueId,
+        attempt_id: quizData.attempt_id,
+        total_questions: quizData.total_questions,
+        questions_received: quizData.questions.length
+      })
+
+      // Store attempt ID for submission
+      setAttemptId(responseData.attempt_id)
+
+      // Initialize quiz with data from API response
+      setCurrentQuiz(quizData)
+      setTakingQuiz(true)
+      setCurrentQuestionIndex(0)
+      setAnswers({})
+
+      // Calculate duration in seconds
+      const duration = (endTime.getTime() - now.getTime()) / 1000
+      setTimeRemaining(Math.max(60, Math.min(duration, 3600))) // Between 1 min and 1 hour
+    } catch (error) {
+      console.error('Error starting quiz:', error)
+      if (error.response?.status === 404) {
+        alert('Quiz endpoint not found. Please contact support.')
+      } else if (error.response?.status === 401) {
+        alert('Unauthorized. Please login again.')
+      } else {
+        alert('Failed to start quiz. Please try again.')
+      }
       return
     }
-
-    if (now > endTime) {
-      alert(getTranslation('quiz.quizEnded', language))
-      return
-    }
-
-    // Initialize quiz
-    setCurrentQuiz(quiz)
-    setTakingQuiz(true)
-    setCurrentQuestionIndex(0)
-    setAnswers({})
-    
-    // Calculate duration in seconds
-    const duration = (endTime.getTime() - now.getTime()) / 1000
-    setTimeRemaining(Math.max(60, Math.min(duration, 3600))) // Between 1 min and 1 hour
   }
 
   const getCurrentQuestion = () => {
@@ -141,18 +206,25 @@ const UserQuiz = () => {
   }
 
   const handleNextQuestion = () => {
+    console.log('Next clicked, current index:', currentQuestionIndex)
     if (currentQuestionIndex < currentQuiz.questions.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1)
+      const newIndex = currentQuestionIndex + 1
+      console.log('Moving to index:', newIndex)
+      setCurrentQuestionIndex(newIndex)
     }
   }
 
   const handlePreviousQuestion = () => {
+    console.log('Previous clicked, current index:', currentQuestionIndex)
     if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(currentQuestionIndex - 1)
+      const newIndex = currentQuestionIndex - 1
+      console.log('Moving to index:', newIndex)
+      setCurrentQuestionIndex(newIndex)
     }
   }
 
   const handleSubmitQuiz = () => {
+    console.log('Submit quiz clicked, answers:', answers)
     // Check if all questions are answered
     if (Object.keys(answers).length !== currentQuiz.questions.length) {
       alert(getTranslation('quiz.answerAll', language))
@@ -162,40 +234,85 @@ const UserQuiz = () => {
     confirmSubmitQuiz()
   }
 
-  const confirmSubmitQuiz = () => {
-    // Calculate score
-    let correctCount = 0
-    let totalMarks = 0
-
-    currentQuiz.questions.forEach((question, index) => {
-      const userAnswer = answers[index]
-      if (userAnswer === question.correct_answer) {
-        correctCount++
-        totalMarks += question.marks || 1
+  const confirmSubmitQuiz = async () => {
+    try {
+      // Prepare submission payload as per required format
+      const submissionData = {
+        student_id: uniqueId,
+        quiz_id: currentQuiz.quiz_id,
+        answers: Object.keys(answers).map(index => ({
+          question_id: currentQuiz.questions[parseInt(index)].id,
+          selected_option: answers[index]
+        }))
       }
-    })
 
-    const totalQuestions = currentQuiz.questions.length
-    const wrongCount = totalQuestions - correctCount
-    const percentage = (correctCount / totalQuestions) * 100
+      console.log('Submitting quiz:', submissionData)
 
-    setQuizResults({
-      quizTitle: currentQuiz.title,
-      correctAnswers: correctCount,
-      wrongAnswers: wrongCount,
-      totalQuestions,
-      score: totalMarks,
-      percentage: percentage.toFixed(2)
-    })
+      // Submit quiz to backend
+      const submitResponse = await axios.post(
+        'https://brjobsedu.com/girls_course/girls_course_backend/api/submit-quiz/',
+        submissionData,
+        {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      )
 
-    setShowResults(true)
-    setTakingQuiz(false)
+      const responseData = submitResponse.data
+      console.log('Submit quiz response:', responseData)
+
+      // Handle server response for scoring
+      let correctCount = responseData.correct_answers || 0
+      let totalQuestions = responseData.total_questions || currentQuiz.total_questions
+      let serverScore = responseData.score !== undefined ? responseData.score : correctCount
+      let serverPercentage = responseData.percentage || ((correctCount / totalQuestions) * 100).toFixed(2)
+
+      // Fallback to local calculation if server doesn't provide scores
+      if (!responseData.correct_answers) {
+        currentQuiz.questions.forEach((question, index) => {
+          if (answers[index] === question.correct_answer) {
+            correctCount++
+          }
+        })
+        totalQuestions = currentQuiz.questions.length
+        serverScore = correctCount
+        serverPercentage = ((correctCount / totalQuestions) * 100).toFixed(2)
+      }
+
+      setQuizResults({
+        quizTitle: currentQuiz.title,
+        correctAnswers: correctCount,
+        wrongAnswers: totalQuestions - correctCount,
+        totalQuestions,
+        score: serverScore,
+        totalMarks: totalQuestions,
+        percentage: serverPercentage,
+        status: correctCount >= (totalQuestions * 0.6) ? 'passed' : 'failed'
+      })
+
+      setShowResults(true)
+      setTakingQuiz(false)
+    } catch (error) {
+      console.error('Error submitting quiz:', error)
+      if (error.response?.status === 401) {
+        alert('Unauthorized. Please login again.')
+      } else {
+        alert('Failed to submit quiz. Please try again.')
+      }
+    }
   }
 
   const handleRetakeQuiz = () => {
     setShowResults(false)
     setQuizResults(null)
-    startQuiz(currentQuiz)
+    setAnswers({})
+    // Call startQuiz with original quiz object from state
+    const originalQuiz = quizzes.find(q => q.quiz_id === currentQuiz.quiz_id)
+    if (originalQuiz) {
+      startQuiz(originalQuiz)
+    }
   }
 
   const formatTime = (seconds) => {
@@ -245,12 +362,10 @@ const UserQuiz = () => {
                     {quizzes.map((quiz) => {
                       const startTime = new Date(quiz.start_date_time)
                       const endTime = new Date(quiz.end_date_time)
-                      const now = new Date()
-                      const isAvailable = now >= startTime && now <= endTime
 
                       return (
-                        <Col md={6} lg={4} key={quiz.id} className="mb-4">
-                          <Card className={`h-100 quiz-card shadow-sm ${!isAvailable ? 'disabled' : ''}`} style={{ borderRadius: '12px', cursor: isAvailable ? 'pointer' : 'default' }}>
+                        <Col md={6} lg={4} key={quiz.quiz_id} className="mb-4">
+                          <Card className="h-100 quiz-card shadow-sm" style={{ borderRadius: '12px', cursor: 'pointer' }}>
                             <Card.Body className="d-flex flex-column">
                               <div className="mb-3">
                                 <h5 className="mb-2">{quiz.title}</h5>
@@ -266,30 +381,25 @@ const UserQuiz = () => {
                                   <Badge bg="info">{quiz.quiz_category}</Badge>
                                 </div>
                                 <small className="text-muted d-block mb-1">
-                                  <TransText k="quiz.startTime" as="span" />: {startTime.toLocaleDateString(language === 'hi' ? 'hi-IN' : 'en-US')}{' '}
+                                  <TransText k="quiz.startTime" as="span" />: {formatDateDDMMYY(startTime)}{' '}
                                   {startTime.toLocaleTimeString(language === 'hi' ? 'hi-IN' : 'en-US', { hour: '2-digit', minute: '2-digit' })}
                                 </small>
                                 <small className="text-muted d-block">
-                                  <TransText k="quiz.endTime" as="span" />: {endTime.toLocaleDateString(language === 'hi' ? 'hi-IN' : 'en-US')}{' '}
+                                  <TransText k="quiz.endTime" as="span" />: {formatDateDDMMYY(endTime)}{' '}
                                   {endTime.toLocaleTimeString(language === 'hi' ? 'hi-IN' : 'en-US', { hour: '2-digit', minute: '2-digit' })}
                                 </small>
                               </div>
 
                               <div className="mt-auto">
                                 <Button
-                                  variant={isAvailable ? 'primary' : 'secondary'}
+                                  variant="primary"
                                   className="w-100"
-                                  onClick={() => isAvailable && startQuiz(quiz)}
-                                  disabled={!isAvailable}
+                                  onClick={() => startQuiz(quiz)}
                                 >
-                                  {isAvailable ? (
-                                    <>
-                                      <TransText k="quiz.startQuiz" as="span" />
-                                      <FaChevronRight className="ms-2" />
-                                    </>
-                                  ) : (
-                                    <TransText k="quiz.quizNotAvailable" as="span" />
-                                  )}
+                                  <>
+                                    <TransText k="quiz.startQuiz" as="span" />
+                                    <FaChevronRight className="ms-2" />
+                                  </>
                                 </Button>
                               </div>
                             </Card.Body>
@@ -315,7 +425,7 @@ const UserQuiz = () => {
                     <TransText k="quiz.congratulations" as="span" />
                   </h3>
                   <p className="text-muted mb-4">
-                    <TransText k="quiz.greatJob" as="span" /> {quizResults.score}/{quizResults.totalQuestions * (quizResults.totalQuestions / quizResults.totalQuestions)}
+                    <TransText k="quiz.greatJob" as="span" /> {quizResults.score}/{quizResults.totalMarks || quizResults.totalQuestions}
                   </p>
 
                   <Card className="shadow-sm mb-4" style={{ borderRadius: '12px', maxWidth: '500px', margin: '0 auto' }}>
@@ -357,7 +467,7 @@ const UserQuiz = () => {
                     </Card.Body>
                   </Card>
 
-                  <div className="d-flex gap-2 justify-content-center">
+                  <div className="d-flex gap-2 justify-content-center mt-3">
                     <Button 
                       variant="primary" 
                       onClick={handleRetakeQuiz}
@@ -440,26 +550,56 @@ const UserQuiz = () => {
                     </Card>
                   )}
 
-                  <div className="d-flex justify-content-between gap-2 mb-4 mt-3">
+                  <div className="d-flex justify-content-between gap-3 mb-4 mt-3">
                     <Button 
                       variant="outline-secondary" 
-                      onClick={handlePreviousQuestion}
+                      onClick={() => {
+                        console.log('Button clicked')
+                        handlePreviousQuestion()
+                      }}
                       disabled={currentQuestionIndex === 0}
+                      style={{ 
+                        minWidth: '120px', 
+                        fontWeight: '600', 
+                        padding: '12px 24px',
+                        cursor: currentQuestionIndex === 0 ? 'not-allowed' : 'pointer',
+                        fontSize: '16px'
+                      }}
                     >
                       <TransText k="quiz.previous" as="span" />
                     </Button>
                     
+                    <div style={{ flex: 1 }} />
+                    
                     {currentQuestionIndex < currentQuiz.questions.length - 1 ? (
                       <Button 
                         variant="primary" 
-                        onClick={handleNextQuestion}
+                        onClick={() => {
+                          console.log('Next clicked')
+                          handleNextQuestion()
+                        }}
+                        style={{ 
+                          minWidth: '120px', 
+                          fontWeight: '600', 
+                          padding: '12px 24px',
+                          fontSize: '16px'
+                        }}
                       >
                         <TransText k="quiz.next" as="span" />
                       </Button>
                     ) : (
                       <Button 
                         variant="success" 
-                        onClick={handleSubmitQuiz}
+                        onClick={() => {
+                          console.log('Submit clicked')
+                          handleSubmitQuiz()
+                        }}
+                        style={{ 
+                          minWidth: '120px', 
+                          fontWeight: '600', 
+                          padding: '12px 24px',
+                          fontSize: '16px'
+                        }}
                       >
                         <TransText k="quiz.submit" as="span" />
                       </Button>

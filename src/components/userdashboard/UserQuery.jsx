@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Container, Row, Col, Card, Table, Alert, Form, Button } from 'react-bootstrap'
 import { useAuth } from '../../contexts/AuthContext'
 import { useLanguage } from '../../contexts/LanguageContext'
+import { useNavigate } from 'react-router-dom'
 import UserTopNav from './UserTopNav'
 import UseLeftNav from './UseLeftNav'
 import TransText from '../TransText'
@@ -11,8 +12,9 @@ import { FaArrowLeft, FaPaperPlane, FaHistory, FaClock } from 'react-icons/fa'
 const API_URL = 'https://brjobsedu.com/girls_course/girls_course_backend/api/student-issue/'
 
 function UserQuery() {
-  const { uniqueId, accessToken } = useAuth()
+  const { uniqueId, accessToken, userRoleType } = useAuth()
   const { language } = useLanguage()
+  const navigate = useNavigate()
   
   const [showOffcanvas, setShowOffcanvas] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
@@ -28,6 +30,13 @@ function UserQuery() {
   const [loading, setLoading] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [message, setMessage] = useState({ type: '', text: '' })
+
+  // Check admin role and redirect
+  useEffect(() => {
+    if (userRoleType === 'admin') {
+      navigate('/AdminDashboard')
+    }
+  }, [userRoleType, navigate])
 
   // Check mobile view
   useEffect(() => {
@@ -57,13 +66,13 @@ function UserQuery() {
     setShowOffcanvas(!showOffcanvas)
   }
 
-  // Fetch all queries on component mount
+  // Fetch all queries on component mount and initialize student_id from auth
   useEffect(() => {
     if (uniqueId) {
       setFormData(prev => ({ ...prev, student_id: uniqueId }))
       fetchQueries()
     }
-  }, [uniqueId])
+  }, [uniqueId, accessToken])
 
   const fetchQueries = async () => {
     setLoading(true)
