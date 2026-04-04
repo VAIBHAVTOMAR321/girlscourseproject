@@ -22,7 +22,9 @@ const QuizManagement = () => {
 
   const [quizFormData, setQuizFormData] = useState({
     title: '',
+    title_hindi: '',
     description: '',
+    description_hindi: '',
     quiz_category: '',
     start_date_time: '',
     end_date_time: '',
@@ -110,7 +112,9 @@ const QuizManagement = () => {
     try {
       const payload = {
         title: quizFormData.title,
+        title_hindi: quizFormData.title_hindi,
         description: quizFormData.description,
+        description_hindi: quizFormData.description_hindi,
         quiz_category: quizFormData.quiz_category,
         start_date_time: formatDateTime(quizFormData.start_date_time),
         end_date_time: formatDateTime(quizFormData.end_date_time),
@@ -151,7 +155,9 @@ const QuizManagement = () => {
             questions: questionsPayload,
             quiz_id: editingQuiz.quiz_id,
             title: quizFormData.title,
+            title_hindi: quizFormData.title_hindi,
             description: quizFormData.description,
+            description_hindi: quizFormData.description_hindi,
             quiz_category: quizFormData.quiz_category,
             quiz_image: editingQuiz.quiz_image,
             start_date_time: formatDateTime(quizFormData.start_date_time),
@@ -179,7 +185,9 @@ const QuizManagement = () => {
     setEditingQuiz(quiz)
     setQuizFormData({
       title: quiz.title || '',
+      title_hindi: quiz.title_hindi || '',
       description: quiz.description || '',
+      description_hindi: quiz.description_hindi || '',
       quiz_category: quiz.quiz_category || '',
       start_date_time: quiz.start_date_time || '',
       end_date_time: quiz.end_date_time || '',
@@ -220,7 +228,9 @@ const QuizManagement = () => {
     setEditingQuiz(null)
     setQuizFormData({
       title: '',
+      title_hindi: '',
       description: '',
+      description_hindi: '',
       quiz_category: '',
       start_date_time: '',
       end_date_time: '',
@@ -325,16 +335,31 @@ const QuizManagement = () => {
             <Row>
               <Col md={6}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Title *</Form.Label>
+                  <Form.Label>Title (English) *</Form.Label>
                   <Form.Control
                     type="text"
                     name="title"
                     value={quizFormData.title}
                     onChange={handleInputChange}
+                    placeholder="Enter title in English"
                     required
                   />
                 </Form.Group>
               </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Title (Hindi)</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="title_hindi"
+                    value={quizFormData.title_hindi}
+                    onChange={handleInputChange}
+                    placeholder="Enter title in Hindi"
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
               <Col md={6}>
                 <Form.Group className="mb-3">
                   <Form.Label>Category *</Form.Label>
@@ -349,16 +374,34 @@ const QuizManagement = () => {
                 </Form.Group>
               </Col>
             </Row>
-            <Form.Group className="mb-3">
-              <Form.Label>Description</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={2}
-                name="description"
-                value={quizFormData.description}
-                onChange={handleInputChange}
-              />
-            </Form.Group>
+            <Row>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Description (English)</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    rows={2}
+                    name="description"
+                    value={quizFormData.description}
+                    onChange={handleInputChange}
+                    placeholder="Enter description in English"
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Description (Hindi)</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    rows={2}
+                    name="description_hindi"
+                    value={quizFormData.description_hindi}
+                    onChange={handleInputChange}
+                    placeholder="Enter description in Hindi"
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
             <Row>
               <Col md={6}>
                 <Form.Group className="mb-3">
@@ -487,7 +530,12 @@ const QuizManagement = () => {
       {/* View Modal */}
       <Modal show={showViewModal} onHide={() => setShowViewModal(false)} size="lg" centered>
         <Modal.Header closeButton>
-          <Modal.Title>{viewingQuiz?.title}</Modal.Title>
+          <Modal.Title>
+            <div>
+              <div>{viewingQuiz?.title}</div>
+              {viewingQuiz?.title_hindi && <div className=" small">{viewingQuiz?.title_hindi}</div>}
+            </div>
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Row className="mb-3">
@@ -495,20 +543,58 @@ const QuizManagement = () => {
             <Col md={6}><strong>Questions:</strong> {viewingQuiz?.number_of_questions}</Col>
             <Col md={6}><strong>Status:</strong> {viewingQuiz?.is_active ? 'Active' : 'Inactive'}</Col>
           </Row>
-          <p className="text-muted">{viewingQuiz?.description}</p>
+          <Row className="mb-3">
+            <Col md={6}>
+              <strong>Description (English):</strong>
+              <p className="text-muted">{viewingQuiz?.description}</p>
+            </Col>
+            {viewingQuiz?.description_hindi && (
+              <Col md={6}>
+                <strong>Description (Hindi):</strong>
+                <p className="text-muted">{viewingQuiz?.description_hindi}</p>
+              </Col>
+            )}
+          </Row>
           <hr />
           <h5>Questions</h5>
           {viewingQuiz?.questions?.map((q, index) => (
-            <Card key={q.id} className="mb-2">
+            <Card key={q.id} className="mb-3">
               <Card.Body>
-                <p className="mb-2"><strong>{index + 1}.</strong> {q.question_text}</p>
-                <ul className="mb-0">
-                  {q.options?.map((opt, i) => (
-                    <li key={i} className={i === q.correct_answer ? 'text-success fw-bold' : ''}>
-                      {opt} {i === q.correct_answer && '✓'}
-                    </li>
-                  ))}
-                </ul>
+                <div className="mb-3">
+                  <strong>{index + 1}. Question (English):</strong>
+                  <p className="mb-0 ms-2">{q.question_text}</p>
+                </div>
+                
+                {q.question_text_hindi && (
+                  <div className="mb-3 p-2" style={{ backgroundColor: '#f8f9fa', borderRadius: '4px' }}>
+                    <strong>Question (Hindi):</strong>
+                    <p className="mb-0 ms-2" dir="ltr">{q.question_text_hindi}</p>
+                  </div>
+                )}
+
+                <div className="mb-3">
+                  <strong>Options (English):</strong>
+                  <ul className="mb-0 ms-3">
+                    {q.options?.map((opt, i) => (
+                      <li key={i} className={i === q.correct_answer ? 'text-success fw-bold' : ''}>
+                        {opt} {i === q.correct_answer && '✓'}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {q.options_hindi && q.options_hindi.length > 0 && (
+                  <div className="p-2" style={{ backgroundColor: '#f8f9fa', borderRadius: '4px' }}>
+                    <strong>Options (Hindi):</strong>
+                    <ul className="mb-0 ms-3" dir="ltr">
+                      {q.options_hindi.map((opt, i) => (
+                        <li key={i} className={i === q.correct_answer ? 'text-success fw-bold' : ''}>
+                          {opt} {i === q.correct_answer && '✓'}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </Card.Body>
             </Card>
           ))}
