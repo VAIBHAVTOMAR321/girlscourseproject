@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from 'react'
 import { Container, Row, Col, Card, Table, Alert, Form, Button } from 'react-bootstrap'
 import { useAuth } from '../../contexts/AuthContext'
+import { useLanguage } from '../../contexts/LanguageContext'
 import UserTopNav from './UserTopNav'
 import UseLeftNav from './UseLeftNav'
+import TransText from '../TransText'
+import { getTranslation } from '../../utils/translations'
 import { FaArrowLeft, FaPaperPlane, FaHistory, FaClock } from 'react-icons/fa'
 
 const API_URL = 'https://brjobsedu.com/girls_course/girls_course_backend/api/student-issue/'
 
 function UserQuery() {
   const { uniqueId, accessToken } = useAuth()
+  const { language } = useLanguage()
   
   const [showOffcanvas, setShowOffcanvas] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
@@ -117,7 +121,7 @@ function UserQuery() {
       })
 
       if (response.ok) {
-        setMessage({ type: 'success', text: 'Query submitted successfully!' })
+        setMessage({ type: 'success', text: getTranslation('query.querySubmitted', language) })
         setFormData({
           full_name: formData.full_name,
           student_id: uniqueId,
@@ -128,11 +132,11 @@ function UserQuery() {
         fetchQueries()
       } else {
         const errorData = await response.json()
-        setMessage({ type: 'danger', text: errorData.message || 'Failed to submit query' })
+        setMessage({ type: 'danger', text: errorData.message || getTranslation('query.failedSubmit', language) })
       }
     } catch (error) {
       console.error('Error submitting query:', error)
-      setMessage({ type: 'danger', text: 'An error occurred while submitting the query' })
+      setMessage({ type: 'danger', text: getTranslation('query.errorOccurred', language) })
     } finally {
       setSubmitting(false)
     }
@@ -140,9 +144,21 @@ function UserQuery() {
 
   const getStatus = (status) => {
     if (!status || status.trim() === '' || status === 'pending') {
-      return 'Pending'
+      return getTranslation('query.pending', language)
     }
-    // Capitalize first letter
+    if (status.toLowerCase() === 'resolved') {
+      return getTranslation('query.resolved', language)
+    }
+    if (status.toLowerCase() === 'completed') {
+      return getTranslation('query.completed', language)
+    }
+    if (status.toLowerCase() === 'rejected') {
+      return getTranslation('query.rejected', language)
+    }
+    if (status.toLowerCase() === 'cancelled') {
+      return getTranslation('query.cancelled', language)
+    }
+    // Fallback: Capitalize first letter
     return status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()
   }
 
@@ -177,7 +193,7 @@ function UserQuery() {
                 className="d-flex align-items-center"
               >
                 <FaArrowLeft className="me-2" />
-                Back to Dashboard
+                <TransText k="query.backToDashboard" as="span" />
               </Button>
             </div>
 
@@ -188,7 +204,7 @@ function UserQuery() {
                   <div className="bg-white border-bottom-0 pt-3 px-3">
                     <h5 className="mb-0 d-flex align-items-center">
                       <FaPaperPlane className="me-2 text-primary" />
-                      Raise a Query
+                      <TransText k="query.raiseAQuery" as="span" />
                     </h5>
                   </div>
                   <div className="p-3">
@@ -196,13 +212,13 @@ function UserQuery() {
                       <Row>
                         <Col md={6} className="mb-3">
                           <Form.Group>
-                            <Form.Label>Full Name</Form.Label>
+                            <Form.Label><TransText k="query.fullName" as="span" /></Form.Label>
                             <Form.Control
                               type="text"
                               name="full_name"
                               value={formData.full_name}
                               onChange={handleInputChange}
-                              placeholder="Enter your full name"
+                              placeholder={"Enter your full name"}
                               required
                             />
                           </Form.Group>
@@ -225,7 +241,7 @@ function UserQuery() {
                     
                         <Col md={6} className="mb-3">
                           <Form.Group>
-                            <Form.Label>Title</Form.Label>
+                            <Form.Label><TransText k="query.title" as="span" /></Form.Label>
                             <Form.Control
                               type="text"
                               name="title"
@@ -238,7 +254,7 @@ function UserQuery() {
                         </Col>
                          <Col md={6} className="mb-3">
                           <Form.Group>
-                            <Form.Label>Issue / Query Description</Form.Label>
+                            <Form.Label><TransText k="query.issueDescription" as="span" /></Form.Label>
                             <Form.Control
                               as="textarea"
                               rows={4}
@@ -267,7 +283,7 @@ function UserQuery() {
                         className="d-flex align-items-center"
                       >
                         <FaPaperPlane className="me-2" />
-                        {submitting ? 'Submitting...' : 'Submit Query'}
+                        <TransText k={submitting ? "query.submitting" : "query.submitQuery"} as="span" />
                       </Button>
                     </Form>
                   </div>
@@ -278,29 +294,29 @@ function UserQuery() {
                   <Card.Header className="bg-white border-bottom-0 pt-3">
                     <h5 className="mb-0 d-flex align-items-center">
                       <FaHistory className="me-2 text-primary" />
-                      My Queries
+                      <TransText k="query.myQueries" as="span" />
                     </h5>
                   </Card.Header>
                   <Card.Body>
                     {loading ? (
                       <div className="text-center py-4">
-                        <p className="text-muted">Loading queries...</p>
+                        <p className="text-muted"><TransText k="query.loadingQueries" as="span" /></p>
                       </div>
                     ) : queries.length === 0 ? (
                       <Alert variant="info" className="d-flex align-items-center">
                         <FaClock className="me-2" />
-                        No queries found. Submit your first query above.
+                        <TransText k="query.noQueries" as="span" />
                       </Alert>
                     ) : (
                       <Table responsive striped bordered hover className="mb-0">
                         <thead>
                           <tr>
-                            <th>Query ID</th>
-                            <th>Title</th>
-                            <th>Issue</th>
-                            <th>Status</th>
-                            <th>Extra Remark</th>
-                            <th>Submitted On</th>
+                            <th><TransText k="query.queryId" as="span" /></th>
+                            <th><TransText k="query.title" as="span" /></th>
+                            <th><TransText k="query.issue" as="span" /></th>
+                            <th><TransText k="query.status" as="span" /></th>
+                            <th><TransText k="query.remark" as="span" /></th>
+                            <th><TransText k="query.submittedOn" as="span" /></th>
                           </tr>
                         </thead>
                         <tbody>
