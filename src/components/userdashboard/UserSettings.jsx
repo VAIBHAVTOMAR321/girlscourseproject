@@ -4,10 +4,16 @@ import { FaGraduationCap, FaLightbulb, FaArrowLeft, FaFlask, FaCalculator, FaBoo
 import { useNavigate } from 'react-router-dom'
 import UseLeftNav from './UseLeftNav'
 import UserTopNav from './UserTopNav'
+import { useAuth } from '../../contexts/AuthContext'
+import axios from 'axios'
 import '../../assets/css/UserSettings.css'
+import CounselingForm from './CounselingForm'
 
 const UserSettings = () => {
+  const { uniqueId, userRoleType, accessToken } = useAuth()
   const navigate = useNavigate()
+  const [userData, setUserData] = useState(null)
+  const [showCounseling, setShowCounseling] = useState(false)
   const [showOffcanvas, setShowOffcanvas] = useState(false)
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768)
   const [selectedStream, setSelectedStream] = useState('')
@@ -16,15 +22,95 @@ const UserSettings = () => {
   const [showModal, setShowModal] = useState(false)
   const [selectedCourse, setSelectedCourse] = useState(null)
   const [selectedCareerPath, setSelectedCareerPath] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const resultsRef = useRef()
+  // Handle counseling form submission
+  const handleCounselingSubmit = async (counselingData) => {
+    try {
+      console.log('Counseling data submitted:', counselingData)
 
+      // Send counseling request to backend
+      const response = await axios.post(
+        'https://brjobsedu.com/girls_course/girls_course_backend/api/student-cousult/',
+        {
+          ...counselingData,
+          student_id: uniqueId, // Ensure student_id is from auth
+          mobile: counselingData.phone, // Map phone to mobile
+          other_category: counselingData.otherCategory || '',
+          category: counselingData.category_consulting.join(', '), // Join the array
+          message: `Career counseling request from student dashboard - Category: ${counselingData.category_consulting.join(', ')}`,
+          student_name: userData?.full_name || userData?.candidate_name || 'Student',
+          stream: selectedStream || 'Not specified',
+          percentage: percentage || 'Not specified'
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      )
+
+      if (response.data.success) {
+        // Success is handled in the CounselingForm component
+        return true
+      } else {
+        throw new Error(response.data.message || 'Failed to submit counseling request')
+      }
+    } catch (error) {
+      console.error('Counseling submission error:', error)
+      throw error // Re-throw to let CounselingForm handle the error
+    }
+  }
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768)
     }
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  // Fetch user data
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        let response
+
+        const config = {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`
+          }
+        }
+
+        // Fetch data based on user role
+        if (userRoleType === 'student-unpaid') {
+          // For unpaid students, fetch from student-unpaid endpoint with student_id
+          response = await axios.get(`https://brjobsedu.com/girls_course/girls_course_backend/api/student-unpaid/?student_id=${uniqueId}`, config)
+        } else {
+          // For regular students, use the existing endpoint
+          response = await axios.get(`https://brjobsedu.com/girls_course/girls_course_backend/api/all-registration/?student_id=${uniqueId}`)
+        }
+
+        const { data } = response
+
+        if (data.success) {
+          setUserData(data.data)
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error)
+      }
+    }
+
+    if (uniqueId) {
+      fetchUserData()
+    }
+  }, [uniqueId, userRoleType, accessToken])
+
+  // Simulate loading
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false)
+    }, 1000)
   }, [])
 
   const handleMenuToggle = () => {
@@ -485,9 +571,6 @@ const UserSettings = () => {
               </Button>
             </div>
 
-            {/* Header Card */}
-          
-
             {loading ? (
               <div className="text-center py-5">
                 <div className="spinner-border text-primary" role="status" style={{ width: '60px', height: '60px' }}>
@@ -496,24 +579,35 @@ const UserSettings = () => {
                 <p className="mt-3">Loading guidance...</p>
               </div>
             ) : (
-              <>
+              <div>
+                {/* Header Card */}
+                <Card className="shadow-sm mb-4 border-0 notifications-header-card" style={{ borderRadius: '10px' }}>
+                  <Card.Body className="card-mobile">
+                    <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+                      <div>
+                        <h3 className="mb-2">
+                          <FaGraduationCap className="me-2 text-primary" />
+                          10th Class Stream Guidance
+                        </h3>
+                        <p className="text-muted mb-0">
+                          Select your 10th stream and enter your percentage to get personalized 11th stream recommendations
+                        </p>
+                      </div>
+                    </div>
+                  </Card.Body>
+                </Card>
+
+                {/* Counseling Form */}
+                <CounselingForm
+                  onSubmit={handleCounselingSubmit}
+                  showForm={showCounseling}
+                  onToggle={setShowCounseling}
+                  initialData={userData}
+                  userRoleType={userRoleType}
+                />
+
                 {/* Step 1: Select Stream */}
                 <Card className="shadow-sm mb-4 border-0" style={{ borderRadius: '10px' }}>
-                    <Card className="shadow-sm mb-4 border-0 notifications-header-card" style={{ borderRadius: '10px' }}>
-              <Card.Body className=" card-mobile">
-                <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
-                  <div>
-                    <h3 className="mb-2">
-                      <FaGraduationCap className="me-2 text-primary" />
-                      10th Class Stream Guidance
-                    </h3>
-                    <p className="text-muted mb-0">
-                      Select your 10th stream and enter your percentage to get personalized 11th stream recommendations
-                    </p>
-                  </div>
-                </div>
-              </Card.Body>
-            </Card>
                   <Card.Body className="card-mobile">
                     <h5 className="mb-3">
                       <Badge bg="primary" className="me-2">Step 1</Badge>
@@ -522,9 +616,9 @@ const UserSettings = () => {
                     <Row>
                       {streams.map((stream) => (
                         <Col lg={3} md={6} className="mb-3" key={stream.id}>
-                          <Card 
+                          <Card
                             className={`h-100 border stream-selection-card ${selectedStream === stream.id ? 'selected' : ''}`}
-                            style={{ 
+                            style={{
                               cursor: 'pointer',
                               borderColor: selectedStream === stream.id ? '#667eea' : '#dee2e6',
                               backgroundColor: selectedStream === stream.id ? '#f0f4ff' : 'white'
@@ -786,7 +880,7 @@ const UserSettings = () => {
                     </Card.Body>
                   </Card>
                 )}
-              </>
+              </div>
             )}
           </Container>
         </div>
