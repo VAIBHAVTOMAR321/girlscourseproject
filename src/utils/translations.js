@@ -393,6 +393,15 @@ export const translations = {
       "For students interested in history and civil services",
     "card.itiHighDesc": "For students interested in technical trades",
 
+
+    "settings.guidanceTip1": "Focus on your core subjects and build strong fundamentals",
+    "settings.guidanceTip2": "Participate in extracurricular activities related to your stream",
+    "settings.guidanceTip3": "Consider internships and practical experience",
+    "settings.guidanceTip4": "Prepare for competitive exams if applicable",
+    "settings.careerTip1": "Research about the streams and their career prospects",
+    "settings.careerTip2": "Talk to professionals in your field of interest",
+    "settings.careerTip3": "Build a strong portfolio or resume",
+    "settings.careerTip4": "Stay updated with industry trends",
     // Card Content - Stream Descriptions Medium Performance
     "card.pcbMediumDesc":
       "For students interested in medical and biological sciences",
@@ -437,6 +446,31 @@ export const translations = {
     "card.frequency": "Frequency",
     "card.difficulty": "Difficulty",
 
+
+     // Counseling Form
+    "counseling.title": "Need Counseling Support?",
+    "counseling.subtitle": "Get personalized guidance for your career journey",
+    "counseling.getCounseling": "Get Counseling",
+    "counseling.hideForm": "Hide Form",
+    "counseling.categoryLabel": "Counseling Category * (Select all that apply)",
+    "counseling.categoryCareer": "Career Guidance",
+    "counseling.categoryCourse": "Course Selection Help",
+    "counseling.categoryAdmission": "Admission Process",
+    "counseling.categoryFinancial": "Financial Aid & Scholarships",
+    "counseling.categoryAbroad": "Study Abroad Guidance",
+    "counseling.categoryJob": "Job Placement Assistance",
+    "counseling.categorySkill": "Skill Development",
+    "counseling.categoryPersonal": "Personal Counseling",
+    "counseling.categoryHealth": "Health Related",
+    "counseling.categoryDomestic": "Domestic Issues",
+    "counseling.categoryOther": "Other",
+    "counseling.otherSpecify": "Specify Other Category *",
+    "counseling.otherPlaceholder": "Please specify",
+    "counseling.submit": "Submit Counseling Request",
+    "counseling.submitting": "Submitting...",
+    "counseling.submitted": "Submitted",
+    "counseling.success": "Counseling request submitted successfully!",
+    "counseling.error": "Failed to submit counseling request. Please try again.",
     // Skills
     "card.skillCommunication": "Communication Skills",
     "card.skillPatience": "Patience",
@@ -446,6 +480,7 @@ export const translations = {
     "card.skillAnalytical": "Analytical Skills",
     "card.skillProblemSolving": "Problem Solving",
     "card.skillNegotiation": "Negotiation Skills",
+
 
     // Colleges
     "card.collegeDelhi": "Delhi University",
@@ -457,6 +492,46 @@ export const translations = {
     "card.careerOptions": "Career Options",
     "card.steps": "Steps",
     "card.step": "Step",
+
+    // UserNotifications - 12th Stream Guidance
+    "notifications.backToDashboard": "Back to Dashboard",
+    "notifications.loading": "Loading course guidance...",
+    "notifications.title": "12th Class Course Guidance",
+    "notifications.subtitle":
+      "Select your 12th stream and enter your percentage to get personalized course recommendations",
+    "notifications.step1": "Step 1",
+    "notifications.selectStream": "Select Your 12th Stream",
+    "notifications.step2": "Step 2",
+    "notifications.enterPercentage": "Enter Your 12th Percentage",
+    "notifications.getCourseGuidance": "Get Course Guidance",
+    "notifications.step3": "Step 3",
+    "notifications.yourPerformance": "Your Performance",
+    "notifications.basedOn": "Based on",
+    "notifications.in": "in",
+    "notifications.courseRecommendations": "Course Recommendations",
+    "notifications.recommendationDesc":
+      "Browse recommended courses based on your percentage and career interests",
+    "notifications.allCourses": "All Available Courses",
+    "notifications.additionalGuidance": "Additional Guidance",
+    "notifications.guidanceFor": "For",
+    "notifications.students": "Students",
+    "notifications.careerTips": "Career Tips",
+    "notifications.howToGetGuidance": "How to Get Course Guidance",
+    "notifications.courseDuration": "Course Duration",
+    "notifications.description": "Description",
+    "notifications.selected": "Selected",
+    "notifications.percentage": "%",
+    "notifications.scienceStream": "Science Stream",
+    "notifications.scienceSubjects": "Physics, Chemistry, Biology/Mathematics",
+    "notifications.commerceStream": "Commerce Stream",
+    "notifications.commerceSubjects":
+      "Accountancy, Business Studies, Economics",
+    "notifications.artsStream": "Arts Stream",
+    "notifications.artsSubjects":
+      "History, Political Science, Sociology, Psychology",
+    "notifications.computerScience": "Computer Science",
+    "notifications.computerSubjects":
+      "Programming, Data Structures, Algorithms",
   },
   hi: {
     // Navigation & Header
@@ -477,6 +552,16 @@ export const translations = {
     "dashboard.noCoursesEnrolled": "अभी तक कोई पाठ्यक्रम नामांकित नहीं है",
     "dashboard.enrollNewCourse": "नए पाठ्यक्रम के लिए नामांकन करें",
 
+
+    
+"settings.guidanceTip1": "अपने मुख्य विषयों पर ध्यान दें और मजबूत नींव बनाएं",
+    "settings.guidanceTip2": "अपनी स्ट्रीम से संबंधित पाठ्येतर गतिविधियों में भाग लें",
+    "settings.guidanceTip3": "इंटर्नशिप और व्यावहारिक अनुभव पर विचार करें",
+    "settings.guidanceTip4": "यदि लागू हो तो प्रतिस्पर्धी परीक्षाओं की तैयारी करें",
+    "settings.careerTip1": "स्ट्रीम और उनके कैरियर संभावनाओं के बारे में शोध करें",
+    "settings.careerTip2": "अपनी रुचि के क्षेत्र में पेशेवरों से बात करें",
+    "settings.careerTip3": "एक मजबूत पोर्टफोलियो या बायोडाटा बनाएं",
+    "settings.careerTip4": "उद्योग के रुझानों से अपडेट रहें",
     // Course Cards
     "course.progress": "प्रगति",
     "course.completed": "पूर्ण",
@@ -495,6 +580,31 @@ export const translations = {
     "course.rating": "रेटिंग",
     "course.review": "समीक्षा",
 
+
+    // Counseling Form
+    "counseling.title": "क्या आपको परामर्श सहायता चाहिए?",
+    "counseling.subtitle": "अपनी करियर यात्रा के लिए व्यक्तिगत मार्गदर्शन प्राप्त करें",
+    "counseling.getCounseling": "परामर्श प्राप्त करें",
+    "counseling.hideForm": "फॉर्म छुपाएं",
+    "counseling.categoryLabel": "परामर्श श्रेणी * (सभी जो लागू हो चुनें)",
+    "counseling.categoryCareer": "कैरियर मार्गदर्शन",
+    "counseling.categoryCourse": "पाठ्यक्रम चयन सहायता",
+    "counseling.categoryAdmission": "प्रवेश प्रक्रिया",
+    "counseling.categoryFinancial": "वित्तीय सहायता और छात्रवृत्ति",
+    "counseling.categoryAbroad": "विदेश में अध्ययन मार्गदर्शन",
+    "counseling.categoryJob": "नौकरी सहायता",
+    "counseling.categorySkill": "कौशल विकास",
+    "counseling.categoryPersonal": "व्यक्तिगत परामर्श",
+    "counseling.categoryHealth": "स्वास्थ्य संबंधी",
+    "counseling.categoryDomestic": "घरेलू मुद्दे",
+    "counseling.categoryOther": "अन्य",
+    "counseling.otherSpecify": "अन्य श्रेणी निर्दिष्ट करें *",
+    "counseling.otherPlaceholder": "कृपया निर्दिष्ट करें",
+    "counseling.submit": "परामर्श अनुरोध जमा करें",
+    "counseling.submitting": "जमा किया जा रहा है...",
+    "counseling.submitted": "जमा किया गया",
+    "counseling.success": "परामर्श अनुरोध सफलतापूर्वक जमा किया गया!",
+    "counseling.error": "परामर्श अनुरोध जमा करने में विफल। कृपया पुनः प्रयास करें।",
     // Modules
     "module.title": "मॉड्यूल",
     "module.lesson": "पाठ",
@@ -913,6 +1023,44 @@ export const translations = {
     "card.careerOptions": "कैरियर विकल्प",
     "card.steps": "चरण",
     "card.step": "चरण",
+
+    // UserNotifications - 12th Stream Guidance Hindi
+    "notifications.backToDashboard": "डैशबोर्ड पर वापस जाएं",
+    "notifications.loading": "कोर्स मार्गदर्शन लोड हो रहा है...",
+    "notifications.title": "12वीं कक्षा कोर्स मार्गदर्शन",
+    "notifications.subtitle":
+      "आपकी 12वीं स्ट्रीम चुनें और व्यक्तिगत कोर्स अनुशंसाएं पाने के लिए अपना प्रतिशत दर्ज करें",
+    "notifications.step1": "चरण 1",
+    "notifications.selectStream": "अपनी 12वीं स्ट्रीम चुनें",
+    "notifications.step2": "चरण 2",
+    "notifications.enterPercentage": "अपना 12वीं प्रतिशत दर्ज करें",
+    "notifications.getCourseGuidance": "कोर्स मार्गदर्शन प्राप्त करें",
+    "notifications.step3": "चरण 3",
+    "notifications.yourPerformance": "आपका प्रदर्शन",
+    "notifications.basedOn": "के आधार पर",
+    "notifications.in": "में",
+    "notifications.courseRecommendations": "कोर्स अनुशंसाएं",
+    "notifications.recommendationDesc":
+      "आपके प्रतिशत और कैरियर हितों के आधार पर अनुशंसित कोर्स ब्राउज़ करें",
+    "notifications.allCourses": "उपलब्ध सभी कोर्स",
+    "notifications.additionalGuidance": "अतिरिक्त मार्गदर्शन",
+    "notifications.guidanceFor": "के लिए",
+    "notifications.students": "छात्र",
+    "notifications.careerTips": "कैरियर टिप्स",
+    "notifications.howToGetGuidance": "कोर्स मार्गदर्शन कैसे प्राप्त करें",
+    "notifications.courseDuration": "कोर्स अवधि",
+    "notifications.description": "विवरण",
+    "notifications.selected": "चयनित",
+    "notifications.percentage": "%",
+    "notifications.scienceStream": "विज्ञान स्ट्रीम",
+    "notifications.scienceSubjects": "भौतिकी, रसायन विज्ञान, जीव विज्ञान/गणित",
+    "notifications.commerceStream": "वाणिज्य स्ट्रीम",
+    "notifications.commerceSubjects": "लेखांकन, व्यावसायिक अध्ययन, अर्थशास्त्र",
+    "notifications.artsStream": "कला स्ट्रीम",
+    "notifications.artsSubjects":
+      "इतिहास, राजनीति विज्ञान, समाज शास्त्र, मनोविज्ञान",
+    "notifications.computerScience": "कंप्यूटर विज्ञान",
+    "notifications.computerSubjects": "प्रोग्रामिंग, डेटा संरचनाएं, एल्गोरिदम",
   },
 };
 

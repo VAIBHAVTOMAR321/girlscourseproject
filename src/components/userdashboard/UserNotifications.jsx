@@ -2,15 +2,19 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Container, Row, Col, Card, Button, Form, ProgressBar, Badge, Modal, Alert, Nav, Tab } from 'react-bootstrap'
 import axios from 'axios'
 import { useAuth } from '../../contexts/AuthContext'
+import { useLanguage } from '../../contexts/LanguageContext'
 import { useNavigate } from 'react-router-dom'
 import UserTopNav from './UserTopNav'
 import UseLeftNav from './UseLeftNav'
 import CounselingForm from './CounselingForm'
+import TransText from '../TransText'
+import { getTranslation } from '../../utils/translations'
 import { FaArrowLeft, FaGraduationCap, FaChartLine, FaLightbulb, FaRocket, FaBook, FaCode, FaPalette, FaCalculator, FaLanguage, FaMusic, FaHeartbeat, FaBusinessTime, FaPercentage, FaUniversity, FaTools, FaLaptopMedical, FaBriefcase, FaCog, FaFlask, FaBalanceScale, FaNewspaper, FaChalkboardTeacher, FaUserTie, FaPaintBrush, FaGuitar, FaRunning, FaHome, FaWrench, FaIndustry, FaPlane, FaCar, FaBuilding, FaHospital, FaSeedling, FaMicrochip, FaNetworkWired, FaDatabase, FaShieldAlt, FaRobot, FaBrain, FaChartBar, FaProjectDiagram, FaBookOpen, FaBolt, FaDna, FaCheckCircle, FaInfoCircle } from 'react-icons/fa'
 import '../../assets/css/UserNotifications.css'
 
   const UserNotifications = () => {
   const { uniqueId, userRoleType, accessToken } = useAuth()
+  const { language } = useLanguage()
   const [loading, setLoading] = useState(true)
   const [showOffcanvas, setShowOffcanvas] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
@@ -99,11 +103,17 @@ import '../../assets/css/UserNotifications.css'
   // 12th Streams
   
   const streams = [
-    { id: 'science', name: 'Science Stream', icon: <FaRocket className="" />, subjects: 'Physics, Chemistry, Biology/Mathematics' },
-    { id: 'commerce', name: 'Commerce Stream', icon: <FaChartLine className="" />, subjects: 'Accountancy, Business Studies, Economics' },
-    { id: 'arts', name: 'Arts Stream', icon: <FaPalette className="" />, subjects: 'History, Political Science, Sociology, Psychology' },
-    { id: 'computer', name: 'Computer Science', icon: <FaCode className="" />, subjects: 'Programming, Data Structures, Algorithms' }
+    { id: 'science', nameKey: 'notifications.scienceStream', icon: <FaRocket className="" />, subjectsKey: 'notifications.scienceSubjects' },
+    { id: 'commerce', nameKey: 'notifications.commerceStream', icon: <FaChartLine className="" />, subjectsKey: 'notifications.commerceSubjects' },
+    { id: 'arts', nameKey: 'notifications.artsStream', icon: <FaPalette className="" />, subjectsKey: 'notifications.artsSubjects' },
+    { id: 'computer', nameKey: 'notifications.computerScience', icon: <FaCode className="" />, subjectsKey: 'notifications.computerSubjects' }
   ]
+
+  // Helper function to get stream display name
+  const getStreamName = (streamId) => {
+    const stream = streams.find(s => s.id === streamId)
+    return stream ? getTranslation(stream.nameKey, language) : 'Unknown'
+  }
 
   // Courses based on stream and percentage
   const getCoursesByStreamAndPercentage = (stream, perc) => {
@@ -1243,7 +1253,7 @@ import '../../assets/css/UserNotifications.css'
                 className="d-flex align-items-center"
               >
                 <FaArrowLeft className="me-2" />
-                Back to Dashboard
+                <TransText k="notifications.backToDashboard" as="span" />
               </Button>
             </div>
 
@@ -1252,9 +1262,9 @@ import '../../assets/css/UserNotifications.css'
             {loading ? (
               <div className="text-center py-5">
                 <div className="spinner-border text-primary" role="status" style={{ width: '60px', height: '60px' }}>
-                  <span className="visually-hidden">Loading...</span>
+                  <span className="visually-hidden"><TransText k="notifications.loading" as="span" /></span>
                 </div>
-                <p className="mt-3">Loading guidance...</p>
+                <p className="mt-3"><TransText k="notifications.loading" as="span" /></p>
               </div>
             ) : (
               <>
@@ -1267,10 +1277,10 @@ import '../../assets/css/UserNotifications.css'
                   <div>
                     <h3 className="mb-2">
                       <FaGraduationCap className="me-2 text-primary" />
-                      Future Guidance & Course Suggestions
+                      <TransText k="notifications.title" as="span" />
                     </h3>
                     <p className="text-muted mb-0">
-                      Select your 12th stream and enter your percentage to get personalized course and career guidance
+                      <TransText k="notifications.subtitle" as="span" />
                     </p>
 
                   </div>
@@ -1288,10 +1298,9 @@ import '../../assets/css/UserNotifications.css'
             </Card>
                   <Card.Body className="">
                     <h5 className="mb-3">
-                      <Badge bg="primary" className="me-2">Step 1</Badge>
-                      Select Your 12th Stream
+                        <Badge bg="primary" className="me-2"><TransText k="notifications.step1" as="span" /></Badge>
+                        <TransText k="notifications.selectStream" as="span" />
                     </h5>
-
                     <Row>
                       {streams.map((stream) => (
                         <Col lg={3} md={6} className="mb-3" key={stream.id}>
@@ -1308,11 +1317,11 @@ import '../../assets/css/UserNotifications.css'
                               <div className="stream-icon-large mb-2">
                                 {stream.icon}
                               </div>
-                              <h6 className="mb-1">{stream.name}</h6>
-                              <small className="text-muted">{stream.subjects}</small>
+                              <h6 className="mb-1">{getTranslation(stream.nameKey, language)}</h6>
+                              <small className="text-muted">{getTranslation(stream.subjectsKey, language)}</small>
                               {selectedStream === stream.id && (
                                 <Badge bg="primary" className="mt-2">
-                                  <FaCheckCircle className="me-1" /> Selected
+                                  <FaCheckCircle className="me-1" /> <TransText k="notifications.selected" as="span" />
                                 </Badge>
                               )}
                             </Card.Body>
@@ -1328,8 +1337,8 @@ import '../../assets/css/UserNotifications.css'
                   <Card className="shadow-sm mb-4 border-0" style={{ borderRadius: '10px' }}>
                     <Card.Body className="p-4">
                       <h5 className="mb-3">
-                        <Badge bg="primary" className="me-2">Step 2</Badge>
-                        Enter Your 12th Percentage
+                        <Badge bg="primary" className="me-2"><TransText k="notifications.step2" as="span" /></Badge>
+                        <TransText k="notifications.enterPercentage" as="span" />
                       </h5>
                       <Row className="align-items-center">
                         <Col md={6}>
@@ -1355,7 +1364,7 @@ import '../../assets/css/UserNotifications.css'
                             className="w-100 mobile-btn-get"
                           >
                             <FaLightbulb className="me-2" />
-                            Get Course Guidance
+                            <TransText k="notifications.getCourseGuidance" as="span" />
                           </Button>
                         </Col>
                       </Row>
@@ -1371,9 +1380,9 @@ import '../../assets/css/UserNotifications.css'
                       <Card.Body className="p-4">
                         <div className="d-flex justify-content-between align-items-center">
                           <div>
-                            <h5 className="mb-1">Your Performance</h5>
+                            <h5 className="mb-1"><TransText k="notifications.yourPerformance" as="span" /></h5>
                             <p className="text-muted mb-0">
-                              Based on {percentage}% in {streams.find(s => s.id === selectedStream)?.name}
+                              <TransText k="notifications.basedOn" as="span" /> {percentage}% <TransText k="notifications.in" as="span" /> {getStreamName(selectedStream)}
                             </p>
                           </div>
                           <div className="text-end">
@@ -1397,7 +1406,7 @@ import '../../assets/css/UserNotifications.css'
                       <Card.Header className="bg-white border-0 pt-4 pb-0">
                         <h5 className="mb-0">
                           <FaUniversity className="me-2 text-primary" />
-                          Course Recommendations
+                          <TransText k="notifications.courseRecommendations" as="span" />
                         </h5>
                         <p className="text-muted mb-0">
                           Browse recommended courses based on your percentage and all available courses in your stream
@@ -1502,11 +1511,11 @@ import '../../assets/css/UserNotifications.css'
                       <Card.Body className="p-4">
                         <h5 className="mb-3">
                           <FaLightbulb className="me-2 text-warning" />
-                          Additional Guidance
+                          <TransText k="notifications.additionalGuidance" as="span" />
                         </h5>
                         <Row>
                           <Col md={6}>
-                            <h6>For {streams.find(s => s.id === selectedStream)?.name} Students:</h6>
+                            <h6><TransText k="notifications.guidanceFor" as="span" /> {getStreamName(selectedStream)} <TransText k="notifications.students" as="span" />:</h6>
                             <ul className="text-muted">
                               <li>Focus on your core subjects and build strong fundamentals</li>
                               <li>Participate in extracurricular activities related to your stream</li>
@@ -1515,7 +1524,7 @@ import '../../assets/css/UserNotifications.css'
                             </ul>
                           </Col>
                           <Col md={6}>
-                            <h6>Career Tips:</h6>
+                            <h6><TransText k="notifications.careerTips" as="span" />:</h6>
                             <ul className="text-muted">
                               <li>Research about the courses and their career prospects</li>
                               <li>Talk to professionals in your field of interest</li>
@@ -1534,7 +1543,7 @@ import '../../assets/css/UserNotifications.css'
                   <Card className="shadow-sm border-0 instructions-card" style={{ borderRadius: '10px' }}>
                     <Card.Body className="p-4">
 
-                      <h4>How to Get Course Guidance</h4>
+                      <h4><TransText k="notifications.howToGetGuidance" as="span" /></h4>
                       <p className="text-muted mb-0">
                         <strong>Step 1:</strong> Select your 12th stream from the options above<br />
                         <strong>Step 2:</strong> Enter your 12th percentage<br />
@@ -1563,12 +1572,12 @@ import '../../assets/css/UserNotifications.css'
           {selectedCourse && (
             <div>
               <div className="mb-4">
-                <h6 className="text-muted mb-2">Course Duration</h6>
+                <h6 className="text-muted mb-2"><TransText k="notifications.courseDuration" as="span" /></h6>
                 <Badge bg="info" className="fs-6">{selectedCourse.duration}</Badge>
               </div>
               
               <div className="mb-4">
-                <h6 className="text-muted mb-2">Description</h6>
+                <h6 className="text-muted mb-2"><TransText k="notifications.description" as="span" /></h6>
                 <p>{selectedCourse.description}</p>
               </div>
               
