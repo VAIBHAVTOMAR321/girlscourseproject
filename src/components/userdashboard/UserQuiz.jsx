@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import UserTopNav from './UserTopNav'
 import UseLeftNav from './UseLeftNav'
 import TransText from '../TransText'
-import { FaArrowLeft, FaClock, FaQuestion, FaTrophy, FaCheckCircle, FaTimesCircle, FaChevronRight } from 'react-icons/fa'
+import { FaArrowLeft, FaClock, FaQuestion, FaTrophy, FaCheckCircle, FaTimesCircle, FaChevronRight, FaMedal } from 'react-icons/fa'
 import '../../assets/css/UserQuiz.css'
 import { getTranslation } from '../../utils/translations'
 
@@ -21,6 +21,9 @@ const UserQuiz = () => {
   const [showOffcanvas, setShowOffcanvas] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const [participatedQuizzes, setParticipatedQuizzes] = useState({})
+  const [quizRanks, setQuizRanks] = useState({})
+  const [showRankModal, setShowRankModal] = useState(false)
+  const [selectedQuizRank, setSelectedQuizRank] = useState(null)
   
   // Quiz taking state
   const [takingQuiz, setTakingQuiz] = useState(false)
@@ -94,12 +97,61 @@ const UserQuiz = () => {
         
         if (response.data.status && response.data.data) {
           const participated = {}
+          const ranks = {}
+          
           response.data.data.forEach(participant => {
             if (participant.student?.student_id === uniqueId) {
               participated[participant.quiz_id] = true
+              
+              if (participant.attempt?.rank) {
+                if (!ranks[participant.quiz_id]) {
+                  ranks[participant.quiz_id] = {
+                    userRank: participant.attempt.rank,
+                    userScore: participant.attempt.score,
+                    totalParticipants: 0,
+                    topThree: []
+                  }
+                }
+              }
             }
           })
           setParticipatedQuizzes(participated)
+          setQuizRanks(ranks)
+          
+          const quizIds = [...new Set(response.data.data.map(p => p.quiz_id))]
+          const rankPromises = quizIds.map(async (quizId) => {
+            try {
+              const rankResponse = await axios.get(
+                `https://brjobsedu.com/girls_course/girls_course_backend/api/quiz-participants/?quiz_id=${quizId}`,
+                config
+              )
+              if (rankResponse.data.status && rankResponse.data.data) {
+                const participants = rankResponse.data.data
+                const sorted = participants
+                  .filter(p => p.attempt?.rank)
+                  .sort((a, b) => a.attempt.rank - b.attempt.rank)
+                  .slice(0, 3)
+                
+                setQuizRanks(prev => ({
+                  ...prev,
+                  [quizId]: {
+                    ...prev[quizId],
+                    totalParticipants: participants.length,
+                    topThree: sorted.map(p => ({
+                      student_id: p.student?.student_id,
+                      full_name: p.student?.full_name,
+                      rank: p.attempt?.rank,
+                      score: p.attempt?.score,
+                      status: p.attempt?.status
+                    }))
+                  }
+                }))
+              }
+            } catch (err) {
+              console.error('Error fetching rank for quiz', quizId, err)
+            }
+          })
+          await Promise.all(rankPromises)
         }
       } catch (error) {
         console.error('Error fetching participated quizzes:', error)
@@ -452,6 +504,86 @@ const UserQuiz = () => {
     </Modal>
   )
 
+  // Rank Modal Component
+  const RankModal = () => (
+    <Modal show={showRankModal} onHide={() => setShowRankModal(false)} centered>
+      <Modal.Header closeButton>
+        <Modal.Title>
+          <FaMedal className="me-2 text-warning" />
+          Quiz Rankings
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        {selectedQuizRank && (
+          <>
+            {selectedQuizRank.userRank && (
+              <div className="mb-4 p-3 bg-primary text-white rounded" style={{ backgroundColor: '#0d6efd' }}>
+                <div className="text-center">
+                  <h5 className="mb-1">Your Rank</h5>
+                  <h2 className="mb-0">#{selectedQuizRank.userRank}</h2>
+                  <small>Score: {selectedQuizRank.userScore}</small>
+                </div>
+              </div>
+            )}
+            
+            {selectedQuizRank.topThree && selectedQuizRank.topThree.length > 0 && (
+              <>
+                <h6 className="mb-3">Top 3 Participants</h6>
+                {selectedQuizRank.topThree
+                  .filter(p => p.rank >= 1 && p.rank <= 3)
+                  .map((participant, idx) => {
+                  const isUser = participant.student_id === uniqueId
+                  const medalColor = participant.rank === 1 ? '#FFD700' : participant.rank === 2 ? '#C0C0C0' : '#CD7F32'
+                  return (
+                    <div 
+                      key={idx} 
+                      className={`d-flex align-items-center p-3 mb-2 rounded ${isUser ? 'bg-info bg-opacity-10' : 'bg-light'}`}
+                      style={{ borderLeft: `4px solid ${medalColor}` }}
+                    >
+                      <div className="me-3" style={{ width: '30px', textAlign: 'center', fontSize: '20px' }}>
+                        {participant.rank === 1 ? '🥇' : participant.rank === 2 ? '🥈' : '🥉'}
+                      </div>
+                      <div className="flex-grow-1">
+                        <div className="fw-bold">
+                          {participant.full_name}
+                          {isUser && <Badge bg="primary" className="ms-2">You</Badge>}
+                        </div>
+                        <small className="text-muted">{participant.student_id}</small>
+                      </div>
+                      <div className="text-end">
+                        <div className="fw-bold">Score: {participant.score}</div>
+                        <small className={participant.status === 'passed' ? 'text-success' : 'text-danger'}>
+                          {participant.status === 'passed' ? 'Passed' : 'Failed'}
+                        </small>
+                      </div>
+                    </div>
+                  )
+                })}
+                
+                {selectedQuizRank.userRank && selectedQuizRank.userRank > 3 && (
+                  <div className="mt-3 p-3 bg-light rounded text-center">
+                    <small className="text-muted">Your rank is #{selectedQuizRank.userRank}, not in top 3</small>
+                  </div>
+                )}
+              </>
+            )}
+            
+            {selectedQuizRank.totalParticipants && (
+              <div className="text-center mt-3 text-muted">
+                <small>Total Participants: {selectedQuizRank.totalParticipants}</small>
+              </div>
+            )}
+          </>
+        )}
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={() => setShowRankModal(false)}>
+          Close
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  )
+
   return (
     <div className="d-flex flex-column">
       <UserTopNav onMenuToggle={handleMenuToggle} isMobile={isMobile} />
@@ -521,13 +653,40 @@ const UserQuiz = () => {
 
                               <div className="mt-auto">
                                 {participatedQuizzes[quiz.quiz_id] ? (
-                                  <Button
-                                    variant="secondary"
-                                    className="w-100"
-                                    disabled
-                                  >
-                                    <TransText k="quiz.alreadyAttempted" as="span" />
-                                  </Button>
+                                  <div className="d-flex flex-column gap-2">
+                                    {quizRanks[quiz.quiz_id]?.userRank && (
+                                      <div className="text-center mb-2">
+                                        <Badge bg="warning" className="py-2 px-3">
+                                          <FaMedal className="me-1" />
+                                          Rank #{quizRanks[quiz.quiz_id].userRank}
+                                        </Badge>
+                                      </div>
+                                    )}
+                                    {quizRanks[quiz.quiz_id]?.userScore !== undefined && (
+                                      <div className="text-center">
+                                        <Badge bg="success" className="py-2 px-3">
+                                          Score: {quizRanks[quiz.quiz_id].userScore}
+                                        </Badge>
+                                      </div>
+                                    )}
+                                    <Button
+                                      variant="info"
+                                      className="w-100"
+                                      onClick={() => {
+                                        setSelectedQuizRank({ quizId: quiz.quiz_id, ...quizRanks[quiz.quiz_id] })
+                                        setShowRankModal(true)
+                                      }}
+                                    >
+                                      <TransText k="quiz.viewRank" as="span" />
+                                    </Button>
+                                    <Button
+                                      variant="secondary"
+                                      className="w-100"
+                                      disabled
+                                    >
+                                      <TransText k="quiz.alreadyAttempted" as="span" />
+                                    </Button>
+                                  </div>
                                 ) : (
                                   <Button
                                     variant="primary"
@@ -762,6 +921,7 @@ const UserQuiz = () => {
       </div>
 
       <WrongAnswersModal />
+      <RankModal />
     </div>
   )
 }
