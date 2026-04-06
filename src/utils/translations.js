@@ -780,6 +780,7 @@ export const translations = {
     "quiz.quizEnded": "This quiz has ended",
     "quiz.congratulations": "Congratulations!",
     "quiz.greatJob": "Great job! You scored",
+    "quiz.viewWrongAnswers": "View Wrong Answers",
   },
   hi: {
     // Navigation & Header
@@ -1551,6 +1552,7 @@ export const translations = {
     "quiz.quizEnded": "यह क्विज़ समाप्त हो गई है",
     "quiz.congratulations": "बधाई हो!",
     "quiz.greatJob": "शानदार काम! आपने स्कोर किया",
+    "quiz.viewWrongAnswers": "गलत उत्तर देखें",
   },
 };
 
