@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Container, Row, Col, Card, Button, Badge, Spinner, Alert, ProgressBar } from 'react-bootstrap'
+import { Container, Row, Col, Card, Button, Badge, Spinner, Alert, ProgressBar, Modal } from 'react-bootstrap'
 import axios from 'axios'
 import { useAuth } from '../../contexts/AuthContext'
 import { useLanguage } from '../../contexts/LanguageContext'
@@ -32,6 +32,8 @@ const UserQuiz = () => {
   // Results state
   const [showResults, setShowResults] = useState(false)
   const [quizResults, setQuizResults] = useState(null)
+  const [showWrongAnswersModal, setShowWrongAnswersModal] = useState(false)
+  const [wrongAnswers, setWrongAnswers] = useState([])
 
   // Check mobile view
   useEffect(() => {
@@ -278,11 +280,20 @@ const UserQuiz = () => {
       let serverScore = responseData.score !== undefined ? responseData.score : correctCount
       let serverPercentage = responseData.percentage || ((correctCount / totalQuestions) * 100).toFixed(2)
 
-      // Fallback to local calculation if server doesn't provide scores
+      // Collect wrong answers
+      let wrongAnswersArray = []
       if (!responseData.correct_answers) {
         currentQuiz.questions.forEach((question, index) => {
-          if (answers[index] === question.correct_answer) {
-            correctCount++
+          if (answers[index] !== question.correct_answer) {
+            wrongAnswersArray.push({
+              questionIndex: index,
+              question_text: question.question_text,
+              question_text_hindi: question.question_text_hindi,
+              options: question.options,
+              options_hindi: question.options_hindi,
+              userAnswer: answers[index],
+              correctAnswer: question.correct_answer
+            })
           }
         })
         totalQuestions = currentQuiz.questions.length
@@ -300,6 +311,11 @@ const UserQuiz = () => {
         percentage: serverPercentage,
         status: correctCount >= (totalQuestions * 0.6) ? 'passed' : 'failed'
       })
+
+      // Store wrong answers for potential viewing
+      if (wrongAnswersArray.length > 0) {
+        setWrongAnswers(wrongAnswersArray)
+      }
 
       setShowResults(true)
       setTakingQuiz(false)
@@ -339,6 +355,77 @@ const UserQuiz = () => {
   }
 
   const currentQuestion = getCurrentQuestion()
+
+  // Wrong Answers Modal Component
+  const WrongAnswersModal = () => (
+    <Modal show={showWrongAnswersModal} onHide={() => setShowWrongAnswersModal(false)} size="lg" centered>
+      <Modal.Header closeButton>
+        <Modal.Title>Wrong Answers Review</Modal.Title>
+      </Modal.Header>
+      <Modal.Body style={{ maxHeight: '500px', overflowY: 'auto' }}>
+        {wrongAnswers.length > 0 ? (
+          wrongAnswers.map((wrongAnswer, idx) => (
+            <Card key={idx} className="mb-3" style={{ borderLeft: '4px solid #dc3545' }}>
+              <Card.Body>
+                <h6 style={{ color: '#dc3545', fontWeight: 'bold' }}>
+                  Question {wrongAnswer.questionIndex + 1}
+                </h6>
+                <p className="mb-2">
+                  <strong>
+                    {language === 'hi' && wrongAnswer.question_text_hindi
+                      ? wrongAnswer.question_text_hindi
+                      : wrongAnswer.question_text}
+                  </strong>
+                </p>
+                
+                <div className="mb-2">
+                  <small style={{ color: '#6c757d' }}>Your Answer:</small>
+                  <p style={{ 
+                    backgroundColor: '#f8d7da', 
+                    padding: '8px 12px', 
+                    borderRadius: '4px',
+                    marginBottom: '8px',
+                    color: '#721c24'
+                  }}>
+                    <strong>
+                      {String.fromCharCode(65 + wrongAnswer.userAnswer)}.{' '}
+                      {language === 'hi' && wrongAnswer.options_hindi
+                        ? wrongAnswer.options_hindi[wrongAnswer.userAnswer]
+                        : wrongAnswer.options[wrongAnswer.userAnswer]}
+                    </strong>
+                  </p>
+                </div>
+
+                <div>
+                  <small style={{ color: '#6c757d' }}>Correct Answer:</small>
+                  <p style={{ 
+                    backgroundColor: '#d4edda', 
+                    padding: '8px 12px', 
+                    borderRadius: '4px',
+                    color: '#155724'
+                  }}>
+                    <strong>
+                      {String.fromCharCode(65 + wrongAnswer.correctAnswer)}.{' '}
+                      {language === 'hi' && wrongAnswer.options_hindi
+                        ? wrongAnswer.options_hindi[wrongAnswer.correctAnswer]
+                        : wrongAnswer.options[wrongAnswer.correctAnswer]}
+                    </strong>
+                  </p>
+                </div>
+              </Card.Body>
+            </Card>
+          ))
+        ) : (
+          <Alert variant="success">All answers are correct!</Alert>
+        )}
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={() => setShowWrongAnswersModal(false)}>
+          Close
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  )
 
   return (
     <div className="d-flex flex-column">
@@ -484,26 +571,36 @@ const UserQuiz = () => {
                     </Card.Body>
                   </Card>
 
-                  <div className="d-flex gap-2 justify-content-center mt-3">
-                    <Button 
-                      variant="primary" 
-                      onClick={handleRetakeQuiz}
-                      className="d-flex align-items-center"
-                    >
-                      <TransText k="quiz.retakeQuiz" as="span" />
-                    </Button>
-                    <Button 
-                      variant="outline-secondary" 
-                      onClick={() => {
-                        setShowResults(false)
-                        setCurrentQuiz(null)
-                        setQuizResults(null)
-                      }}
-                      className="d-flex align-items-center"
-                    >
-                      <TransText k="quiz.backToQuizzes" as="span" />
-                    </Button>
-                  </div>
+                   <div className="d-flex gap-2 justify-content-center mt-3 flex-wrap">
+                     <Button
+                       variant="primary"
+                       onClick={handleRetakeQuiz}
+                       className="d-flex align-items-center"
+                     >
+                       <TransText k="quiz.retakeQuiz" as="span" />
+                     </Button>
+                     {wrongAnswers.length > 0 && (
+                       <Button
+                         variant="warning"
+                         onClick={() => setShowWrongAnswersModal(true)}
+                         className="d-flex align-items-center"
+                       >
+                         <FaTimesCircle className="me-2" />
+                         <TransText k="quiz.viewWrongAnswers" as="span" />
+                       </Button>
+                     )}
+                     <Button
+                       variant="outline-secondary"
+                       onClick={() => {
+                         setShowResults(false)
+                         setCurrentQuiz(null)
+                         setQuizResults(null)
+                       }}
+                       className="d-flex align-items-center"
+                     >
+                       <TransText k="quiz.backToQuizzes" as="span" />
+                     </Button>
+                   </div>
                 </div>
               </>
             ) : (
@@ -629,7 +726,7 @@ const UserQuiz = () => {
         </div>
       </div>
 
-   
+      <WrongAnswersModal />
     </div>
   )
 }
