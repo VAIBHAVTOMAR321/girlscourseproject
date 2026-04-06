@@ -1,15 +1,25 @@
 import React, { useState, useEffect } from 'react'
 import { Nav, Button, Offcanvas, Dropdown } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import '../../assets/css/UserLeftNav.css'
 import { useAuth } from '../../contexts/AuthContext'
 import TransText from '../TransText'
 
-const UseLeftNav = ({ showOffcanvas, setShowOffcanvas }) => {
+const UseLeftNav = ({ showOffcanvas, setShowOffcanvas, onNavAttempt }) => {
   const { userRoleType } = useAuth()
+  const navigate = useNavigate()
   const [show, setShow] = useState(true)
   const [isMobile, setIsMobile] = useState(false)
   const [showGuidelines, setShowGuidelines] = useState(false)
+
+  // Handle navigation with callback
+  const handleNavClick = (path) => {
+    if (onNavAttempt) {
+      onNavAttempt(path)
+    } else {
+      navigate(path)
+    }
+  }
 
   useEffect(() => {
     const checkMobile = () => {
@@ -68,23 +78,23 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas }) => {
                 </Button>
               </div>
                 <Nav className="flex-column p-3">
-                  <Nav.Link as={Link} to="/UserDashboard" className="text-white">
+                  <Nav.Link className="text-white" onClick={() => handleNavClick('/UserDashboard')} style={{ cursor: 'pointer' }}>
                     <i className="bi bi-grid-3x3-gap me-2"></i> <TransText k="dashboard.title" as="span" />
                   </Nav.Link>
                   
-                   <Nav.Link as={Link} to="/UserProfile" className="text-white">
+                   <Nav.Link className="text-white" onClick={() => handleNavClick('/UserProfile')} style={{ cursor: 'pointer' }}>
                     <i className="bi bi-person-circle me-2"></i> <TransText k="menu.profile" as="span" />
                   </Nav.Link>
-                  <Nav.Link as={Link} to="/UserQuery" className="text-white">
+                  <Nav.Link className="text-white" onClick={() => handleNavClick('/UserQuery')} style={{ cursor: 'pointer' }}>
                     <i className="bi bi-person-circle me-2"></i> <TransText k="menu.query" as="span" />
                   </Nav.Link>
-                  <Nav.Link as={Link} to="/UserQuiz" className="text-white">
+                  <Nav.Link className="text-white" onClick={() => handleNavClick('/UserQuiz')} style={{ cursor: 'pointer' }}>
                     <i className="bi bi-clipboard-check me-2"></i> <TransText k="quiz.title" as="span" />
                   </Nav.Link>
                   
                    {/* Refund Request only visible to paid users */}
                    {userRoleType !== 'student-unpaid' && (
-                     <Nav.Link as={Link} to="/RefundRequest" className="text-white">
+                     <Nav.Link className="text-white" onClick={() => handleNavClick('/RefundRequest')} style={{ cursor: 'pointer' }}>
                        <i className="bi bi-currency-exchange me-2"></i> <TransText k="menu.refund" as="span" />
                      </Nav.Link>
                    )}
@@ -100,19 +110,16 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas }) => {
                      </div>
                      {showGuidelines && (
                        <div className="guidelines-submenu ps-4">
-                         <Nav.Link as={Link} to="/UserNotifications" className="text-white py-1">
+                         <Nav.Link className="text-white py-1" onClick={() => handleNavClick('/UserNotifications')} style={{ cursor: 'pointer' }}>
                            <i className="bi bi-chevron-right me-2"></i> 12th
                          </Nav.Link>
-                         <Nav.Link as={Link} to="/UserSettings" className="text-white py-1">
+                         <Nav.Link className="text-white py-1" onClick={() => handleNavClick('/UserSettings')} style={{ cursor: 'pointer' }}>
                            <i className="bi bi-chevron-right me-2"></i> 10th
                          </Nav.Link>
                        </div>
                      )}
                    </div>
                   
-                   {/* <Nav.Link as={Link} to="/UserTest" className="text-white">
-                    <i className="bi bi-clipboard-check me-2"></i> Test Dashboard
-                  </Nav.Link> */}
                 </Nav>
               
             </div>
@@ -128,25 +135,25 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas }) => {
                 </Button>
                 </div>
                 <Nav className="flex-column p-3 align-items-center">
-                  <Nav.Link as={Link} to="/UserDashboard" className="text-white">
+                  <Nav.Link className="text-white" onClick={() => handleNavClick('/UserDashboard')} style={{ cursor: 'pointer' }}>
                     <i className="bi bi-grid-3x3-gap fs-5"></i>
                   </Nav.Link>
-                  <Nav.Link as={Link} to="/UserProfile" className="text-white">
+                  <Nav.Link className="text-white" onClick={() => handleNavClick('/UserProfile')} style={{ cursor: 'pointer' }}>
                     <i className="bi bi-person-circle fs-5"></i>
                   </Nav.Link>
                   {/* Refund Request only visible to paid users */}
                   {userRoleType !== 'student-unpaid' && (
-                    <Nav.Link as={Link} to="/RefundRequest" className="text-white">
+                    <Nav.Link className="text-white" onClick={() => handleNavClick('/RefundRequest')} style={{ cursor: 'pointer' }}>
                       <i className="bi bi-currency-exchange fs-5"></i>
                     </Nav.Link>
                   )}
-                  <Nav.Link as={Link} to="/UserNotifications" className="text-white">
+                  <Nav.Link className="text-white" onClick={() => handleNavClick('/UserNotifications')} style={{ cursor: 'pointer' }}>
                     <i className="bi bi-bell fs-5"></i>
                   </Nav.Link>
-                  <Nav.Link as={Link} to="/UserSettings" className="text-white">
+                  <Nav.Link className="text-white" onClick={() => handleNavClick('/UserSettings')} style={{ cursor: 'pointer' }}>
                     <i className="bi bi-gear fs-5"></i>
                   </Nav.Link>
-                  <Nav.Link as={Link} to="/UserQuiz" className="text-white">
+                  <Nav.Link className="text-white" onClick={() => handleNavClick('/UserQuiz')} style={{ cursor: 'pointer' }}>
                     <i className="bi bi-clipboard-check fs-5"></i>
                   </Nav.Link>
                 </Nav>
@@ -170,21 +177,21 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas }) => {
           </Offcanvas.Header>
           <Offcanvas.Body>
               <Nav className="nav-menu mobile-menu flex-column">
-                <Nav.Link as={Link} to="/UserDashboard" className="text-white" onClick={() => setShowOffcanvas(false)}>
+                <Nav.Link className="text-white" onClick={() => { setShowOffcanvas(false); handleNavClick('/UserDashboard'); }} style={{ cursor: 'pointer' }}>
                   <i className="bi bi-grid-3x3-gap me-2"></i> Dashboard
                 </Nav.Link>
-                <Nav.Link as={Link} to="/UserProfile" className="text-white" onClick={() => setShowOffcanvas(false)}>
+                <Nav.Link className="text-white" onClick={() => { setShowOffcanvas(false); handleNavClick('/UserProfile'); }} style={{ cursor: 'pointer' }}>
                   <i className="bi bi-person-circle me-2"></i> User Profile
                 </Nav.Link>
-                  <Nav.Link as={Link} to="/UserQuery" className="text-white" onClick={() => setShowOffcanvas(false)}>
+                <Nav.Link className="text-white" onClick={() => { setShowOffcanvas(false); handleNavClick('/UserQuery'); }} style={{ cursor: 'pointer' }}>
                   <i className="bi bi-person-circle me-2"></i> Query
                 </Nav.Link>
-                <Nav.Link as={Link} to="/UserQuiz" className="text-white" onClick={() => setShowOffcanvas(false)}>
+                <Nav.Link className="text-white" onClick={() => { setShowOffcanvas(false); handleNavClick('/UserQuiz'); }} style={{ cursor: 'pointer' }}>
                   <i className="bi bi-clipboard-check me-2"></i> <TransText k="quiz.title" as="span" />
                 </Nav.Link>
                 {/* Refund Request only visible to paid users */}
                 {userRoleType !== 'student-unpaid' && (
-                  <Nav.Link as={Link} to="/RefundRequest" className="text-white" onClick={() => setShowOffcanvas(false)}>
+                  <Nav.Link className="text-white" onClick={() => { setShowOffcanvas(false); handleNavClick('/RefundRequest'); }} style={{ cursor: 'pointer' }}>
                     <i className="bi bi-currency-exchange me-2"></i> Refund Request
                   </Nav.Link>
                 )}
@@ -199,10 +206,10 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas }) => {
                   </div>
                   {showGuidelines && (
                     <div className="guidelines-submenu">
-                      <Nav.Link as={Link} to="/UserNotifications" className="text-white py-1" onClick={() => setShowOffcanvas(false)}>
+                      <Nav.Link className="text-white py-1" onClick={() => { setShowOffcanvas(false); handleNavClick('/UserNotifications'); }} style={{ cursor: 'pointer' }}>
                         <i className="bi bi-chevron-right me-2"></i> 12th
                       </Nav.Link>
-                      <Nav.Link as={Link} to="/UserSettings" className="text-white py-1" onClick={() => setShowOffcanvas(false)}>
+                      <Nav.Link className="text-white py-1" onClick={() => { setShowOffcanvas(false); handleNavClick('/UserSettings'); }} style={{ cursor: 'pointer' }}>
                         <i className="bi bi-chevron-right me-2"></i> 10th
                       </Nav.Link>
                     </div>

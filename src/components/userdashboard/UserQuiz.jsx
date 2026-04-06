@@ -41,6 +41,11 @@ const UserQuiz = () => {
   const [showWrongAnswersModal, setShowWrongAnswersModal] = useState(false)
   const [wrongAnswers, setWrongAnswers] = useState([])
 
+  // Navigation warning state
+  const [showNavigationWarning, setShowNavigationWarning] = useState(false)
+  const [navigationWarningShown, setNavigationWarningShown] = useState(false)
+  const [pendingNavigation, setPendingNavigation] = useState(null)
+
   // Check mobile view
   useEffect(() => {
     const checkMobile = () => {
@@ -64,6 +69,156 @@ const UserQuiz = () => {
       }
     }
   }, [isMobile])
+
+  // Handle navigation prevention during quiz
+  useEffect(() => {
+    if (!takingQuiz) return
+
+    // Prevent browser back button and tab close
+    const handleBeforeUnload = (e) => {
+      if (navigationWarningShown) {
+        // Auto-submit on second attempt
+        confirmSubmitQuiz()
+        e.preventDefault()
+        e.returnValue = ''
+        return
+      } else {
+        // Show warning on first attempt
+        setNavigationWarningShown(true)
+        setShowNavigationWarning(true)
+        e.preventDefault()
+        e.returnValue = ''
+        return
+      }
+    }
+
+    // Handle browser back button
+    const handlePopState = (e) => {
+      if (navigationWarningShown) {
+        // Auto-submit on second attempt
+        confirmSubmitQuiz()
+      } else {
+        // Show warning on first attempt
+        setNavigationWarningShown(true)
+        setShowNavigationWarning(true)
+        // Push a new entry to prevent default back behavior
+        window.history.pushState(null, null, window.location.href)
+      }
+    }
+
+    // Handle keyboard shortcuts for new tab/window
+    const handleKeyDown = (e) => {
+      // Ctrl+T (new tab on Windows/Linux), Cmd+T (new tab on Mac)
+      if ((e.ctrlKey || e.metaKey) && e.key === 't') {
+        e.preventDefault()
+        if (navigationWarningShown) {
+          confirmSubmitQuiz()
+        } else {
+          setNavigationWarningShown(true)
+          setShowNavigationWarning(true)
+        }
+        return
+      }
+      
+      // Ctrl+N (new window)
+      if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+        e.preventDefault()
+        if (navigationWarningShown) {
+          confirmSubmitQuiz()
+        } else {
+          setNavigationWarningShown(true)
+          setShowNavigationWarning(true)
+        }
+        return
+      }
+
+      // Ctrl+Tab (switch tab)
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Tab') {
+        e.preventDefault()
+        if (navigationWarningShown) {
+          confirmSubmitQuiz()
+        } else {
+          setNavigationWarningShown(true)
+          setShowNavigationWarning(true)
+        }
+        return
+      }
+
+      // Alt+Left Arrow (browser back on Windows)
+      if (e.altKey && e.key === 'ArrowLeft') {
+        e.preventDefault()
+        if (navigationWarningShown) {
+          confirmSubmitQuiz()
+        } else {
+          setNavigationWarningShown(true)
+          setShowNavigationWarning(true)
+        }
+        return
+      }
+    }
+
+    window.addEventListener('beforeunload', handleBeforeUnload)
+    window.addEventListener('popstate', handlePopState)
+    window.addEventListener('keydown', handleKeyDown)
+    
+    // Push initial state to track back button
+    window.history.pushState(null, null, window.location.href)
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload)
+      window.removeEventListener('popstate', handlePopState)
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [takingQuiz, navigationWarningShown, answers, currentQuiz])
+
+  // Handle tab switching during quiz
+  useEffect(() => {
+    if (!takingQuiz) return
+
+    const handleVisibilityChange = () => {
+      // When tab/window loses focus or another tab is opened
+      if (document.hidden) {
+        if (!navigationWarningShown) {
+          setNavigationWarningShown(true)
+          setShowNavigationWarning(true)
+        }
+      }
+    }
+
+    const handleWindowBlur = () => {
+      // When user switches to another window/tab
+      if (!navigationWarningShown && takingQuiz) {
+        // Only show warning once per quiz session
+        console.log('User left the tab/window')
+      }
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    window.addEventListener('blur', handleWindowBlur)
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+      window.removeEventListener('blur', handleWindowBlur)
+    }
+  }, [takingQuiz, navigationWarningShown])
+
+  const handleLeftNavClick = (callback) => {
+    if (!takingQuiz) {
+      callback && callback()
+      return
+    }
+
+    if (navigationWarningShown) {
+      // Auto-submit on second attempt
+      confirmSubmitQuiz()
+      return
+    }
+
+    // Show warning on first attempt
+    setNavigationWarningShown(true)
+    setShowNavigationWarning(true)
+    setPendingNavigation(callback)
+  }
 
   // Fetch quizzes
   useEffect(() => {
@@ -183,8 +338,45 @@ const UserQuiz = () => {
   const handleMenuToggle = () => {
     setShowOffcanvas(!showOffcanvas)
   }
+  
+  // Handle continuing navigation after warning
+  const handleContinueNavigation = () => {
+    setShowNavigationWarning(false)
+    // Execute pending navigation if it exists, or auto-submit
+    if (pendingNavigation) {
+      confirmSubmitQuiz()
+    } else {
+      confirmSubmitQuiz()
+    }
+  }
 
-  // Format date as dd/mm/yy
+  // Handle dismissing warning (stay on quiz)
+  const handleStayOnQuiz = () => {
+    setShowNavigationWarning(false)
+    setPendingNavigation(null)
+  }
+
+  // Handle navigation attempts from leftnav
+  const handleNavFromLeftNav = (path) => {
+    if (!takingQuiz) {
+      navigate(path)
+      return
+    }
+
+    if (navigationWarningShown) {
+      // Auto-submit on second attempt
+      confirmSubmitQuiz()
+      // Navigate after submission completes
+      setTimeout(() => navigate(path), 500)
+      return
+    }
+
+    // Show warning on first attempt
+    setNavigationWarningShown(true)
+    setShowNavigationWarning(true)
+    setPendingNavigation(() => () => navigate(path))
+  }
+  
   const formatDateDDMMYY = (date) => {
     const d = String(date.getDate()).padStart(2, '0')
     const m = String(date.getMonth() + 1).padStart(2, '0')
@@ -326,14 +518,22 @@ const UserQuiz = () => {
 
   const confirmSubmitQuiz = async () => {
     try {
-      // Prepare submission payload as per required format
+      // Collect all answers (including unanswered questions)
+      const allAnswers = []
+      for (let i = 0; i < currentQuiz.questions.length; i++) {
+        const question = currentQuiz.questions[i]
+        const selectedOption = answers[i] !== undefined ? answers[i] : -1
+        allAnswers.push({
+          question_id: question.id,
+          selected_option: selectedOption
+        })
+      }
+
+      // Prepare submission payload with all answers
       const submissionData = {
         student_id: uniqueId,
         quiz_id: currentQuiz.quiz_id,
-        answers: Object.keys(answers).map(index => ({
-          question_id: currentQuiz.questions[parseInt(index)].id,
-          selected_option: answers[index]
-        }))
+        answers: allAnswers
       }
 
       console.log('Submitting quiz:', submissionData)
@@ -414,6 +614,11 @@ const UserQuiz = () => {
 
       setShowResults(true)
       setTakingQuiz(false)
+      
+      // Reset navigation warning state after submission
+      setShowNavigationWarning(false)
+      setNavigationWarningShown(false)
+      setPendingNavigation(null)
     } catch (error) {
       console.error('Error submitting quiz:', error)
       const errorMessage = error.response?.data?.message || error.response?.data?.error || error.message
@@ -450,6 +655,53 @@ const UserQuiz = () => {
   }
 
   const currentQuestion = getCurrentQuestion()
+
+  // Navigation Warning Modal Component
+  const NavigationWarningModal = () => (
+    <Modal show={showNavigationWarning} onHide={handleStayOnQuiz} centered backdrop="static" keyboard={false}>
+      <Modal.Header closeButton={false}>
+        <Modal.Title style={{ color: '#dc3545', fontWeight: 'bold' }}>
+          Quiz In Progress
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <div className="text-center mb-3">
+          <p style={{ fontSize: '16px', fontWeight: '500' }}>
+            ⚠️ You are currently taking a quiz!
+          </p>
+        </div>
+        <Alert variant="warning" className="mb-3">
+          <strong>Important:</strong> If you navigate away now, your quiz will be automatically submitted with your current answers.
+          {navigationWarningShown && (
+            <div className="mt-2">
+              <strong className="text-danger">This is your final warning. Any further navigation will auto-submit your quiz.</strong>
+            </div>
+          )}
+        </Alert>
+        <p className="text-muted">
+          {navigationWarningShown 
+            ? 'Are you sure you want to continue and submit the quiz?' 
+            : 'Would you like to continue taking the quiz or submit now?'}
+        </p>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button 
+          variant="primary" 
+          onClick={handleStayOnQuiz}
+          className="fw-bold"
+        >
+          Continue Quiz
+        </Button>
+        <Button 
+          variant={navigationWarningShown ? "danger" : "warning"} 
+          onClick={handleContinueNavigation}
+          className="fw-bold"
+        >
+          {navigationWarningShown ? '⚠️ Submit & Leave' : 'Submit Now'}
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  )
 
   // Wrong Answers Modal Component
   const WrongAnswersModal = () => (
@@ -623,7 +875,8 @@ const UserQuiz = () => {
       <div className="d-flex flex-1">
         <UseLeftNav 
           showOffcanvas={showOffcanvas} 
-          setShowOffcanvas={setShowOffcanvas} 
+          setShowOffcanvas={setShowOffcanvas}
+          onNavAttempt={handleNavFromLeftNav}
         />
         
         <div className="flex-grow-1" style={{ marginLeft: isMobile ? '0px' : '220px', padding: isMobile ? '10px' : '20px', minHeight: 'calc(100vh - 70px)' }}>
@@ -971,6 +1224,7 @@ const UserQuiz = () => {
         </div>
       </div>
 
+      <NavigationWarningModal />
       <WrongAnswersModal />
       <RankModal />
     </div>
