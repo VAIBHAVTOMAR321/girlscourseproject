@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import UserTopNav from './UserTopNav'
 import UseLeftNav from './UseLeftNav'
 import TransText from '../TransText'
-import { FaArrowLeft, FaClock, FaQuestion, FaTrophy, FaCheckCircle, FaTimesCircle, FaChevronRight, FaMedal } from 'react-icons/fa'
+import { FaArrowLeft, FaClock, FaQuestion, FaTrophy, FaCheckCircle, FaTimesCircle, FaChevronRight, FaMedal, FaUsers } from 'react-icons/fa'
 import '../../assets/css/UserQuiz.css'
 import { getTranslation } from '../../utils/translations'
 
@@ -22,6 +22,7 @@ const UserQuiz = () => {
   const [isMobile, setIsMobile] = useState(false)
   const [participatedQuizzes, setParticipatedQuizzes] = useState({})
   const [quizRanks, setQuizRanks] = useState({})
+  const [quizParticipants, setQuizParticipants] = useState({})
   const [showRankModal, setShowRankModal] = useState(false)
   const [selectedQuizRank, setSelectedQuizRank] = useState(null)
   
@@ -516,19 +517,28 @@ const UserQuiz = () => {
       <Modal.Body>
         {selectedQuizRank && (
           <>
-            {selectedQuizRank.userRank && (
+            {selectedQuizRank.userRank ? (
               <div className="mb-4 p-3 bg-primary text-white rounded" style={{ backgroundColor: '#0d6efd' }}>
                 <div className="text-center">
-                  <h5 className="mb-1">Your Rank</h5>
+                  <h5 className="mb-1"><TransText k="quiz.yourRank" as="span" /></h5>
                   <h2 className="mb-0">#{selectedQuizRank.userRank}</h2>
-                  <small>Score: {selectedQuizRank.userScore}</small>
+                  <small><TransText k="quiz.score" as="span" />: {selectedQuizRank.userScore}</small>
+                </div>
+              </div>
+            ) : (
+              <div className="mb-4 p-3 bg-info text-white rounded">
+                <div className="text-center">
+                  <h5 className="mb-1"><TransText k="quiz.topParticipants" as="span" /></h5>
+                  <small><TransText k="quiz.participants" as="span" />: {selectedQuizRank.totalParticipants}</small>
                 </div>
               </div>
             )}
             
             {selectedQuizRank.topThree && selectedQuizRank.topThree.length > 0 && (
               <>
-                <h6 className="mb-3">Top 3 Participants</h6>
+                <h6 className="mb-3">
+                  {selectedQuizRank.userRank ? <TransText k="quiz.topThree" as="span" /> : <TransText k="quiz.topRankers" as="span" />}
+                </h6>
                 {selectedQuizRank.topThree
                   .filter(p => p.rank >= 1 && p.rank <= 3)
                   .map((participant, idx) => {
@@ -551,7 +561,7 @@ const UserQuiz = () => {
                         <small className="text-muted">{participant.student_id}</small>
                       </div>
                       <div className="text-end">
-                        <div className="fw-bold">Score: {participant.score}</div>
+                        <div className="fw-bold"><TransText k="quiz.score" as="span" />: {participant.score}</div>
                         <small className={participant.status === 'passed' ? 'text-success' : 'text-danger'}>
                           {participant.status === 'passed' ? 'Passed' : 'Failed'}
                         </small>
@@ -562,7 +572,7 @@ const UserQuiz = () => {
                 
                 {selectedQuizRank.userRank && selectedQuizRank.userRank > 3 && (
                   <div className="mt-3 p-3 bg-light rounded text-center">
-                    <small className="text-muted">Your rank is #{selectedQuizRank.userRank}, not in top 3</small>
+                    <small className="text-muted"><TransText k="quiz.rankNotInTop" as="span" /> #{selectedQuizRank.userRank}</small>
                   </div>
                 )}
               </>
@@ -570,7 +580,7 @@ const UserQuiz = () => {
             
             {selectedQuizRank.totalParticipants && (
               <div className="text-center mt-3 text-muted">
-                <small>Total Participants: {selectedQuizRank.totalParticipants}</small>
+                <small><TransText k="quiz.totalParticipants" as="span" />: {selectedQuizRank.totalParticipants}</small>
               </div>
             )}
           </>
@@ -645,7 +655,7 @@ const UserQuiz = () => {
                                   <TransText k="quiz.startTime" as="span" />: {formatDateDDMMYY(startTime)}{' '}
                                   {startTime.toLocaleTimeString(language === 'hi' ? 'hi-IN' : 'en-US', { hour: '2-digit', minute: '2-digit' })}
                                 </small>
-                                <small className="text-muted d-block">
+                                <small className="text-muted d-block mb-1">
                                   <TransText k="quiz.endTime" as="span" />: {formatDateDDMMYY(endTime)}{' '}
                                   {endTime.toLocaleTimeString(language === 'hi' ? 'hi-IN' : 'en-US', { hour: '2-digit', minute: '2-digit' })}
                                 </small>
@@ -654,21 +664,21 @@ const UserQuiz = () => {
                               <div className="mt-auto">
                                 {participatedQuizzes[quiz.quiz_id] ? (
                                   <div className="d-flex flex-column gap-2">
-                                    {quizRanks[quiz.quiz_id]?.userRank && (
-                                      <div className="text-center mb-2">
-                                        <Badge bg="warning" className="py-2 px-3">
-                                          <FaMedal className="me-1" />
-                                          Rank #{quizRanks[quiz.quiz_id].userRank}
+                                    <div className="d-flex justify-content-between gap-2">
+                                      <Badge bg="primary" className="flex-fill py-2">
+                                        {quizRanks[quiz.quiz_id]?.totalParticipants || 0}
+                                      </Badge>
+                                      {quizRanks[quiz.quiz_id]?.userRank && (
+                                        <Badge bg="warning" className="flex-fill py-2">
+                                          <TransText k="quiz.rank" as="span" />: #{quizRanks[quiz.quiz_id].userRank}
                                         </Badge>
-                                      </div>
-                                    )}
-                                    {quizRanks[quiz.quiz_id]?.userScore !== undefined && (
-                                      <div className="text-center">
-                                        <Badge bg="success" className="py-2 px-3">
-                                          Score: {quizRanks[quiz.quiz_id].userScore}
+                                      )}
+                                      {quizRanks[quiz.quiz_id]?.userScore !== undefined && (
+                                        <Badge bg="success" className="flex-fill py-2">
+                                          <TransText k="quiz.score" as="span" />: {quizRanks[quiz.quiz_id].userScore}
                                         </Badge>
-                                      </div>
-                                    )}
+                                      )}
+                                    </div>
                                     <Button
                                       variant="info"
                                       className="w-100"
@@ -688,16 +698,31 @@ const UserQuiz = () => {
                                     </Button>
                                   </div>
                                 ) : (
-                                  <Button
-                                    variant="primary"
-                                    className="w-100"
-                                    onClick={() => startQuiz(quiz)}
-                                  >
-                                    <>
-                                      <TransText k="quiz.startQuiz" as="span" />
-                                      <FaChevronRight className="ms-2" />
-                                    </>
-                                  </Button>
+                                  <div className="d-flex flex-column gap-2">
+                                    {quizRanks[quiz.quiz_id]?.totalParticipants > 0 && (
+                                      <Button
+                                        variant="outline-primary"
+                                        className="w-100"
+                                        onClick={() => {
+                                          setSelectedQuizRank({ quizId: quiz.quiz_id, ...quizRanks[quiz.quiz_id] })
+                                          setShowRankModal(true)
+                                        }}
+                                      >
+                                        <FaUsers className="me-2" />
+                                        {quizRanks[quiz.quiz_id].totalParticipants} <TransText k="quiz.participants" as="span" />
+                                      </Button>
+                                    )}
+                                    <Button
+                                      variant="primary"
+                                      className="w-100"
+                                      onClick={() => startQuiz(quiz)}
+                                    >
+                                      <>
+                                        <TransText k="quiz.startQuiz" as="span" />
+                                        <FaChevronRight className="ms-2" />
+                                      </>
+                                    </Button>
+                                  </div>
                                 )}
                               </div>
                             </Card.Body>
