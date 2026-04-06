@@ -404,7 +404,7 @@ const UserProfile = () => {
                           <TransText k="profile.information" as="span" />
                         </h6>
                       </Card.Header>
-                     <Card.Body className="p-4">
+                     <Card.Body className="">
                       <Row className="g-3">
                         {userRoleType === 'student-unpaid' ? (
                           <>

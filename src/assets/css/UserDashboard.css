@@ -1077,7 +1077,7 @@ padding: 4px !important;
 /* Submodule alternating layout */
 .submodule-row {
   margin-bottom: 30px;
-  padding: 20px;
+ padding-right: 0px !important;
   background: #fff;
   border-radius: 10px;
 }
