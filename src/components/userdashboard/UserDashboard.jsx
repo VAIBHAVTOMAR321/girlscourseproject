@@ -978,25 +978,27 @@ const UserDashboard = () => {
                         </h4>
                        
                        <div className="d-flex align-items-center gap-2">
-                         {/* Language Toggle */}
-                         <div className="btn-group" role="group">
-                           <Button 
-                             variant={courseLanguage === 'hindi' ? 'primary' : 'outline-primary'}
-                             size="sm"
-                             onClick={() => setCourseLanguage('hindi')}
-                             className="fw-semibold"
-                           >
-                             हिंदी
-                           </Button>
-                           <Button 
-                             variant={courseLanguage === 'english' ? 'primary' : 'outline-primary'}
-                             size="sm"
-                             onClick={() => setCourseLanguage('english')}
-                             className="fw-semibold"
-                           >
-                             English
-                           </Button>
-                         </div>
+                          {/* Language Toggle - Floating */}
+                          <div className="btn-group" role="group" style={{ position: 'fixed', right: '20px', top: '12%', transform: 'translateY(-50%)', zIndex: 1050, boxShadow: '0 4px 12px rgba(0,0,0,0.15)', borderRadius: '25px', overflow: 'hidden' }}>
+                            <Button 
+                              variant={courseLanguage === 'hindi' ? 'dark' : 'outline-dark'}
+                              size="sm"
+                              onClick={() => setCourseLanguage('hindi')}
+                              className="fw-semibold"
+                              style={courseLanguage === 'hindi' ? { backgroundColor: 'black', borderColor: 'black', color: 'white' } : {}}
+                            >
+                              हिंदी
+                            </Button>
+                            <Button 
+                              variant={courseLanguage === 'english' ? 'dark' : 'outline-dark'}
+                              size="sm"
+                              onClick={() => setCourseLanguage('english')}
+                              className="fw-semibold"
+                              style={courseLanguage === 'english' ? { backgroundColor: 'black', borderColor: 'black', color: 'white' } : {}}
+                            >
+                              English
+                            </Button>
+                          </div>
 
                          {/* Certificate Button */}
                          {isCertificateGenerated() ? (
@@ -1245,19 +1247,21 @@ const UserDashboard = () => {
                                              {/* Determine layout based on image presence and alternating pattern */}
                                              {(() => {
                                                const hasImage = subModule.image;
-                                               let contentCol, imageCol, contentFirst;
+                                                let contentCol, imageCol, contentFirst;
 
-                                               if (hasImage) {
-                                                 // Alternating layout when image exists
-                                                 contentCol = subModuleIndex % 2 === 0 ? 7 : 5;
-                                                 imageCol = subModuleIndex % 2 === 0 ? 5 : 7;
-                                                 contentFirst = subModuleIndex % 2 === 0;
-                                               } else {
-                                                 // Full width content when no image
-                                                 contentCol = 12;
-                                                 imageCol = 0;
-                                                 contentFirst = true;
-                                               }
+                                                if (hasImage) {
+                                                  // Alternating layout when image exists
+                                                  // Even index (0, 2, 4): Content col-8 left, Image col-4 right
+                                                  // Odd index (1, 3, 5): Image col-4 left, Content col-8 right
+                                                  contentCol = subModuleIndex % 2 === 0 ? 8 : 8;
+                                                  imageCol = subModuleIndex % 2 === 0 ? 4 : 4;
+                                                  contentFirst = subModuleIndex % 2 === 0;
+                                                } else {
+                                                  // Full width content when no image
+                                                  contentCol = 12;
+                                                  imageCol = 0;
+                                                  contentFirst = true;
+                                                }
 
                                                // Render content section
                                                const contentElement = (
@@ -1367,18 +1371,22 @@ const UserDashboard = () => {
                                                  </Col>
                                                ) : null;
 
-                                               // Order based on alternating pattern or content-first when no image
-                                               return contentFirst ? (
-                                                 <>
-                                                   {contentElement}
-                                                   {imageElement}
-                                                 </>
-                                               ) : (
-                                                 <>
-                                                   {imageElement}
-                                                   {contentElement}
-                                                 </>
-                                               );
+                                                 // Order based on alternating pattern or content-first when no image
+                                                 return (
+                                                   <Row className={`align-items-center submodule-row ${contentFirst ? '' : 'flex-row-reverse'}`} key={subModule.sub_module_id}>
+                                                     {contentFirst ? (
+                                                       <>
+                                                         {contentElement}
+                                                         {imageElement}
+                                                       </>
+                                                     ) : (
+                                                       <>
+                                                         {imageElement}
+                                                         {contentElement}
+                                                       </>
+                                                     )}
+                                                   </Row>
+                                                );
                                              })()}
                                            </Row>
                                         </div>
