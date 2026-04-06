@@ -20,6 +20,7 @@ const UserQuiz = () => {
   const [loading, setLoading] = useState(true)
   const [showOffcanvas, setShowOffcanvas] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
+  const [participatedQuizzes, setParticipatedQuizzes] = useState({})
   
   // Quiz taking state
   const [takingQuiz, setTakingQuiz] = useState(false)
@@ -82,8 +83,32 @@ const UserQuiz = () => {
       }
     }
 
+    const fetchParticipatedQuizzes = async () => {
+      try {
+        const config = {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`
+          }
+        }
+        const response = await axios.get('https://brjobsedu.com/girls_course/girls_course_backend/api/quiz-participants/', config)
+        
+        if (response.data.status && response.data.data) {
+          const participated = {}
+          response.data.data.forEach(participant => {
+            if (participant.student?.student_id === uniqueId) {
+              participated[participant.quiz_id] = true
+            }
+          })
+          setParticipatedQuizzes(participated)
+        }
+      } catch (error) {
+        console.error('Error fetching participated quizzes:', error)
+      }
+    }
+
     fetchQuizzes()
-  }, [accessToken])
+    fetchParticipatedQuizzes()
+  }, [accessToken, uniqueId])
 
   // Quiz timer
   useEffect(() => {
@@ -495,16 +520,26 @@ const UserQuiz = () => {
                               </div>
 
                               <div className="mt-auto">
-                                <Button
-                                  variant="primary"
-                                  className="w-100"
-                                  onClick={() => startQuiz(quiz)}
-                                >
-                                  <>
-                                    <TransText k="quiz.startQuiz" as="span" />
-                                    <FaChevronRight className="ms-2" />
-                                  </>
-                                </Button>
+                                {participatedQuizzes[quiz.quiz_id] ? (
+                                  <Button
+                                    variant="secondary"
+                                    className="w-100"
+                                    disabled
+                                  >
+                                    <TransText k="quiz.alreadyAttempted" as="span" />
+                                  </Button>
+                                ) : (
+                                  <Button
+                                    variant="primary"
+                                    className="w-100"
+                                    onClick={() => startQuiz(quiz)}
+                                  >
+                                    <>
+                                      <TransText k="quiz.startQuiz" as="span" />
+                                      <FaChevronRight className="ms-2" />
+                                    </>
+                                  </Button>
+                                )}
                               </div>
                             </Card.Body>
                           </Card>
