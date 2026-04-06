@@ -338,17 +338,17 @@ const UserProfile = () => {
                    </Card>
                     
                     {/* Quiz Progress Card */}
-                    <Card className="shadow-sm mb-4 border-0 quiz-progress-card">
+                    <Card className="shadow-sm mb-4 border-0 quiz-progress-card mt-3">
                       <Card.Body className="p-3">
-                         <div className="d-flex align-items-center justify-content-between mb-3">
+                         <div className="d-flex align-items-center justify-content-between  mb-3">
                            <div className="d-flex align-items-center">
-                             <div className="bg-white bg-opacity-20 rounded-circle p-2 me-2 quiz-icon-container">
-                               <FaChartLine className=" quiz-chart-icon" />
-                             </div>
-                             <div>
-                               <h6 className="mb-0 fw-bold quiz-title">Quiz Performance</h6>
-                               <small className="text-white-50 quiz-subtitle">Track your progress</small>
-                             </div>
+                              <div className="rounded-circle p-2 me-2 quiz-icon-container">
+                                <FaChartLine className="quiz-chart-icon" />
+                              </div>
+                              <div>
+                                <h6 className="mb-0 fw-bold quiz-title">Quiz Performance</h6>
+                                <small className="quiz-subtitle">Track your progress</small>
+                              </div>
                            </div>
                            <div className="text-end">
                              <div className="fw-bold quiz-percentage">
@@ -375,15 +375,15 @@ const UserProfile = () => {
                         
                          <Row className="text-center g-2">
                             <Col xs={6}>
-                              <div className="bg-white bg-opacity-10 rounded-2 py-2 stat-box">
+                              <div className="rounded-2 py-2 stat-box">
                                 <div className="fw-bold stat-count">{quizProgress.participated}</div>
-                                <div className="small text-white-50 stat-text">Completed</div>
+                                <div className="small stat-text">Completed</div>
                               </div>
                             </Col>
                             <Col xs={6}>
-                              <div className="bg-white bg-opacity-10 rounded-2 py-2 stat-box">
+                              <div className="rounded-2 py-2 stat-box">
                                 <div className="fw-bold stat-count">{quizProgress.total}</div>
-                                <div className="small text-white-50 stat-text">Total</div>
+                                <div className="small stat-text">Total</div>
                               </div>
                             </Col>
                          </Row>
@@ -398,7 +398,7 @@ const UserProfile = () => {
                       </Card.Body>
                     </Card>
 
-                    <Card className="shadow-sm border-0 profile-details-card">
+                    <Card className="shadow-sm border-0 profile-details-card mt-4">
                       <Card.Header className="bg-white border-bottom pt-4 pb-3 px-4 card-header-custom">
                         <h6 className="mb-0 card-title">
                           <TransText k="profile.information" as="span" />
