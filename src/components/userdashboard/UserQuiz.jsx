@@ -792,23 +792,16 @@ const UserQuiz = () => {
                   </Card>
 
                    <div className="d-flex gap-2 justify-content-center mt-3 flex-wrap">
-                     <Button
-                       variant="primary"
-                       onClick={handleRetakeQuiz}
-                       className="d-flex align-items-center"
-                     >
-                       <TransText k="quiz.retakeQuiz" as="span" />
-                     </Button>
-                     {wrongAnswers.length > 0 && (
-                       <Button
-                         variant="warning"
-                         onClick={() => setShowWrongAnswersModal(true)}
-                         className="d-flex align-items-center"
-                       >
-                         <FaTimesCircle className="me-2" />
-                         <TransText k="quiz.viewWrongAnswers" as="span" />
-                       </Button>
-                     )}
+                      {wrongAnswers.length > 0 && (
+                        <Button
+                          variant="warning"
+                          onClick={() => setShowWrongAnswersModal(true)}
+                          className="d-flex align-items-center"
+                        >
+                          <FaTimesCircle className="me-2" />
+                          <TransText k="quiz.viewWrongAnswers" as="span" />
+                        </Button>
+                      )}
                       <Button
                         variant="outline-secondary"
                         onClick={() => {
@@ -816,7 +809,7 @@ const UserQuiz = () => {
                           setCurrentQuiz(null)
                           setQuizResults(null)
                           setRefreshKey(prev => prev + 1)
-                          navigate('/UserProfile', { state: { fromQuiz: true } })
+                          navigate('/UserQuiz', { state: { fromQuiz: true } })
                         }}
                         className="d-flex align-items-center"
                       >
