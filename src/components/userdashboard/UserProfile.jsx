@@ -340,33 +340,32 @@ const UserProfile = () => {
                       boxShadow: '0 4px 15px rgba(30, 64, 175, 0.25)',
                       overflow: 'hidden'
                     }}>
-                      <Card.Body className="p-4">
-                        <div className="d-flex align-items-center justify-content-between mb-5">
+                      <Card.Body className="p-3">
+                        <div className="d-flex align-items-center justify-content-between mb-3">
                           <div className="d-flex align-items-center">
-                            <div className="bg-white bg-opacity-20 rounded-circle p-3 me-3" style={{ backdropFilter: 'blur(10px)', width: '65px', height: '65px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(255,255,255,0.3)' }}>
-                              <FaChartLine className="text-white" style={{ fontSize: '28px' }} />
+                            <div className="bg-white bg-opacity-20 rounded-circle p-2 me-2" style={{ backdropFilter: 'blur(10px)', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(255,255,255,0.3)' }}>
+                              <FaChartLine className="text-white" style={{ fontSize: '18px' }} />
                             </div>
                             <div>
-                              <h5 className="mb-0 fw-bold" style={{ fontSize: '1.15rem', letterSpacing: '0.3px' }}>Quiz Performance</h5>
-                              <small className="text-white-50" style={{ fontSize: '0.85rem' }}>Track your progress</small>
+                              <h6 className="mb-0 fw-bold" style={{ fontSize: '1rem' }}>Quiz Performance</h6>
+                              <small className="text-white-50" style={{ fontSize: '0.75rem' }}>Track your progress</small>
                             </div>
                           </div>
                           <div className="text-end">
-                            <div className="fw-bold" style={{ fontSize: '2.8rem', textShadow: '0 2px 10px rgba(0,0,0,0.3)', letterSpacing: '-1px' }}>
-                              {quizProgress.averagePercentage}<span style={{ fontSize: '1.5rem' }}>%</span>
+                            <div className="fw-bold" style={{ fontSize: '1.8rem', textShadow: '0 2px 10px rgba(0,0,0,0.3)' }}>
+                              {quizProgress.averagePercentage}<span style={{ fontSize: '1rem' }}>%</span>
                             </div>
-                            <small className="text-white-50" style={{ fontSize: '0.85rem' }}>Average Score</small>
                           </div>
                         </div>
                         
-                        <div className="mb-5">
+                        <div className="mb-3">
                           <div style={{ 
                             background: 'rgba(255,255,255,0.15)', 
-                            borderRadius: '12px', 
-                            height: '36px',
+                            borderRadius: '8px', 
+                            height: '20px',
                             overflow: 'hidden',
                             position: 'relative',
-                            boxShadow: 'inset 0 2px 8px rgba(0,0,0,0.2)',
+                            boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.2)',
                             border: '1px solid rgba(255,255,255,0.2)'
                           }}>
                             <div style={{ 
@@ -377,93 +376,39 @@ const UserProfile = () => {
                                   ? 'linear-gradient(90deg, #f59e0b, #fbbf24)' 
                                   : 'linear-gradient(90deg, #ef4444, #f87171)',
                               height: '100%',
-                              borderRadius: '12px',
+                              borderRadius: '8px',
                               transition: 'width 1.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
-                              boxShadow: '0 2px 12px rgba(0,0,0,0.3)',
-                              animation: 'progressFill 1.5s ease-out'
+                              boxShadow: '0 2px 8px rgba(0,0,0,0.3)'
                             }} />
-                            <div style={{
-                              position: 'absolute',
-                              top: '50%',
-                              left: '50%',
-                              transform: 'translate(-50%, -50%)',
-                              fontSize: '13px',
-                              fontWeight: '600',
-                              textShadow: '0 1px 3px rgba(0,0,0,0.5)',
-                              zIndex: 1,
-                              letterSpacing: '0.5px'
-                            }}>
-                              {quizProgress.averagePercentage}% Complete
-                            </div>
                           </div>
                         </div>
                         
-                        <Row className="text-center g-2 mb-4">
+                        <Row className="text-center g-2">
                           <Col xs={6}>
-                            <div className="bg-white bg-opacity-10 rounded-3 py-3" style={{ backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.15)' }}>
-                              <div className="fs-3 fw-bold" style={{ letterSpacing: '1px' }}>{quizProgress.participated}</div>
-                              <div className="small text-white-50" style={{ fontSize: '0.85rem', marginTop: '4px' }}>
-                                ✓ Completed
-                              </div>
+                            <div className="bg-white bg-opacity-10 rounded-2 py-2" style={{ backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.15)' }}>
+                              <div className="fs-5 fw-bold">{quizProgress.participated}</div>
+                              <div className="small text-white-50" style={{ fontSize: '0.7rem' }}>Completed</div>
                             </div>
                           </Col>
                           <Col xs={6}>
-                            <div className="bg-white bg-opacity-10 rounded-3 py-3" style={{ backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.15)' }}>
-                              <div className="fs-3 fw-bold" style={{ letterSpacing: '1px' }}>{quizProgress.total}</div>
-                              <div className="small text-white-50" style={{ fontSize: '0.85rem', marginTop: '4px' }}>
-                                ★ Total
-                              </div>
+                            <div className="bg-white bg-opacity-10 rounded-2 py-2" style={{ backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.15)' }}>
+                              <div className="fs-5 fw-bold">{quizProgress.total}</div>
+                              <div className="small text-white-50" style={{ fontSize: '0.7rem' }}>Total</div>
                             </div>
                           </Col>
                         </Row>
                         
-                        {quizProgress.participated > 0 && (
-                          <div className="mt-4 pt-3 border-top border-white border-opacity-20">
-                            <Row className="text-center g-2">
-                              <Col xs={4}>
-                                <div className="text-center">
-                                  <div className="fs-5 fw-bold mb-1">
-                                    {quizProgress.averagePercentage >= 70 ? '✓' : quizProgress.averagePercentage >= 50 ? '◐' : '◯'}
-                                  </div>
-                                  <small className="text-white-50" style={{ fontSize: '0.8rem' }}>Status</small>
-                                </div>
-                              </Col>
-                              <Col xs={4}>
-                                <div className="text-center">
-                                  <div className="fs-5 fw-bold mb-1">
-                                    {quizProgress.total > 0 ? Math.round((quizProgress.participated / quizProgress.total) * 100) : 0}%
-                                  </div>
-                                  <small className="text-white-50" style={{ fontSize: '0.8rem' }}>Complete</small>
-                                </div>
-                              </Col>
-                              <Col xs={4}>
-                                <div className="text-center">
-                                  <div className="fs-5 fw-bold mb-1">
-                                    {quizProgress.total - quizProgress.participated}
-                                  </div>
-                                  <small className="text-white-50" style={{ fontSize: '0.8rem' }}>Remain</small>
-                                </div>
-                              </Col>
-                            </Row>
-                          </div>
-                        )}
-                        
                         {quizProgress.participated === quizProgress.total && quizProgress.total > 0 && (
-                          <div className="mt-4 text-center">
-                            <Badge className="py-2 px-4" style={{ borderRadius: '20px', fontSize: '12px', fontWeight: '600', backgroundColor: 'rgba(34, 197, 94, 0.9)', border: '1px solid rgba(34, 197, 94, 0.6)' }}>
-                              ★ All Quizzes Completed!
+                          <div className="mt-2 text-center">
+                            <Badge bg="warning" text="dark" className="py-1 px-2" style={{ borderRadius: '15px', fontSize: '0.75rem' }}>
+                              🎉 All Completed!
                             </Badge>
                           </div>
                         )}
                       </Card.Body>
-                      <style>{`
-                        @keyframes progressFill {
-                          from { width: 0%; }
-                        }
-                      `}</style>
                     </Card>
 
-                   <Card className="shadow-sm border-0 profile-details-card" style={{ borderRadius: '12px', backgroundColor: '#ffffff', boxShadow: '0 1px 3px rgba(0, 0, 0, 0.08)' }}>
+                    <Card className="shadow-sm border-0 profile-details-card" style={{ borderRadius: '12px', backgroundColor: '#ffffff', boxShadow: '0 1px 3px rgba(0, 0, 0, 0.08)' }}>
                      <Card.Header className="bg-white border-bottom pt-4 pb-3 px-4" style={{ borderBottomColor: '#e5e7eb', borderRadius: '12px 12px 0 0', borderWidth: '1px' }}>
                        <h6 className="mb-0" style={{ fontWeight: '700', fontSize: '1rem', color: '#1a202c', letterSpacing: '0.3px' }}>
                          <TransText k="profile.information" as="span" />
