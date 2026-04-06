@@ -252,7 +252,7 @@ const UserProfile = () => {
                 <Col lg={12}>
                    {/* Profile Header Card */}
                    <Card className="shadow-sm mb-4 border-0 profile-header-card" style={{ borderRadius: '12px', background: '#ffffff', boxShadow: '0 1px 3px rgba(0, 0, 0, 0.08)' }}>
-                     <Card.Body className="p-4">
+                     <Card.Body className="p-2">
                        <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
                          <div className="d-flex align-items-center gap-3">
                            {/* Profile Image */}
@@ -272,7 +272,7 @@ const UserProfile = () => {
                                  style={{ width: '90px', height: '90px', objectFit: 'cover', border: '3px solid #f0f4f8' }}
                                />
                              ) : (
-                               <div className="profile-image bg-gradient-primary rounded-circle d-flex align-items-center justify-content-center" style={{ width: '90px', height: '90px', border: '3px solid #f0f4f8' }}>
+                               <div className="profile-image bg-gradient-primary rounded-circle d-flex align-items-center justify-content-center" style={{ width: '56px', height: '56px', border: '3px solid #f0f4f8' }}>
                                  <FaUser className="text-white" style={{ fontSize: '36px' }} />
                                </div>
                              )}
