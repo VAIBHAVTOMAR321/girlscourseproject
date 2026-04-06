@@ -135,21 +135,20 @@
 }
 
 .option-button {
-  border: 2px solid #e9ecef;
+  border: 1px solid #dee2e6;
   background: white;
   color: #212529;
-  transition: all 0.2s ease;
 }
 
 .option-button:hover {
-  border-color: #007bff;
-  background-color: #f0f3f7;
-  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.1);
+  border-color: #dee2e6;
+  background-color: white;
+  box-shadow: none;
 }
 
 .option-button.active {
-  border-color: #007bff;
-  background-color: #007bff;
+  border-color: #0d6efd;
+  background-color: #0d6efd;
   color: white;
 }
 

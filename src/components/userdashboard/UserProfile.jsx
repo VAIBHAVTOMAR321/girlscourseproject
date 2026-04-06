@@ -3,7 +3,7 @@ import { Container, Row, Col, Card, Spinner, Button, Modal, Form, Alert, Badge, 
 import axios from 'axios'
 import { useAuth } from '../../contexts/AuthContext'
 import { useLanguage } from '../../contexts/LanguageContext'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import UserTopNav from './UserTopNav'
 import UseLeftNav from './UseLeftNav'
 import TransText from '../TransText'
@@ -21,7 +21,17 @@ const UserProfile = () => {
   const [previewImage, setPreviewImage] = useState(null)
   const [uploading, setUploading] = useState(false)
   const [quizProgress, setQuizProgress] = useState({ participated: 0, total: 0, averagePercentage: 0 })
+  const [refreshKey, setRefreshKey] = useState(0)
   const navigate = useNavigate()
+  const location = useLocation()
+
+  // Refresh quiz progress when returning from quiz
+  useEffect(() => {
+    if (location.state?.fromQuiz) {
+      setRefreshKey(prev => prev + 1)
+      navigate(location.pathname, { replace: true, state: {} })
+    }
+  }, [location])
 
   // Check mobile view
   useEffect(() => {
@@ -147,7 +157,7 @@ const UserProfile = () => {
     }
 
     fetchQuizProgress()
-  }, [uniqueId, accessToken])
+  }, [uniqueId, accessToken, refreshKey])
 
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text)

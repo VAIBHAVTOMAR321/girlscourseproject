@@ -25,6 +25,7 @@ const UserQuiz = () => {
   const [quizParticipants, setQuizParticipants] = useState({})
   const [showRankModal, setShowRankModal] = useState(false)
   const [selectedQuizRank, setSelectedQuizRank] = useState(null)
+  const [refreshKey, setRefreshKey] = useState(0)
   
   // Quiz taking state
   const [takingQuiz, setTakingQuiz] = useState(false)
@@ -161,7 +162,7 @@ const UserQuiz = () => {
 
     fetchQuizzes()
     fetchParticipatedQuizzes()
-  }, [accessToken, uniqueId])
+  }, [accessToken, uniqueId, refreshKey])
 
   // Quiz timer
   useEffect(() => {
@@ -808,17 +809,19 @@ const UserQuiz = () => {
                          <TransText k="quiz.viewWrongAnswers" as="span" />
                        </Button>
                      )}
-                     <Button
-                       variant="outline-secondary"
-                       onClick={() => {
-                         setShowResults(false)
-                         setCurrentQuiz(null)
-                         setQuizResults(null)
-                       }}
-                       className="d-flex align-items-center"
-                     >
-                       <TransText k="quiz.backToQuizzes" as="span" />
-                     </Button>
+                      <Button
+                        variant="outline-secondary"
+                        onClick={() => {
+                          setShowResults(false)
+                          setCurrentQuiz(null)
+                          setQuizResults(null)
+                          setRefreshKey(prev => prev + 1)
+                          navigate('/UserProfile', { state: { fromQuiz: true } })
+                        }}
+                        className="d-flex align-items-center"
+                      >
+                        <TransText k="quiz.backToQuizzes" as="span" />
+                      </Button>
                    </div>
                 </div>
               </>
@@ -847,33 +850,41 @@ const UserQuiz = () => {
                           <h5 className="mb-3">
                             <TransText k="quiz.question" as="span" /> {currentQuestionIndex + 1} <TransText k="quiz.of" as="span" /> {currentQuiz.questions.length}
                           </h5>
-                          <h6 className="mb-3">
-                            {language === 'hi' && currentQuestion.question_text_hindi 
-                              ? currentQuestion.question_text_hindi 
-                              : currentQuestion.question_text}
-                          </h6>
+                          <div className="mb-3">
+                            {currentQuestion.question_text && (
+                              <h6 className="mb-2" style={{ fontWeight: '500' }}>{currentQuestion.question_text}</h6>
+                            )}
+                            {currentQuestion.question_text_hindi && (
+                              <h6 className="mb-0 text-muted" style={{ fontWeight: '400' }}>{currentQuestion.question_text_hindi}</h6>
+                            )}
+                          </div>
                         </div>
 
                         <div className="options mb-4">
-                          {(language === 'hi' && currentQuestion.options_hindi ? currentQuestion.options_hindi : currentQuestion.options).map((option, idx) => {
+                          {currentQuestion.options && currentQuestion.options.map((option, idx) => {
                             const isSelected = answers[currentQuestionIndex] === idx
+                            const hindiOption = currentQuestion.options_hindi?.[idx]
                             return (
                               <div key={idx} className="mb-2">
                                 <Button 
-                                  variant={isSelected ? 'primary' : 'outline-primary'}
                                   className="w-100 text-start option-button"
                                   onClick={() => handleAnswerSelect(idx)}
-                                  style={isSelected ? { 
-                                    backgroundColor: '#0d6efd',
-                                    borderColor: '#0d6efd',
-                                    boxShadow: '0 0 0 3px rgba(13, 110, 253, 0.25)',
-                                    fontWeight: '600'
-                                  } : {
-                                    borderWidth: '2px'
+                                  style={{ 
+                                    backgroundColor: isSelected ? '#0d6efd' : '#ffffff',
+                                    borderColor: isSelected ? '#0d6efd' : '#dee2e6',
+                                    color: isSelected ? '#ffffff' : '#212529',
+                                    fontWeight: '500',
+                                    padding: '12px 16px',
+                                    borderRadius: '8px',
+                                    borderWidth: '1px',
+                                    boxShadow: 'none'
                                   }}
                                 >
-                                  <span className="option-letter me-2">{String.fromCharCode(65 + idx)}</span>
+                                  <span className="option-letter me-2" style={{ fontWeight: '600' }}>{String.fromCharCode(65 + idx)}.</span>
                                   {option}
+                                  {hindiOption && (
+                                    <span className="ms-2" style={{ fontSize: '0.9em', color: isSelected ? '#ffffff' : '#212529' }}>({hindiOption})</span>
+                                  )}
                                 </Button>
                               </div>
                             )
