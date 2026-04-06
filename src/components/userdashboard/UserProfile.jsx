@@ -8,6 +8,7 @@ import UserTopNav from './UserTopNav'
 import UseLeftNav from './UseLeftNav'
 import TransText from '../TransText'
 import { FaCopy, FaArrowLeft, FaCheck, FaEnvelope, FaPhone, FaMapMarkerAlt, FaIdCard, FaCalendarAlt, FaBuilding, FaUserShield, FaUser, FaChartLine } from 'react-icons/fa'
+import '../../components/admindashboard/userprofile.css'
 
 const UserProfile = () => {
   const { uniqueId, accessToken, updateProfilePhoto, userRoleType } = useAuth()
@@ -230,15 +231,14 @@ const UserProfile = () => {
           setShowOffcanvas={setShowOffcanvas} 
         />
         
-        <div className="flex-grow-1" style={{ marginLeft: isMobile ? '0px' : '220px', padding: isMobile ? '12px' : '28px', minHeight: 'calc(100vh - 70px)', backgroundColor: '#fafbfc' }}>
+        <div className={`flex-grow-1 main-content-area ${isMobile ? 'mobile' : ''}`}>
           <Container fluid className='fixed-profile'>
             {/* Back Button */}
             <div className="mb-5">
-              <Button 
-                variant="outline-secondary" 
-                onClick={() => navigate('/UserDashboard')} 
-                className="d-flex align-items-center"
-                style={{ borderColor: '#d1d5db', color: '#4b5563', fontSize: '0.95rem', fontWeight: '500', padding: '8px 16px' }}
+              <Button
+                variant="outline-secondary"
+                onClick={() => navigate('/UserDashboard')}
+                className="d-flex align-items-center back-button"
               >
                 <FaArrowLeft className="me-2" />
                 <TransText k="profile.backToDashboard" as="span" />
@@ -246,171 +246,151 @@ const UserProfile = () => {
             </div>
             
             {updateSuccess && (
-              <Alert variant="success" className="mb-4 animate-fade-in border-0" style={{ backgroundColor: '#d1fae5', color: '#065f46', borderRadius: '8px', padding: '14px 18px', fontWeight: '500' }}>
+              <Alert variant="success" className="mb-4 animate-fade-in border-0 success-alert">
                 <FaCheck className="me-2" />
                 <TransText k="profile.profileUpdated" as="span" />
               </Alert>
             )}
 
             {loading ? (
-              <div className="text-center py-5" style={{ paddingTop: '60px', paddingBottom: '60px' }}>
-                <Spinner animation="border" variant="primary" style={{ width: '50px', height: '50px', opacity: 0.8 }} />
-                <p className="mt-4" style={{ color: '#6b7280', fontWeight: '500', fontSize: '0.95rem' }}><TransText k="profile.loading" as="span" /></p>
+              <div className="text-center py-5 loading-no-data-padding">
+                <Spinner animation="border" variant="primary" className="loading-spinner" />
+                <p className="mt-4 loading-text"><TransText k="profile.loading" as="span" /></p>
               </div>
             ) : userData ? (
               <Row>
                 <Col lg={12}>
                    {/* Profile Header Card */}
-                   <Card className="shadow-sm mb-4 border-0 profile-header-card" style={{ borderRadius: '12px', background: '#ffffff', boxShadow: '0 1px 3px rgba(0, 0, 0, 0.08)' }}>
+                   <Card className="shadow-sm mb-4 border-0 profile-header-card">
                      <Card.Body className="p-2">
                        <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
                          <div className="d-flex align-items-center gap-3">
                            {/* Profile Image */}
                            <div className="profile-image-wrapper">
-                             {previewImage ? (
-                               <img 
-                                 src={previewImage} 
-                                 alt="Preview" 
-                                 className="profile-image rounded-circle" 
-                                 style={{ width: '90px', height: '90px', objectFit: 'cover', border: '3px solid #f0f4f8' }}
-                               />
-                             ) : (userRoleType !== 'student-unpaid' && userData.profile_photo) ? (
-                               <img 
-                                 src={`https://brjobsedu.com/girls_course/girls_course_backend/${userData.profile_photo}`} 
-                                 alt="Profile" 
-                                 className="profile-image rounded-circle" 
-                                 style={{ width: '90px', height: '90px', objectFit: 'cover', border: '3px solid #f0f4f8' }}
-                               />
-                             ) : (
-                               <div className="profile-image bg-gradient-primary rounded-circle d-flex align-items-center justify-content-center" style={{ width: '56px', height: '56px', border: '3px solid #f0f4f8' }}>
-                                 <FaUser className="text-white" style={{ fontSize: '36px' }} />
-                               </div>
-                             )}
+                              {previewImage ? (
+                                <img
+                                  src={previewImage}
+                                  alt="Preview"
+                                  className="profile-image rounded-circle"
+                                />
+                              ) : (userRoleType !== 'student-unpaid' && userData.profile_photo) ? (
+                                <img
+                                  src={`https://brjobsedu.com/girls_course/girls_course_backend/${userData.profile_photo}`}
+                                  alt="Profile"
+                                  className="profile-image rounded-circle"
+                                />
+                              ) : (
+                                <div className="profile-image bg-gradient-primary rounded-circle d-flex align-items-center justify-content-center default-profile-image">
+                                  <FaUser className="text-white default-profile-icon" />
+                                </div>
+                              )}
                            </div>
                             <div>
-                             <h3 className="mb-1" style={{ fontWeight: '700', color: '#1a202c', fontSize: '1.4rem' }}>{userRoleType === 'student-unpaid' ? userData.full_name : userData.candidate_name}</h3>
-                             <p className="mb-0" style={{ fontSize: '0.95rem', color: '#718096', fontWeight: '500' }}>
-                               {userRoleType === 'student-unpaid' ? 'Student Candidate' : 'Registered Student'}
-                             </p>
+                              <h3 className="mb-1 profile-name">{userRoleType === 'student-unpaid' ? userData.full_name : userData.candidate_name}</h3>
+                              <p className="mb-0 profile-role">
+                                {userRoleType === 'student-unpaid' ? 'Student Candidate' : 'Registered Student'}
+                              </p>
                            </div>
                          </div>
                           <div className="d-flex gap-2 flex-wrap">
-                           {userRoleType === 'student-unpaid' && (
-                             <Button 
-                               variant="outline-info" 
-                               className="d-flex align-items-center" 
-                               onClick={() => window.open(`https://brjobsedu.com/girls_course/girls_course_backend${userData.adharcard_file}`, '_blank')}
-                               style={{ fontSize: '0.9rem', fontWeight: '500', padding: '8px 16px', borderColor: '#cbd5e0', color: '#0284c7' }}
-                             >
-                               <FaIdCard className="me-2" style={{ fontSize: '16px' }} />
-                               <TransText k="profile.viewAadhaar" as="span" />
-                             </Button>
-                           )}
-                           {userRoleType !== 'student-unpaid' && (
-                             <>
-                               <input
-                                 type="file"
-                                 accept="image/*"
-                                 onChange={handleFileChange}
-                                 className="d-none"
-                                 id="profilePhotoInput"
-                               />
-                               <Button 
-                                 variant="outline-primary" 
-                                 className="d-flex align-items-center"
-                                 onClick={() => document.getElementById('profilePhotoInput').click()}
-                                 style={{ fontSize: '0.9rem', fontWeight: '500', padding: '8px 16px', borderColor: '#cbd5e0', color: '#2563eb' }}
-                               >
-                                 <FaUser className="me-2" style={{ fontSize: '16px' }} />
-                                 <TransText k={selectedFile ? "profile.changePhoto" : "profile.updatePhoto"} as="span" />
-                               </Button>
-                               {selectedFile && (
-                                 <Button 
-                                   variant="primary" 
-                                   className="d-flex align-items-center"
-                                   onClick={handleUpload}
-                                   disabled={uploading}
-                                   style={{ fontSize: '0.9rem', fontWeight: '500', padding: '8px 16px', backgroundColor: '#2563eb', borderColor: '#2563eb' }}
-                                 >
-                                   <TransText k={uploading ? "profile.uploading" : "profile.upload"} as="span" />
-                                 </Button>
-                               )}
-                             </>
-                           )}
+                            {userRoleType === 'student-unpaid' && (
+                              <Button
+                                variant="outline-info"
+                                className="d-flex align-items-center view-aadhaar-btn"
+                                onClick={() => window.open(`https://brjobsedu.com/girls_course/girls_course_backend${userData.adharcard_file}`, '_blank')}
+                              >
+                                <FaIdCard className="me-2 button-icon" />
+                                <TransText k="profile.viewAadhaar" as="span" />
+                              </Button>
+                            )}
+                            {userRoleType !== 'student-unpaid' && (
+                              <>
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  onChange={handleFileChange}
+                                  className="d-none"
+                                  id="profilePhotoInput"
+                                />
+                                <Button
+                                  variant="outline-primary"
+                                  className="d-flex align-items-center update-photo-btn"
+                                  onClick={() => document.getElementById('profilePhotoInput').click()}
+                                >
+                                  <FaUser className="me-2 button-icon" />
+                                  <TransText k={selectedFile ? "profile.changePhoto" : "profile.updatePhoto"} as="span" />
+                                </Button>
+                                {selectedFile && (
+                                  <Button
+                                    variant="primary"
+                                    className="d-flex align-items-center upload-btn"
+                                    onClick={handleUpload}
+                                    disabled={uploading}
+                                  >
+                                    <TransText k={uploading ? "profile.uploading" : "profile.upload"} as="span" />
+                                  </Button>
+                                )}
+                              </>
+                            )}
                          </div>
                        </div>
                      </Card.Body>
                    </Card>
                     
                     {/* Quiz Progress Card */}
-                    <Card className="shadow-sm mb-4 border-0 quiz-progress-card" style={{ 
-                      borderRadius: '12px',
-                      background: 'linear-gradient(135deg, #1e40af 0%, #1e3a8a 50%, #0c4a6e 100%)',
-                      color: 'white',
-                      boxShadow: '0 4px 15px rgba(30, 64, 175, 0.25)',
-                      overflow: 'hidden'
-                    }}>
+                    <Card className="shadow-sm mb-4 border-0 quiz-progress-card">
                       <Card.Body className="p-3">
-                        <div className="d-flex align-items-center justify-content-between mb-3">
-                          <div className="d-flex align-items-center">
-                            <div className="bg-white bg-opacity-20 rounded-circle p-2 me-2" style={{ backdropFilter: 'blur(10px)', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(255,255,255,0.3)' }}>
-                              <FaChartLine className="text-white" style={{ fontSize: '18px' }} />
-                            </div>
-                            <div>
-                              <h6 className="mb-0 fw-bold" style={{ fontSize: '1rem' }}>Quiz Performance</h6>
-                              <small className="text-white-50" style={{ fontSize: '0.75rem' }}>Track your progress</small>
-                            </div>
-                          </div>
-                          <div className="text-end">
-                            <div className="fw-bold" style={{ fontSize: '1.8rem', textShadow: '0 2px 10px rgba(0,0,0,0.3)' }}>
-                              {quizProgress.averagePercentage}<span style={{ fontSize: '1rem' }}>%</span>
-                            </div>
-                          </div>
-                        </div>
+                         <div className="d-flex align-items-center justify-content-between mb-3">
+                           <div className="d-flex align-items-center">
+                             <div className="bg-white bg-opacity-20 rounded-circle p-2 me-2 quiz-icon-container">
+                               <FaChartLine className=" quiz-chart-icon" />
+                             </div>
+                             <div>
+                               <h6 className="mb-0 fw-bold quiz-title">Quiz Performance</h6>
+                               <small className="text-white-50 quiz-subtitle">Track your progress</small>
+                             </div>
+                           </div>
+                           <div className="text-end">
+                             <div className="fw-bold quiz-percentage">
+                               {quizProgress.averagePercentage}<span className="quiz-percentage-span">%</span>
+                             </div>
+                           </div>
+                         </div>
                         
-                        <div className="mb-3">
-                          <div style={{ 
-                            background: 'rgba(255,255,255,0.15)', 
-                            borderRadius: '8px', 
-                            height: '20px',
-                            overflow: 'hidden',
-                            position: 'relative',
-                            boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.2)',
-                            border: '1px solid rgba(255,255,255,0.2)'
-                          }}>
-                            <div style={{ 
-                              width: `${quizProgress.averagePercentage}%`,
-                              background: quizProgress.averagePercentage >= 70 
-                                ? 'linear-gradient(90deg, #10b981, #34d399)' 
-                                : quizProgress.averagePercentage >= 50 
-                                  ? 'linear-gradient(90deg, #f59e0b, #fbbf24)' 
-                                  : 'linear-gradient(90deg, #ef4444, #f87171)',
-                              height: '100%',
-                              borderRadius: '8px',
-                              transition: 'width 1.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
-                              boxShadow: '0 2px 8px rgba(0,0,0,0.3)'
-                            }} />
-                          </div>
-                        </div>
+                         <div className="mb-3">
+                           <div className="progress-container">
+                             <div
+                               className="progress-bar-fill"
+                               style={{
+                                 width: `${quizProgress.averagePercentage}%`,
+                                 background: quizProgress.averagePercentage >= 70
+                                   ? 'linear-gradient(90deg, #10b981, #34d399)'
+                                   : quizProgress.averagePercentage >= 50
+                                     ? 'linear-gradient(90deg, #f59e0b, #fbbf24)'
+                                     : 'linear-gradient(90deg, #ef4444, #f87171)'
+                               }}
+                             />
+                           </div>
+                         </div>
                         
-                        <Row className="text-center g-2">
-                          <Col xs={6}>
-                            <div className="bg-white bg-opacity-10 rounded-2 py-2" style={{ backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.15)' }}>
-                              <div className="fs-5 fw-bold">{quizProgress.participated}</div>
-                              <div className="small text-white-50" style={{ fontSize: '0.7rem' }}>Completed</div>
-                            </div>
-                          </Col>
-                          <Col xs={6}>
-                            <div className="bg-white bg-opacity-10 rounded-2 py-2" style={{ backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.15)' }}>
-                              <div className="fs-5 fw-bold">{quizProgress.total}</div>
-                              <div className="small text-white-50" style={{ fontSize: '0.7rem' }}>Total</div>
-                            </div>
-                          </Col>
-                        </Row>
+                         <Row className="text-center g-2">
+                            <Col xs={6}>
+                              <div className="bg-white bg-opacity-10 rounded-2 py-2 stat-box">
+                                <div className="fw-bold stat-count">{quizProgress.participated}</div>
+                                <div className="small text-white-50 stat-text">Completed</div>
+                              </div>
+                            </Col>
+                            <Col xs={6}>
+                              <div className="bg-white bg-opacity-10 rounded-2 py-2 stat-box">
+                                <div className="fw-bold stat-count">{quizProgress.total}</div>
+                                <div className="small text-white-50 stat-text">Total</div>
+                              </div>
+                            </Col>
+                         </Row>
                         
                         {quizProgress.participated === quizProgress.total && quizProgress.total > 0 && (
                           <div className="mt-2 text-center">
-                            <Badge bg="warning" text="dark" className="py-1 px-2" style={{ borderRadius: '15px', fontSize: '0.75rem' }}>
+                            <Badge bg="warning" text="dark" className="py-1 px-2 completed-badge">
                               🎉 All Completed!
                             </Badge>
                           </div>
@@ -418,156 +398,156 @@ const UserProfile = () => {
                       </Card.Body>
                     </Card>
 
-                    <Card className="shadow-sm border-0 profile-details-card" style={{ borderRadius: '12px', backgroundColor: '#ffffff', boxShadow: '0 1px 3px rgba(0, 0, 0, 0.08)' }}>
-                     <Card.Header className="bg-white border-bottom pt-4 pb-3 px-4" style={{ borderBottomColor: '#e5e7eb', borderRadius: '12px 12px 0 0', borderWidth: '1px' }}>
-                       <h6 className="mb-0" style={{ fontWeight: '700', fontSize: '1rem', color: '#1a202c', letterSpacing: '0.3px' }}>
-                         <TransText k="profile.information" as="span" />
-                       </h6>
-                     </Card.Header>
+                    <Card className="shadow-sm border-0 profile-details-card">
+                      <Card.Header className="bg-white border-bottom pt-4 pb-3 px-4 card-header-custom">
+                        <h6 className="mb-0 card-title">
+                          <TransText k="profile.information" as="span" />
+                        </h6>
+                      </Card.Header>
                      <Card.Body className="p-4">
                       <Row className="g-3">
                         {userRoleType === 'student-unpaid' ? (
                           <>
                             {/* Student-Unpaid Profile Fields */}
-                            <Col md={6} className="mb-2">
-                              <div className="info-item">
-                                <div className="info-label small">
-                                  <FaIdCard className="me-2" style={{ color: '#3b82f6' }} />
-                                  <TransText k="profile.studentId" as="span" />
-                                </div>
-                                <div className="info-value">{userData.student_id}</div>
-                              </div>
-                            </Col>
-                            <Col md={6} className="mb-2">
-                              <div className="info-item">
-                                <div className="info-label small">
-                                  <FaIdCard className="me-2" style={{ color: '#3b82f6' }} />
-                                  <TransText k="profile.aadhaarNumber" as="span" />
-                                </div>
-                                <div className="info-value">{userData.aadhaar_no}</div>
-                              </div>
-                            </Col>
-                            <Col md={6} className="mb-2">
-                              <div className="info-item">
-                                <div className="info-label small">
-                                  <FaEnvelope className="me-2" style={{ color: '#06b6d4' }} />
-                                  <TransText k="profile.emailAddress" as="span" />
-                                </div>
-                                <div className="info-value text-truncate">{userData.email}</div>
-                              </div>
-                            </Col>
-                            <Col md={6} className="mb-2">
-                              <div className="info-item">
-                                <div className="info-label small">
-                                  <FaPhone className="me-2" style={{ color: '#10b981' }} />
-                                  <TransText k="profile.mobileNumber" as="span" />
-                                </div>
-                                <div className="info-value">{userData.phone}</div>
-                              </div>
-                            </Col>
-                            <Col md={6} className="mb-2">
-                              <div className="info-item">
-                                <div className="info-label small">
-                                  <FaMapMarkerAlt className="me-2" style={{ color: '#ef4444' }} />
-                                  <TransText k="profile.district" as="span" />
-                                </div>
-                                <div className="info-value">{userData.district}</div>
-                              </div>
-                            </Col>
-                            <Col md={6} className="mb-2">
-                              <div className="info-item">
-                                <div className="info-label small">
-                                  <FaMapMarkerAlt className="me-2" style={{ color: '#ef4444' }} />
-                                  <TransText k="profile.block" as="span" />
-                                </div>
-                                <div className="info-value">{userData.block}</div>
-                              </div>
-                            </Col>
-                            <Col md={6} className="mb-2">
-                              <div className="info-item">
-                                <div className="info-label small">
-                                  <FaMapMarkerAlt className="me-2" style={{ color: '#ef4444' }} />
-                                  <TransText k="profile.state" as="span" />
-                                </div>
-                                <div className="info-value">{userData.state}</div>
-                              </div>
-                            </Col>
-                            <Col md={6} className="mb-3">
-                              <div className="info-item">
-                                <div className="info-label small">
-                                  <FaBuilding className="me-2" style={{ color: '#f59e0b' }} />
-                                  <TransText k="profile.associateWings" as="span" />
-                                </div>
-                                <div className="info-value">{userData.associate_wings}</div>
-                              </div>
-                            </Col>
+                             <Col md={6} className="mb-2">
+                               <div className="info-item">
+                                 <div className="info-label small">
+                                   <FaIdCard className="me-2 icon-student-id" />
+                                   <TransText k="profile.studentId" as="span" />
+                                 </div>
+                                 <div className="info-value">{userData.student_id}</div>
+                               </div>
+                             </Col>
+                             <Col md={6} className="mb-2">
+                               <div className="info-item">
+                                 <div className="info-label small">
+                                   <FaIdCard className="me-2 icon-aadhaar" />
+                                   <TransText k="profile.aadhaarNumber" as="span" />
+                                 </div>
+                                 <div className="info-value">{userData.aadhaar_no}</div>
+                               </div>
+                             </Col>
+                             <Col md={6} className="mb-2">
+                               <div className="info-item">
+                                 <div className="info-label small">
+                                   <FaEnvelope className="me-2 icon-email" />
+                                   <TransText k="profile.emailAddress" as="span" />
+                                 </div>
+                                 <div className="info-value text-truncate">{userData.email}</div>
+                               </div>
+                             </Col>
+                             <Col md={6} className="mb-2">
+                               <div className="info-item">
+                                 <div className="info-label small">
+                                   <FaPhone className="me-2 icon-phone" />
+                                   <TransText k="profile.mobileNumber" as="span" />
+                                 </div>
+                                 <div className="info-value">{userData.phone}</div>
+                               </div>
+                             </Col>
+                             <Col md={6} className="mb-2">
+                               <div className="info-item">
+                                 <div className="info-label small">
+                                   <FaMapMarkerAlt className="me-2 icon-location" />
+                                   <TransText k="profile.district" as="span" />
+                                 </div>
+                                 <div className="info-value">{userData.district}</div>
+                               </div>
+                             </Col>
+                             <Col md={6} className="mb-2">
+                               <div className="info-item">
+                                 <div className="info-label small">
+                                   <FaMapMarkerAlt className="me-2 icon-location" />
+                                   <TransText k="profile.block" as="span" />
+                                 </div>
+                                 <div className="info-value">{userData.block}</div>
+                               </div>
+                             </Col>
+                             <Col md={6} className="mb-2">
+                               <div className="info-item">
+                                 <div className="info-label small">
+                                   <FaMapMarkerAlt className="me-2 icon-location" />
+                                   <TransText k="profile.state" as="span" />
+                                 </div>
+                                 <div className="info-value">{userData.state}</div>
+                               </div>
+                             </Col>
+                             <Col md={6} className="mb-3">
+                               <div className="info-item">
+                                 <div className="info-label small">
+                                   <FaBuilding className="me-2 icon-building" />
+                                   <TransText k="profile.associateWings" as="span" />
+                                 </div>
+                                 <div className="info-value">{userData.associate_wings}</div>
+                               </div>
+                             </Col>
                           </>
                         ) : (
                           <>
                             {/* Regular Student Profile Fields */}
-                            <Col md={6} className="mb-2">
-                              <div className="info-item">
-                                <div className="info-label small">
-                                  <FaEnvelope className="me-2" style={{ color: '#06b6d4' }} />
-                                  <TransText k="profile.emailAddress" as="span" />
-                                </div>
-                                <div className="info-value text-truncate">{userData.email}</div>
-                              </div>
-                            </Col>
-                            <Col md={6} className="mb-2">
-                              <div className="info-item">
-                                <div className="info-label small">
-                                  <FaPhone className="me-2" style={{ color: '#10b981' }} />
-                                  <TransText k="profile.mobileNumber" as="span" />
-                                </div>
-                                <div className="info-value">{userData.mobile_no}</div>
-                              </div>
-                            </Col>
-                            <Col md={6} className="mb-2">
-                              <div className="info-item">
-                                <div className="info-label small">
-                                  <FaUserShield className="me-2" style={{ color: '#8b5cf6' }} />
-                                  <TransText k="profile.guardianName" as="span" />
-                                </div>
-                                <div className="info-value">{userData.guardian_name}</div>
-                              </div>
-                            </Col>
-                            <Col md={6} className="mb-2">
-                              <div className="info-item">
-                                <div className="info-label small">
-                                  <FaCalendarAlt className="me-2" style={{ color: '#3b82f6' }} />
-                                  <TransText k="profile.dateOfBirth" as="span" />
-                                </div>
-                                <div className="info-value">{userData.date_of_birth}</div>
-                              </div>
-                            </Col>
-                            <Col md={6} className="mb-2">
-                              <div className="info-item">
-                                <div className="info-label small">
-                                  <FaBuilding className="me-2" style={{ color: '#f59e0b' }} />
-                                  <TransText k="profile.highestEducation" as="span" />
-                                </div>
-                                <div className="info-value">{userData.highest_education}</div>
-                              </div>
-                            </Col>
-                            <Col md={6} className="mb-2">
-                              <div className="info-item">
-                                <div className="info-label small">
-                                  <FaMapMarkerAlt className="me-2" style={{ color: '#ef4444' }} />
-                                  <TransText k="profile.address" as="span" />
-                                </div>
-                                <div className="info-value">{userData.address}</div>
-                              </div>
-                            </Col>
-                            <Col md={6} className="mb-3">
-                              <div className="info-item">
-                                <div className="info-label">
-                                  <FaCalendarAlt className="me-2" style={{ color: '#3b82f6' }} />
-                                  <TransText k="profile.joinedDate" as="span" />
-                                </div>
-                                <div className="info-value">{new Date(userData.created_at).toLocaleDateString()}</div>
-                              </div>
-                            </Col>
+                             <Col md={6} className="mb-2">
+                               <div className="info-item">
+                                 <div className="info-label small">
+                                   <FaEnvelope className="me-2 icon-email" />
+                                   <TransText k="profile.emailAddress" as="span" />
+                                 </div>
+                                 <div className="info-value text-truncate">{userData.email}</div>
+                               </div>
+                             </Col>
+                             <Col md={6} className="mb-2">
+                               <div className="info-item">
+                                 <div className="info-label small">
+                                   <FaPhone className="me-2 icon-phone" />
+                                   <TransText k="profile.mobileNumber" as="span" />
+                                 </div>
+                                 <div className="info-value">{userData.mobile_no}</div>
+                               </div>
+                             </Col>
+                             <Col md={6} className="mb-2">
+                               <div className="info-item">
+                                 <div className="info-label small">
+                                   <FaUserShield className="me-2 icon-guardian" />
+                                   <TransText k="profile.guardianName" as="span" />
+                                 </div>
+                                 <div className="info-value">{userData.guardian_name}</div>
+                               </div>
+                             </Col>
+                             <Col md={6} className="mb-2">
+                               <div className="info-item">
+                                 <div className="info-label small">
+                                   <FaCalendarAlt className="me-2 icon-calendar" />
+                                   <TransText k="profile.dateOfBirth" as="span" />
+                                 </div>
+                                 <div className="info-value">{userData.date_of_birth}</div>
+                               </div>
+                             </Col>
+                             <Col md={6} className="mb-2">
+                               <div className="info-item">
+                                 <div className="info-label small">
+                                   <FaBuilding className="me-2 icon-education" />
+                                   <TransText k="profile.highestEducation" as="span" />
+                                 </div>
+                                 <div className="info-value">{userData.highest_education}</div>
+                               </div>
+                             </Col>
+                             <Col md={6} className="mb-2">
+                               <div className="info-item">
+                                 <div className="info-label small">
+                                   <FaMapMarkerAlt className="me-2 icon-location" />
+                                   <TransText k="profile.address" as="span" />
+                                 </div>
+                                 <div className="info-value">{userData.address}</div>
+                               </div>
+                             </Col>
+                             <Col md={6} className="mb-3">
+                               <div className="info-item">
+                                 <div className="info-label">
+                                   <FaCalendarAlt className="me-2 icon-calendar" />
+                                   <TransText k="profile.joinedDate" as="span" />
+                                 </div>
+                                 <div className="info-value">{new Date(userData.created_at).toLocaleDateString()}</div>
+                               </div>
+                             </Col>
                           </>
                         )}
                       </Row>
@@ -578,136 +558,15 @@ const UserProfile = () => {
                 </Col>
               </Row>
             ) : (
-              <div className="text-center py-5" style={{ paddingTop: '60px', paddingBottom: '60px' }}>
-                <p className="text-muted" style={{ fontSize: '1rem', color: '#6b7280', fontWeight: '500' }}><TransText k="profile.noProfileData" as="span" /></p>
+              <div className="text-center py-5 loading-no-data-padding">
+                <p className="text-muted no-data-text"><TransText k="profile.noProfileData" as="span" /></p>
               </div>
             )}
           </Container>
         </div>
       </div>
 
-      {/* Handle responsive margin for mobile */}
-      <style jsx>{`
-        .profile-image-wrapper {
-          position: relative;
-        }
 
-        .profile-image {
-          width: 90px;
-          height: 90px;
-          background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
-          box-shadow: 0 4px 12px rgba(30, 64, 175, 0.25);
-          transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .profile-image:hover {
-          transform: scale(1.06);
-          box-shadow: 0 6px 16px rgba(30, 64, 175, 0.35);
-        }
-
-        .profile-header-card {
-          background: white;
-          border-radius: 12px;
-          transition: box-shadow 0.3s ease, transform 0.3s ease;
-        }
-
-        .profile-header-card:hover {
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
-          transform: translateY(-1px);
-        }
-
-        .quiz-progress-card {
-          position: relative;
-          overflow: hidden;
-        }
-
-        .profile-details-card {
-          background: white;
-          border-radius: 12px;
-          transition: box-shadow 0.3s ease, transform 0.3s ease;
-        }
-
-        .profile-details-card:hover {
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
-          transform: translateY(-1px);
-        }
-
-        .info-item {
-          background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
-          border-radius: 10px;
-          padding: 16px;
-          transition: all 0.3s ease;
-          border: 1px solid #e5e7eb;
-          height: 100%;
-        }
-
-        .info-item:hover {
-          background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
-          transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-          border-color: #d1d5db;
-        }
-
-        .info-label {
-          font-size: 0.8rem;
-          color: #6b7280;
-          font-weight: 700;
-          margin-bottom: 8px;
-          display: flex;
-          align-items: center;
-          text-transform: uppercase;
-          letter-spacing: 0.4px;
-        }
-
-        .info-value {
-          font-size: 0.95rem;
-          color: '#1a202c';
-          font-weight: 500;
-          word-break: break-word;
-        }
-
-        .animate-fade-in {
-          animation: fadeIn 0.5s ease-in;
-        }
-
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(-10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @media (max-width: 768px) {
-          .profile-image {
-            width: 70px;
-            height: 70px;
-          }
-
-          .profile-details-card .card-body {
-            padding: 1.5rem !important;
-          }
-
-          .info-item {
-            margin-bottom: 1rem;
-          }
-
-          .quiz-progress-card {
-            margin-bottom: 1.5rem !important;
-          }
-
-          .info-label {
-            font-size: 0.75rem;
-          }
-
-          .info-value {
-            font-size: 0.9rem;
-          }
-        }
-      `}</style>
     </div>
   )
 }
