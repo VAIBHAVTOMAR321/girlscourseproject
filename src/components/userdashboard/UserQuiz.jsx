@@ -688,8 +688,8 @@ const UserQuiz = () => {
                                 {participatedQuizzes[quiz.quiz_id] ? (
                                   <div className="d-flex flex-column gap-2">
                                     <div className="d-flex justify-content-between gap-2">
-                                      <Badge bg="primary" className="flex-fill py-2">
-                                        {quizRanks[quiz.quiz_id]?.totalParticipants || 0}
+                                      <Badge bg="primary" className="flex-fill py-2" style={{ fontSize: '0.85rem' }}>
+                                        <TransText k="quiz.participants" as="span" />: {quizRanks[quiz.quiz_id]?.totalParticipants || 0}
                                       </Badge>
                                       {quizRanks[quiz.quiz_id]?.userRank && (
                                         <Badge bg="warning" className="flex-fill py-2">
@@ -732,7 +732,7 @@ const UserQuiz = () => {
                                         }}
                                       >
                                         <FaUsers className="me-2" />
-                                        {quizRanks[quiz.quiz_id].totalParticipants} <TransText k="quiz.participants" as="span" />
+                                        <TransText k="quiz.participants" as="span" />: {quizRanks[quiz.quiz_id].totalParticipants}
                                       </Button>
                                     )}
                                     <Button
