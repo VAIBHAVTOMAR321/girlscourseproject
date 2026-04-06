@@ -238,3 +238,150 @@
     padding: 4px 8px;
   }
 }
+
+/* Quiz Main Content Area */
+.quiz-main-content {
+  margin-left: 220px;
+  padding: 20px;
+  min-height: calc(100vh - 70px);
+}
+
+.quiz-main-content.mobile {
+  margin-left: 0px;
+  padding: 10px;
+}
+
+/* Loading Styles */
+.quiz-loading-spinner {
+  width: 60px;
+  height: 60px;
+}
+
+/* Quiz Card */
+.quiz-card {
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+/* Trophy Icon */
+.trophy-icon {
+  font-size: 60px;
+}
+
+/* Results Card */
+.results-card {
+  border-radius: 12px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* Percentage Display */
+.percentage-display {
+  color: #28a745;
+}
+
+.percentage-display.fail {
+  color: #dc3545;
+}
+
+/* Timer Display */
+.timer-display {
+  font-size: 24px;
+  font-weight: bold;
+  color: #007bff;
+}
+
+.timer-display.warning {
+  color: #dc3545;
+}
+
+/* Question Card */
+.question-card {
+  border-radius: 12px;
+}
+
+/* Question Text */
+.question-text {
+  font-weight: 500;
+}
+
+.question-text-hindi {
+  font-weight: 400;
+}
+
+/* Option Button Selected */
+.option-button.selected {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+  color: #ffffff;
+}
+
+/* Hindi Option */
+.hindi-option {
+  font-size: 0.9em;
+}
+
+.option-button.selected .hindi-option {
+  color: #ffffff;
+}
+
+/* Navigation Buttons */
+.nav-btn {
+  min-width: 120px;
+  font-weight: 600;
+  padding: 12px 24px;
+  font-size: 16px;
+}
+
+.nav-btn:disabled {
+  cursor: not-allowed;
+}
+
+/* Wrong Answers Modal */
+.wrong-answers-body {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.wrong-answer-card {
+  border-left: 4px solid #dc3545;
+}
+
+.wrong-question-title {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+.answer-label {
+  color: #6c757d;
+}
+
+.user-answer {
+  background-color: #f8d7da;
+  padding: 8px 12px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  color: #721c24;
+}
+
+.correct-answer {
+  background-color: #d4edda;
+  padding: 8px 12px;
+  border-radius: 4px;
+  color: #155724;
+}
+
+/* Rank Modal */
+.user-rank-card {
+  background-color: #0d6efd;
+}
+
+.rank-item {
+  border-left: 4px solid #FFD700;
+}
+
+.rank-medal {
+  width: 30px;
+  text-align: center;
+  font-size: 20px;
+}

@@ -354,14 +354,14 @@ const UserQuiz = () => {
       console.log('Submit quiz response:', responseData)
 
       // Handle server response for scoring
-      let correctCount = responseData.correct_answers || 0
+      let correctCount = responseData.correct_answers || responseData.score || 0
       let totalQuestions = responseData.total_questions || currentQuiz.total_questions
       let serverScore = responseData.score !== undefined ? responseData.score : correctCount
       let serverPercentage = responseData.percentage || ((correctCount / totalQuestions) * 100).toFixed(2)
 
       // Collect wrong answers
       let wrongAnswersArray = []
-      if (!responseData.correct_answers) {
+      if (!responseData.correct_answers && responseData.score === undefined) {
         currentQuiz.questions.forEach((question, index) => {
           if (answers[index] !== question.correct_answer) {
             wrongAnswersArray.push({
@@ -376,8 +376,24 @@ const UserQuiz = () => {
           }
         })
         totalQuestions = currentQuiz.questions.length
+        correctCount = totalQuestions - wrongAnswersArray.length
         serverScore = correctCount
         serverPercentage = ((correctCount / totalQuestions) * 100).toFixed(2)
+      } else if (!responseData.correct_answers) {
+        // If score provided but not correct_answers, calculate wrong answers for display
+        currentQuiz.questions.forEach((question, index) => {
+          if (answers[index] !== question.correct_answer) {
+            wrongAnswersArray.push({
+              questionIndex: index,
+              question_text: question.question_text,
+              question_text_hindi: question.question_text_hindi,
+              options: question.options,
+              options_hindi: question.options_hindi,
+              userAnswer: answers[index],
+              correctAnswer: question.correct_answer
+            })
+          }
+        })
       }
 
       setQuizResults({
@@ -501,7 +517,7 @@ const UserQuiz = () => {
             </Card>
           ))
         ) : (
-          <Alert variant="success">All answers are correct!</Alert>
+          <Alert variant="success">All answers are correct! / सभी उत्तर सही हैं!</Alert>
         )}
       </Modal.Body>
       <Modal.Footer>
@@ -569,9 +585,9 @@ const UserQuiz = () => {
                       </div>
                       <div className="text-end">
                         <div className="fw-bold"><TransText k="quiz.score" as="span" />: {participant.score}</div>
-                        <small className={participant.status === 'passed' ? 'text-success' : 'text-danger'}>
-                          {participant.status === 'passed' ? 'Passed' : 'Failed'}
-                        </small>
+                         <small className={participant.status === 'passed' ? 'text-success' : 'text-danger'}>
+                           {participant.status === 'passed' ? 'Passed / उत्तीर्ण' : 'Failed / असफल'}
+                         </small>
                       </div>
                     </div>
                   )
