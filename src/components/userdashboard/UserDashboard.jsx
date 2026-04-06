@@ -50,6 +50,7 @@ const UserDashboard = () => {
   const [feedbackError, setFeedbackError] = useState(null)
   const [submittedFeedbackCourses, setSubmittedFeedbackCourses] = useState([])
 
+ 
   // Course language preference state (default: hindi)
   const [courseLanguage, setCourseLanguage] = useState('hindi')
 
@@ -979,7 +980,7 @@ const UserDashboard = () => {
                        
                        <div className="d-flex align-items-center gap-2">
                           {/* Language Toggle - Floating */}
-                          <div className="btn-group" role="group" style={{ position: 'fixed', right: '20px', top: '12%', transform: 'translateY(-50%)', zIndex: 1050, boxShadow: '0 4px 12px rgba(0,0,0,0.15)', borderRadius: '25px', overflow: 'hidden' }}>
+                          <div className="btn-group" role="group" style={{ position: 'fixed', right: '20px', top: '12%', transform: 'translateY(-50%)', zIndex: 1050, boxShadow: '0 4px 12px rgba(0,0,0,0.15)', }}>
                             <Button 
                               variant={courseLanguage === 'hindi' ? 'dark' : 'outline-dark'}
                               size="sm"
