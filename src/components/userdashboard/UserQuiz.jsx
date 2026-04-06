@@ -449,13 +449,17 @@ const UserQuiz = () => {
                 <h6 style={{ color: '#dc3545', fontWeight: 'bold' }}>
                   Question {wrongAnswer.questionIndex + 1}
                 </h6>
-                <p className="mb-2">
-                  <strong>
-                    {language === 'hi' && wrongAnswer.question_text_hindi
-                      ? wrongAnswer.question_text_hindi
-                      : wrongAnswer.question_text}
-                  </strong>
-                </p>
+                
+                {wrongAnswer.question_text && (
+                  <p className="mb-2">
+                    <strong>{wrongAnswer.question_text}</strong>
+                  </p>
+                )}
+                {wrongAnswer.question_text_hindi && (
+                  <p className="mb-2 text-muted">
+                    <strong>{wrongAnswer.question_text_hindi}</strong>
+                  </p>
+                )}
                 
                 <div className="mb-2">
                   <small style={{ color: '#6c757d' }}>Your Answer:</small>
@@ -468,9 +472,10 @@ const UserQuiz = () => {
                   }}>
                     <strong>
                       {String.fromCharCode(65 + wrongAnswer.userAnswer)}.{' '}
-                      {language === 'hi' && wrongAnswer.options_hindi
-                        ? wrongAnswer.options_hindi[wrongAnswer.userAnswer]
-                        : wrongAnswer.options[wrongAnswer.userAnswer]}
+                      {wrongAnswer.options[wrongAnswer.userAnswer]}
+                      {wrongAnswer.options_hindi?.[wrongAnswer.userAnswer] && (
+                        <span className="ms-1">({wrongAnswer.options_hindi[wrongAnswer.userAnswer]})</span>
+                      )}
                     </strong>
                   </p>
                 </div>
@@ -485,9 +490,10 @@ const UserQuiz = () => {
                   }}>
                     <strong>
                       {String.fromCharCode(65 + wrongAnswer.correctAnswer)}.{' '}
-                      {language === 'hi' && wrongAnswer.options_hindi
-                        ? wrongAnswer.options_hindi[wrongAnswer.correctAnswer]
-                        : wrongAnswer.options[wrongAnswer.correctAnswer]}
+                      {wrongAnswer.options[wrongAnswer.correctAnswer]}
+                      {wrongAnswer.options_hindi?.[wrongAnswer.correctAnswer] && (
+                        <span className="ms-1">({wrongAnswer.options_hindi[wrongAnswer.correctAnswer]})</span>
+                      )}
                     </strong>
                   </p>
                 </div>
