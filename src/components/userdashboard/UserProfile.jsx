@@ -220,16 +220,15 @@ const UserProfile = () => {
           setShowOffcanvas={setShowOffcanvas} 
         />
         
-        <div className="flex-grow-1" style={{ marginLeft: isMobile ? '0px' : '220px', padding: isMobile ? '12px' : '24px', minHeight: 'calc(100vh - 70px)', backgroundColor: '#f8f9fa' }}>
+        <div className="flex-grow-1" style={{ marginLeft: isMobile ? '0px' : '220px', padding: isMobile ? '12px' : '28px', minHeight: 'calc(100vh - 70px)', backgroundColor: '#fafbfc' }}>
           <Container fluid className='fixed-profile'>
-            {/* Success Alert */}
             {/* Back Button */}
-            <div className="mb-4">
+            <div className="mb-5">
               <Button 
                 variant="outline-secondary" 
                 onClick={() => navigate('/UserDashboard')} 
                 className="d-flex align-items-center"
-                style={{ borderColor: '#dee2e6', color: '#495057', fontSize: '0.95rem' }}
+                style={{ borderColor: '#d1d5db', color: '#4b5563', fontSize: '0.95rem', fontWeight: '500', padding: '8px 16px' }}
               >
                 <FaArrowLeft className="me-2" />
                 <TransText k="profile.backToDashboard" as="span" />
@@ -237,22 +236,22 @@ const UserProfile = () => {
             </div>
             
             {updateSuccess && (
-              <Alert variant="success" className="mb-4 animate-fade-in">
+              <Alert variant="success" className="mb-4 animate-fade-in border-0" style={{ backgroundColor: '#d1fae5', color: '#065f46', borderRadius: '8px', padding: '14px 18px', fontWeight: '500' }}>
                 <FaCheck className="me-2" />
                 <TransText k="profile.profileUpdated" as="span" />
               </Alert>
             )}
 
             {loading ? (
-              <div className="text-center py-5">
-                <Spinner animation="border" variant="primary" style={{ width: '60px', height: '60px' }} />
-                <p className="mt-3"><TransText k="profile.loading" as="span" /></p>
+              <div className="text-center py-5" style={{ paddingTop: '60px', paddingBottom: '60px' }}>
+                <Spinner animation="border" variant="primary" style={{ width: '50px', height: '50px', opacity: 0.8 }} />
+                <p className="mt-4" style={{ color: '#6b7280', fontWeight: '500', fontSize: '0.95rem' }}><TransText k="profile.loading" as="span" /></p>
               </div>
             ) : userData ? (
               <Row>
                 <Col lg={12}>
                    {/* Profile Header Card */}
-                   <Card className="shadow-sm mb-4 border-0 profile-header-card" style={{ borderRadius: '16px', background: 'linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)' }}>
+                   <Card className="shadow-sm mb-4 border-0 profile-header-card" style={{ borderRadius: '12px', background: '#ffffff', boxShadow: '0 1px 3px rgba(0, 0, 0, 0.08)' }}>
                      <Card.Body className="p-4">
                        <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
                          <div className="d-flex align-items-center gap-3">
@@ -263,24 +262,24 @@ const UserProfile = () => {
                                  src={previewImage} 
                                  alt="Preview" 
                                  className="profile-image rounded-circle" 
-                                 style={{ width: '90px', height: '90px', objectFit: 'cover' }}
+                                 style={{ width: '90px', height: '90px', objectFit: 'cover', border: '3px solid #f0f4f8' }}
                                />
                              ) : (userRoleType !== 'student-unpaid' && userData.profile_photo) ? (
                                <img 
                                  src={`https://brjobsedu.com/girls_course/girls_course_backend/${userData.profile_photo}`} 
                                  alt="Profile" 
                                  className="profile-image rounded-circle" 
-                                 style={{ width: '90px', height: '90px', objectFit: 'cover' }}
+                                 style={{ width: '90px', height: '90px', objectFit: 'cover', border: '3px solid #f0f4f8' }}
                                />
                              ) : (
-                               <div className="profile-image bg-gradient-primary rounded-circle d-flex align-items-center justify-content-center" style={{ width: '90px', height: '90px' }}>
-                                 <FaUser className="text-white" style={{ fontSize: '32px' }} />
+                               <div className="profile-image bg-gradient-primary rounded-circle d-flex align-items-center justify-content-center" style={{ width: '90px', height: '90px', border: '3px solid #f0f4f8' }}>
+                                 <FaUser className="text-white" style={{ fontSize: '36px' }} />
                                </div>
                              )}
                            </div>
                             <div>
-                             <h3 className="mb-1" style={{ fontWeight: '600', color: '#202020' }}>{userRoleType === 'student-unpaid' ? userData.full_name : userData.candidate_name}</h3>
-                             <p className="mb-0 text-muted" style={{ fontSize: '0.9rem' }}>
+                             <h3 className="mb-1" style={{ fontWeight: '700', color: '#1a202c', fontSize: '1.4rem' }}>{userRoleType === 'student-unpaid' ? userData.full_name : userData.candidate_name}</h3>
+                             <p className="mb-0" style={{ fontSize: '0.95rem', color: '#718096', fontWeight: '500' }}>
                                {userRoleType === 'student-unpaid' ? 'Student Candidate' : 'Registered Student'}
                              </p>
                            </div>
@@ -291,9 +290,9 @@ const UserProfile = () => {
                                variant="outline-info" 
                                className="d-flex align-items-center" 
                                onClick={() => window.open(`https://brjobsedu.com/girls_course/girls_course_backend${userData.adharcard_file}`, '_blank')}
-                               style={{ fontSize: '0.9rem' }}
+                               style={{ fontSize: '0.9rem', fontWeight: '500', padding: '8px 16px', borderColor: '#cbd5e0', color: '#0284c7' }}
                              >
-                               <FaIdCard className="me-2" />
+                               <FaIdCard className="me-2" style={{ fontSize: '16px' }} />
                                <TransText k="profile.viewAadhaar" as="span" />
                              </Button>
                            )}
@@ -310,9 +309,9 @@ const UserProfile = () => {
                                  variant="outline-primary" 
                                  className="d-flex align-items-center"
                                  onClick={() => document.getElementById('profilePhotoInput').click()}
-                                 style={{ fontSize: '0.9rem' }}
+                                 style={{ fontSize: '0.9rem', fontWeight: '500', padding: '8px 16px', borderColor: '#cbd5e0', color: '#2563eb' }}
                                >
-                                 <FaUser className="me-2" />
+                                 <FaUser className="me-2" style={{ fontSize: '16px' }} />
                                  <TransText k={selectedFile ? "profile.changePhoto" : "profile.updatePhoto"} as="span" />
                                </Button>
                                {selectedFile && (
@@ -321,7 +320,7 @@ const UserProfile = () => {
                                    className="d-flex align-items-center"
                                    onClick={handleUpload}
                                    disabled={uploading}
-                                   style={{ fontSize: '0.9rem' }}
+                                   style={{ fontSize: '0.9rem', fontWeight: '500', padding: '8px 16px', backgroundColor: '#2563eb', borderColor: '#2563eb' }}
                                  >
                                    <TransText k={uploading ? "profile.uploading" : "profile.upload"} as="span" />
                                  </Button>
@@ -335,51 +334,52 @@ const UserProfile = () => {
                     
                     {/* Quiz Progress Card */}
                     <Card className="shadow-sm mb-4 border-0 quiz-progress-card" style={{ 
-                      borderRadius: '16px',
-                      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)',
+                      borderRadius: '12px',
+                      background: 'linear-gradient(135deg, #1e40af 0%, #1e3a8a 50%, #0c4a6e 100%)',
                       color: 'white',
-                      boxShadow: '0 12px 50px rgba(102, 126, 234, 0.35)',
+                      boxShadow: '0 4px 15px rgba(30, 64, 175, 0.25)',
                       overflow: 'hidden'
                     }}>
                       <Card.Body className="p-4">
-                        <div className="d-flex align-items-center justify-content-between mb-4">
+                        <div className="d-flex align-items-center justify-content-between mb-5">
                           <div className="d-flex align-items-center">
-                            <div className="bg-white bg-opacity-25 rounded-circle p-3 me-3" style={{ backdropFilter: 'blur(10px)', width: '60px', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <div className="bg-white bg-opacity-20 rounded-circle p-3 me-3" style={{ backdropFilter: 'blur(10px)', width: '65px', height: '65px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(255,255,255,0.3)' }}>
                               <FaChartLine className="text-white" style={{ fontSize: '28px' }} />
                             </div>
                             <div>
-                              <h5 className="mb-0 fw-bold" style={{ fontSize: '1.1rem' }}>Quiz Progress</h5>
-                              <small className="text-white-50" style={{ fontSize: '0.85rem' }}>Your Performance Overview</small>
+                              <h5 className="mb-0 fw-bold" style={{ fontSize: '1.15rem', letterSpacing: '0.3px' }}>Quiz Performance</h5>
+                              <small className="text-white-50" style={{ fontSize: '0.85rem' }}>Track your progress</small>
                             </div>
                           </div>
                           <div className="text-end">
-                            <div className="fs-1 fw-bold" style={{ fontSize: '2.5rem', textShadow: '0 2px 10px rgba(0,0,0,0.3)' }}>
-                              {quizProgress.averagePercentage}%
+                            <div className="fw-bold" style={{ fontSize: '2.8rem', textShadow: '0 2px 10px rgba(0,0,0,0.3)', letterSpacing: '-1px' }}>
+                              {quizProgress.averagePercentage}<span style={{ fontSize: '1.5rem' }}>%</span>
                             </div>
                             <small className="text-white-50" style={{ fontSize: '0.85rem' }}>Average Score</small>
                           </div>
                         </div>
                         
-                        <div className="mb-4">
+                        <div className="mb-5">
                           <div style={{ 
-                            background: 'rgba(255,255,255,0.2)', 
-                            borderRadius: '20px', 
-                            height: '32px',
+                            background: 'rgba(255,255,255,0.15)', 
+                            borderRadius: '12px', 
+                            height: '36px',
                             overflow: 'hidden',
                             position: 'relative',
-                            boxShadow: 'inset 0 2px 8px rgba(0,0,0,0.2)'
+                            boxShadow: 'inset 0 2px 8px rgba(0,0,0,0.2)',
+                            border: '1px solid rgba(255,255,255,0.2)'
                           }}>
                             <div style={{ 
                               width: `${quizProgress.averagePercentage}%`,
-                              background: quizProgress.averagePercentage >= 60 
+                              background: quizProgress.averagePercentage >= 70 
                                 ? 'linear-gradient(90deg, #10b981, #34d399)' 
-                                : quizProgress.averagePercentage >= 40 
+                                : quizProgress.averagePercentage >= 50 
                                   ? 'linear-gradient(90deg, #f59e0b, #fbbf24)' 
                                   : 'linear-gradient(90deg, #ef4444, #f87171)',
                               height: '100%',
-                              borderRadius: '20px',
-                              transition: 'width 1.5s ease-in-out',
-                              boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
+                              borderRadius: '12px',
+                              transition: 'width 1.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                              boxShadow: '0 2px 12px rgba(0,0,0,0.3)',
                               animation: 'progressFill 1.5s ease-out'
                             }} />
                             <div style={{
@@ -387,60 +387,61 @@ const UserProfile = () => {
                               top: '50%',
                               left: '50%',
                               transform: 'translate(-50%, -50%)',
-                              fontSize: '14px',
-                              fontWeight: 'bold',
+                              fontSize: '13px',
+                              fontWeight: '600',
                               textShadow: '0 1px 3px rgba(0,0,0,0.5)',
-                              zIndex: 1
+                              zIndex: 1,
+                              letterSpacing: '0.5px'
                             }}>
                               {quizProgress.averagePercentage}% Complete
                             </div>
                           </div>
                         </div>
                         
-                        <Row className="text-center g-2 mb-3">
+                        <Row className="text-center g-2 mb-4">
                           <Col xs={6}>
-                            <div className="bg-white bg-opacity-15 rounded-3 py-3" style={{ backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.2)' }}>
-                              <div className="fs-3 fw-bold">{quizProgress.participated}</div>
-                              <div className="small text-white-50" style={{ fontSize: '0.85rem' }}>
-                                <i className="bi bi-check-circle me-1"></i> Completed
+                            <div className="bg-white bg-opacity-10 rounded-3 py-3" style={{ backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.15)' }}>
+                              <div className="fs-3 fw-bold" style={{ letterSpacing: '1px' }}>{quizProgress.participated}</div>
+                              <div className="small text-white-50" style={{ fontSize: '0.85rem', marginTop: '4px' }}>
+                                ✓ Completed
                               </div>
                             </div>
                           </Col>
                           <Col xs={6}>
-                            <div className="bg-white bg-opacity-15 rounded-3 py-3" style={{ backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.2)' }}>
-                              <div className="fs-3 fw-bold">{quizProgress.total}</div>
-                              <div className="small text-white-50" style={{ fontSize: '0.85rem' }}>
-                                <i className="bi bi-collection me-1"></i> Total
+                            <div className="bg-white bg-opacity-10 rounded-3 py-3" style={{ backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.15)' }}>
+                              <div className="fs-3 fw-bold" style={{ letterSpacing: '1px' }}>{quizProgress.total}</div>
+                              <div className="small text-white-50" style={{ fontSize: '0.85rem', marginTop: '4px' }}>
+                                ★ Total
                               </div>
                             </div>
                           </Col>
                         </Row>
                         
                         {quizProgress.participated > 0 && (
-                          <div className="mt-3 pt-3 border-top border-white border-opacity-30">
+                          <div className="mt-4 pt-3 border-top border-white border-opacity-20">
                             <Row className="text-center g-2">
                               <Col xs={4}>
                                 <div className="text-center">
-                                  <div className="fs-4 fw-bold mb-1">
-                                    {quizProgress.averagePercentage >= 60 ? '🟢' : quizProgress.averagePercentage >= 40 ? '🟡' : '🔴'}
+                                  <div className="fs-5 fw-bold mb-1">
+                                    {quizProgress.averagePercentage >= 70 ? '✓' : quizProgress.averagePercentage >= 50 ? '◐' : '◯'}
                                   </div>
                                   <small className="text-white-50" style={{ fontSize: '0.8rem' }}>Status</small>
                                 </div>
                               </Col>
                               <Col xs={4}>
                                 <div className="text-center">
-                                  <div className="fs-4 fw-bold mb-1">
+                                  <div className="fs-5 fw-bold mb-1">
                                     {quizProgress.total > 0 ? Math.round((quizProgress.participated / quizProgress.total) * 100) : 0}%
                                   </div>
-                                  <small className="text-white-50" style={{ fontSize: '0.8rem' }}>Completion</small>
+                                  <small className="text-white-50" style={{ fontSize: '0.8rem' }}>Complete</small>
                                 </div>
                               </Col>
                               <Col xs={4}>
                                 <div className="text-center">
-                                  <div className="fs-4 fw-bold mb-1">
+                                  <div className="fs-5 fw-bold mb-1">
                                     {quizProgress.total - quizProgress.participated}
                                   </div>
-                                  <small className="text-white-50" style={{ fontSize: '0.8rem' }}>Remaining</small>
+                                  <small className="text-white-50" style={{ fontSize: '0.8rem' }}>Remain</small>
                                 </div>
                               </Col>
                             </Row>
@@ -448,9 +449,9 @@ const UserProfile = () => {
                         )}
                         
                         {quizProgress.participated === quizProgress.total && quizProgress.total > 0 && (
-                          <div className="mt-3 text-center">
-                            <Badge bg="warning" text="dark" className="py-2 px-4" style={{ borderRadius: '25px', fontSize: '13px', fontWeight: 'bold', boxShadow: '0 4px 15px rgba(0,0,0,0.2)' }}>
-                              🎉 Congratulations! All Quizzes Completed!
+                          <div className="mt-4 text-center">
+                            <Badge className="py-2 px-4" style={{ borderRadius: '20px', fontSize: '12px', fontWeight: '600', backgroundColor: 'rgba(34, 197, 94, 0.9)', border: '1px solid rgba(34, 197, 94, 0.6)' }}>
+                              ★ All Quizzes Completed!
                             </Badge>
                           </div>
                         )}
@@ -462,9 +463,9 @@ const UserProfile = () => {
                       `}</style>
                     </Card>
 
-                   <Card className="shadow-sm border-0 profile-details-card" style={{ borderRadius: '16px', backgroundColor: '#ffffff' }}>
-                     <Card.Header className="bg-white border-bottom pt-4 pb-3 px-4" style={{ borderBottomColor: '#e9ecef', borderRadius: '16px 16px 0 0' }}>
-                       <h6 className="mb-0" style={{ fontWeight: '600', fontSize: '1.05rem', color: '#202020' }}>
+                   <Card className="shadow-sm border-0 profile-details-card" style={{ borderRadius: '12px', backgroundColor: '#ffffff', boxShadow: '0 1px 3px rgba(0, 0, 0, 0.08)' }}>
+                     <Card.Header className="bg-white border-bottom pt-4 pb-3 px-4" style={{ borderBottomColor: '#e5e7eb', borderRadius: '12px 12px 0 0', borderWidth: '1px' }}>
+                       <h6 className="mb-0" style={{ fontWeight: '700', fontSize: '1rem', color: '#1a202c', letterSpacing: '0.3px' }}>
                          <TransText k="profile.information" as="span" />
                        </h6>
                      </Card.Header>
@@ -476,7 +477,7 @@ const UserProfile = () => {
                             <Col md={6} className="mb-2">
                               <div className="info-item">
                                 <div className="info-label small">
-                                  <FaIdCard className="me-2 text-primary" />
+                                  <FaIdCard className="me-2" style={{ color: '#3b82f6' }} />
                                   <TransText k="profile.studentId" as="span" />
                                 </div>
                                 <div className="info-value">{userData.student_id}</div>
@@ -485,7 +486,7 @@ const UserProfile = () => {
                             <Col md={6} className="mb-2">
                               <div className="info-item">
                                 <div className="info-label small">
-                                  <FaIdCard className="me-2 text-primary" />
+                                  <FaIdCard className="me-2" style={{ color: '#3b82f6' }} />
                                   <TransText k="profile.aadhaarNumber" as="span" />
                                 </div>
                                 <div className="info-value">{userData.aadhaar_no}</div>
@@ -494,7 +495,7 @@ const UserProfile = () => {
                             <Col md={6} className="mb-2">
                               <div className="info-item">
                                 <div className="info-label small">
-                                  <FaEnvelope className="me-2 text-info" />
+                                  <FaEnvelope className="me-2" style={{ color: '#06b6d4' }} />
                                   <TransText k="profile.emailAddress" as="span" />
                                 </div>
                                 <div className="info-value text-truncate">{userData.email}</div>
@@ -503,7 +504,7 @@ const UserProfile = () => {
                             <Col md={6} className="mb-2">
                               <div className="info-item">
                                 <div className="info-label small">
-                                  <FaPhone className="me-2 text-success" />
+                                  <FaPhone className="me-2" style={{ color: '#10b981' }} />
                                   <TransText k="profile.mobileNumber" as="span" />
                                 </div>
                                 <div className="info-value">{userData.phone}</div>
@@ -512,7 +513,7 @@ const UserProfile = () => {
                             <Col md={6} className="mb-2">
                               <div className="info-item">
                                 <div className="info-label small">
-                                  <FaMapMarkerAlt className="me-2 text-danger" />
+                                  <FaMapMarkerAlt className="me-2" style={{ color: '#ef4444' }} />
                                   <TransText k="profile.district" as="span" />
                                 </div>
                                 <div className="info-value">{userData.district}</div>
@@ -521,7 +522,7 @@ const UserProfile = () => {
                             <Col md={6} className="mb-2">
                               <div className="info-item">
                                 <div className="info-label small">
-                                  <FaMapMarkerAlt className="me-2 text-danger" />
+                                  <FaMapMarkerAlt className="me-2" style={{ color: '#ef4444' }} />
                                   <TransText k="profile.block" as="span" />
                                 </div>
                                 <div className="info-value">{userData.block}</div>
@@ -530,7 +531,7 @@ const UserProfile = () => {
                             <Col md={6} className="mb-2">
                               <div className="info-item">
                                 <div className="info-label small">
-                                  <FaMapMarkerAlt className="me-2 text-danger" />
+                                  <FaMapMarkerAlt className="me-2" style={{ color: '#ef4444' }} />
                                   <TransText k="profile.state" as="span" />
                                 </div>
                                 <div className="info-value">{userData.state}</div>
@@ -539,7 +540,7 @@ const UserProfile = () => {
                             <Col md={6} className="mb-3">
                               <div className="info-item">
                                 <div className="info-label small">
-                                  <FaBuilding className="me-2 text-warning" />
+                                  <FaBuilding className="me-2" style={{ color: '#f59e0b' }} />
                                   <TransText k="profile.associateWings" as="span" />
                                 </div>
                                 <div className="info-value">{userData.associate_wings}</div>
@@ -552,7 +553,7 @@ const UserProfile = () => {
                             <Col md={6} className="mb-2">
                               <div className="info-item">
                                 <div className="info-label small">
-                                  <FaEnvelope className="me-2 text-info" />
+                                  <FaEnvelope className="me-2" style={{ color: '#06b6d4' }} />
                                   <TransText k="profile.emailAddress" as="span" />
                                 </div>
                                 <div className="info-value text-truncate">{userData.email}</div>
@@ -561,7 +562,7 @@ const UserProfile = () => {
                             <Col md={6} className="mb-2">
                               <div className="info-item">
                                 <div className="info-label small">
-                                  <FaPhone className="me-2 text-success" />
+                                  <FaPhone className="me-2" style={{ color: '#10b981' }} />
                                   <TransText k="profile.mobileNumber" as="span" />
                                 </div>
                                 <div className="info-value">{userData.mobile_no}</div>
@@ -570,7 +571,7 @@ const UserProfile = () => {
                             <Col md={6} className="mb-2">
                               <div className="info-item">
                                 <div className="info-label small">
-                                  <FaUserShield className="me-2 text-secondary" />
+                                  <FaUserShield className="me-2" style={{ color: '#8b5cf6' }} />
                                   <TransText k="profile.guardianName" as="span" />
                                 </div>
                                 <div className="info-value">{userData.guardian_name}</div>
@@ -579,7 +580,7 @@ const UserProfile = () => {
                             <Col md={6} className="mb-2">
                               <div className="info-item">
                                 <div className="info-label small">
-                                  <FaCalendarAlt className="me-2 text-primary" />
+                                  <FaCalendarAlt className="me-2" style={{ color: '#3b82f6' }} />
                                   <TransText k="profile.dateOfBirth" as="span" />
                                 </div>
                                 <div className="info-value">{userData.date_of_birth}</div>
@@ -588,7 +589,7 @@ const UserProfile = () => {
                             <Col md={6} className="mb-2">
                               <div className="info-item">
                                 <div className="info-label small">
-                                  <FaBuilding className="me-2 text-warning" />
+                                  <FaBuilding className="me-2" style={{ color: '#f59e0b' }} />
                                   <TransText k="profile.highestEducation" as="span" />
                                 </div>
                                 <div className="info-value">{userData.highest_education}</div>
@@ -597,7 +598,7 @@ const UserProfile = () => {
                             <Col md={6} className="mb-2">
                               <div className="info-item">
                                 <div className="info-label small">
-                                  <FaMapMarkerAlt className="me-2 text-danger" />
+                                  <FaMapMarkerAlt className="me-2" style={{ color: '#ef4444' }} />
                                   <TransText k="profile.address" as="span" />
                                 </div>
                                 <div className="info-value">{userData.address}</div>
@@ -606,7 +607,7 @@ const UserProfile = () => {
                             <Col md={6} className="mb-3">
                               <div className="info-item">
                                 <div className="info-label">
-                                  <FaCalendarAlt className="me-2 text-primary" />
+                                  <FaCalendarAlt className="me-2" style={{ color: '#3b82f6' }} />
                                   <TransText k="profile.joinedDate" as="span" />
                                 </div>
                                 <div className="info-value">{new Date(userData.created_at).toLocaleDateString()}</div>
@@ -622,8 +623,8 @@ const UserProfile = () => {
                 </Col>
               </Row>
             ) : (
-              <div className="text-center py-5">
-                <p className="text-muted fs-4"><TransText k="profile.noProfileData" as="span" /></p>
+              <div className="text-center py-5" style={{ paddingTop: '60px', paddingBottom: '60px' }}>
+                <p className="text-muted" style={{ fontSize: '1rem', color: '#6b7280', fontWeight: '500' }}><TransText k="profile.noProfileData" as="span" /></p>
               </div>
             )}
           </Container>
@@ -639,25 +640,25 @@ const UserProfile = () => {
         .profile-image {
           width: 90px;
           height: 90px;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+          background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+          box-shadow: 0 4px 12px rgba(30, 64, 175, 0.25);
           transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .profile-image:hover {
-          transform: scale(1.08);
-          box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+          transform: scale(1.06);
+          box-shadow: 0 6px 16px rgba(30, 64, 175, 0.35);
         }
 
         .profile-header-card {
           background: white;
-          border-radius: 16px;
+          border-radius: 12px;
           transition: box-shadow 0.3s ease, transform 0.3s ease;
         }
 
         .profile-header-card:hover {
-          box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08) !important;
-          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+          transform: translateY(-1px);
         }
 
         .quiz-progress-card {
@@ -665,59 +666,47 @@ const UserProfile = () => {
           overflow: hidden;
         }
 
-        .quiz-progress-card::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="white" stroke-width="0.5" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
-          pointer-events: none;
-          opacity: 0.5;
-        }
-
         .profile-details-card {
           background: white;
-          border-radius: 16px;
+          border-radius: 12px;
           transition: box-shadow 0.3s ease, transform 0.3s ease;
         }
 
         .profile-details-card:hover {
-          box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08) !important;
-          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+          transform: translateY(-1px);
         }
 
         .info-item {
-          background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-          border-radius: 12px;
-          padding: 18px;
+          background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+          border-radius: 10px;
+          padding: 16px;
           transition: all 0.3s ease;
-          border: 1px solid #dee2e6;
+          border: 1px solid #e5e7eb;
           height: 100%;
         }
 
         .info-item:hover {
-          background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
-          transform: translateY(-3px);
-          box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
-          border-color: #adb5bd;
+          background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+          border-color: #d1d5db;
         }
 
         .info-label {
-          font-size: 0.875rem;
-          color: #6c757d;
-          font-weight: 600;
+          font-size: 0.8rem;
+          color: #6b7280;
+          font-weight: 700;
           margin-bottom: 8px;
           display: flex;
           align-items: center;
           text-transform: uppercase;
-          letter-spacing: 0.5px;
+          letter-spacing: 0.4px;
         }
 
         .info-value {
-          font-size: 1rem;
-          color: #212529;
+          font-size: 0.95rem;
+          color: '#1a202c';
           font-weight: 500;
           word-break: break-word;
         }
@@ -756,11 +745,11 @@ const UserProfile = () => {
           }
 
           .info-label {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
           }
 
           .info-value {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
           }
         }
       `}</style>
