@@ -923,7 +923,7 @@ const UserQuiz = () => {
                                 <div className="d-flex justify-content-between mb-2">
                                   <small className="text-muted">
                                     <FaQuestion className="me-1" />
-                                    <TransText k="quiz.questions" as="span" />: {quiz.number_of_questions}
+                                    <TransText k="quiz.questions" as="span" />: 10
                                   </small>
                                   <Badge bg="info">{quiz.quiz_category}</Badge>
                                 </div>
