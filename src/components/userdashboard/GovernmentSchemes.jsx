@@ -72,8 +72,9 @@ const GovernmentSchemes = () => {
     education: [
       {
         id: 1,
-        name: 'National Scholarship Portal',
+        nameKey: 'schemes.nsp',
         icon: <FaGraduationCap />,
+        descriptionKey: 'schemes.nspDesc',
         description: 'Central Government portal for various scholarships across India',
         benefits: ['Multiple scholarship schemes', 'Single window application', 'Direct benefit transfer'],
         eligibility: 'Students from Class 1 to PhD level',
@@ -84,6 +85,7 @@ const GovernmentSchemes = () => {
       },
       {
         id: 2,
+        nameKey: 'schemes.scScholarship',
         name: 'Post Matric Scholarship for SC Students',
         icon: <FaBook />,
         description: 'Scholarship for SC students pursuing post-matriculation education',
@@ -96,6 +98,7 @@ const GovernmentSchemes = () => {
       },
       {
         id: 3,
+        nameKey: 'schemes.stScholarship',
         name: 'Post Matric Scholarship for ST Students',
         icon: <FaBook />,
         description: 'Scholarship for ST students for post-matriculation studies',
@@ -108,6 +111,7 @@ const GovernmentSchemes = () => {
       },
       {
         id: 4,
+        nameKey: 'schemes.centralScholarship',
         name: 'Central Sector Scheme of Scholarships',
         icon: <FaAward />,
         description: 'Scholarship for top performing students from economically weaker sections',
@@ -117,11 +121,25 @@ const GovernmentSchemes = () => {
         applicationProcess: 'Online application through National Scholarship Portal',
         officialLink: 'https://scholarships.gov.in/',
         amount: '₹10,000 - ₹20,000 per annum'
+      },
+      {
+        id: 5,
+        nameKey: 'schemes.nandaGoraHigher',
+        name: 'Nanda Gora Higher Education Scheme',
+        icon: <FaGraduationCap />,
+        description: 'Educational support and loans for meritorious students pursuing higher education after 12th',
+        benefits: ['Educational loan up to ₹10 Lakhs', 'Scholarship for merit holders', 'Educational material support', 'Career counseling'],
+        eligibility: 'Students who have passed Class 12 with minimum 50% marks and annual family income below ₹3 Lakh',
+        documents: ['Class 12 Certificate', 'College Admission Letter', 'Income Certificate', 'Aadhaar Card', 'Bank Account Details'],
+        applicationProcess: 'Apply through Ministry of Education or partner financial institutions',
+        officialLink: 'https://www.moe.gov.in/',
+        amount: 'Loan up to ₹10 Lakhs + Merit scholarship'
       }
     ],
     scholarship: [
       {
-        id: 5,
+        id: 6,
+        nameKey: 'schemes.pmScholarship',
         name: 'Prime Minister Scholarship Scheme',
         icon: <FaPiggyBank />,
         description: 'Scholarship for wards of Central Armed Police Forces and RPF',
@@ -133,7 +151,8 @@ const GovernmentSchemes = () => {
         amount: '₹2,500 - ₹3,000 per month'
       },
       {
-        id: 6,
+        id: 7,
+        nameKey: 'schemes.obcScholarship',
         name: 'Pre-Matric Scholarship for OBC Students',
         icon: <FaHandHoldingUsd />,
         description: 'Scholarship for OBC students studying in Classes 1 to 10',
@@ -145,7 +164,8 @@ const GovernmentSchemes = () => {
         amount: '₹600 - ₹1,000 per month'
       },
       {
-        id: 7,
+        id: 8,
+        nameKey: 'schemes.minorityScholarship',
         name: 'Merit-cum-Means Scholarship',
         icon: <FaMedal />,
         description: 'Scholarship for professional courses for students from minority communities',
@@ -157,21 +177,24 @@ const GovernmentSchemes = () => {
         amount: '100% fee waiver + ₹10,000'
       },
       {
-        id: 8,
-        name: '中央直辖区奖学金计划',
+        id: 9,
+        name: 'Nanda Gora Women Development Scheme',
+        nameKey: 'schemes.nandaGora',
         icon: <FaPiggyBank />,
-        description: 'Scholarship for students from Northeast Region',
-        benefits: ['₹5,000 per month', 'Book grant', 'One-time stationery allowance'],
-        eligibility: 'Students from NE region studying outside their home state',
-        documents: ['Domicile Certificate', 'Income Certificate', 'College Admission Proof', 'Aadhaar Card'],
-        applicationProcess: 'Apply through Ministry of DoNER',
-        officialLink: 'https://doner.gov.in/',
-        amount: '₹5,000 per month'
+        description: 'Scheme for skill development and livelihood support for women in rural areas',
+        descriptionKey: 'schemes.nandaGoraDesc',
+        benefits: ['Monthly stipend of ₹3,000', 'Skill development training', 'Business support and mentoring', 'Microfinance assistance up to ₹50,000'],
+        eligibility: 'Women from rural areas aged 18-45 years with family income below ₹1.5 Lakh per annum',
+        documents: ['Aadhaar Card', 'Address Proof', 'Income Certificate', 'Bank Account Details'],
+        applicationProcess: 'Apply through Women Development Block Office or online portal',
+        officialLink: 'https://wcd.nic.in/',
+        amount: '₹3,000 per month + training'
       }
     ],
     skills: [
       {
-        id: 9,
+        id: 10,
+        nameKey: 'schemes.skillIndia',
         name: 'Skill India Mission',
         icon: <FaTools />,
         description: 'National mission for skills training and development',
@@ -183,7 +206,8 @@ const GovernmentSchemes = () => {
         amount: 'Free training with stipend'
       },
       {
-        id: 10,
+        id: 11,
+        nameKey: 'schemes.pmkvy',
         name: 'PMKVY (Pradhan Mantri Kaushal Vikas Yojana)',
         icon: <FaLaptopCode />,
         description: 'Skill certification program under Skill India Mission',
@@ -195,7 +219,8 @@ const GovernmentSchemes = () => {
         amount: 'Training free + placement'
       },
       {
-        id: 11,
+        id: 12,
+        nameKey: 'schemes.apprenticeship',
         name: 'National Apprenticeship Promotion Scheme',
         icon: <FaBriefcase />,
         description: 'Scheme to promote apprenticeship training',
@@ -207,7 +232,8 @@ const GovernmentSchemes = () => {
         amount: '₹5,000 - ₹9,000 per month'
       },
       {
-        id: 12,
+        id: 13,
+        nameKey: 'schemes.digitalIndia',
         name: 'Digital India Program',
         icon: <FaLaptop />,
         description: 'Training program for digital literacy',
@@ -221,7 +247,8 @@ const GovernmentSchemes = () => {
     ],
     women: [
       {
-        id: 13,
+        id: 14,
+        nameKey: 'schemes.betiBachao',
         name: 'Beti Bachao Beti Padhao',
         icon: <FaFemale />,
         description: 'Scheme for survival, protection and education of girl child',
@@ -233,7 +260,8 @@ const GovernmentSchemes = () => {
         amount: 'Various benefits'
       },
       {
-        id: 14,
+        id: 15,
+        nameKey: 'schemes.sukanya',
         name: 'Sukanya Samriddhi Yojana',
         icon: <FaPiggyBank />,
         description: 'Savings scheme for girl child',
@@ -245,7 +273,8 @@ const GovernmentSchemes = () => {
         amount: 'Investment with high returns'
       },
       {
-        id: 15,
+        id: 16,
+        nameKey: 'schemes.matruVandana',
         name: 'Pradhan Mantri Matru Vandana Yojana',
         icon: <FaBaby />,
         description: 'Maternity benefit program for pregnant and lactating mothers',
@@ -257,7 +286,8 @@ const GovernmentSchemes = () => {
         amount: '₹5,000 in installments'
       },
       {
-        id: 16,
+        id: 17,
+        nameKey: 'schemes.womenHelpline',
         name: 'Women Helpline Scheme',
         icon: <FaShieldAlt />,
         description: '24x7 helpline for women in distress',
@@ -269,7 +299,8 @@ const GovernmentSchemes = () => {
         amount: 'Free service'
       },
       {
-        id: 17,
+        id: 18,
+        nameKey: 'schemes.oneStopCentre',
         name: 'One Stop Centre Scheme',
         icon: <FaHeart />,
         description: 'Integrated support and assistance center for women',
@@ -281,7 +312,8 @@ const GovernmentSchemes = () => {
         amount: 'Free services'
       },
       {
-        id: 18,
+        id: 19,
+        nameKey: 'schemes.mahilaShakti',
         name: 'Mahila Shakti Kendra',
         icon: <FaFemale />,
         description: 'Empowerment center for rural women',
@@ -450,7 +482,7 @@ const GovernmentSchemes = () => {
                                             {scheme.icon}
                                           </div>
                                           <div>
-                                            <h6 className="mb-1">{scheme.name}</h6>
+                                            <h6 className="mb-1">{scheme.nameKey ? getTranslation(scheme.nameKey, language) : scheme.name}</h6>
                                             <Badge bg="success">{scheme.amount}</Badge>
                                           </div>
                                         </div>
@@ -488,7 +520,7 @@ const GovernmentSchemes = () => {
                                             {scheme.icon}
                                           </div>
                                           <div>
-                                            <h6 className="mb-1">{scheme.name}</h6>
+                                            <h6 className="mb-1">{scheme.nameKey ? getTranslation(scheme.nameKey, language) : scheme.name}</h6>
                                             <Badge bg="success">{scheme.amount}</Badge>
                                           </div>
                                         </div>
@@ -536,96 +568,161 @@ const GovernmentSchemes = () => {
         </div>
       </div>
 
-      <Modal show={showModal} onHide={() => setShowModal(false)} size="lg" centered>
-        <Modal.Header closeButton className="border-0">
-          <Modal.Title>
-            {selectedScheme?.icon}
-            <span className="ms-2">{selectedScheme?.name}</span>
+      <Modal show={showModal} onHide={() => setShowModal(false)} size="lg" centered scrollable className="government-schemes-modal">
+        <Modal.Header closeButton className="border-0" style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', padding: '2rem 1.5rem', borderRadius: '8px 8px 0 0'}}>
+          <Modal.Title className="w-100">
+            <div className="d-flex align-items-center gap-3" style={{color: 'white'}}>
+              <div style={{fontSize: '2.5rem', display: 'flex', alignItems: 'center'}}>
+                {selectedScheme?.icon}
+              </div>
+              <div style={{flex: 1}}>
+                <h3 className="mb-2 fw-bold" style={{color: 'white', fontSize: '1.5rem'}}>
+                  {selectedScheme?.nameKey ? getTranslation(selectedScheme.nameKey, language) : selectedScheme?.name}
+                </h3>
+                <p className="mb-0" style={{fontSize: '0.9rem', color: 'rgba(255,255,255,0.9)'}}>
+                  {language === 'hi' ? '✓ सरकारी योजना' : '✓ Government Scheme'}
+                </p>
+              </div>
+            </div>
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body className="pt-4" style={{background: '#f8f9fa'}}>
           {selectedScheme && (
             <div>
+              {/* Amount Badge - Prominent */}
               <div className="mb-4">
-                <h6 className="text-muted mb-2"><TransText k="schemes.description" as="span" /></h6>
-                <p>{selectedScheme.description}</p>
+                <div className="text-center p-4 rounded" style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white'}}>
+                  <small style={{fontSize: '0.85rem', opacity: 0.9}}>{language === 'hi' ? 'कुल लाभ की राशि' : 'Total Benefit Amount'}</small>
+                  <h2 className="mb-0 mt-2 fw-bold">{selectedScheme.amount}</h2>
+                </div>
               </div>
 
-              <div className="mb-4">
-                <h6 className="text-muted mb-2">
-                  <FaMoneyBillWave className="me-2 text-success" />
-                  <TransText k="schemes.benefits" as="span" />
+              {/* Description */}
+              <div className="mb-4 p-4 bg-white rounded border-start border-5" style={{borderColor: '#667eea'}}>
+                <h6 className="text-dark mb-3 fw-bold" style={{fontSize: '1rem'}}>
+                  {language === 'hi' ? '📌 योजना का विवरण' : '📌 About this Scheme'}
                 </h6>
-                <ul className="list-group">
+                <p className="mb-0 text-muted" style={{lineHeight: '1.6'}}>{selectedScheme.description}</p>
+              </div>
+
+              {/* Benefits - Highlighted */}
+              <div className="mb-4 p-4 bg-white rounded">
+                <h6 className="text-dark mb-3 fw-bold" style={{fontSize: '1rem'}}>
+                  <span style={{color: '#28a745'}}>✨ {language === 'hi' ? 'मुख्य लाभ' : 'Key Benefits'}</span>
+                </h6>
+                <div className="ps-2">
                   {selectedScheme.benefits.map((benefit, idx) => (
-                    <li key={idx} className="list-group-item">
-                      <FaCheckCircle className="me-2 text-success" />
-                      {benefit}
-                    </li>
+                    <div key={idx} className="mb-3 d-flex align-items-start">
+                      <span style={{color: '#28a745', marginRight: '0.75rem', marginTop: '0.25rem', fontSize: '1.2rem'}}>✓</span>
+                      <span className="text-muted" style={{fontSize: '0.95rem'}}>{benefit}</span>
+                    </div>
                   ))}
+                </div>
+              </div>
+
+              {/* Eligibility - Important */}
+              <div className="mb-4 p-4 bg-white rounded border-start border-5" style={{borderColor: '#0d6efd'}}>
+                <h6 className="text-dark mb-3 fw-bold" style={{fontSize: '1rem'}}>
+                  <span style={{color: '#0d6efd'}}>👤 {language === 'hi' ? 'कौन आवेदन कर सकता है?' : 'Who Can Apply?'}</span>
+                </h6>
+                <p className="mb-0 text-muted" style={{lineHeight: '1.6', fontSize: '0.95rem'}}>{selectedScheme.eligibility}</p>
+              </div>
+
+              {/* Documents Required */}
+              <div className="mb-4 p-4 bg-white rounded">
+                <h6 className="text-dark mb-3 fw-bold" style={{fontSize: '1rem'}}>
+                  <span style={{color: '#fd7e14'}}>📄 {language === 'hi' ? 'आवश्यक दस्तावेज़' : 'Documents Needed'}</span>
+                </h6>
+                <div className="row g-3 ps-2">
+                  {selectedScheme.documents.map((doc, idx) => (
+                    <div key={idx} className="col-md-6">
+                      <div className="p-3 rounded d-flex align-items-start" style={{background: '#fff3cd', border: '1px solid #ffc107'}}>
+                        <span style={{color: '#fd7e14', marginRight: '0.75rem', fontSize: '1rem'}}>📋</span>
+                        <span className="text-muted small" style={{fontSize: '0.9rem'}}>{doc}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Step by Step Application Guide */}
+              <div className="mb-4 p-4 bg-white rounded border-top border-5" style={{borderColor: '#0dcaf0'}}>
+                <h6 className="text-dark mb-4 fw-bold" style={{fontSize: '1.05rem'}}>
+                  <span style={{color: '#0dcaf0'}}>📍 {language === 'hi' ? 'आवेदन कैसे करें? (सरल चरण)' : 'How to Apply? (Simple Steps)'}</span>
+                </h6>
+                <div className="ms-2">
+                  {[
+                    {
+                      title: language === 'hi' ? 'सभी दस्तावेज़ तैयार करें' : 'Gather All Documents',
+                      desc: language === 'hi' ? 'ऊपर दिए गए सभी दस्तावेज़ों की मूल प्रति या फोटोकॉपी तैयार करें।' : 'Collect original or photocopy of all documents listed above.'
+                    },
+                    {
+                      title: language === 'hi' ? 'आधिकारिक वेबसाइट पर जाएं' : 'Visit Official Website',
+                      desc: language === 'hi' ? 'नीचे दिए गए लिंक पर क्लिक करें और आधिकारिक वेबसाइट खोलें।' : 'Click the link below to open the official government website.'
+                    },
+                    {
+                      title: language === 'hi' ? 'आवेदन फॉर्म भरें' : 'Fill Application Form',
+                      desc: language === 'hi' ? 'वेबसाइट पर "आवेदन करें" या "नया आवेदन" बटन खोजें और फॉर्म भरें।' : 'Look for "Apply Now" or "New Application" button and fill in all details.'
+                    },
+                    {
+                      title: language === 'hi' ? 'दस्तावेज़ अपलोड करें' : 'Upload Documents',
+                      desc: language === 'hi' ? 'फॉर्म में सभी आवश्यक दस्तावेज़ों की स्कैन प्रति अपलोड करें।' : 'Upload scanned copies of all required documents in the form.'
+                    },
+                    {
+                      title: language === 'hi' ? 'आवेदन सबमिट करें' : 'Submit Application',
+                      desc: language === 'hi' ? 'सभी विवरण जांचें और "सबमिट" बटन पर क्लिक करें।' : 'Double-check all details and click "Submit" button.'
+                    },
+                    {
+                      title: language === 'hi' ? 'पुष्टिकरण प्राप्त करें' : 'Get Confirmation',
+                      desc: language === 'hi' ? 'आपको एक संदर्भ संख्या/पावती मिलेगी। इसे सुरक्षित रखें।' : 'You will receive a reference number/receipt. Keep it safe for future updates.'
+                    }
+                  ].map((step, idx) => (
+                    <div key={idx} className="mb-3 d-flex gap-3">
+                      <div className="d-flex align-items-center justify-content-center" style={{minWidth: '40px', height: '40px', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', borderRadius: '50%', fontWeight: 'bold', fontSize: '1rem'}}>
+                        {idx + 1}
+                      </div>
+                      <div style={{flex: 1}}>
+                        <strong className="text-dark d-block" style={{fontSize: '0.95rem', marginBottom: '0.25rem'}}>{step.title}</strong>
+                        <p className="mb-0 text-muted small" style={{fontSize: '0.85rem', lineHeight: '1.5'}}>{step.desc}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Tips */}
+              <div className="mb-4 p-4 rounded" style={{background: '#fff3cd', border: '2px solid #ffc107'}}>
+                <h6 className="text-dark mb-3 fw-bold" style={{fontSize: '1rem'}}>
+                  <span style={{color: '#fd7e14'}}>⚠️ {language === 'hi' ? 'महत्वपूर्ण सुझाव' : 'Important Tips'}</span>
+                </h6>
+                <ul className="mb-0 ps-4 small" style={{color: '#856404', fontSize: '0.9rem'}}>
+                  <li className="mb-2">{language === 'hi' ? 'गलत या अधूरे आवेदन को अस्वीकार किया जा सकता है।' : 'Incomplete applications may be rejected.'}</li>
+                  <li className="mb-2">{language === 'hi' ? 'आवेदन की समय सीमा को मिस न करें।' : 'Do not miss the application deadline.'}</li>
+                  <li>{language === 'hi' ? 'सभी दस्तावेज़ स्पष्ट और वैध होने चाहिए।' : 'All documents must be clear and valid.'}</li>
                 </ul>
               </div>
 
-              <div className="mb-4">
-                <h6 className="text-muted mb-2">
-                  <FaUserGraduate className="me-2 text-primary" />
-                  <TransText k="schemes.eligibility" as="span" />
+              {/* Official Link */}
+              <div className="p-4 rounded" style={{background: '#e7f3ff', border: '2px solid #0d6efd'}}>
+                <h6 className="text-dark mb-3 fw-bold" style={{fontSize: '1rem'}}>
+                  <span style={{color: '#0d6efd'}}>🔗 {language === 'hi' ? 'आधिकारिक वेबसाइट' : 'Official Website'}</span>
                 </h6>
-                <p>{selectedScheme.eligibility}</p>
-              </div>
-
-              <div className="mb-4">
-                <h6 className="text-muted mb-2">
-                  <FaBook className="me-2 text-info" />
-                  <TransText k="schemes.requiredDocuments" as="span" />
-                </h6>
-                <Row>
-                  {selectedScheme.documents.map((doc, idx) => (
-                    <Col md={6} key={idx} className="mb-2">
-                      <Badge bg="light" text="dark" className="w-100 p-2 text-start">
-                        <FaCheckCircle className="me-2 text-success" />
-                        {doc}
-                      </Badge>
-                    </Col>
-                  ))}
-                </Row>
-              </div>
-
-              <div className="mb-4">
-                <h6 className="text-muted mb-2">
-                  <FaInfoCircle className="me-2 text-warning" />
-                  <TransText k="schemes.applicationProcess" as="span" />
-                </h6>
-                <p>{selectedScheme.applicationProcess}</p>
-              </div>
-
-              <div className="mb-4">
-                <h6 className="text-muted mb-2">
-                  <FaMoneyBillWave className="me-2 text-success" />
-                  <TransText k="schemes.amount" as="span" />
-                </h6>
-                <Badge bg="success" className="fs-5 p-2">{selectedScheme.amount}</Badge>
-              </div>
-
-              <Alert variant="info">
-                <FaInfoCircle className="me-2" />
-                <strong><TransText k="schemes.officialLink" as="span" />:</strong> 
-                <a href={selectedScheme.officialLink} target="_blank" rel="noopener noreferrer" className="ms-2">
+                <a href={selectedScheme.officialLink} target="_blank" rel="noopener noreferrer" className="text-break" style={{color: '#0d6efd', textDecoration: 'none', fontWeight: '500'}}>
                   {selectedScheme.officialLink}
                 </a>
-              </Alert>
+              </div>
             </div>
           )}
         </Modal.Body>
-        <Modal.Footer className="border-0">
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
-            <TransText k="button.close" as="span" />
+        <Modal.Footer className="border-0 bg-white pt-3 pb-3">
+          <Button variant="secondary" onClick={() => setShowModal(false)} style={{borderRadius: '8px', padding: '0.5rem 2rem'}}>
+            {language === 'hi' ? 'बंद करें' : 'Close'}
           </Button>
-          <Button variant="primary" onClick={() => {
-            setShowModal(false)
-            navigate('/UserDashboard')
-          }}>
-            <TransText k="schemes.toDashboard" as="span" />
+          <Button 
+            style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', border: 'none', borderRadius: '8px', padding: '0.5rem 2rem', fontWeight: 'bold'}} 
+            onClick={() => window.open(selectedScheme?.officialLink, '_blank')}
+          >
+            {language === 'hi' ? '🚀 अभी आवेदन करें' : '🚀 Apply Now'}
           </Button>
         </Modal.Footer>
       </Modal>
