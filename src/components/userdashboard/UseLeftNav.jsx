@@ -99,7 +99,7 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas, onNavAttempt }) => {
                      </Nav.Link>
                    )}
 
-                   <Nav.Link className="text-white" onClick={() => handleNavClick('/UserSettings')} style={{ cursor: 'pointer' }}>
+                   <Nav.Link className="text-white" onClick={() => handleNavClick('/GovernmentSchemes')} style={{ cursor: 'pointer' }}>
                      <i className="bi bi-file-earmark-text me-2"></i> <TransText k="settings.governmentSchemes" as="span" />
                    </Nav.Link>
                    
@@ -151,7 +151,7 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas, onNavAttempt }) => {
                       <i className="bi bi-currency-exchange fs-5"></i>
                     </Nav.Link>
                   )}
-                  <Nav.Link className="text-white" onClick={() => handleNavClick('/UserSettings')} title="Government Schemes" style={{ cursor: 'pointer' }}>
+                  <Nav.Link className="text-white" onClick={() => handleNavClick('/GovernmentSchemes')} title="Government Schemes" style={{ cursor: 'pointer' }}>
                     <i className="bi bi-file-earmark-text fs-5"></i>
                   </Nav.Link>
                   <Nav.Link className="text-white" onClick={() => handleNavClick('/UserNotifications')} style={{ cursor: 'pointer' }}>
@@ -202,7 +202,7 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas, onNavAttempt }) => {
                     <i className="bi bi-currency-exchange me-2"></i> Refund Request
                   </Nav.Link>
                 )}
-                <Nav.Link className="text-white" onClick={() => { setShowOffcanvas(false); handleNavClick('/UserSettings'); }} style={{ cursor: 'pointer' }}>
+                <Nav.Link className="text-white" onClick={() => { setShowOffcanvas(false); handleNavClick('/GovernmentSchemes'); }} style={{ cursor: 'pointer' }}>
                   <i className="bi bi-file-earmark-text me-2"></i> <TransText k="settings.governmentSchemes" as="span" />
                 </Nav.Link>
                 <div className="guidelines-menu">
