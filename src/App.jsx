@@ -6,6 +6,7 @@ import {
   Navigate,
   useLocation,
 } from "react-router-dom";
+import { useAuth } from "./contexts/AuthContext.jsx";
 import 'bootstrap/dist/css/bootstrap.min.css'; // If you use Bootstrap CSS
 import 'bootstrap-icons/font/bootstrap-icons.css'; // <-- ADD THIS LINE
 import Login from "./components/login/Login.jsx";
@@ -37,6 +38,34 @@ import UserQuiz from "./components/userdashboard/UserQuiz.jsx";
 
 function AppContent() {
   const location = useLocation();
+  const { logout, isAuthenticated } = useAuth();
+  const initialRender = React.useRef(true);
+
+  React.useEffect(() => {
+    if (initialRender.current) {
+      initialRender.current = false;
+      return;
+    }
+
+    if (!isAuthenticated) return;
+
+    const handlePopState = (event) => {
+      if (window.confirm("Are you sure you want to logout?")) {
+        logout();
+        window.location.href = "/";
+      } else {
+        window.history.pushState(null, "", window.location.href);
+      }
+    };
+
+    window.history.pushState(null, "", window.location.href);
+    window.addEventListener("popstate", handlePopState);
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [isAuthenticated, logout]);
+
   const hideFooter = location.pathname.includes("/AdminDashboard") || location.pathname.includes("/UserDashboard") || location.pathname.includes("/UserProfile") || location.pathname.includes("/UserTest") || location.pathname.includes("/Enrollments") || location.pathname.includes("/RefundRequest") || location.pathname.includes("/UserSettings") || location.pathname.includes("/UserNotifications") || location.pathname.includes("/OccupationDetails") || location.pathname.includes("/Feedback") || location.pathname.includes("/UserQuery") || location.pathname.includes("/StudentIssues") || location.pathname.includes("/QuizManagement") || location.pathname.includes("/UserQuiz");
   const hideNavBar = location.pathname.includes("/AdminDashboard") || location.pathname.includes("/UserDashboard") || location.pathname.includes("/UserProfile") || location.pathname.includes("/UserTest") || location.pathname.includes("/Enrollments") || location.pathname.includes("/RefundRequest") || location.pathname.includes("/UserSettings") || location.pathname.includes("/UserNotifications") || location.pathname.includes("/OccupationDetails") || location.pathname.includes("/Feedback") || location.pathname.includes("/UserQuery") || location.pathname.includes("/StudentIssues") || location.pathname.includes("/QuizManagement") || location.pathname.includes("/UserQuiz");
 
