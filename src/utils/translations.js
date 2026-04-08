@@ -350,6 +350,9 @@ export const translations = {
     "settings.therapist": "Therapist",
     "settings.lawyer": "Lawyer",
     "settings.electricianCareer": "Electrician",
+    "settings.governmentSchemes": "Government Schemes for Students",
+    "settings.schemesDescription":
+      "Explore various government schemes available for educational support, financial assistance, and career development",
 
     // Occupation Details Page
     "occupation.backToGuidance": "Back to Guidance",
@@ -781,6 +784,42 @@ export const translations = {
     "quiz.congratulations": "Congratulations!",
     "quiz.greatJob": "Great job! You scored",
     "quiz.viewWrongAnswers": "View Wrong Answers",
+
+    // Government Schemes
+    "schemes.title": "Government Schemes",
+    "schemes.subtitle": "Government schemes for education and employment",
+    "schemes.description":
+      "Information about various government schemes available for you",
+    "schemes.eligibility": "Eligibility",
+    "schemes.benefits": "Benefits",
+    "schemes.apply": "Apply Now",
+    "schemes.website": "Website",
+    "schemes.viewSchemes": "View All Schemes",
+    "schemes.pmay": "Pradhan Mantri Awas Yojana",
+    "schemes.pmayDesc": "Scheme to provide housing for poor families",
+    "schemes.pmayBenefit": "Financial assistance up to ₹1.5 lakh",
+    "schemes.pmjay": "Ayushman Bharat",
+    "schemes.pmjayDesc": "Pradhan Mantri Jan Arogya Yojana - Health Insurance",
+    "schemes.pmjayBenefit": "Health insurance cover up to ₹5 lakh",
+    "schemes.pmkvy": "Pradhan Mantri Kaushal Vikas Yojana",
+    "schemes.pmkvyDesc": "Skill training for youth for employment",
+    "schemes.pmkvyBenefit": "Free skill training and certification",
+    "schemes.pmyss": "Pradhan Mantri Student Scholarship",
+    "schemes.pmyssDesc": "Scholarship for students",
+    "schemes.pmyssBenefit": "Scholarship from ₹1,000 to ₹75,000",
+    "schemes.nsp": "National Scholarship Portal",
+    "schemes.nspDesc":
+      "Single portal for Central and State scholarship schemes",
+    "schemes.nspBenefit": "Access to various scholarship schemes",
+    "schemes.pmrel": "Pradhan Mantri Rojgar Protsahan Yojana",
+    "schemes.pmrelDesc": "Govt contributes employer EPF for employees",
+    "schemes.pmrelBenefit": "12% contribution on employee EPF",
+    "schemes.pmayg": "PMAY (Rural)",
+    "schemes.pmaygDesc": "Pucca house construction in rural areas",
+    "schemes.pmaygBenefit": "₹1.20 lakh (₹1.30 lakh in hilly areas)",
+    "schemes.standup": "Stand-Up India",
+    "schemes.standupDesc": "Loans for SC/ST and Women entrepreneurs",
+    "schemes.standupBenefit": "Loan from ₹10 lakh to ₹1 crore",
   },
   hi: {
     // Navigation & Header
@@ -1165,6 +1204,9 @@ export const translations = {
     "settings.therapist": "चिकित्सक",
     "settings.lawyer": "वकील",
     "settings.electricianCareer": "इलेक्ट्रीशियन",
+    "settings.governmentSchemes": "छात्रों के लिए सरकारी योजनाएं",
+    "settings.schemesDescription":
+      "शैक्षणिक सहायता, वित्तीय सहायता और कैरियर विकास के लिए उपलब्ध विभिन्न सरकारी योजनाओं का अन्वेषण करें",
 
     // Occupation Details Page
     "occupation.backToGuidance": "मार्गदर्शन पर वापस जाएं",
@@ -1553,6 +1595,42 @@ export const translations = {
     "quiz.congratulations": "बधाई हो!",
     "quiz.greatJob": "शानदार काम! आपने स्कोर किया",
     "quiz.viewWrongAnswers": "गलत उत्तर देखें",
+
+    // Government Schemes
+    "schemes.title": "सरकारी योजनाएं",
+    "schemes.subtitle": "शिक्षा और रोजगार के लिए सरकारी योजनाएं",
+    "schemes.description":
+      "विभिन्न सरकारी योजनाओं की जानकारी जो आपके लिए उपलब्ध हैं",
+    "schemes.eligibility": "पात्रता",
+    "schemes.benefits": "लाभ",
+    "schemes.apply": "आवेदन करें",
+    "schemes.website": "वेबसाइट",
+    "schemes.viewSchemes": "सभी योजनाएं देखें",
+    "schemes.pmay": "प्रधानमंत्री आवास योजना",
+    "schemes.pmayDesc": "गरीब परिवारों को आवास प्रदान करने की योजना",
+    "schemes.pmayBenefit": "₹1.5 लाख तक की वित्तीय सहायता",
+    "schemes.pmjay": "आयुष्मान भारत",
+    "schemes.pmjayDesc": "प्रधानमंत्री जन आरोग्य योजना - स्वास्थ्य बीमा",
+    "schemes.pmjayBenefit": "₹5 लाख तक का स्वास्थ्य बीमा कवर",
+    "schemes.pmkvy": "प्रधानमंत्री कौशल विकास योजना",
+    "schemes.pmkvyDesc": "युवाओं को रोजगार के लिए कौशल प्रशिक्षण",
+    "schemes.pmkvyBenefit": "मुफ्त कौशल प्रशिक्षण और प्रमाणपत्र",
+    "schemes.pmyss": "प्रधानमंत्री छात्रवृत्ति योजना",
+    "schemes.pmyssDesc": "विद्यार्थियों को छात्रवृत्ति प्रदान करना",
+    "schemes.pmyssBenefit": "₹1,000 - ₹75,000 तक छात्रवृत्ति",
+    "schemes.nsp": "राष्ट्रीय छात्रवृत्ति पोर्टल",
+    "schemes.nspDesc":
+      "केंद्र और राज्य सरकार की छात्रवृत्ति योजनाओं का एकल पोर्टल",
+    "schemes.nspBenefit": "विभिन्न छात्रवृत्ति योजनाओं तक पहुंच",
+    "schemes.pmrel": "प्रधानमंत्री रोजगार लेखा",
+    "schemes.pmrelDesc": "नियोक्ताओं को कर्मचारियों के EPF का अंशदान",
+    "schemes.pmrelBenefit": "कर्मचारी के EPF पर 12% अंशदान",
+    "schemes.pmayg": "प्रधानमंत्री आवास (ग्रामीण)",
+    "schemes.pmaygDesc": "ग्रामीण क्षेत्रों में पक्के घर निर्माण",
+    "schemes.pmaygBenefit": "₹1.20 लाख (पहाड़ी क्षेत्रों में ₹1.30 लाख)",
+    "schemes.standup": "स्टैंड-अप इंडिया",
+    "schemes.standupDesc": "एससी/एसटी और महिला उद्यमियों के लिए ऋण",
+    "schemes.standupBenefit": "₹10 लाख से ₹1 करोड़ तक ऋण",
   },
 };
 
