@@ -98,6 +98,10 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas, onNavAttempt }) => {
                        <i className="bi bi-currency-exchange me-2"></i> <TransText k="menu.refund" as="span" />
                      </Nav.Link>
                    )}
+
+                   <Nav.Link className="text-white" onClick={() => handleNavClick('/UserSettings')} style={{ cursor: 'pointer' }}>
+                     <i className="bi bi-file-earmark-text me-2"></i> <TransText k="settings.governmentSchemes" as="span" />
+                   </Nav.Link>
                    
                    <div className="guidelines-menu">
                      <div 
@@ -147,6 +151,9 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas, onNavAttempt }) => {
                       <i className="bi bi-currency-exchange fs-5"></i>
                     </Nav.Link>
                   )}
+                  <Nav.Link className="text-white" onClick={() => handleNavClick('/UserSettings')} title="Government Schemes" style={{ cursor: 'pointer' }}>
+                    <i className="bi bi-file-earmark-text fs-5"></i>
+                  </Nav.Link>
                   <Nav.Link className="text-white" onClick={() => handleNavClick('/UserNotifications')} style={{ cursor: 'pointer' }}>
                     <i className="bi bi-bell fs-5"></i>
                   </Nav.Link>
@@ -195,6 +202,9 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas, onNavAttempt }) => {
                     <i className="bi bi-currency-exchange me-2"></i> Refund Request
                   </Nav.Link>
                 )}
+                <Nav.Link className="text-white" onClick={() => { setShowOffcanvas(false); handleNavClick('/UserSettings'); }} style={{ cursor: 'pointer' }}>
+                  <i className="bi bi-file-earmark-text me-2"></i> <TransText k="settings.governmentSchemes" as="span" />
+                </Nav.Link>
                 <div className="guidelines-menu">
                   <div 
                     className="text-white text-decoration-none w-100 text-start d-flex align-items-center justify-content-between cursor-pointer py-2"

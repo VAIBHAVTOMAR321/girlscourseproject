@@ -35,6 +35,7 @@ import OccupationDetails from "./components/userdashboard/OccupationDetails.jsx"
 import UserQuery from "./components/userdashboard/UserQuery.jsx";
 import Home from "./components/home/Home.jsx";
 import UserQuiz from "./components/userdashboard/UserQuiz.jsx";
+import GovernmentSchemes from "./components/userdashboard/GovernmentSchemes.jsx";
 
 function AppContent() {
   const location = useLocation();
@@ -66,8 +67,8 @@ function AppContent() {
     };
   }, [isAuthenticated, logout]);
 
-  const hideFooter = location.pathname.includes("/AdminDashboard") || location.pathname.includes("/UserDashboard") || location.pathname.includes("/UserProfile") || location.pathname.includes("/UserTest") || location.pathname.includes("/Enrollments") || location.pathname.includes("/RefundRequest") || location.pathname.includes("/UserSettings") || location.pathname.includes("/UserNotifications") || location.pathname.includes("/OccupationDetails") || location.pathname.includes("/Feedback") || location.pathname.includes("/UserQuery") || location.pathname.includes("/StudentIssues") || location.pathname.includes("/QuizManagement") || location.pathname.includes("/UserQuiz");
-  const hideNavBar = location.pathname.includes("/AdminDashboard") || location.pathname.includes("/UserDashboard") || location.pathname.includes("/UserProfile") || location.pathname.includes("/UserTest") || location.pathname.includes("/Enrollments") || location.pathname.includes("/RefundRequest") || location.pathname.includes("/UserSettings") || location.pathname.includes("/UserNotifications") || location.pathname.includes("/OccupationDetails") || location.pathname.includes("/Feedback") || location.pathname.includes("/UserQuery") || location.pathname.includes("/StudentIssues") || location.pathname.includes("/QuizManagement") || location.pathname.includes("/UserQuiz");
+  const hideFooter = location.pathname.includes("/AdminDashboard") || location.pathname.includes("/UserDashboard") || location.pathname.includes("/UserProfile") || location.pathname.includes("/UserTest") || location.pathname.includes("/Enrollments") || location.pathname.includes("/RefundRequest") || location.pathname.includes("/UserSettings") || location.pathname.includes("/UserNotifications") || location.pathname.includes("/OccupationDetails") || location.pathname.includes("/Feedback") || location.pathname.includes("/UserQuery") || location.pathname.includes("/StudentIssues") || location.pathname.includes("/QuizManagement") || location.pathname.includes("/UserQuiz") || location.pathname.includes("/GovernmentSchemes");
+  const hideNavBar = location.pathname.includes("/AdminDashboard") || location.pathname.includes("/UserDashboard") || location.pathname.includes("/UserProfile") || location.pathname.includes("/UserTest") || location.pathname.includes("/Enrollments") || location.pathname.includes("/RefundRequest") || location.pathname.includes("/UserSettings") || location.pathname.includes("/UserNotifications") || location.pathname.includes("/OccupationDetails") || location.pathname.includes("/Feedback") || location.pathname.includes("/UserQuery") || location.pathname.includes("/StudentIssues") || location.pathname.includes("/QuizManagement") || location.pathname.includes("/UserQuiz") || location.pathname.includes("/GovernmentSchemes");
 
   return (
     <>
@@ -157,6 +158,14 @@ function AppContent() {
             element={
               <ProtectedRoute>
                 <UserNotifications />
+              </ProtectedRoute>
+            }
+          />
+           <Route
+            path="/GovernmentSchemes"
+            element={
+              <ProtectedRoute>
+                <GovernmentSchemes />
               </ProtectedRoute>
             }
           />
