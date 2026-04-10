@@ -1233,7 +1233,7 @@ const UserDashboard = () => {
                                                  ? subModule.sub_modu_description 
                                                  : (subModule.sub_modu_description_hindi || subModule.sub_modu_description)
                                                ) && (
-                                                 <p className="mb-0 text-muted small">
+                                                 <p className="mb-0  small">
                                                    {renderContentWithLineBreaks(
                                                      courseLanguage === 'english' 
                                                        ? subModule.sub_modu_description 
@@ -1284,7 +1284,7 @@ const UserDashboard = () => {
                                                                        {renderContentWithLineBreaks(item[1])}
                                                                      </div>
                                                                    ) : item[0].toLowerCase() === 'description' ? (
-                                                                     <div className="content-description text-muted">
+                                                                     <div className="content-description ">
                                                                        {renderContentWithLineBreaks(item[1])}
                                                                      </div>
                                                                    ) : (
@@ -1307,7 +1307,7 @@ const UserDashboard = () => {
                                                                            {renderContentWithLineBreaks(value)}
                                                                          </h6>
                                                                        ) : key.toLowerCase() === 'description' ? (
-                                                                         <p className="content-description text-muted mb-0">
+                                                                         <p className="content-description  mb-0">
                                                                            {renderContentWithLineBreaks(value)}
                                                                          </p>
                                                                        ) : (

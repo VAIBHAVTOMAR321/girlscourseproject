@@ -93,7 +93,7 @@ const GovernmentSchemes = () => {
         eligibility: 'SC students with family income below specified limit',
         documents: ['Caste Certificate', 'Income Certificate', 'Previous Year Marksheet', 'Bank Account'],
         applicationProcess: 'Apply through state welfare department',
-        officialLink: 'https://www.socialjustice.nic.in/',
+        officialLink: 'https://socialjustice.gov.in/',
         amount: 'Up to ₹15,000 per annum'
       },
       {
@@ -132,7 +132,7 @@ const GovernmentSchemes = () => {
         eligibility: 'Students who have passed Class 12 with minimum 50% marks and annual family income below ₹3 Lakh',
         documents: ['Class 12 Certificate', 'College Admission Letter', 'Income Certificate', 'Aadhaar Card', 'Bank Account Details'],
         applicationProcess: 'Apply through Ministry of Education or partner financial institutions',
-        officialLink: 'https://www.moe.gov.in/',
+        officialLink: 'https://www.education.gov.in/',
         amount: 'Loan up to ₹10 Lakhs + Merit scholarship'
       }
     ],
@@ -187,7 +187,7 @@ const GovernmentSchemes = () => {
         eligibility: 'Women from rural areas aged 18-45 years with family income below ₹1.5 Lakh per annum',
         documents: ['Aadhaar Card', 'Address Proof', 'Income Certificate', 'Bank Account Details'],
         applicationProcess: 'Apply through Women Development Block Office or online portal',
-        officialLink: 'https://wcd.nic.in/',
+        officialLink: 'https://www.nandagaurauk.in/',
         amount: '₹3,000 per month + training'
       }
     ],

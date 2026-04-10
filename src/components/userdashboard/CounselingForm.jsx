@@ -72,20 +72,7 @@ const CounselingForm = ({ onSubmit, initialData = {}, showForm: propShowForm, on
       return
     }
 
-    // Validate phone number (basic validation)
-    const phoneRegex = /^[6-9]\d{9}$/
-    if (!formData.phone) {
-      alert(getTranslation('counseling.errorPhone', language))
-      return
-    }
-    if (!phoneRegex.test(formData.phone.replace(/\s+/g, ''))) {
-      alert(getTranslation('counseling.errorPhoneValid', language))
-      return
-    }
 
-    // Validate email
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/  
- 
 
     // Validate aadhaar if provided
     if (formData.aadhaar_no && !/^\d{12}$/.test(formData.aadhaar_no.replace(/\s+/g, ''))) {

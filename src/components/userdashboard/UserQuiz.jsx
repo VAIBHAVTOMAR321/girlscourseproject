@@ -452,8 +452,8 @@ const UserQuiz = () => {
       setAnswers({})
 
       // Calculate duration in seconds
-      const duration = (endTime.getTime() - now.getTime()) / 1000
-      setTimeRemaining(Math.max(60, Math.min(duration, 3600))) // Between 1 min and 1 hour
+const duration = (endTime.getTime() - now.getTime()) / 1000
+setTimeRemaining(Math.max(0, Math.min(duration, 300))) // Max 5 min
     } catch (error) {
       console.error('Error starting quiz:', error)
       const errorMessage = error.response?.data?.message || error.response?.data?.error || error.message
