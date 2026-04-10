@@ -109,7 +109,7 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas, onNavAttempt }) => {
                        onClick={() => setShowGuidelines(!showGuidelines)}
                        style={{ cursor: 'pointer' }}
                      >
-                       <span className='mx-3'><i className="bi bi-book me-2"></i> <TransText k="module.lessons" as="span" /></span>
+                       <span className='mx-3'><i className="bi bi-book me-2"></i> <TransText k="menu.guideline" as="span" /></span>
                        <i className={`bi bi-chevron-${showGuidelines ? 'up' : 'down'}`}></i>
                      </div>
                      {showGuidelines && (
@@ -211,7 +211,7 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas, onNavAttempt }) => {
                     onClick={() => setShowGuidelines(!showGuidelines)}
                     style={{ cursor: 'pointer' }}
                   >
-                    <span className='mx-3'><i className="bi bi-book me-2"></i> Guidelines</span>
+                    <span className='mx-3'><i className="bi bi-book me-2"></i> <TransText k="menu.guideline" as="span" /></span>
                   <i className={`bi bi-chevron-${showGuidelines ? 'up' : 'down'} ms-auto me-3`}></i>
                   </div>
                   {showGuidelines && (
