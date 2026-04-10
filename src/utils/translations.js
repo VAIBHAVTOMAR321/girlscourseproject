@@ -71,6 +71,7 @@ export const translations = {
     "menu.notifications": "Notifications",
     "menu.refund": "Refund Request",
     "menu.query": "Send Query",
+    "menu.guideline": "Guidelines",
     "menu.logout": "Logout",
     "menu.occupation": "Occupation Details",
 
@@ -1006,6 +1007,7 @@ export const translations = {
     "menu.query": "प्रश्न भेजें",
     "menu.logout": "लॉग आउट",
     "menu.occupation": "व्यावसायिक विवरण",
+    "menu.guideline": "गाइडलाइन",
 
     // Status Messages
     "status.loading": "लोड हो रहा है...",
