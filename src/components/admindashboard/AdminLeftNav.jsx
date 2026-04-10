@@ -76,6 +76,14 @@ const AdminLeftNav = ({ show, setShow }) => {
               <i className="bi bi-question-circle nav-icon"></i>
               <span className="nav-text">Quiz Management</span>
             </Nav.Link>
+            <Nav.Link as={Link} to="/ManageGovtSchemes" className="nav-link-custom ">
+              <i className="bi bi-file-earmark-text nav-icon"></i>
+              <span className="nav-text">Manage Schemes</span>
+            </Nav.Link>
+            <Nav.Link as={Link} to="/AddGovtSchemes" className="nav-link-custom ">
+              <i className="bi bi-plus-circle nav-icon"></i>
+              <span className="nav-text">Add Scheme</span>
+            </Nav.Link>
           </Nav>
         </div>
       )}
@@ -106,6 +114,12 @@ const AdminLeftNav = ({ show, setShow }) => {
             </Nav.Link>
             <Nav.Link as={Link} to="/QuizManagement" className="nav-link-custom" onClick={() => setShowOffcanvas(false)}>
               <i className="bi bi-question-circle nav-icon me-2"></i> Quiz Management
+            </Nav.Link>
+            <Nav.Link as={Link} to="/ManageGovtSchemes" className="nav-link-custom" onClick={() => setShowOffcanvas(false)}>
+              <i className="bi bi-file-earmark-text nav-icon me-2"></i> Manage Schemes
+            </Nav.Link>
+            <Nav.Link as={Link} to="/AddGovtSchemes" className="nav-link-custom" onClick={() => setShowOffcanvas(false)}>
+              <i className="bi bi-plus-circle nav-icon me-2"></i> Add Scheme
             </Nav.Link>
           </Nav>
         </Offcanvas.Body>

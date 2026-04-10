@@ -1,0 +1,643 @@
+import React, { useState, useEffect, useRef } from 'react'
+import { 
+  Container, Row, Col, Card, Spinner, Button, Form, Badge, Table
+} from 'react-bootstrap'
+import AdminLeftNav from './AdminLeftNav'
+import AdminTopNav from './AdminTopNav'
+import axios from 'axios'
+import '../../assets/css/AdminDashboard.css'
+import { useAuth } from '../../contexts/AuthContext'
+import { FaPlus, FaArrowLeft, FaEdit, FaTrash } from 'react-icons/fa'
+
+const AddGovtSchemes = () => {
+  const isMounted = useRef(true)
+  const [showSidebar, setShowSidebar] = useState(true)
+  
+  const authData = useAuth()
+  const authToken = authData?.accessToken
+
+  const [categories, setCategories] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [submitting, setSubmitting] = useState(false)
+  const [schemes, setSchemes] = useState([])
+  const [loadingSchemes, setLoadingSchemes] = useState(false)
+  const [currentView, setCurrentView] = useState('add')
+  const [selectedCategory, setSelectedCategory] = useState(null)
+  
+  const [formData, setFormData] = useState({
+    gov_scheme_id: null,
+    scheme_category_id: '',
+    title: '',
+    title_hindi: '',
+    description: '',
+    description_hindi: '',
+    sub_mod: [{ title: '', description: '' }],
+    sub_mod_hindi: [{ title: '', description: '' }],
+    web_link: '',
+    image: null
+  })
+
+  useEffect(() => {
+    if (isMounted.current) {
+      fetchCategories()
+      fetchAllSchemes()
+    }
+    return () => { isMounted.current = false }
+  }, [authToken])
+
+  const getAuthConfig = () => {
+    const headers = {}
+    if (authToken) {
+      headers['Authorization'] = `Bearer ${authToken}`
+    }
+    return { headers }
+  }
+
+  const fetchCategories = async () => {
+    if (!authToken) {
+      setLoading(false)
+      return
+    }
+    
+    try {
+      const config = getAuthConfig()
+      const response = await axios.get('https://brjobsedu.com/girls_course/girls_course_backend/api/scheme-category/', config)
+      if (response.data && response.data.success) {
+        setCategories(response.data.data)
+        if (response.data.data.length > 0) {
+          setFormData(prev => ({ ...prev, scheme_category_id: response.data.data[0].scheme_category_id }))
+          setSelectedCategory(response.data.data[0])
+        }
+      }
+    } catch (error) {
+      setCategories([])
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const fetchAllSchemes = async () => {
+    setLoadingSchemes(true)
+    try {
+      const config = getAuthConfig()
+      const response = await axios.get('https://brjobsedu.com/girls_course/girls_course_backend/api/scheme-category-with-schemes/', config)
+      if (response.data && response.data.success) {
+        // Flatten all schemes from all categories
+        const allSchemes = response.data.data.flatMap(cat => 
+          (cat.schemes || []).map(scheme => ({
+            ...scheme,
+            sub_mod: typeof scheme.sub_mod === 'string' ? JSON.parse(scheme.sub_mod) : (scheme.sub_mod || []),
+            sub_mod_hindi: typeof scheme.sub_mod_hindi === 'string' ? JSON.parse(scheme.sub_mod_hindi) : (scheme.sub_mod_hindi || [])
+          }))
+        )
+        setSchemes(allSchemes)
+      }
+    } catch (error) {
+      setSchemes([])
+    } finally {
+      setLoadingSchemes(false)
+    }
+  }
+
+  const handleChange = (field, value) => {
+    setFormData({ ...formData, [field]: value })
+  }
+
+  const handleCategoryChange = (categoryId) => {
+    setFormData({ ...formData, scheme_category_id: categoryId })
+    const selected = categories.find(cat => cat.scheme_category_id === categoryId)
+    setSelectedCategory(selected)
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    if (submitting) return
+
+    // Validation
+    if (!formData.scheme_category_id || formData.scheme_category_id.trim() === '') {
+      alert('Please select a category')
+      return
+    }
+
+    // Verify selected category exists
+    const categoryExists = categories.some(cat => cat.scheme_category_id === formData.scheme_category_id)
+    if (!categoryExists) {
+      alert('Invalid category selected. Please select a valid category.')
+      return
+    }
+
+    if (!formData.title || formData.title.trim() === '') {
+      alert('Please enter scheme title (English)')
+      return
+    }
+    if (!formData.description || formData.description.trim() === '') {
+      alert('Please enter scheme description (English)')
+      return
+    }
+    if (formData.sub_mod.some(s => !s.title || !s.description)) {
+      alert('Please fill all sub-module fields (Title and Description)')
+      return
+    }
+
+    setSubmitting(true)
+
+    try {
+      const config = getAuthConfig()
+      
+      // Create clean payload object
+      const payload = {
+        scheme_category_id: formData.scheme_category_id.trim(),
+        title: formData.title.trim(),
+        title_hindi: formData.title_hindi.trim() || '',
+        description: formData.description.trim(),
+        description_hindi: formData.description_hindi.trim() || '',
+        sub_mod: formData.sub_mod.map(s => ({
+          title: s.title.trim(),
+          description: s.description.trim()
+        })),
+        sub_mod_hindi: formData.sub_mod_hindi.map(s => ({
+          title: s.title.trim(),
+          description: s.description.trim()
+        })),
+        web_link: formData.web_link.trim() || ''
+      }
+
+      // Log payload for debugging
+      console.log('📤 Submitting payload:', JSON.stringify(payload, null, 2))
+
+      if (formData.gov_scheme_id) {
+        payload.gov_scheme_id = formData.gov_scheme_id
+        console.log('🔄 Updating scheme:', formData.gov_scheme_id)
+        
+        const response = await axios.put(
+          'https://brjobsedu.com/girls_course/girls_course_backend/api/scheme/',
+          payload,
+          {
+            ...config,
+            headers: { ...config.headers, 'Content-Type': 'application/json' },
+            timeout: 10000
+          }
+        )
+        console.log('✅ Update response:', response.data)
+        alert('✅ Scheme updated successfully!')
+      } else {
+        // Add image if provided
+        if (formData.image) {
+          const imageFormData = new FormData()
+          // Add JSON fields
+          Object.keys(payload).forEach(key => {
+            if (key === 'sub_mod' || key === 'sub_mod_hindi') {
+              imageFormData.append(key, JSON.stringify(payload[key]))
+            } else {
+              imageFormData.append(key, payload[key])
+            }
+          })
+          imageFormData.append('image', formData.image)
+          
+          console.log('📸 Adding scheme with image')
+          const response = await axios.post(
+            'https://brjobsedu.com/girls_course/girls_course_backend/api/scheme/',
+            imageFormData,
+            {
+              ...config,
+              headers: { ...config.headers, 'Content-Type': 'multipart/form-data' },
+              timeout: 10000
+            }
+          )
+          console.log('✅ Add response:', response.data)
+        } else {
+          console.log('📝 Adding scheme without image')
+          // Send without image as JSON
+          const response = await axios.post(
+            'https://brjobsedu.com/girls_course/girls_course_backend/api/scheme/',
+            payload,
+            {
+              ...config,
+              headers: { ...config.headers, 'Content-Type': 'application/json' },
+              timeout: 10000
+            }
+          )
+          console.log('✅ Add response:', response.data)
+        }
+        alert('✅ Scheme added successfully!')
+      }
+
+      resetForm()
+      fetchAllSchemes()
+    } catch (error) {
+      console.error('❌ Error details:', error)
+      
+      let errorMessage = 'An error occurred'
+      let errorDetails = ''
+      
+      if (error.response) {
+        console.error('Status:', error.response.status)
+        console.error('Response:', error.response.data)
+        
+        // Extract error message from various response formats
+        if (error.response.data) {
+          if (typeof error.response.data === 'string') {
+            errorMessage = error.response.data
+          } else if (error.response.data.detail) {
+            errorMessage = error.response.data.detail
+          } else if (error.response.data.message) {
+            errorMessage = error.response.data.message
+          } else if (error.response.data.error) {
+            errorMessage = error.response.data.error
+          } else if (error.response.data.errors) {
+            // Handle validation errors
+            const errors = error.response.data.errors
+            if (typeof errors === 'object') {
+              errorDetails = Object.entries(errors)
+                .map(([field, msgs]) => `• ${field}: ${Array.isArray(msgs) ? msgs.join(', ') : msgs}`)
+                .join('\n')
+              errorMessage = 'Validation Failed'
+            } else {
+              errorMessage = JSON.stringify(errors)
+            }
+          } else {
+            errorMessage = JSON.stringify(error.response.data)
+          }
+        }
+        
+        const fullError = errorDetails 
+          ? `❌ ${error.response.status} - ${errorMessage}\n\n${errorDetails}`
+          : `❌ ${error.response.status} - ${errorMessage}`
+        
+        alert(fullError)
+      } else if (error.request) {
+        console.error('No response received')
+        alert('❌ Failed: No response from server. Check your internet connection.')
+      } else {
+        console.error('Error:', error.message)
+        alert('❌ Failed: ' + error.message)
+      }
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  const resetForm = () => {
+    setFormData({
+      gov_scheme_id: null,
+      scheme_category_id: categories.length > 0 ? categories[0].scheme_category_id : '',
+      title: '',
+      title_hindi: '',
+      description: '',
+      description_hindi: '',
+      sub_mod: [{ title: '', description: '' }],
+      sub_mod_hindi: [{ title: '', description: '' }],
+      web_link: '',
+      image: null
+    })
+  }
+
+  const handleEdit = (scheme) => {
+    setFormData({
+      gov_scheme_id: scheme.gov_scheme_id,
+      scheme_category_id: scheme.scheme_category_id,
+      title: scheme.title,
+      title_hindi: scheme.title_hindi || '',
+      description: scheme.description || '',
+      description_hindi: scheme.description_hindi || '',
+      sub_mod: scheme.sub_mod || [{ title: '', description: '' }],
+      sub_mod_hindi: scheme.sub_mod_hindi || [{ title: '', description: '' }],
+      web_link: scheme.web_link || '',
+      image: null
+    })
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const handleDelete = async (scheme) => {
+    if (window.confirm(`Are you sure you want to delete the scheme "${scheme.title}"?`)) {
+      try {
+        const config = getAuthConfig()
+        await axios.delete('https://brjobsedu.com/girls_course/girls_course_backend/api/scheme/', {
+          data: { gov_scheme_id: scheme.gov_scheme_id },
+          ...config
+        })
+        fetchAllSchemes()
+        alert('Scheme deleted successfully!')
+      } catch (error) {
+        alert('Failed to delete scheme. Please check the console for details.')
+      }
+    }
+  }
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0]
+    setFormData({ ...formData, image: file })
+  }
+
+  const handleAddSubModSection = () => {
+    setFormData({
+      ...formData,
+      sub_mod: [...formData.sub_mod, { title: '', description: '' }],
+      sub_mod_hindi: [...(formData.sub_mod_hindi || []), { title: '', description: '' }]
+    })
+  }
+
+  const handleRemoveSubModSection = (index) => {
+    if (formData.sub_mod.length > 1) {
+      const newSubMod = [...formData.sub_mod]
+      newSubMod.splice(index, 1)
+      const newSubModHindi = [...(formData.sub_mod_hindi || [])]
+      newSubModHindi.splice(index, 1)
+      setFormData({
+        ...formData,
+        sub_mod: newSubMod,
+        sub_mod_hindi: newSubModHindi
+      })
+    }
+  }
+
+  const handleSubModSectionChange = (index, field, value, isHindi = false) => {
+    if (isHindi) {
+      const newSubModHindi = [...formData.sub_mod_hindi]
+      newSubModHindi[index][field] = value
+      setFormData({
+        ...formData,
+        sub_mod_hindi: newSubModHindi
+      })
+    } else {
+      const newSubMod = [...formData.sub_mod]
+      newSubMod[index][field] = value
+      setFormData({
+        ...formData,
+        sub_mod: newSubMod
+      })
+    }
+  }
+
+  return (
+    <div className="d-flex">
+      <AdminLeftNav show={showSidebar} setShow={setShowSidebar} />
+      <div className="flex-grow-1" style={{ marginLeft: showSidebar ? '250px' : '80px', transition: 'margin-left 0.3s' }}>
+        <AdminTopNav />
+        <Container fluid className="py-4">
+          <div className="fade-in">
+            <h4 className="mb-4">Add Government Schemes</h4>
+
+            <Row className="g-4">
+              <Col lg={8}>
+                <Card className="shadow-sm border-0">
+                  <Card.Header className="bg-primary text-white">
+                    <FaPlus className="me-2" />
+                    {formData.gov_scheme_id ? 'Edit Scheme' : 'Add New Scheme'}
+                  </Card.Header>
+                  <Card.Body>
+                    {loading ? (
+                      <div className="text-center">
+                        <Spinner animation="border" variant="primary" />
+                      </div>
+                    ) : (
+                      <Form onSubmit={handleSubmit}>
+                        <Form.Group className="mb-3">
+                          <Form.Label>Category *</Form.Label>
+                          <Form.Select
+                            value={formData.scheme_category_id}
+                            onChange={(e) => handleCategoryChange(e.target.value)}
+                            required
+                          >
+                            <option value="">Select Category</option>
+                            {categories.map(cat => (
+                              <option key={cat.scheme_category_id} value={cat.scheme_category_id}>
+                                {cat.title} ({cat.scheme_category_id})
+                              </option>
+                            ))}
+                          </Form.Select>
+                        </Form.Group>
+
+                        <Row className="g-3">
+                          <Col md={6}>
+                            <Form.Group className="mb-3">
+                              <Form.Label>Title (English) *</Form.Label>
+                              <Form.Control
+                                type="text"
+                                value={formData.title}
+                                onChange={(e) => handleChange('title', e.target.value)}
+                                placeholder="e.g. Scholarship Scheme"
+                                required
+                              />
+                            </Form.Group>
+                          </Col>
+                          <Col md={6}>
+                            <Form.Group className="mb-3">
+                              <Form.Label>Title (Hindi)</Form.Label>
+                              <Form.Control
+                                type="text"
+                                value={formData.title_hindi}
+                                onChange={(e) => handleChange('title_hindi', e.target.value)}
+                                placeholder="e.g. छात्रवृत्ति योजना"
+                              />
+                            </Form.Group>
+                          </Col>
+                          <Col md={6}>
+                            <Form.Group className="mb-3">
+                              <Form.Label>Description (English)</Form.Label>
+                              <Form.Control
+                                as="textarea"
+                                rows={3}
+                                value={formData.description}
+                                onChange={(e) => handleChange('description', e.target.value)}
+                                placeholder="e.g. Financial help for students"
+                              />
+                            </Form.Group>
+                          </Col>
+                          <Col md={6}>
+                            <Form.Group className="mb-3">
+                              <Form.Label>Description (Hindi)</Form.Label>
+                              <Form.Control
+                                as="textarea"
+                                rows={3}
+                                value={formData.description_hindi}
+                                onChange={(e) => handleChange('description_hindi', e.target.value)}
+                                placeholder="e.g. छात्रों के लिए आर्थिक सहायता"
+                              />
+                            </Form.Group>
+                          </Col>
+                          <Col md={12}>
+                            <Form.Group className="mb-3">
+                              <Form.Label>Official Link</Form.Label>
+                              <Form.Control
+                                type="url"
+                                value={formData.web_link}
+                                onChange={(e) => handleChange('web_link', e.target.value)}
+                                placeholder="e.g. https://example.com/scholarship"
+                              />
+                            </Form.Group>
+                          </Col>
+                          {/* <Col md={12}>
+                            <Form.Group className="mb-3">
+                              <Form.Label>Scheme Image</Form.Label>
+                              <Form.Control
+                                type="file"
+                                accept="image/*"
+                                onChange={handleImageChange}
+                              />
+                            </Form.Group>
+                          </Col> */}
+                        </Row>
+
+                        {/* Sub-Modules Section */}
+                        <Card className="mt-4 shadow-sm border-0">
+                          <Card.Header className="bg-light">
+                            <div className="d-flex justify-content-between align-items-center">
+                              <h6 className="mb-0">Sub-Modules / Details</h6>
+                              <Button 
+                                variant="outline-primary" 
+                                size="sm" 
+                                onClick={handleAddSubModSection}
+                              >
+                                <FaPlus className="me-1" /> Add Section
+                              </Button>
+                            </div>
+                          </Card.Header>
+                          <Card.Body>
+                            {formData.sub_mod && formData.sub_mod.map((submod, index) => (
+                              <div key={index} className="mb-4 pb-3 border-bottom">
+                                <div className="d-flex justify-content-between align-items-center mb-3">
+                                  <h6 className="mb-0">Section {index + 1}</h6>
+                                  {formData.sub_mod.length > 1 && (
+                                    <Button 
+                                      variant="outline-danger" 
+                                      size="sm" 
+                                      onClick={() => handleRemoveSubModSection(index)}
+                                    >
+                                      <FaTrash className="me-1" /> Remove
+                                    </Button>
+                                  )}
+                                </div>
+
+                                <Row className="g-3">
+                                  <Col md={6}>
+                                    <Form.Group className="mb-3">
+                                      <Form.Label>Title (English)</Form.Label>
+                                      <Form.Control
+                                        type="text"
+                                        value={submod.title}
+                                        onChange={(e) => handleSubModSectionChange(index, 'title', e.target.value, false)}
+                                        placeholder="e.g. Eligibility"
+                                      />
+                                    </Form.Group>
+                                  </Col>
+                                  <Col md={6}>
+                                    <Form.Group className="mb-3">
+                                      <Form.Label>Title (Hindi)</Form.Label>
+                                      <Form.Control
+                                        type="text"
+                                        value={formData.sub_mod_hindi?.[index]?.title || ''}
+                                        onChange={(e) => handleSubModSectionChange(index, 'title', e.target.value, true)}
+                                        placeholder="e.g. पात्रता"
+                                      />
+                                    </Form.Group>
+                                  </Col>
+                                  <Col md={6}>
+                                    <Form.Group className="mb-3">
+                                      <Form.Label>Description (English)</Form.Label>
+                                      <Form.Control
+                                        as="textarea"
+                                        rows={2}
+                                        value={submod.description}
+                                        onChange={(e) => handleSubModSectionChange(index, 'description', e.target.value, false)}
+                                        placeholder="e.g. Students must be below poverty line"
+                                      />
+                                    </Form.Group>
+                                  </Col>
+                                  <Col md={6}>
+                                    <Form.Group className="mb-3">
+                                      <Form.Label>Description (Hindi)</Form.Label>
+                                      <Form.Control
+                                        as="textarea"
+                                        rows={2}
+                                        value={formData.sub_mod_hindi?.[index]?.description || ''}
+                                        onChange={(e) => handleSubModSectionChange(index, 'description', e.target.value, true)}
+                                        placeholder="e.g. गरीबी रेखा से नीचे होना चाहिए"
+                                      />
+                                    </Form.Group>
+                                  </Col>
+                                </Row>
+                              </div>
+                            ))}
+                          </Card.Body>
+                        </Card>
+
+                        <div className="d-flex gap-2 mt-4">
+                          <Button variant="primary" type="submit" disabled={submitting}>
+                            {submitting ? <Spinner as="span" animation="border" size="sm" /> : (formData.gov_scheme_id ? 'Update Scheme' : 'Add Scheme')}
+                          </Button>
+                          {formData.gov_scheme_id && (
+                            <Button variant="outline-secondary" onClick={resetForm}>
+                              Cancel
+                            </Button>
+                          )}
+                        </div>
+                      </Form>
+                    )}
+                  </Card.Body>
+                </Card>
+              </Col>
+
+              <Col lg={4}>
+                <Card className="shadow-sm border-0">
+                  <Card.Header className="bg-info text-white">
+                    Existing Schemes ({schemes.length})
+                  </Card.Header>
+                  <Card.Body className="p-0" style={{ maxHeight: '700px', overflowY: 'auto' }}>
+                    {loadingSchemes ? (
+                      <div className="text-center p-4">
+                        <Spinner animation="border" variant="primary" />
+                      </div>
+                    ) : schemes.length === 0 ? (
+                      <div className="text-center text-muted p-4">
+                        <p>No schemes found</p>
+                      </div>
+                    ) : (
+                      <div className="list-group list-group-flush">
+                        {schemes.map((scheme) => (
+                          <div key={scheme.gov_scheme_id} className="list-group-item p-3">
+                            <div className="d-flex justify-content-between align-items-start">
+                              <div>
+                                <Badge bg="secondary" className="mb-1">{scheme.gov_scheme_id}</Badge>
+                                <h6 className="mb-0">{scheme.title}</h6>
+                                {scheme.title_hindi && (
+                                  <small className="text-muted fst-italic">{scheme.title_hindi}</small>
+                                )}
+                                {scheme.sub_mod && scheme.sub_mod.length > 0 && (
+                                  <div className="small mt-1">
+                                    {scheme.sub_mod.slice(0, 1).map((mod, idx) => (
+                                      <Badge key={idx} bg="light" text="dark" className="me-1">
+                                        {mod.title}
+                                      </Badge>
+                                    ))}
+                                    {scheme.sub_mod.length > 1 && (
+                                      <Badge bg="light" text="dark">+{scheme.sub_mod.length - 1}</Badge>
+                                    )}
+                                  </div>
+                                )}
+                              </div>
+                              <div className="d-flex gap-1">
+                                <Button variant="outline-warning" size="sm" onClick={() => handleEdit(scheme)}>
+                                  <FaEdit />
+                                </Button>
+                                <Button variant="outline-danger" size="sm" onClick={() => handleDelete(scheme)}>
+                                  <FaTrash />
+                                </Button>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </Card.Body>
+                </Card>
+              </Col>
+            </Row>
+          </div>
+        </Container>
+      </div>
+    </div>
+  )
+}
+
+export default AddGovtSchemes

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { Container, Card, Button, Row, Col, Badge, Form, Modal, Alert, Tab, Nav } from 'react-bootstrap'
+import { Container, Card, Button, Row, Col, Badge, Form, Modal, Alert, Tab, Nav, Spinner } from 'react-bootstrap'
 import { FaGraduationCap, FaArrowLeft, FaCheckCircle, FaInfoCircle, FaBook, FaMoneyBillWave, FaBriefcase, FaLaptop, FaUniversity, FaBus, FaUtensils, FaHouseUser, FaHeart, FaShieldAlt, FaLaptopCode, FaUserGraduate, FaAward, FaPiggyBank, FaHandHoldingUsd, FaTools, FaMedal, FaBaby, FaFemale } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
 import UseLeftNav from './UseLeftNav'
 import UserTopNav from './UserTopNav'
 import { useAuth } from '../../contexts/AuthContext'
@@ -20,6 +21,213 @@ const GovernmentSchemes = () => {
   const [loading, setLoading] = useState(true)
   const [showModal, setShowModal] = useState(false)
   const [selectedScheme, setSelectedScheme] = useState(null)
+  const [apiCategories, setApiCategories] = useState([])
+  const [apiSchemesData, setApiSchemesData] = useState({})
+  const [error, setError] = useState(null)
+  const [retryCount, setRetryCount] = useState(0)
+
+  // Detailed scheme information (fallback/enhancement data)
+  const detailedSchemesInfo = {
+    education: [
+      {
+        id: 1,
+        nameKey: 'schemes.nsp',
+        icon: <FaGraduationCap />,
+        descriptionKey: 'schemes.nspDesc',
+        benefits: ['Multiple scholarship schemes', 'Single window application', 'Direct benefit transfer'],
+        eligibility: 'Students from Class 1 to PhD level',
+        documents: ['Aadhaar Card', 'Income Certificate', 'Marksheet', 'Bank Account Details'],
+        applicationProcess: 'Online application through national scholarship portal',
+        amount: 'Varies by scheme'
+      },
+      {
+        id: 2,
+        nameKey: 'schemes.scScholarship',
+        icon: <FaBook />,
+        benefits: ['Tuition fee reimbursement', 'Monthly maintenance allowance', 'Book grant'],
+        eligibility: 'SC students with family income below specified limit',
+        documents: ['Caste Certificate', 'Income Certificate', 'Previous Year Marksheet', 'Bank Account'],
+        applicationProcess: 'Apply through state welfare department',
+        amount: 'Up to ₹15,000 per annum'
+      },
+      {
+        id: 3,
+        nameKey: 'schemes.stScholarship',
+        icon: <FaBook />,
+        benefits: ['Full tuition fee', 'Living allowance', 'Book allowance'],
+        eligibility: 'ST students with annual family income below ₹2.5 Lakh',
+        documents: ['ST Certificate', 'Income Certificate', 'Marksheets', 'Hostel Certificate (if applicable)'],
+        applicationProcess: 'Apply through tribal development department',
+        amount: 'Up to ₹15,000 per annum'
+      },
+      {
+        id: 4,
+        nameKey: 'schemes.centralScholarship',
+        icon: <FaAward />,
+        benefits: ['₹10,000 per annum for first 3 years', '₹20,000 for 4th and 5th year', 'Book grant'],
+        eligibility: 'Students above 80th percentile in Class 12 board exams',
+        documents: ['Class 12 Marksheet', 'Income Certificate', 'Aadhaar Card', 'Bank Account'],
+        applicationProcess: 'Online application through National Scholarship Portal',
+        amount: '₹10,000 - ₹20,000 per annum'
+      },
+      {
+        id: 5,
+        nameKey: 'schemes.nandaGoraHigher',
+        icon: <FaGraduationCap />,
+        benefits: ['Educational loan up to ₹10 Lakhs', 'Scholarship for merit holders', 'Educational material support', 'Career counseling'],
+        eligibility: 'Students who have passed Class 12 with minimum 50% marks and annual family income below ₹3 Lakh',
+        documents: ['Class 12 Certificate', 'College Admission Letter', 'Income Certificate', 'Aadhaar Card', 'Bank Account Details'],
+        applicationProcess: 'Apply through Ministry of Education or partner financial institutions',
+        amount: 'Loan up to ₹10 Lakhs + Merit scholarship'
+      }
+    ],
+    scholarship: [
+      {
+        id: 6,
+        nameKey: 'schemes.pmScholarship',
+        icon: <FaPiggyBank />,
+        benefits: ['₹2,500 per month for boys', '₹3,000 per month for girls', 'Annual book grant'],
+        eligibility: 'Children of CAPF/RPF personnel pursuing professional courses',
+        documents: ['Parent Service Certificate', 'Class 12 Marksheet', 'Admission Letter', 'Aadhaar Card'],
+        applicationProcess: 'Online application through National Scholarship Portal',
+        amount: '₹2,500 - ₹3,000 per month'
+      },
+      {
+        id: 7,
+        nameKey: 'schemes.obcScholarship',
+        icon: <FaHandHoldingUsd />,
+        benefits: ['₹600 per month for Classes 1-5', '₹1,000 per month for Classes 6-10'],
+        eligibility: 'OBC students with family income below ₹2.5 Lakh per annum',
+        documents: ['OBC Certificate', 'Income Certificate', 'School ID', 'Bank Account Details'],
+        applicationProcess: 'Apply through state social welfare department',
+        amount: '₹600 - ₹1,000 per month'
+      },
+      {
+        id: 8,
+        nameKey: 'schemes.minorityScholarship',
+        icon: <FaMedal />,
+        benefits: ['100% tuition fee waiver', '₹10,000 per annum for books', 'Monthly maintenance'],
+        eligibility: 'Minority community students with 50% marks and family income below ₹2 Lakh',
+        documents: ['Minority Certificate', 'Income Certificate', 'Marksheets', 'College Fee Receipt'],
+        applicationProcess: 'Apply through Ministry of Minority Affairs portal',
+        amount: '100% fee waiver + ₹10,000'
+      },
+      {
+        id: 9,
+        nameKey: 'schemes.nandaGora',
+        icon: <FaPiggyBank />,
+        benefits: ['Monthly stipend of ₹3,000', 'Skill development training', 'Business support and mentoring', 'Microfinance assistance up to ₹50,000'],
+        eligibility: 'Women from rural areas aged 18-45 years with family income below ₹1.5 Lakh per annum',
+        documents: ['Aadhaar Card', 'Address Proof', 'Income Certificate', 'Bank Account Details'],
+        applicationProcess: 'Apply through Women Development Block Office or online portal',
+        amount: '₹3,000 per month + training'
+      }
+    ],
+    skills: [
+      {
+        id: 10,
+        nameKey: 'schemes.skillIndia',
+        icon: <FaTools />,
+        benefits: ['Free skill training', 'Industry-recognized certification', 'Placement assistance'],
+        eligibility: 'Youth aged 15 years and above',
+        documents: ['Aadhaar Card', 'Educational Certificate', 'Photo', 'Bank Account'],
+        applicationProcess: 'Register at nearest Skill India Centre or online',
+        amount: 'Free training with stipend'
+      },
+      {
+        id: 11,
+        nameKey: 'schemes.pmkvy',
+        icon: <FaLaptopCode />,
+        benefits: ['Free skill training', 'Industry-recognized certificate', 'Placement support', 'Market fee'],
+        eligibility: 'Youth seeking skill development and employment',
+        documents: ['Aadhaar Card', 'Educational Qualification Proof', 'Bank Account'],
+        applicationProcess: 'Enroll at nearest PMKVY center or online portal',
+        amount: 'Training free + placement'
+      },
+      {
+        id: 12,
+        nameKey: 'schemes.apprenticeship',
+        icon: <FaBriefcase />,
+        benefits: ['Monthly stipend', 'Certificate from NIOS', 'Practical work experience'],
+        eligibility: 'Candidates who have completed Class 10 or above',
+        documents: ['Aadhaar Card', 'Educational Certificate', 'Bank Account', 'Photo'],
+        applicationProcess: 'Apply through apprenticeship portal',
+        amount: '₹5,000 - ₹9,000 per month'
+      },
+      {
+        id: 13,
+        nameKey: 'schemes.digitalIndia',
+        icon: <FaLaptop />,
+        benefits: ['Free computer training', 'Digital certificate', 'Basic IT skills'],
+        eligibility: 'All citizens, especially women and rural population',
+        documents: ['Aadhaar Card', 'Photo', 'Basic education proof'],
+        applicationProcess: 'Enroll at Common Service Centre or online',
+        amount: 'Free training'
+      }
+    ],
+    women: [
+      {
+        id: 14,
+        nameKey: 'schemes.betiBachao',
+        icon: <FaFemale />,
+        benefits: ['Awareness programs', 'Educational support', 'Health services'],
+        eligibility: 'Girls from birth to Class 12',
+        documents: ['Birth Certificate', 'Aadhaar Card', 'School ID', 'Parent ID'],
+        applicationProcess: 'Through local Anganwadi or school',
+        amount: 'Various benefits'
+      },
+      {
+        id: 15,
+        nameKey: 'schemes.sukanya',
+        icon: <FaPiggyBank />,
+        benefits: ['High interest rate (8.2%)', 'Tax benefits', 'Tax-free maturity amount'],
+        eligibility: 'Parents/guardians of girl child below 10 years',
+        documents: ['Girl Child Birth Certificate', 'Parent ID Proof', 'Address Proof', 'Photo'],
+        applicationProcess: 'Open account at Post Office or authorized bank',
+        amount: 'Investment with high returns'
+      },
+      {
+        id: 16,
+        nameKey: 'schemes.matruVandana',
+        icon: <FaBaby />,
+        benefits: ['₹5,000 in three installments', 'DBT to bank account', 'Health checkups'],
+        eligibility: 'Pregnant women and lactating mothers',
+        documents: ['Aadhaar Card', 'MCP Card', 'Bank Account', 'Pregnancy Proof'],
+        applicationProcess: 'Apply through Anganwadi center or hospital',
+        amount: '₹5,000 in installments'
+      },
+      {
+        id: 17,
+        nameKey: 'schemes.womenHelpline',
+        icon: <FaShieldAlt />,
+        benefits: ['Emergency assistance', 'Legal aid', 'Counseling', 'Shelter referral'],
+        eligibility: 'All women in distress',
+        documents: ['No documents required for emergency'],
+        applicationProcess: 'Call 181 (national) or 1091 (state)',
+        amount: 'Free service'
+      },
+      {
+        id: 18,
+        nameKey: 'schemes.oneStopCentre',
+        icon: <FaHeart />,
+        benefits: ['Legal aid', 'Medical assistance', 'Psychological support', 'Shelter'],
+        eligibility: 'All women facing violence',
+        documents: ['No documents required'],
+        applicationProcess: 'Visit nearest OSC or call 181',
+        amount: 'Free services'
+      },
+      {
+        id: 19,
+        nameKey: 'schemes.mahilaShakti',
+        icon: <FaFemale />,
+        benefits: ['Skill training', 'Employment guidance', 'Legal aid', 'Scholarship information'],
+        eligibility: 'Women from rural areas',
+        documents: ['Aadhaar Card', 'Any ID Proof'],
+        applicationProcess: 'Visit nearest MSK center in your block',
+        amount: 'Free services'
+      }
+    ]
+  }
 
   useEffect(() => {
     const handleResize = () => {
@@ -29,11 +237,91 @@ const GovernmentSchemes = () => {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
+  // Fetch categories and schemes from API
   useEffect(() => {
-    setTimeout(() => {
-      setLoading(false)
-    }, 1000)
-  }, [])
+    const fetchSchemesData = async () => {
+      try {
+        setError(null)
+        
+        const response = await axios.get(
+          'https://brjobsedu.com/girls_course/girls_course_backend/api/scheme-category-with-schemes/',
+          {
+            headers: {
+              'Authorization': `Bearer ${accessToken}`,
+              'Content-Type': 'application/json'
+            },
+            timeout: 10000
+          }
+        )
+        
+        if (response.data.success && response.data.data && Array.isArray(response.data.data)) {
+          // Transform API data into categories and schemes
+          const categoryList = response.data.data
+          const schemesMap = {}
+          
+          categoryList.forEach((category) => {
+            if (category.scheme_category_id && category.schemes) {
+              const categoryKey = category.scheme_category_id
+              schemesMap[categoryKey] = category.schemes.map(scheme => ({
+                gov_scheme_id: scheme.gov_scheme_id,
+                title: scheme.title || 'Untitled Scheme',
+                title_hindi: scheme.title_hindi || scheme.title || 'योजना',
+                description: scheme.description || 'No description available',
+                description_hindi: scheme.description_hindi || scheme.description || 'विवरण उपलब्ध नहीं',
+                web_link: scheme.web_link || '#',
+                sub_mod: scheme.sub_mod || [],
+                sub_mod_hindi: scheme.sub_mod_hindi || []
+              }))
+            }
+          })
+          
+          setApiCategories(categoryList)
+          setApiSchemesData(schemesMap)
+          setError(null)
+          setRetryCount(0)
+        } else {
+          throw new Error('Invalid response format: missing success or data')
+        }
+        setLoading(false)
+      } catch (error) {
+        console.error('Error fetching schemes:', error)
+        setLoading(false)
+        
+        if (error.response) {
+          // Server responded with error status
+          if (error.response.status === 401) {
+            setError('Unauthorized: Please login again')
+          } else if (error.response.status === 403) {
+            setError('Forbidden: You do not have permission to access this resource')
+          } else if (error.response.status === 404) {
+            setError('API endpoint not found')
+          } else if (error.response.status === 500) {
+            setError('Server error: Please try again later')
+          } else {
+            setError(`Server error: ${error.response.status} ${error.response.statusText}`)
+          }
+        } else if (error.request) {
+          // Request made but no response
+          if (error.code === 'ECONNREFUSED') {
+            setError('Connection refused: Server may be down')
+          } else if (error.code === 'ETIMEDOUT' || error.code === 'ENOTFOUND') {
+            setError('Network error: Please check your connection')
+          } else if (error.message.includes('CORS')) {
+            setError('CORS error: Backend server may not be configured correctly')
+          } else {
+            setError('Network error: No response from server')
+          }
+        } else {
+          // Other errors
+          setError(error.message || 'Unknown error occurred')
+        }
+      }
+    }
+    
+    if (accessToken) {
+      fetchSchemesData()
+    }
+  }, [accessToken, retryCount])
 
   const handleMenuToggle = () => {
     if (isMobile) {
@@ -41,298 +329,70 @@ const GovernmentSchemes = () => {
     }
   }
 
-  const categories = [
-    { 
-      id: 'education', 
-      nameKey: 'schemes.education', 
-      icon: <FaGraduationCap />, 
-      descriptionKey: 'schemes.educationDesc'
-    },
-    { 
-      id: 'scholarship', 
-      nameKey: 'schemes.scholarship', 
-      icon: <FaPiggyBank />, 
-      descriptionKey: 'schemes.scholarshipDesc'
-    },
-    { 
-      id: 'skills', 
-      nameKey: 'schemes.skills', 
-      icon: <FaTools />, 
-      descriptionKey: 'schemes.skillsDesc'
-    },
-    { 
-      id: 'women', 
-      nameKey: 'schemes.womenWelfare', 
-      icon: <FaFemale />, 
-      descriptionKey: 'schemes.womenWelfareDesc'
+  // Build categories from API data for display
+  const getCategoriesForDisplay = () => {
+    const categoryIconMap = {
+      'SCHEME-CAT-00001': <FaGraduationCap />,
+      'SCHEME-CAT-00002': <FaPiggyBank />,
+      'SCHEME-CAT-00003': <FaTools />,
+      'SCHEME-CAT-00004': <FaFemale />
     }
-  ]
 
-  const schemesData = {
-    education: [
-      {
-        id: 1,
-        nameKey: 'schemes.nsp',
-        icon: <FaGraduationCap />,
-        descriptionKey: 'schemes.nspDesc',
-        description: 'Central Government portal for various scholarships across India',
-        benefits: ['Multiple scholarship schemes', 'Single window application', 'Direct benefit transfer'],
-        eligibility: 'Students from Class 1 to PhD level',
-        documents: ['Aadhaar Card', 'Income Certificate', 'Marksheet', 'Bank Account Details'],
-        applicationProcess: 'Online application through national scholarship portal',
-        officialLink: 'https://scholarships.gov.in/',
-        amount: 'Varies by scheme'
-      },
-      {
-        id: 2,
-        nameKey: 'schemes.scScholarship',
-        name: 'Post Matric Scholarship for SC Students',
-        icon: <FaBook />,
-        description: 'Scholarship for SC students pursuing post-matriculation education',
-        benefits: ['Tuition fee reimbursement', 'Monthly maintenance allowance', 'Book grant'],
-        eligibility: 'SC students with family income below specified limit',
-        documents: ['Caste Certificate', 'Income Certificate', 'Previous Year Marksheet', 'Bank Account'],
-        applicationProcess: 'Apply through state welfare department',
-        officialLink: 'https://socialjustice.gov.in/',
-        amount: 'Up to ₹15,000 per annum'
-      },
-      {
-        id: 3,
-        nameKey: 'schemes.stScholarship',
-        name: 'Post Matric Scholarship for ST Students',
-        icon: <FaBook />,
-        description: 'Scholarship for ST students for post-matriculation studies',
-        benefits: ['Full tuition fee', 'Living allowance', 'Book allowance'],
-        eligibility: 'ST students with annual family income below ₹2.5 Lakh',
-        documents: ['ST Certificate', 'Income Certificate', 'Marksheets', 'Hostel Certificate (if applicable)'],
-        applicationProcess: 'Apply through tribal development department',
-        officialLink: 'https://tribal.nic.in/',
-        amount: 'Up to ₹15,000 per annum'
-      },
-      {
-        id: 4,
-        nameKey: 'schemes.centralScholarship',
-        name: 'Central Sector Scheme of Scholarships',
-        icon: <FaAward />,
-        description: 'Scholarship for top performing students from economically weaker sections',
-        benefits: ['₹10,000 per annum for first 3 years', '₹20,000 for 4th and 5th year', 'Book grant'],
-        eligibility: 'Students above 80th percentile in Class 12 board exams',
-        documents: ['Class 12 Marksheet', 'Income Certificate', 'Aadhaar Card', 'Bank Account'],
-        applicationProcess: 'Online application through National Scholarship Portal',
-        officialLink: 'https://scholarships.gov.in/',
-        amount: '₹10,000 - ₹20,000 per annum'
-      },
-      {
-        id: 5,
-        nameKey: 'schemes.nandaGoraHigher',
-        name: 'Nanda Gora Higher Education Scheme',
-        icon: <FaGraduationCap />,
-        description: 'Educational support and loans for meritorious students pursuing higher education after 12th',
-        benefits: ['Educational loan up to ₹10 Lakhs', 'Scholarship for merit holders', 'Educational material support', 'Career counseling'],
-        eligibility: 'Students who have passed Class 12 with minimum 50% marks and annual family income below ₹3 Lakh',
-        documents: ['Class 12 Certificate', 'College Admission Letter', 'Income Certificate', 'Aadhaar Card', 'Bank Account Details'],
-        applicationProcess: 'Apply through Ministry of Education or partner financial institutions',
-        officialLink: 'https://www.education.gov.in/',
-        amount: 'Loan up to ₹10 Lakhs + Merit scholarship'
-      }
-    ],
-    scholarship: [
-      {
-        id: 6,
-        nameKey: 'schemes.pmScholarship',
-        name: 'Prime Minister Scholarship Scheme',
-        icon: <FaPiggyBank />,
-        description: 'Scholarship for wards of Central Armed Police Forces and RPF',
-        benefits: ['₹2,500 per month for boys', '₹3,000 per month for girls', 'Annual book grant'],
-        eligibility: 'Children of CAPF/RPF personnel pursuing professional courses',
-        documents: ['Parent Service Certificate', 'Class 12 Marksheet', 'Admission Letter', 'Aadhaar Card'],
-        applicationProcess: 'Online application through National Scholarship Portal',
-        officialLink: 'https://scholarships.gov.in/',
-        amount: '₹2,500 - ₹3,000 per month'
-      },
-      {
-        id: 7,
-        nameKey: 'schemes.obcScholarship',
-        name: 'Pre-Matric Scholarship for OBC Students',
-        icon: <FaHandHoldingUsd />,
-        description: 'Scholarship for OBC students studying in Classes 1 to 10',
-        benefits: ['₹600 per month for Classes 1-5', '₹1,000 per month for Classes 6-10'],
-        eligibility: 'OBC students with family income below ₹2.5 Lakh per annum',
-        documents: ['OBC Certificate', 'Income Certificate', 'School ID', 'Bank Account Details'],
-        applicationProcess: 'Apply through state social welfare department',
-        officialLink: 'https://www.ncm.nic.in/',
-        amount: '₹600 - ₹1,000 per month'
-      },
-      {
-        id: 8,
-        nameKey: 'schemes.minorityScholarship',
-        name: 'Merit-cum-Means Scholarship',
-        icon: <FaMedal />,
-        description: 'Scholarship for professional courses for students from minority communities',
-        benefits: ['100% tuition fee waiver', '₹10,000 per annum for books', 'Monthly maintenance'],
-        eligibility: 'Minority community students with 50% marks and family income below ₹2 Lakh',
-        documents: ['Minority Certificate', 'Income Certificate', 'Marksheets', 'College Fee Receipt'],
-        applicationProcess: 'Apply through Ministry of Minority Affairs portal',
-        officialLink: 'https://minorityaffairs.gov.in/',
-        amount: '100% fee waiver + ₹10,000'
-      },
-      {
-        id: 9,
-        name: 'Nanda Gora Women Development Scheme',
-        nameKey: 'schemes.nandaGora',
-        icon: <FaPiggyBank />,
-        description: 'Scheme for skill development and livelihood support for women in rural areas',
-        descriptionKey: 'schemes.nandaGoraDesc',
-        benefits: ['Monthly stipend of ₹3,000', 'Skill development training', 'Business support and mentoring', 'Microfinance assistance up to ₹50,000'],
-        eligibility: 'Women from rural areas aged 18-45 years with family income below ₹1.5 Lakh per annum',
-        documents: ['Aadhaar Card', 'Address Proof', 'Income Certificate', 'Bank Account Details'],
-        applicationProcess: 'Apply through Women Development Block Office or online portal',
-        officialLink: 'https://www.nandagaurauk.in/',
-        amount: '₹3,000 per month + training'
-      }
-    ],
-    skills: [
-      {
-        id: 10,
-        nameKey: 'schemes.skillIndia',
-        name: 'Skill India Mission',
-        icon: <FaTools />,
-        description: 'National mission for skills training and development',
-        benefits: ['Free skill training', 'Industry-recognized certification', 'Placement assistance'],
-        eligibility: 'Youth aged 15 years and above',
-        documents: ['Aadhaar Card', 'Educational Certificate', 'Photo', 'Bank Account'],
-        applicationProcess: 'Register at nearest Skill India Centre or online',
-        officialLink: 'https://www.skillindia.gov.in/',
-        amount: 'Free training with stipend'
-      },
-      {
-        id: 11,
-        nameKey: 'schemes.pmkvy',
-        name: 'PMKVY (Pradhan Mantri Kaushal Vikas Yojana)',
-        icon: <FaLaptopCode />,
-        description: 'Skill certification program under Skill India Mission',
-        benefits: ['Free skill training', 'Industry-recognized certificate', 'Placement support', 'Market fee'],
-        eligibility: 'Youth seeking skill development and employment',
-        documents: ['Aadhaar Card', 'Educational Qualification Proof', 'Bank Account'],
-        applicationProcess: 'Enroll at nearest PMKVY center or online portal',
-        officialLink: 'https://pmkvylms.org/',
-        amount: 'Training free + placement'
-      },
-      {
-        id: 12,
-        nameKey: 'schemes.apprenticeship',
-        name: 'National Apprenticeship Promotion Scheme',
-        icon: <FaBriefcase />,
-        description: 'Scheme to promote apprenticeship training',
-        benefits: ['Monthly stipend', 'Certificate from NIOS', 'Practical work experience'],
-        eligibility: 'Candidates who have completed Class 10 or above',
-        documents: ['Aadhaar Card', 'Educational Certificate', 'Bank Account', 'Photo'],
-        applicationProcess: 'Apply through apprenticeship portal',
-        officialLink: 'https://www.apprenticeshipindia.gov.in/',
-        amount: '₹5,000 - ₹9,000 per month'
-      },
-      {
-        id: 13,
-        nameKey: 'schemes.digitalIndia',
-        name: 'Digital India Program',
-        icon: <FaLaptop />,
-        description: 'Training program for digital literacy',
-        benefits: ['Free computer training', 'Digital certificate', 'Basic IT skills'],
-        eligibility: 'All citizens, especially women and rural population',
-        documents: ['Aadhaar Card', 'Photo', 'Basic education proof'],
-        applicationProcess: 'Enroll at Common Service Centre or online',
-        officialLink: 'https://www.digitalindia.gov.in/',
-        amount: 'Free training'
-      }
-    ],
-    women: [
-      {
-        id: 14,
-        nameKey: 'schemes.betiBachao',
-        name: 'Beti Bachao Beti Padhao',
-        icon: <FaFemale />,
-        description: 'Scheme for survival, protection and education of girl child',
-        benefits: ['Awareness programs', 'Educational support', 'Health services'],
-        eligibility: 'Girls from birth to Class 12',
-        documents: ['Birth Certificate', 'Aadhaar Card', 'School ID', 'Parent ID'],
-        applicationProcess: 'Through local Anganwadi or school',
-        officialLink: 'https://wcd.nic.in/bbbp-scheme',
-        amount: 'Various benefits'
-      },
-      {
-        id: 15,
-        nameKey: 'schemes.sukanya',
-        name: 'Sukanya Samriddhi Yojana',
-        icon: <FaPiggyBank />,
-        description: 'Savings scheme for girl child',
-        benefits: ['High interest rate (8.2%)', 'Tax benefits', 'Tax-free maturity amount'],
-        eligibility: 'Parents/guardians of girl child below 10 years',
-        documents: ['Girl Child Birth Certificate', 'Parent ID Proof', 'Address Proof', 'Photo'],
-        applicationProcess: 'Open account at Post Office or authorized bank',
-        officialLink: 'https://www.indiapost.gov.in/',
-        amount: 'Investment with high returns'
-      },
-      {
-        id: 16,
-        nameKey: 'schemes.matruVandana',
-        name: 'Pradhan Mantri Matru Vandana Yojana',
-        icon: <FaBaby />,
-        description: 'Maternity benefit program for pregnant and lactating mothers',
-        benefits: ['₹5,000 in three installments', 'DBT to bank account', 'Health checkups'],
-        eligibility: 'Pregnant women and lactating mothers',
-        documents: ['Aadhaar Card', 'MCP Card', 'Bank Account', 'Pregnancy Proof'],
-        applicationProcess: 'Apply through Anganwadi center or hospital',
-        officialLink: 'https://wcd.nic.in/',
-        amount: '₹5,000 in installments'
-      },
-      {
-        id: 17,
-        nameKey: 'schemes.womenHelpline',
-        name: 'Women Helpline Scheme',
-        icon: <FaShieldAlt />,
-        description: '24x7 helpline for women in distress',
-        benefits: ['Emergency assistance', 'Legal aid', 'Counseling', 'Shelter referral'],
-        eligibility: 'All women in distress',
-        documents: ['No documents required for emergency'],
-        applicationProcess: 'Call 181 (national) or 1091 (state)',
-        officialLink: 'https://wcd.nic.in/',
-        amount: 'Free service'
-      },
-      {
-        id: 18,
-        nameKey: 'schemes.oneStopCentre',
-        name: 'One Stop Centre Scheme',
-        icon: <FaHeart />,
-        description: 'Integrated support and assistance center for women',
-        benefits: ['Legal aid', 'Medical assistance', 'Psychological support', 'Shelter'],
-        eligibility: 'All women facing violence',
-        documents: ['No documents required'],
-        applicationProcess: 'Visit nearest OSC or call 181',
-        officialLink: 'https://wcd.nic.in/',
-        amount: 'Free services'
-      },
-      {
-        id: 19,
-        nameKey: 'schemes.mahilaShakti',
-        name: 'Mahila Shakti Kendra',
-        icon: <FaFemale />,
-        description: 'Empowerment center for rural women',
-        benefits: ['Skill training', 'Employment guidance', 'Legal aid', 'Scholarship information'],
-        eligibility: 'Women from rural areas',
-        documents: ['Aadhaar Card', 'Any ID Proof'],
-        applicationProcess: 'Visit nearest MSK center in your block',
-        officialLink: 'https://wcd.nic.in/',
-        amount: 'Free services'
-      }
-    ]
+    return apiCategories.map(category => ({
+      id: category.scheme_category_id,
+      nameKey: category.title,
+      name: category.title,
+      name_hindi: category.title_hindi,
+      icon: categoryIconMap[category.scheme_category_id] || <FaAward />,
+      descriptionKey: category.description,
+      description: category.description,
+      description_hindi: category.description_hindi,
+      categoryIcon: category.icon
+    }))
   }
 
   const handleCategoryChange = (categoryId) => {
     setSelectedCategory(categoryId)
   }
 
+  // Enrich scheme data with detailed information
+  const enrichSchemeData = (apiScheme) => {
+    // Find in all detailed schemes by matching title
+    for (const categoryKey in detailedSchemesInfo) {
+      const found = detailedSchemesInfo[categoryKey].find(
+        s => s.name === apiScheme.title || 
+             (s.nameKey && getTranslation(s.nameKey, 'en') === apiScheme.title)
+      )
+      if (found) {
+        return {
+          ...apiScheme,
+          icon: found.icon,
+          benefits: found.benefits,
+          eligibility: found.eligibility,
+          documents: found.documents,
+          applicationProcess: found.applicationProcess,
+          amount: found.amount,
+          officialLink: 'https://example.com'
+        }
+      }
+    }
+    
+    // Fallback: create from API data
+    return {
+      ...apiScheme,
+      icon: <FaAward />,
+      benefits: apiScheme.sub_mod?.map(m => m.title) || [],
+      eligibility: 'Check official website for eligibility.',
+      documents: ['See official website for documents'],
+      applicationProcess: apiScheme.description || 'Visit official website for application',
+      amount: 'See website',
+      officialLink: apiScheme.web_link || 'https://example.com'
+    }
+  }
+
   const handleSchemeClick = (scheme) => {
-    setSelectedScheme(scheme)
+    const enrichedScheme = enrichSchemeData(scheme)
+    setSelectedScheme(enrichedScheme)
     setShowModal(true)
   }
 
@@ -340,19 +400,21 @@ const GovernmentSchemes = () => {
     if (!selectedCategory) {
       return []
     }
-    return schemesData[selectedCategory] || []
+    const schemes = apiSchemesData[selectedCategory] || []
+    return schemes.map(s => enrichSchemeData(s))
   }
 
   const getAllSchemes = () => {
     const allSchemes = []
-    Object.values(schemesData).forEach(categorySchemes => {
-      allSchemes.push(...categorySchemes)
+    Object.values(apiSchemesData).forEach(categorySchemes => {
+      allSchemes.push(...categorySchemes.map(s => enrichSchemeData(s)))
     })
     return allSchemes
   }
 
   const displayedSchemes = selectedCategory ? getCategorySchemes() : []
   const allSchemes = getAllSchemes()
+  const categories = getCategoriesForDisplay()
 
   return (
     <div className="d-flex flex-column">
@@ -383,6 +445,31 @@ const GovernmentSchemes = () => {
                 </div>
                 <p className="mt-3"><TransText k="schemes.loading" as="span" /></p>
               </div>
+            ) : error ? (
+              <Card className="shadow-sm border-0 mb-4" style={{ borderRadius: '10px', borderLeft: '5px solid #dc3545' }}>
+                <Card.Body className="p-4">
+                  <div className="d-flex align-items-start gap-3">
+                    <div style={{fontSize: '1.5rem'}}>⚠️</div>
+                    <div style={{flex: 1}}>
+                      <h5 className="text-danger mb-2">Error Loading Government Schemes</h5>
+                      <p className="text-muted mb-3">{error}</p>
+                      <Button 
+                        variant="outline-danger" 
+                        size="sm"
+                        onClick={() => setRetryCount(prev => prev + 1)}
+                      >
+                        Retry
+                      </Button>
+                    </div>
+                  </div>
+                </Card.Body>
+              </Card>
+            ) : apiCategories.length === 0 ? (
+              <Card className="shadow-sm border-0 mb-4" style={{ borderRadius: '10px', borderLeft: '5px solid #ffc107' }}>
+                <Card.Body className="p-4 text-center">
+                  <p className="text-muted mb-0">No government schemes available at the moment. Please try again later.</p>
+                </Card.Body>
+              </Card>
             ) : (
               <div>
                 <Card className="shadow-sm mb-4 border-0 notifications-header-card" style={{ borderRadius: '10px' }}>
@@ -423,8 +510,8 @@ const GovernmentSchemes = () => {
                               <div className="stream-icon-large mb-2">
                                 {category.icon}
                               </div>
-                              <h6 className="mb-1"><TransText k={category.nameKey} as="span" /></h6>
-                              <small className="text-muted"><TransText k={category.descriptionKey} as="span" /></small>
+                              <h6 className="mb-1">{language === 'hi' ? category.name_hindi : category.name}</h6>
+                              <small className="text-muted">{language === 'hi' ? category.description_hindi : category.description}</small>
                               {selectedCategory === category.id && (
                                 <Badge bg="primary" className="mt-2">
                                   <FaCheckCircle className="me-1" /> <TransText k="schemes.selected" as="span" />
@@ -444,7 +531,7 @@ const GovernmentSchemes = () => {
                       <Card.Header className="bg-white border-0 pt-4 pb-0">
                         <h5 className="mb-0">
                           <FaUniversity className="me-2 text-primary" />
-                          <TransText k="schemes.availableSchemes" as="span" /> - <TransText k={categories.find(c => c.id === selectedCategory)?.nameKey} as="span" />
+                          <TransText k="schemes.availableSchemes" as="span" /> - {language === 'hi' ? categories.find(c => c.id === selectedCategory)?.name_hindi : categories.find(c => c.id === selectedCategory)?.name}
                         </h5>
                         <p className="text-muted mb-0">
                           <TransText k="schemes.browseSchemes" as="span" />
@@ -470,7 +557,7 @@ const GovernmentSchemes = () => {
                             <Tab.Pane eventKey="category">
                               <Row>
                                 {displayedSchemes.map((scheme) => (
-                                  <Col lg={4} md={6} className="mb-4" key={scheme.id}>
+                                  <Col lg={4} md={6} className="mb-4" key={scheme.id || scheme.gov_scheme_id}>
                                     <Card 
                                       className="h-100 border course-card"
                                       style={{ cursor: 'pointer' }}
@@ -482,7 +569,7 @@ const GovernmentSchemes = () => {
                                             {scheme.icon}
                                           </div>
                                           <div>
-                                            <h6 className="mb-1">{scheme.nameKey ? getTranslation(scheme.nameKey, language) : scheme.name}</h6>
+                                            <h6 className="mb-1">{language === 'hi' ? scheme.title_hindi : scheme.title}</h6>
                                             <Badge bg="success">{scheme.amount}</Badge>
                                           </div>
                                         </div>
@@ -492,7 +579,7 @@ const GovernmentSchemes = () => {
                                         <div className="mt-auto">
                                           <small className="text-muted d-block mb-2"><TransText k="schemes.keyBenefits" as="span" /></small>
                                           <div className="d-flex flex-wrap gap-1">
-                                            {scheme.benefits.slice(0, 3).map((benefit, idx) => (
+                                            {scheme.benefits?.slice(0, 3).map((benefit, idx) => (
                                               <Badge bg="light" text="dark" key={idx} className="small">
                                                 {benefit}
                                               </Badge>
@@ -508,7 +595,7 @@ const GovernmentSchemes = () => {
                             <Tab.Pane eventKey="all">
                               <Row>
                                 {allSchemes.map((scheme) => (
-                                  <Col lg={4} md={6} className="mb-4" key={scheme.id}>
+                                  <Col lg={4} md={6} className="mb-4" key={scheme.id || scheme.gov_scheme_id}>
                                     <Card 
                                       className="h-100 border course-card"
                                       style={{ cursor: 'pointer' }}
@@ -520,7 +607,7 @@ const GovernmentSchemes = () => {
                                             {scheme.icon}
                                           </div>
                                           <div>
-                                            <h6 className="mb-1">{scheme.nameKey ? getTranslation(scheme.nameKey, language) : scheme.name}</h6>
+                                            <h6 className="mb-1">{language === 'hi' ? scheme.title_hindi : scheme.title}</h6>
                                             <Badge bg="success">{scheme.amount}</Badge>
                                           </div>
                                         </div>
@@ -530,7 +617,7 @@ const GovernmentSchemes = () => {
                                         <div className="mt-auto">
                                           <small className="text-muted d-block mb-2"><TransText k="schemes.keyBenefits" as="span" /></small>
                                           <div className="d-flex flex-wrap gap-1">
-                                            {scheme.benefits.slice(0, 3).map((benefit, idx) => (
+                                            {scheme.benefits?.slice(0, 3).map((benefit, idx) => (
                                               <Badge bg="light" text="dark" key={idx} className="small">
                                                 {benefit}
                                               </Badge>
@@ -577,7 +664,7 @@ const GovernmentSchemes = () => {
               </div>
               <div style={{flex: 1}}>
                 <h3 className="mb-2 fw-bold" style={{color: 'white', fontSize: '1.5rem'}}>
-                  {selectedScheme?.nameKey ? getTranslation(selectedScheme.nameKey, language) : selectedScheme?.name}
+                  {language === 'hi' ? selectedScheme?.title_hindi : selectedScheme?.title}
                 </h3>
                 <p className="mb-0" style={{fontSize: '0.9rem', color: 'rgba(255,255,255,0.9)'}}>
                   {language === 'hi' ? '✓ सरकारी योजना' : '✓ Government Scheme'}
