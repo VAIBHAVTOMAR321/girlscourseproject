@@ -24,6 +24,24 @@ const AddGovtSchemes = () => {
   const [currentView, setCurrentView] = useState('add')
   const [selectedCategory, setSelectedCategory] = useState(null)
   
+  const sectionNames = [
+    'About this Scheme',
+    'Key Benefits',
+    'Who Can Apply',
+    'Documents Needed',
+    'How to Apply',
+    'Important Tips'
+  ]
+
+  const sectionNamesHindi = [
+    'योजना के बारे में',
+    'मुख्य लाभ',
+    'आवेदन कौन कर सकते हैं',
+    'आवश्यक दस्तावेज़',
+    'आवेदन कैसे करें',
+    'महत्वपूर्ण सुझाव'
+  ]
+
   const [formData, setFormData] = useState({
     gov_scheme_id: null,
     scheme_category_id: '',
@@ -31,8 +49,13 @@ const AddGovtSchemes = () => {
     title_hindi: '',
     description: '',
     description_hindi: '',
-    sub_mod: [{ title: '', description: '' }],
-    sub_mod_hindi: [{ title: '', description: '' }],
+    total_amount: '',
+    sub_mod: [
+      { title: sectionNames[0], description: '' }
+    ],
+    sub_mod_hindi: [
+      { title: sectionNamesHindi[0], description: '' }
+    ],
     web_link: '',
     image: null
   })
@@ -151,6 +174,7 @@ const AddGovtSchemes = () => {
         title_hindi: formData.title_hindi.trim() || '',
         description: formData.description.trim(),
         description_hindi: formData.description_hindi.trim() || '',
+        total_amount: formData.total_amount ? parseFloat(formData.total_amount) : '',
         sub_mod: formData.sub_mod.map(s => ({
           title: s.title.trim(),
           description: s.description.trim()
@@ -285,8 +309,13 @@ const AddGovtSchemes = () => {
       title_hindi: '',
       description: '',
       description_hindi: '',
-      sub_mod: [{ title: '', description: '' }],
-      sub_mod_hindi: [{ title: '', description: '' }],
+      total_amount: '',
+      sub_mod: [
+        { title: sectionNames[0], description: '' }
+      ],
+      sub_mod_hindi: [
+        { title: sectionNamesHindi[0], description: '' }
+      ],
       web_link: '',
       image: null
     })
@@ -300,6 +329,7 @@ const AddGovtSchemes = () => {
       title_hindi: scheme.title_hindi || '',
       description: scheme.description || '',
       description_hindi: scheme.description_hindi || '',
+      total_amount: scheme.total_amount || '',
       sub_mod: scheme.sub_mod || [{ title: '', description: '' }],
       sub_mod_hindi: scheme.sub_mod_hindi || [{ title: '', description: '' }],
       web_link: scheme.web_link || '',
@@ -456,7 +486,20 @@ const AddGovtSchemes = () => {
                               />
                             </Form.Group>
                           </Col>
-                          <Col md={12}>
+                          <Col md={6}>
+                            <Form.Group className="mb-3">
+                              <Form.Label>Total Amount (Budget)</Form.Label>
+                              <Form.Control
+                                type="number"
+                                value={formData.total_amount}
+                                onChange={(e) => handleChange('total_amount', e.target.value)}
+                                placeholder="e.g. 100000"
+                                min="0"
+                                step="0.01"
+                              />
+                            </Form.Group>
+                          </Col>
+                          <Col md={6}>
                             <Form.Group className="mb-3">
                               <Form.Label>Official Link</Form.Label>
                               <Form.Control
@@ -467,7 +510,7 @@ const AddGovtSchemes = () => {
                               />
                             </Form.Group>
                           </Col>
-                          {/* <Col md={12}>
+                          <Col md={12}>
                             <Form.Group className="mb-3">
                               <Form.Label>Scheme Image</Form.Label>
                               <Form.Control
@@ -476,7 +519,7 @@ const AddGovtSchemes = () => {
                                 onChange={handleImageChange}
                               />
                             </Form.Group>
-                          </Col> */}
+                          </Col>
                         </Row>
 
                         {/* Sub-Modules Section */}
@@ -494,15 +537,20 @@ const AddGovtSchemes = () => {
                             </div>
                           </Card.Header>
                           <Card.Body>
-                            {formData.sub_mod && formData.sub_mod.map((submod, index) => (
+                            {formData.sub_mod && formData.sub_mod.map((submod, index) => {
+                              const sectionName = index < sectionNames.length ? sectionNames[index] : `Custom Section ${index + 1}`
+                              return(
                               <div key={index} className="mb-4 pb-3 border-bottom">
                                 <div className="d-flex justify-content-between align-items-center mb-3">
-                                  <h6 className="mb-0">Section {index + 1}</h6>
+                                  <h6 className="mb-0">Section {index + 1} - {sectionName} {index < sectionNames.length && <Badge bg="info" className="ms-2">Predefined</Badge>}</h6>
                                   {formData.sub_mod.length > 1 && (
                                     <Button 
                                       variant="outline-danger" 
                                       size="sm" 
                                       onClick={() => handleRemoveSubModSection(index)}
+                                      disabled={index < sectionNames.length}
+                                      style={index < sectionNames.length ? {opacity: 0.5, cursor: 'not-allowed'} : {}}
+                                      title={index < sectionNames.length ? 'Cannot delete predefined sections' : 'Remove section'}
                                     >
                                       <FaTrash className="me-1" /> Remove
                                     </Button>
@@ -512,23 +560,27 @@ const AddGovtSchemes = () => {
                                 <Row className="g-3">
                                   <Col md={6}>
                                     <Form.Group className="mb-3">
-                                      <Form.Label>Title (English)</Form.Label>
+                                      <Form.Label>Title (English) {index < sectionNames.length && '(Auto-filled)'}</Form.Label>
                                       <Form.Control
                                         type="text"
-                                        value={submod.title}
-                                        onChange={(e) => handleSubModSectionChange(index, 'title', e.target.value, false)}
+                                        value={index < sectionNames.length ? sectionNames[index] : submod.title}
+                                        onChange={(e) => index >= sectionNames.length && handleSubModSectionChange(index, 'title', e.target.value, false)}
                                         placeholder="e.g. Eligibility"
+                                        disabled={index < sectionNames.length}
+                                        style={index < sectionNames.length ? {backgroundColor: '#f5f5f5', cursor: 'not-allowed'} : {}}
                                       />
                                     </Form.Group>
                                   </Col>
                                   <Col md={6}>
                                     <Form.Group className="mb-3">
-                                      <Form.Label>Title (Hindi)</Form.Label>
+                                      <Form.Label>Title (Hindi) {index < sectionNamesHindi.length && '(Auto-filled)'}</Form.Label>
                                       <Form.Control
                                         type="text"
-                                        value={formData.sub_mod_hindi?.[index]?.title || ''}
-                                        onChange={(e) => handleSubModSectionChange(index, 'title', e.target.value, true)}
+                                        value={index < sectionNamesHindi.length ? sectionNamesHindi[index] : (formData.sub_mod_hindi?.[index]?.title || '')}
+                                        onChange={(e) => index >= sectionNamesHindi.length && handleSubModSectionChange(index, 'title', e.target.value, true)}
                                         placeholder="e.g. पात्रता"
+                                        disabled={index < sectionNamesHindi.length}
+                                        style={index < sectionNamesHindi.length ? {backgroundColor: '#f5f5f5', cursor: 'not-allowed'} : {}}
                                       />
                                     </Form.Group>
                                   </Col>
@@ -558,7 +610,7 @@ const AddGovtSchemes = () => {
                                   </Col>
                                 </Row>
                               </div>
-                            ))}
+                            )})}
                           </Card.Body>
                         </Card>
 
