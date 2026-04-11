@@ -510,7 +510,7 @@ const AddGovtSchemes = () => {
                               />
                             </Form.Group>
                           </Col>
-                          {/* <Col md={12}>
+                          <Col md={12}>
                             <Form.Group className="mb-3">
                               <Form.Label>Scheme Image</Form.Label>
                               <Form.Control
@@ -519,7 +519,7 @@ const AddGovtSchemes = () => {
                                 onChange={handleImageChange}
                               />
                             </Form.Group>
-                          </Col> */}
+                          </Col>
                         </Row>
 
                         {/* Sub-Modules Section */}
