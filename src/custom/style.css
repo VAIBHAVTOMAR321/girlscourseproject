@@ -112,17 +112,17 @@ padding: 0px !important;
  
   
 }
-.responsive-box {
+/* .responsive-box {
   height: 90px;
-  width: 279px !important; /* Desktop default */
-}
+  width: 279px !important; 
+} */
 
 /* Mobile View */
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
   .responsive-box  {
     width: 342px !important;
   }
-}
+} */
 /* OR for screens 568px and wider */
 @media (min-width: 568px) {
 

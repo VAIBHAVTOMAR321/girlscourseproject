@@ -378,15 +378,27 @@ const GovernmentSchemes = () => {
                             onClick={() => handleCategoryChange(category.id)}
                           >
                             {category.image && (
-                              <div className="responsive-box"style={{
-                                
-                               
-                                backgroundImage: `url(${category.image})`,
-                                backgroundSize: 'contain',
-                                backgroundPosition: 'center',
-                                backgroundRepeat: 'no-repeat',
-                                backgroundColor: '#f5f5f5'
-                              }} />
+                              <div style={{
+                                height: '120px',
+                                width: '100%',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                backgroundColor: '#f5f5f5',
+                                borderBottom: '1px solid #e0e0e0'
+                              }}>
+                                <img
+                                  src={category.image}
+                                  alt={category.name}
+                                  style={{
+                                    maxHeight: '100%',
+                                    maxWidth: '100%',
+                                    objectFit: 'contain',
+                                    padding: '10px'
+                                  }}
+                                  onError={(e) => { e.target.style.display = 'none' }}
+                                />
+                              </div>
                             )}
                             <Card.Body className="p-3 text-center">
                               <h6 className="mb-1">{language === 'hi' ? category.name_hindi : category.name}</h6>
@@ -442,59 +454,28 @@ const GovernmentSchemes = () => {
                                       style={{ cursor: 'pointer', overflow: 'hidden', width: '100%' }}
                                       onClick={() => handleSchemeClick(scheme)}
                                     >
-                                      {scheme.scheme_image ? (
+                                    {scheme.scheme_image ? (
                                         <div style={{
-                                          height: '100px',
+                                          height: '120px',
                                           width: '100%',
-                                          backgroundImage: `url(${scheme.scheme_image})`,
-                                          backgroundSize: 'contain',
-                                          backgroundPosition: 'center',
-                                          backgroundRepeat: 'no-repeat',
-                                          backgroundColor: '#f5f5f5'
-                                        }} />
-                                      ) : null}
-                                      <Card.Body className="p-3 text-center">
-                                        <h6 className="mb-1">{language === 'hi' ? scheme.title_hindi : scheme.title}</h6>
-                                        {scheme.amount && scheme.amount !== 'Visit Website' ? (
-                                          <Badge bg="success" className="mb-2">₹{Number(scheme.amount).toLocaleString('en-IN')}</Badge>
-                                        ) : (
-                                          <Badge bg="warning" text="dark" className="mb-2">{scheme.amount}</Badge>
-                                        )}
-                                        <p className="text-muted small mb-2">
-                                          {scheme.about}
-                                        </p>
-                                        <div className="d-flex flex-wrap gap-1 justify-content-center">
-                                          {scheme.benefits?.slice(0, 3).map((benefit, idx) => (
-                                            <Badge bg="light" text="dark" key={idx} className="small">
-                                              {benefit}
-                                            </Badge>
-                                          ))}
+                                          display: 'flex',
+                                          alignItems: 'center',
+                                          justifyContent: 'center',
+                                          backgroundColor: '#f5f5f5',
+                                          borderBottom: '1px solid #e0e0e0'
+                                        }}>
+                                          <img
+                                            src={scheme.scheme_image}
+                                            alt={scheme.title}
+                                            style={{
+                                              maxHeight: '100%',
+                                              maxWidth: '100%',
+                                              objectFit: 'contain',
+                                              padding: '8px'
+                                            }}
+                                            onError={(e) => { e.target.style.display = 'none' }}
+                                          />
                                         </div>
-                                      </Card.Body>
-                                    </Card>
-                                  </Col>
-                                ))}
-                              </Row>
-                            </Tab.Pane>
-                            <Tab.Pane eventKey="all">
-                              <Row>
-                                {allSchemes.map((scheme) => (
-                                  <Col lg={4} md={6} className="mb-4" key={scheme.id || scheme.gov_scheme_id}>
-                                    <Card 
-                                      className="h-100 border course-card"
-                                      style={{ cursor: 'pointer', overflow: 'hidden', width: '100%' }}
-                                      onClick={() => handleSchemeClick(scheme)}
-                                    >
-                                      {scheme.scheme_image ? (
-                                        <div style={{
-                                          height: '100px',
-                                          width: '100%',
-                                          backgroundImage: `url(${scheme.scheme_image})`,
-                                          backgroundSize: 'contain',
-                                          backgroundPosition: 'center',
-                                          backgroundRepeat: 'no-repeat',
-                                          backgroundColor: '#f5f5f5'
-                                        }} />
                                       ) : null}
                                       <Card.Body className="p-3 text-center">
                                         <h6 className="mb-1">{language === 'hi' ? scheme.title_hindi : scheme.title}</h6>
