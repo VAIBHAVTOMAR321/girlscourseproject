@@ -71,14 +71,26 @@ const CreateGroomingClass = () => {
     setSubmitting(true)
 
     try {
+      const formatDateTimeForAPI = (dateTimeStr) => {
+        if (!dateTimeStr) return null
+        const date = new Date(dateTimeStr)
+        const year = date.getFullYear()
+        const month = String(date.getMonth() + 1).padStart(2, '0')
+        const day = String(date.getDate()).padStart(2, '0')
+        const hours = String(date.getHours()).padStart(2, '0')
+        const minutes = String(date.getMinutes()).padStart(2, '0')
+        const seconds = String(date.getSeconds()).padStart(2, '0')
+        return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}Z`
+      }
+
       const payload = {
         title: formData.title.trim(),
         title_hindi: formData.title_hindi?.trim() || '',
         description: formData.description?.trim() || '',
         description_hindi: formData.description_hindi?.trim() || '',
         class_link: formData.class_link?.trim() || '',
-        start_date_time: formData.start_date_time ? new Date(formData.start_date_time).toISOString() : null,
-        end_date_time: formData.end_date_time ? new Date(formData.end_date_time).toISOString() : null
+        start_date_time: formatDateTimeForAPI(formData.start_date_time),
+        end_date_time: formatDateTimeForAPI(formData.end_date_time)
       }
 
       if (editMode && editClassId) {
