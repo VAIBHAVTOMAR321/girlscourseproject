@@ -328,6 +328,22 @@ const AddGovtSchemes = () => {
 
   const handleEdit = (scheme) => {
     const previewUrl = scheme.scheme_image ? `https://brjobsedu.com/girls_course/girls_course_backend${scheme.scheme_image}` : null
+    
+    // Populate sub_mod with titles from predefined sections if title is empty
+    const populateSubMod = (subModArray) => {
+      return subModArray?.map((mod, index) => ({
+        ...mod,
+        title: mod.title || (index < sectionNames.length ? sectionNames[index] : mod.title || '')
+      })) || []
+    }
+
+    const populateSubModHindi = (subModArray) => {
+      return subModArray?.map((mod, index) => ({
+        ...mod,
+        title: mod.title || (index < sectionNamesHindi.length ? sectionNamesHindi[index] : mod.title || '')
+      })) || []
+    }
+
     setFormData({
       gov_scheme_id: scheme.gov_scheme_id,
       scheme_category_id: scheme.scheme_category_id,
@@ -336,8 +352,8 @@ const AddGovtSchemes = () => {
       description: scheme.description || '',
       description_hindi: scheme.description_hindi || '',
       total_amount: scheme.total_amount || '',
-      sub_mod: scheme.sub_mod || [{ title: '', description: '' }],
-      sub_mod_hindi: scheme.sub_mod_hindi || [{ title: '', description: '' }],
+      sub_mod: populateSubMod(scheme.sub_mod),
+      sub_mod_hindi: populateSubModHindi(scheme.sub_mod_hindi),
       web_link: scheme.web_link || '',
       scheme_image: null,
       scheme_image_preview: previewUrl,
@@ -373,10 +389,13 @@ const AddGovtSchemes = () => {
   }
 
   const handleAddSubModSection = () => {
+    const newIndex = formData.sub_mod?.length || 0
+    const newTitle = newIndex < sectionNames.length ? sectionNames[newIndex] : `Custom Section ${newIndex + 1}`
+    const newTitleHindi = newIndex < sectionNamesHindi.length ? sectionNamesHindi[newIndex] : ''
     setFormData({
       ...formData,
-      sub_mod: [...formData.sub_mod, { title: '', description: '' }],
-      sub_mod_hindi: [...(formData.sub_mod_hindi || []), { title: '', description: '' }]
+      sub_mod: [...(formData.sub_mod || []), { title: newTitle, description: '' }],
+      sub_mod_hindi: [...(formData.sub_mod_hindi || []), { title: newTitleHindi, description: '' }]
     })
   }
 
