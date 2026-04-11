@@ -137,17 +137,23 @@ const GovernmentSchemes = () => {
       'SCHEME-CAT-00004': <FaFemale />
     }
 
-    return apiCategories.map(category => ({
-      id: category.scheme_category_id,
-      nameKey: category.title,
-      name: category.title,
-      name_hindi: category.title_hindi,
-      icon: categoryIconMap[category.scheme_category_id] || <FaAward />,
-      descriptionKey: category.description,
-      description: category.description,
-      description_hindi: category.description_hindi,
-      categoryIcon: category.icon
-    }))
+    return apiCategories.map(category => {
+      const iconPath = category.icon || ''
+      const fullPath = iconPath && !iconPath.startsWith('/media') ? iconPath : (iconPath ? `https://brjobsedu.com/girls_course/girls_course_backend${iconPath}` : '')
+      
+      return {
+        id: category.scheme_category_id,
+        nameKey: category.title,
+        name: category.title,
+        name_hindi: category.title_hindi,
+        icon: categoryIconMap[category.scheme_category_id] || <FaAward />,
+        descriptionKey: category.description,
+        description: category.description,
+        description_hindi: category.description_hindi,
+        categoryIcon: category.icon,
+        image: fullPath
+      }
+    })
   }
 
   const handleCategoryChange = (categoryId) => {
@@ -360,14 +366,23 @@ const GovernmentSchemes = () => {
                             style={{
                               cursor: 'pointer',
                               borderColor: selectedCategory === category.id ? '#667eea' : '#dee2e6',
-                              backgroundColor: selectedCategory === category.id ? '#f0f4ff' : 'white'
+                              overflow: 'hidden',
+                              width: '100%'
                             }}
                             onClick={() => handleCategoryChange(category.id)}
                           >
+                            {category.image && (
+                              <div style={{
+                                height: '190px',
+                                width: '280px',
+                                backgroundImage: `url(${category.image})`,
+                                backgroundSize: 'contain',
+                                backgroundPosition: 'center',
+                                backgroundRepeat: 'no-repeat',
+                                backgroundColor: '#f5f5f5'
+                              }} />
+                            )}
                             <Card.Body className="p-3 text-center">
-                              <div className="stream-icon-large mb-2">
-                                {category.icon}
-                              </div>
                               <h6 className="mb-1">{language === 'hi' ? category.name_hindi : category.name}</h6>
                               <small className="text-muted">{language === 'hi' ? category.description_hindi : category.description}</small>
                               {selectedCategory === category.id && (
