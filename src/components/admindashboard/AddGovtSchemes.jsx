@@ -138,32 +138,6 @@ const AddGovtSchemes = () => {
     e.preventDefault()
     if (submitting) return
 
-    // Validation
-    if (!formData.scheme_category_id || formData.scheme_category_id.trim() === '') {
-      alert('Please select a category')
-      return
-    }
-
-    // Verify selected category exists
-    const categoryExists = categories.some(cat => cat.scheme_category_id === formData.scheme_category_id)
-    if (!categoryExists) {
-      alert('Invalid category selected. Please select a valid category.')
-      return
-    }
-
-    if (!formData.title || formData.title.trim() === '') {
-      alert('Please enter scheme title (English)')
-      return
-    }
-    if (!formData.description || formData.description.trim() === '') {
-      alert('Please enter scheme description (English)')
-      return
-    }
-    if (formData.sub_mod.some(s => !s.title || !s.description)) {
-      alert('Please fill all sub-module fields (Title and Description)')
-      return
-    }
-
     setSubmitting(true)
 
     try {
@@ -171,21 +145,21 @@ const AddGovtSchemes = () => {
       
       // Create clean payload object
       const payload = {
-        scheme_category_id: formData.scheme_category_id.trim(),
-        title: formData.title.trim(),
-        title_hindi: formData.title_hindi.trim() || '',
-        description: formData.description.trim(),
-        description_hindi: formData.description_hindi.trim() || '',
+        scheme_category_id: formData.scheme_category_id || '',
+        title: formData.title || '',
+        title_hindi: formData.title_hindi || '',
+        description: formData.description || '',
+        description_hindi: formData.description_hindi || '',
         total_amount: formData.total_amount ? parseFloat(formData.total_amount) : '',
         sub_mod: formData.sub_mod.map(s => ({
-          title: s.title.trim(),
-          description: s.description.trim()
+          title: s.title || '',
+          description: s.description || ''
         })),
         sub_mod_hindi: formData.sub_mod_hindi.map(s => ({
-          title: s.title.trim(),
-          description: s.description.trim()
+          title: s.title || '',
+          description: s.description || ''
         })),
-        web_link: formData.web_link.trim() || ''
+        web_link: formData.web_link || ''
       }
 
       // Log payload for debugging
@@ -464,11 +438,10 @@ const AddGovtSchemes = () => {
                     ) : (
                       <Form onSubmit={handleSubmit}>
                         <Form.Group className="mb-3">
-                          <Form.Label>Category *</Form.Label>
+                          <Form.Label>Category</Form.Label>
                           <Form.Select
                             value={formData.scheme_category_id}
                             onChange={(e) => handleCategoryChange(e.target.value)}
-                            required
                           >
                             <option value="">Select Category</option>
                             {categories.map(cat => (
@@ -482,13 +455,12 @@ const AddGovtSchemes = () => {
                         <Row className="g-3">
                           <Col md={6}>
                             <Form.Group className="mb-3">
-                              <Form.Label>Title (English) *</Form.Label>
+                              <Form.Label>Title (English)</Form.Label>
                               <Form.Control
                                 type="text"
                                 value={formData.title}
                                 onChange={(e) => handleChange('title', e.target.value)}
                                 placeholder="e.g. Scholarship Scheme"
-                                required
                               />
                             </Form.Group>
                           </Col>
