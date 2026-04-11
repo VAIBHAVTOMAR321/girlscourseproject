@@ -115,6 +115,24 @@ const UserTopNav = ({ onMenuToggle, isMobile }) => {
             {language === 'en' ? 'EN' : 'HI'}
           </Button>
 
+          <Button
+            onClick={() => navigate('/GroomingClasses')}
+            className="me-3 d-flex align-items-center"
+            style={{
+              borderRadius: '8px',
+              padding: '0.5rem 1rem',
+              background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+              border: 'none',
+              color: 'white',
+              fontWeight: 'bold',
+              boxShadow: '0 2px 8px rgba(240, 147, 251, 0.4)'
+            }}
+            title={language === 'en' ? 'Grooming Classes' : 'ग्रूमिंग क्लासेस'}
+          >
+            <i className="bi bi-mortarboard-fill me-2"></i>
+            {language === 'en' ? 'Grooming' : 'ग्रूमिंग'}
+          </Button>
+
           <Dropdown 
             show={showDropdown}
             onToggle={(isOpen) => setShowDropdown(isOpen)}

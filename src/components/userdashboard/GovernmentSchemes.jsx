@@ -455,7 +455,11 @@ const GovernmentSchemes = () => {
                                       ) : null}
                                       <Card.Body className="p-3 text-center">
                                         <h6 className="mb-1">{language === 'hi' ? scheme.title_hindi : scheme.title}</h6>
-                                        <Badge bg="success" className="mb-2">{scheme.amount}</Badge>
+                                        {scheme.amount && scheme.amount !== 'Visit Website' ? (
+                                          <Badge bg="success" className="mb-2">₹{Number(scheme.amount).toLocaleString('en-IN')}</Badge>
+                                        ) : (
+                                          <Badge bg="warning" text="dark" className="mb-2">{scheme.amount}</Badge>
+                                        )}
                                         <p className="text-muted small mb-2">
                                           {scheme.about}
                                         </p>
@@ -494,7 +498,11 @@ const GovernmentSchemes = () => {
                                       ) : null}
                                       <Card.Body className="p-3 text-center">
                                         <h6 className="mb-1">{language === 'hi' ? scheme.title_hindi : scheme.title}</h6>
-                                        <Badge bg="success" className="mb-2">{scheme.amount}</Badge>
+                                        {scheme.amount && scheme.amount !== 'Visit Website' ? (
+                                          <Badge bg="success" className="mb-2">₹{Number(scheme.amount).toLocaleString('en-IN')}</Badge>
+                                        ) : (
+                                          <Badge bg="warning" text="dark" className="mb-2">{scheme.amount}</Badge>
+                                        )}
                                         <p className="text-muted small mb-2">
                                           {scheme.about}
                                         </p>
