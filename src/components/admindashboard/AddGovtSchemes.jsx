@@ -151,14 +151,14 @@ const AddGovtSchemes = () => {
         description: formData.description || '',
         description_hindi: formData.description_hindi || '',
         total_amount: formData.total_amount ? parseFloat(formData.total_amount) : '',
-        sub_mod: formData.sub_mod.map(s => ({
+        sub_mod: formData.sub_mod?.map(s => ({
           title: s.title || '',
           description: s.description || ''
-        })),
-        sub_mod_hindi: formData.sub_mod_hindi.map(s => ({
+        })) || [],
+        sub_mod_hindi: formData.sub_mod_hindi?.map(s => ({
           title: s.title || '',
           description: s.description || ''
-        })),
+        })) || [],
         web_link: formData.web_link || ''
       }
 
@@ -172,14 +172,16 @@ const AddGovtSchemes = () => {
         // Handle image update for existing scheme
         if (formData.scheme_image) {
           const imageFormData = new FormData()
+          imageFormData.append('gov_scheme_id', formData.gov_scheme_id)
           Object.keys(payload).forEach(key => {
             if (key === 'sub_mod' || key === 'sub_mod_hindi') {
               imageFormData.append(key, JSON.stringify(payload[key]))
-            } else if (key !== 'scheme_image') {
+            } else if (key !== 'scheme_image' && key !== 'gov_scheme_id') {
               imageFormData.append(key, payload[key])
             }
           })
           imageFormData.append('scheme_image', formData.scheme_image)
+          console.log('📤 Update with new image payload:', JSON.stringify(Object.fromEntries(imageFormData), null, 2))
           
           const response = await axios.put(
             'https://brjobsedu.com/girls_course/girls_course_backend/api/scheme/',
@@ -192,14 +194,12 @@ const AddGovtSchemes = () => {
           )
           console.log('✅ Update response:', response.data)
         } else {
-          // Include existing image URL if no new image is uploaded
-          const payloadWithImage = {
-            ...payload,
-            scheme_image: formData.existing_image_url || ''
-          }
+          // Update without new image - don't send scheme_image field
+          // Backend will preserve existing image if not sending a new one
+          console.log('📤 Update payload (no new image):', JSON.stringify(payload, null, 2))
           const response = await axios.put(
             'https://brjobsedu.com/girls_course/girls_course_backend/api/scheme/',
-            payloadWithImage,
+            payload,
             {
               ...config,
               headers: { ...config.headers, 'Content-Type': 'application/json' },
@@ -218,12 +218,13 @@ const AddGovtSchemes = () => {
             if (key === 'sub_mod' || key === 'sub_mod_hindi') {
               imageFormData.append(key, JSON.stringify(payload[key]))
             } else {
-              imageFormData.append(key, payload[key])
+              imageFormData.append(key, payload[key] ?? '')
             }
           })
           imageFormData.append('scheme_image', formData.scheme_image)
           
           console.log('📸 Adding scheme with image')
+          console.log('📤 Create with image payload:', JSON.stringify(Object.fromEntries(imageFormData), null, 2))
           const response = await axios.post(
             'https://brjobsedu.com/girls_course/girls_course_backend/api/scheme/',
             imageFormData,
@@ -236,6 +237,7 @@ const AddGovtSchemes = () => {
           console.log('✅ Add response:', response.data)
         } else {
           console.log('📝 Adding scheme without image')
+          console.log('📤 Add payload:', JSON.stringify(payload, null, 2))
           // Send without image as JSON
           const response = await axios.post(
             'https://brjobsedu.com/girls_course/girls_course_backend/api/scheme/',
@@ -261,10 +263,11 @@ const AddGovtSchemes = () => {
       
       if (error.response) {
         console.error('Status:', error.response.status)
-        console.error('Response:', error.response.data)
+        console.error('Response data:', JSON.stringify(error.response.data, null, 2))
         
         // Extract error message from various response formats
         if (error.response.data) {
+          let errorMsg = ''
           if (typeof error.response.data === 'string') {
             errorMessage = error.response.data
           } else if (error.response.data.detail) {
@@ -274,13 +277,12 @@ const AddGovtSchemes = () => {
           } else if (error.response.data.error) {
             errorMessage = error.response.data.error
           } else if (error.response.data.errors) {
-            // Handle validation errors
             const errors = error.response.data.errors
             if (typeof errors === 'object') {
               errorDetails = Object.entries(errors)
                 .map(([field, msgs]) => `• ${field}: ${Array.isArray(msgs) ? msgs.join(', ') : msgs}`)
                 .join('\n')
-              errorMessage = 'Validation Failed'
+              errorMessage = 'Validation Failed: ' + errorDetails
             } else {
               errorMessage = JSON.stringify(errors)
             }
@@ -289,11 +291,7 @@ const AddGovtSchemes = () => {
           }
         }
         
-        const fullError = errorDetails 
-          ? `❌ ${error.response.status} - ${errorMessage}\n\n${errorDetails}`
-          : `❌ ${error.response.status} - ${errorMessage}`
-        
-        alert(fullError)
+        alert(`Error ${error.response.status}: ${errorMessage}`)
       } else if (error.request) {
         console.error('No response received')
         alert('❌ Failed: No response from server. Check your internet connection.')
