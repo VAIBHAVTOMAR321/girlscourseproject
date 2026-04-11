@@ -112,7 +112,17 @@ padding: 0px !important;
  
   
 }
+.responsive-box {
+  height: 90px;
+  width: 297px; /* Desktop default */
+}
 
+/* Mobile View */
+@media (max-width: 768px) {
+  .responsive-box {
+    width: 345px;
+  }
+}
 /* OR for screens 568px and wider */
 @media (min-width: 568px) {
 
