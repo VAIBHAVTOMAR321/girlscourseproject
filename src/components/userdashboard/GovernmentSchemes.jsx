@@ -60,17 +60,22 @@ const GovernmentSchemes = () => {
           categoryList.forEach((category) => {
             if (category.scheme_category_id && category.schemes) {
               const categoryKey = category.scheme_category_id
-              schemesMap[categoryKey] = category.schemes.map(scheme => ({
-                gov_scheme_id: scheme.gov_scheme_id,
-                title: scheme.title || 'Untitled Scheme',
-                title_hindi: scheme.title_hindi || scheme.title || 'योजना',
-                description: scheme.description || 'No description available',
-                description_hindi: scheme.description_hindi || scheme.description || 'विवरण उपलब्ध नहीं',
-                web_link: scheme.web_link || '#',
-                total_amount: scheme.total_amount || '',
-                sub_mod: scheme.sub_mod || [],
-                sub_mod_hindi: scheme.sub_mod_hindi || []
-              }))
+              schemesMap[categoryKey] = category.schemes.map(scheme => {
+                const imgPath = scheme.scheme_image || ''
+                const imgUrl = imgPath && !imgPath.startsWith('http') ? `https://brjobsedu.com/girls_course/girls_course_backend${imgPath}` : imgPath
+                return {
+                  gov_scheme_id: scheme.gov_scheme_id,
+                  title: scheme.title || 'Untitled Scheme',
+                  title_hindi: scheme.title_hindi || scheme.title || 'योजना',
+                  description: scheme.description || 'No description available',
+                  description_hindi: scheme.description_hindi || scheme.description || 'विवरण उपलब्ध नहीं',
+                  web_link: scheme.web_link || '#',
+                  total_amount: scheme.total_amount || '',
+                  scheme_image: imgUrl,
+                  sub_mod: scheme.sub_mod || [],
+                  sub_mod_hindi: scheme.sub_mod_hindi || []
+                }
+              })
             }
           })
           
@@ -250,6 +255,7 @@ const GovernmentSchemes = () => {
       howToApply,
       tips,
       amount: totalAmount,
+      scheme_image: apiScheme.scheme_image || '',
       officialLink: apiScheme.web_link || 'https://example.com'
     }
   }
@@ -433,31 +439,32 @@ const GovernmentSchemes = () => {
                                   <Col lg={4} md={6} className="mb-4" key={scheme.id || scheme.gov_scheme_id}>
                                     <Card 
                                       className="h-100 border course-card"
-                                      style={{ cursor: 'pointer' }}
+                                      style={{ cursor: 'pointer', overflow: 'hidden', width: '100%' }}
                                       onClick={() => handleSchemeClick(scheme)}
                                     >
-                                      <Card.Body className="">
-                                        <div className="d-flex align-items-start gap-3 mb-3">
-                                          <div className="course-icon-large">
-                                            {scheme.icon}
-                                          </div>
-                                          <div>
-                                            <h6 className="mb-1">{language === 'hi' ? scheme.title_hindi : scheme.title}</h6>
-                                            <Badge bg="success">{scheme.amount}</Badge>
-                                          </div>
-                                        </div>
-                                        <p className="text-muted small mb-3">
+                                      {scheme.scheme_image ? (
+                                        <div style={{
+                                          height: '100px',
+                                          width: '100%',
+                                          backgroundImage: `url(${scheme.scheme_image})`,
+                                          backgroundSize: 'contain',
+                                          backgroundPosition: 'center',
+                                          backgroundRepeat: 'no-repeat',
+                                          backgroundColor: '#f5f5f5'
+                                        }} />
+                                      ) : null}
+                                      <Card.Body className="p-3 text-center">
+                                        <h6 className="mb-1">{language === 'hi' ? scheme.title_hindi : scheme.title}</h6>
+                                        <Badge bg="success" className="mb-2">{scheme.amount}</Badge>
+                                        <p className="text-muted small mb-2">
                                           {scheme.about}
                                         </p>
-                                        <div className="mt-auto">
-                                          <small className="text-muted d-block mb-2"><TransText k="schemes.keyBenefits" as="span" /></small>
-                                          <div className="d-flex flex-wrap gap-1">
-                                            {scheme.benefits?.slice(0, 3).map((benefit, idx) => (
-                                              <Badge bg="light" text="dark" key={idx} className="small">
-                                                {benefit}
-                                              </Badge>
-                                            ))}
-                                          </div>
+                                        <div className="d-flex flex-wrap gap-1 justify-content-center">
+                                          {scheme.benefits?.slice(0, 3).map((benefit, idx) => (
+                                            <Badge bg="light" text="dark" key={idx} className="small">
+                                              {benefit}
+                                            </Badge>
+                                          ))}
                                         </div>
                                       </Card.Body>
                                     </Card>
@@ -471,31 +478,32 @@ const GovernmentSchemes = () => {
                                   <Col lg={4} md={6} className="mb-4" key={scheme.id || scheme.gov_scheme_id}>
                                     <Card 
                                       className="h-100 border course-card"
-                                      style={{ cursor: 'pointer' }}
+                                      style={{ cursor: 'pointer', overflow: 'hidden', width: '100%' }}
                                       onClick={() => handleSchemeClick(scheme)}
                                     >
-                                      <Card.Body className="">
-                                        <div className="d-flex align-items-start gap-3 mb-3">
-                                          <div className="course-icon-large">
-                                            {scheme.icon}
-                                          </div>
-                                          <div>
-                                            <h6 className="mb-1">{language === 'hi' ? scheme.title_hindi : scheme.title}</h6>
-                                            <Badge bg="success">{scheme.amount}</Badge>
-                                          </div>
-                                        </div>
-                                        <p className="text-muted small mb-3">
+                                      {scheme.scheme_image ? (
+                                        <div style={{
+                                          height: '100px',
+                                          width: '100%',
+                                          backgroundImage: `url(${scheme.scheme_image})`,
+                                          backgroundSize: 'contain',
+                                          backgroundPosition: 'center',
+                                          backgroundRepeat: 'no-repeat',
+                                          backgroundColor: '#f5f5f5'
+                                        }} />
+                                      ) : null}
+                                      <Card.Body className="p-3 text-center">
+                                        <h6 className="mb-1">{language === 'hi' ? scheme.title_hindi : scheme.title}</h6>
+                                        <Badge bg="success" className="mb-2">{scheme.amount}</Badge>
+                                        <p className="text-muted small mb-2">
                                           {scheme.about}
                                         </p>
-                                        <div className="mt-auto">
-                                          <small className="text-muted d-block mb-2"><TransText k="schemes.keyBenefits" as="span" /></small>
-                                          <div className="d-flex flex-wrap gap-1">
-                                            {scheme.benefits?.slice(0, 3).map((benefit, idx) => (
-                                              <Badge bg="light" text="dark" key={idx} className="small">
-                                                {benefit}
-                                              </Badge>
-                                            ))}
-                                          </div>
+                                        <div className="d-flex flex-wrap gap-1 justify-content-center">
+                                          {scheme.benefits?.slice(0, 3).map((benefit, idx) => (
+                                            <Badge bg="light" text="dark" key={idx} className="small">
+                                              {benefit}
+                                            </Badge>
+                                          ))}
                                         </div>
                                       </Card.Body>
                                     </Card>
