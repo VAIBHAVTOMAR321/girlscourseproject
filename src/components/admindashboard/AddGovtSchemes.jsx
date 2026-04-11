@@ -434,7 +434,7 @@ const AddGovtSchemes = () => {
   return (
     <div className="d-flex">
       <AdminLeftNav show={showSidebar} setShow={setShowSidebar} />
-      <div className="flex-grow-1" style={{ marginLeft: showSidebar ? '250px' : '80px', transition: 'margin-left 0.3s' }}>
+      <div className="flex-grow-1" style={{ marginLeft: showSidebar ? '238px' : '', transition: 'margin-left 0.3s' }}>
         <AdminTopNav />
         <Container fluid className="py-4">
           <div className="fade-in">
