@@ -57,7 +57,8 @@ const AddGovtSchemes = () => {
       { title: sectionNamesHindi[0], description: '' }
     ],
     web_link: '',
-    image: null
+    scheme_image: null,
+    scheme_image_preview: null
   })
 
   useEffect(() => {
@@ -193,20 +194,44 @@ const AddGovtSchemes = () => {
         payload.gov_scheme_id = formData.gov_scheme_id
         console.log('🔄 Updating scheme:', formData.gov_scheme_id)
         
-        const response = await axios.put(
-          'https://brjobsedu.com/girls_course/girls_course_backend/api/scheme/',
-          payload,
-          {
-            ...config,
-            headers: { ...config.headers, 'Content-Type': 'application/json' },
-            timeout: 10000
-          }
-        )
-        console.log('✅ Update response:', response.data)
+        // Handle image update for existing scheme
+        if (formData.scheme_image) {
+          const imageFormData = new FormData()
+          Object.keys(payload).forEach(key => {
+            if (key === 'sub_mod' || key === 'sub_mod_hindi') {
+              imageFormData.append(key, JSON.stringify(payload[key]))
+            } else {
+              imageFormData.append(key, payload[key])
+            }
+          })
+          imageFormData.append('scheme_image', formData.scheme_image)
+          
+          const response = await axios.put(
+            'https://brjobsedu.com/girls_course/girls_course_backend/api/scheme/',
+            imageFormData,
+            {
+              ...config,
+              headers: { ...config.headers, 'Content-Type': 'multipart/form-data' },
+              timeout: 10000
+            }
+          )
+          console.log('✅ Update response:', response.data)
+        } else {
+          const response = await axios.put(
+            'https://brjobsedu.com/girls_course/girls_course_backend/api/scheme/',
+            payload,
+            {
+              ...config,
+              headers: { ...config.headers, 'Content-Type': 'application/json' },
+              timeout: 10000
+            }
+          )
+          console.log('✅ Update response:', response.data)
+        }
         alert('✅ Scheme updated successfully!')
       } else {
         // Add image if provided
-        if (formData.image) {
+        if (formData.scheme_image) {
           const imageFormData = new FormData()
           // Add JSON fields
           Object.keys(payload).forEach(key => {
@@ -216,7 +241,7 @@ const AddGovtSchemes = () => {
               imageFormData.append(key, payload[key])
             }
           })
-          imageFormData.append('image', formData.image)
+          imageFormData.append('scheme_image', formData.scheme_image)
           
           console.log('📸 Adding scheme with image')
           const response = await axios.post(
@@ -317,11 +342,13 @@ const AddGovtSchemes = () => {
         { title: sectionNamesHindi[0], description: '' }
       ],
       web_link: '',
-      image: null
+      scheme_image: null,
+      scheme_image_preview: null
     })
   }
 
   const handleEdit = (scheme) => {
+    const previewUrl = scheme.scheme_image ? `https://brjobsedu.com/girls_course/girls_course_backend${scheme.scheme_image}` : null
     setFormData({
       gov_scheme_id: scheme.gov_scheme_id,
       scheme_category_id: scheme.scheme_category_id,
@@ -333,7 +360,8 @@ const AddGovtSchemes = () => {
       sub_mod: scheme.sub_mod || [{ title: '', description: '' }],
       sub_mod_hindi: scheme.sub_mod_hindi || [{ title: '', description: '' }],
       web_link: scheme.web_link || '',
-      image: null
+      scheme_image: null,
+      scheme_image_preview: previewUrl
     })
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
@@ -356,7 +384,12 @@ const AddGovtSchemes = () => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0]
-    setFormData({ ...formData, image: file })
+    if (file) {
+      const previewUrl = URL.createObjectURL(file)
+      setFormData({ ...formData, scheme_image: file, scheme_image_preview: previewUrl })
+    } else {
+      setFormData({ ...formData, scheme_image: file })
+    }
   }
 
   const handleAddSubModSection = () => {
@@ -518,6 +551,23 @@ const AddGovtSchemes = () => {
                                 accept="image/*"
                                 onChange={handleImageChange}
                               />
+                              {formData.scheme_image_preview && (
+                                <div className="mt-2">
+                                  <img 
+                                    src={formData.scheme_image_preview} 
+                                    alt="Scheme Preview" 
+                                    style={{ maxWidth: '200px', maxHeight: '150px', borderRadius: '8px', border: '1px solid #ddd' }}
+                                  />
+                                  <Button 
+                                    variant="link" 
+                                    size="sm" 
+                                    className="ms-2 text-danger"
+                                    onClick={() => setFormData({ ...formData, scheme_image: null, scheme_image_preview: null })}
+                                  >
+                                    Remove
+                                  </Button>
+                                </div>
+                              )}
                             </Form.Group>
                           </Col>
                         </Row>
@@ -646,39 +696,56 @@ const AddGovtSchemes = () => {
                       </div>
                     ) : (
                       <div className="list-group list-group-flush">
-                        {schemes.map((scheme) => (
-                          <div key={scheme.gov_scheme_id} className="list-group-item p-3">
-                            <div className="d-flex justify-content-between align-items-start">
-                              <div>
-                                <Badge bg="secondary" className="mb-1">{scheme.gov_scheme_id}</Badge>
-                                <h6 className="mb-0">{scheme.title}</h6>
-                                {scheme.title_hindi && (
-                                  <small className="text-muted fst-italic">{scheme.title_hindi}</small>
-                                )}
-                                {scheme.sub_mod && scheme.sub_mod.length > 0 && (
-                                  <div className="small mt-1">
-                                    {scheme.sub_mod.slice(0, 1).map((mod, idx) => (
-                                      <Badge key={idx} bg="light" text="dark" className="me-1">
-                                        {mod.title}
-                                      </Badge>
-                                    ))}
-                                    {scheme.sub_mod.length > 1 && (
-                                      <Badge bg="light" text="dark">+{scheme.sub_mod.length - 1}</Badge>
-                                    )}
+                        {schemes.map((scheme) => {
+                          const imgUrl = scheme.scheme_image 
+                            ? (scheme.scheme_image.startsWith('http') 
+                                ? scheme.scheme_image 
+                                : `https://brjobsedu.com/girls_course/girls_course_backend${scheme.scheme_image}`) 
+                            : null
+                          return (
+                            <div key={scheme.gov_scheme_id} className="list-group-item p-3">
+                              <div className="d-flex justify-content-between align-items-start">
+                                <div className="flex-grow-1">
+                                  <Badge bg="secondary" className="mb-1">{scheme.gov_scheme_id}</Badge>
+                                  <h6 className="mb-0">{scheme.title}</h6>
+                                  {scheme.title_hindi && (
+                                    <small className="text-muted fst-italic">{scheme.title_hindi}</small>
+                                  )}
+                                  {scheme.sub_mod && scheme.sub_mod.length > 0 && (
+                                    <div className="small mt-1">
+                                      {scheme.sub_mod.slice(0, 1).map((mod, idx) => (
+                                        <Badge key={idx} bg="light" text="dark" className="me-1">
+                                          {mod.title}
+                                        </Badge>
+                                      ))}
+                                      {scheme.sub_mod.length > 1 && (
+                                        <Badge bg="light" text="dark">+{scheme.sub_mod.length - 1}</Badge>
+                                      )}
+                                    </div>
+                                  )}
+                                </div>
+                                {imgUrl && (
+                                  <div className="ms-2">
+                                    <img 
+                                      src={imgUrl} 
+                                      alt={scheme.title}
+                                      style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '6px' }}
+                                      onError={(e) => { e.target.style.display = 'none' }}
+                                    />
                                   </div>
                                 )}
-                              </div>
-                              <div className="d-flex gap-1">
-                                <Button variant="outline-warning" size="sm" onClick={() => handleEdit(scheme)}>
-                                  <FaEdit />
-                                </Button>
-                                <Button variant="outline-danger" size="sm" onClick={() => handleDelete(scheme)}>
-                                  <FaTrash />
-                                </Button>
+                                <div className="d-flex gap-1 ms-2">
+                                  <Button variant="outline-warning" size="sm" onClick={() => handleEdit(scheme)}>
+                                    <FaEdit />
+                                  </Button>
+                                  <Button variant="outline-danger" size="sm" onClick={() => handleDelete(scheme)}>
+                                    <FaTrash />
+                                  </Button>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        ))}
+                          )
+                        })}
                       </div>
                     )}
                   </Card.Body>
