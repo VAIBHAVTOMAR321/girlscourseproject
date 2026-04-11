@@ -58,7 +58,8 @@ const AddGovtSchemes = () => {
     ],
     web_link: '',
     scheme_image: null,
-    scheme_image_preview: null
+    scheme_image_preview: null,
+    existing_image_url: null
   })
 
   useEffect(() => {
@@ -200,7 +201,7 @@ const AddGovtSchemes = () => {
           Object.keys(payload).forEach(key => {
             if (key === 'sub_mod' || key === 'sub_mod_hindi') {
               imageFormData.append(key, JSON.stringify(payload[key]))
-            } else {
+            } else if (key !== 'scheme_image') {
               imageFormData.append(key, payload[key])
             }
           })
@@ -217,9 +218,14 @@ const AddGovtSchemes = () => {
           )
           console.log('✅ Update response:', response.data)
         } else {
+          // Include existing image URL if no new image is uploaded
+          const payloadWithImage = {
+            ...payload,
+            scheme_image: formData.existing_image_url || ''
+          }
           const response = await axios.put(
             'https://brjobsedu.com/girls_course/girls_course_backend/api/scheme/',
-            payload,
+            payloadWithImage,
             {
               ...config,
               headers: { ...config.headers, 'Content-Type': 'application/json' },
@@ -343,7 +349,8 @@ const AddGovtSchemes = () => {
       ],
       web_link: '',
       scheme_image: null,
-      scheme_image_preview: null
+      scheme_image_preview: null,
+      existing_image_url: null
     })
   }
 
@@ -361,7 +368,8 @@ const AddGovtSchemes = () => {
       sub_mod_hindi: scheme.sub_mod_hindi || [{ title: '', description: '' }],
       web_link: scheme.web_link || '',
       scheme_image: null,
-      scheme_image_preview: previewUrl
+      scheme_image_preview: previewUrl,
+      existing_image_url: scheme.scheme_image || null
     })
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
