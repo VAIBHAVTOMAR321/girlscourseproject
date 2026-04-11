@@ -358,7 +358,7 @@ const AddGovtSchemes = () => {
                               <Form.Label>Scheme Image</Form.Label>
                               <Form.Control
                                 type="file"
-                                accept="image/*"
+                                accept="image/*" value={formData.scheme_image}
                                 onChange={handleImageChange}
                               />
                             </Form.Group>

@@ -39,6 +39,8 @@ import Home from "./components/home/Home.jsx";
 import UserQuiz from "./components/userdashboard/UserQuiz.jsx";
 import GovernmentSchemes from "./components/userdashboard/GovernmentSchemes.jsx";
 import GroomingClasses from "./components/userdashboard/GroomingClasses.jsx";
+import ManageGroomingClasses from "./components/admindashboard/ManageGroomingClasses.jsx";
+import CreateGroomingClass from "./components/admindashboard/CreateGroomingClass.jsx";
 
 function AppContent() {
   const location = useLocation();
@@ -70,8 +72,8 @@ function AppContent() {
     };
   }, [isAuthenticated, logout]);
 
-  const hideFooter = location.pathname.includes("/AdminDashboard") || location.pathname.includes("/UserDashboard") || location.pathname.includes("/UserProfile") || location.pathname.includes("/UserTest") || location.pathname.includes("/Enrollments") || location.pathname.includes("/RefundRequest") || location.pathname.includes("/UserSettings") || location.pathname.includes("/UserNotifications") || location.pathname.includes("/OccupationDetails") || location.pathname.includes("/Feedback") || location.pathname.includes("/UserQuery") || location.pathname.includes("/StudentIssues") || location.pathname.includes("/QuizManagement") || location.pathname.includes("/UserQuiz") || location.pathname.includes("/GovernmentSchemes") || location.pathname.includes("/ManageGovtSchemes") || location.pathname.includes("/AddGovtSchemes") || location.pathname.includes("/GroomingClasses");
-  const hideNavBar = location.pathname.includes("/AdminDashboard") || location.pathname.includes("/UserDashboard") || location.pathname.includes("/UserProfile") || location.pathname.includes("/UserTest") || location.pathname.includes("/Enrollments") || location.pathname.includes("/RefundRequest") || location.pathname.includes("/UserSettings") || location.pathname.includes("/UserNotifications") || location.pathname.includes("/OccupationDetails") || location.pathname.includes("/Feedback") || location.pathname.includes("/UserQuery") || location.pathname.includes("/StudentIssues") || location.pathname.includes("/QuizManagement") || location.pathname.includes("/UserQuiz") || location.pathname.includes("/GovernmentSchemes") || location.pathname.includes("/ManageGovtSchemes") || location.pathname.includes("/AddGovtSchemes") || location.pathname.includes("/GroomingClasses");
+  const hideFooter = location.pathname.includes("/AdminDashboard") || location.pathname.includes("/UserDashboard") || location.pathname.includes("/UserProfile") || location.pathname.includes("/UserTest") || location.pathname.includes("/Enrollments") || location.pathname.includes("/RefundRequest") || location.pathname.includes("/UserSettings") || location.pathname.includes("/UserNotifications") || location.pathname.includes("/OccupationDetails") || location.pathname.includes("/Feedback") || location.pathname.includes("/UserQuery") || location.pathname.includes("/StudentIssues") || location.pathname.includes("/QuizManagement") || location.pathname.includes("/UserQuiz") || location.pathname.includes("/GovernmentSchemes") || location.pathname.includes("/ManageGovtSchemes") || location.pathname.includes("/AddGovtSchemes") || location.pathname.includes("/GroomingClasses") || location.pathname.includes("/ManageGroomingClasses") || location.pathname.includes("/CreateGroomingClass");
+  const hideNavBar = location.pathname.includes("/AdminDashboard") || location.pathname.includes("/UserDashboard") || location.pathname.includes("/UserProfile") || location.pathname.includes("/UserTest") || location.pathname.includes("/Enrollments") || location.pathname.includes("/RefundRequest") || location.pathname.includes("/UserSettings") || location.pathname.includes("/UserNotifications") || location.pathname.includes("/OccupationDetails") || location.pathname.includes("/Feedback") || location.pathname.includes("/UserQuery") || location.pathname.includes("/StudentIssues") || location.pathname.includes("/QuizManagement") || location.pathname.includes("/UserQuiz") || location.pathname.includes("/GovernmentSchemes") || location.pathname.includes("/ManageGovtSchemes") || location.pathname.includes("/AddGovtSchemes") || location.pathname.includes("/GroomingClasses") || location.pathname.includes("/ManageGroomingClasses") || location.pathname.includes("/CreateGroomingClass");
 
   return (
     <>
@@ -260,6 +262,22 @@ function AppContent() {
             element={
               <ProtectedRoute allowedRoles={["admin"]}>
                 <AddGovtSchemes />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/ManageGroomingClasses"
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <ManageGroomingClasses />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/CreateGroomingClass"
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <CreateGroomingClass />
               </ProtectedRoute>
             }
           />

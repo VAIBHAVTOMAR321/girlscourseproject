@@ -84,6 +84,14 @@ const AdminLeftNav = ({ show, setShow }) => {
               <i className="bi bi-plus-circle nav-icon"></i>
               <span className="nav-text">Add Scheme</span>
             </Nav.Link>
+            <Nav.Link as={Link} to="/CreateGroomingClass" className="nav-link-custom ">
+              <i className="bi bi-person-badge nav-icon"></i>
+              <span className="nav-text">Create Grooming</span>
+            </Nav.Link>
+            <Nav.Link as={Link} to="/ManageGroomingClasses" className="nav-link-custom ">
+              <i className="bi bi-calendar-check nav-icon"></i>
+              <span className="nav-text">Manage Grooming</span>
+            </Nav.Link>
           </Nav>
         </div>
       )}
@@ -120,6 +128,12 @@ const AdminLeftNav = ({ show, setShow }) => {
             </Nav.Link>
             <Nav.Link as={Link} to="/AddGovtSchemes" className="nav-link-custom" onClick={() => setShowOffcanvas(false)}>
               <i className="bi bi-plus-circle nav-icon me-2"></i> Add Scheme
+            </Nav.Link>
+            <Nav.Link as={Link} to="/CreateGroomingClass" className="nav-link-custom" onClick={() => setShowOffcanvas(false)}>
+              <i className="bi bi-person-badge nav-icon me-2"></i> Create Grooming
+            </Nav.Link>
+            <Nav.Link as={Link} to="/ManageGroomingClasses" className="nav-link-custom" onClick={() => setShowOffcanvas(false)}>
+              <i className="bi bi-calendar-check nav-icon me-2"></i> Manage Grooming
             </Nav.Link>
           </Nav>
         </Offcanvas.Body>
