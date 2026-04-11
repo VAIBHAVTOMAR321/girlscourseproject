@@ -156,13 +156,17 @@ const GroomingClasses = () => {
     if (!start || !end) return ''
     const startDate = new Date(start)
     const endDate = new Date(end)
-    const diffMinutes = (endDate - startDate) / (1000 * 60)
-    if (diffMinutes >= 60) {
-      const hours = Math.floor(diffMinutes / 60)
-      const mins = diffMinutes % 60
-      return `${hours}h ${mins}m`
-    }
-    return `${diffMinutes} min`
+    const diffMs = endDate - startDate
+    if (isNaN(diffMs)) return ''
+    const totalSeconds = Math.floor(diffMs / 1000)
+    const hours = Math.floor(totalSeconds / 3600)
+    const minutes = Math.floor((totalSeconds % 3600) / 60)
+    const seconds = totalSeconds % 60
+    let result = []
+    if (hours > 0) result.push(`${hours}h`)
+    if (minutes > 0) result.push(`${minutes}m`)
+    if (seconds > 0 && hours === 0) result.push(`${seconds}s`)
+    return result.join(' ') || '0s'
   }
 
   const handleMenuToggle = () => {
