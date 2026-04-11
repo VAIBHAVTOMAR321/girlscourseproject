@@ -378,8 +378,8 @@ const GovernmentSchemes = () => {
                             onClick={() => handleCategoryChange(category.id)}
                           >
                             {category.image && (
-                              <div style={{
-                                height: '190px',
+                              <div className="responsive-box"style={{
+                                
                                
                                 backgroundImage: `url(${category.image})`,
                                 backgroundSize: 'contain',
