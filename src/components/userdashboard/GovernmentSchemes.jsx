@@ -380,7 +380,7 @@ const GovernmentSchemes = () => {
                             {category.image && (
                               <div style={{
                                 height: '190px',
-                                width: '280px',
+                               
                                 backgroundImage: `url(${category.image})`,
                                 backgroundSize: 'contain',
                                 backgroundPosition: 'center',
