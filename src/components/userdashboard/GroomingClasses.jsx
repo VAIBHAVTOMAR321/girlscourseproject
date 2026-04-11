@@ -18,7 +18,7 @@ const translations = {
     duration: 'Duration',
     seats: 'Participants',
     enrolled: 'Enrolled',
-    enrollNow: 'Join Now',
+    enrollNow: 'Enroll Now',
     joinClass: 'Join Class',
     participants: 'participants'
   },
@@ -31,7 +31,7 @@ const translations = {
     duration: 'अवधि',
     seats: 'प्रतिभागी',
     enrolled: 'नामांकित',
-    enrollNow: 'अभी जुड़ें',
+    enrollNow: 'अभी भर्ती करें',
     joinClass: 'क्लास में शामिल हों',
     participants: 'प्रतिभागी'
   }
@@ -156,13 +156,17 @@ const GroomingClasses = () => {
     if (!start || !end) return ''
     const startDate = new Date(start)
     const endDate = new Date(end)
-    const diffMinutes = (endDate - startDate) / (1000 * 60)
-    if (diffMinutes >= 60) {
-      const hours = Math.floor(diffMinutes / 60)
-      const mins = diffMinutes % 60
-      return `${hours}h ${mins}m`
-    }
-    return `${diffMinutes} min`
+    const diffMs = endDate - startDate
+    if (isNaN(diffMs)) return ''
+    const totalSeconds = Math.floor(diffMs / 1000)
+    const hours = Math.floor(totalSeconds / 3600)
+    const minutes = Math.floor((totalSeconds % 3600) / 60)
+    const seconds = totalSeconds % 60
+    let result = []
+    if (hours > 0) result.push(`${hours}h`)
+    if (minutes > 0) result.push(`${minutes}m`)
+    if (seconds > 0 && hours === 0) result.push(`${seconds}s`)
+    return result.join(' ') || '0s'
   }
 
   const handleMenuToggle = () => {
@@ -258,12 +262,33 @@ const GroomingClasses = () => {
                               </div>
 
                               <div className="d-flex gap-2">
-                                {isEnrolled ? (
-                                  <Button className="w-100" disabled style={{ background: '#28a745', border: 'none', color: 'white' }}>
-                                    <FaCheckCircle className="me-2" />
-                                    {t.enrolled}
-                                  </Button>
-                                ) : (
+                                {isEnrolled ? (() => {
+                                  const now = new Date()
+                                  const start = cls.start_date_time ? new Date(cls.start_date_time) : null
+                                  const end = cls.end_date_time ? new Date(cls.end_date_time) : null
+                                  const isActive = start && end && now >= start && now <= end
+                                  
+                                  if (isActive && cls.class_link) {
+                                    return (
+                                      <a 
+                                        href={cls.class_link} 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className="btn w-100"
+                                        style={{ background: '#667eea', border: 'none', color: 'white', fontWeight: 'bold', textDecoration: 'none', textAlign: 'center', padding: '0.5rem' }}
+                                      >
+                                        <FaVideo className="me-2" />
+                                        {t.joinClass}
+                                      </a>
+                                    )
+                                  }
+                                  return (
+                                    <Button className="w-100" disabled style={{ background: '#28a745', border: 'none', color: 'white' }}>
+                                      <FaCheckCircle className="me-2" />
+                                      {t.enrolled}
+                                    </Button>
+                                  )
+                                })() : (
                                   <Button 
                                     className="w-100" 
                                     onClick={() => handleEnroll(cls.class_id)}
