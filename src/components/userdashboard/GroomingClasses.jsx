@@ -219,9 +219,29 @@ const GroomingClasses = () => {
                                   </div>
                                   <div className="d-flex gap-2">
                                     {isEnrolled ? (
-                                      <Button className="w-100" disabled style={{ background: '#28a745', border: 'none' }}>
-                                        <FaCheckCircle className="me-2" />{t.enrolled}
-                                      </Button>
+                                      (() => {
+                                        const now = new Date()
+                                        const start = cls.start_date_time ? new Date(cls.start_date_time) : null
+                                        const end = cls.end_date_time ? new Date(cls.end_date_time) : null
+                                        const isLive = start && end && now >= start && now <= end
+                                        
+                                        if (isLive && cls.class_link) {
+                                          return (
+                                            <Button 
+                                              className="w-100" 
+                                              style={{ background: '#667eea', border: 'none' }}
+                                              onClick={() => window.open(cls.class_link, '_blank')}
+                                            >
+                                              <FaVideo className="me-2" />Join Class
+                                            </Button>
+                                          )
+                                        }
+                                        return (
+                                          <Button className="w-100" disabled style={{ background: '#28a745', border: 'none' }}>
+                                            <FaCheckCircle className="me-2" />{t.enrolled}
+                                          </Button>
+                                        )
+                                      })()
                                     ) : (
                                       <Button className="w-100" onClick={() => handleEnroll(cls.class_id)} disabled={enrolling === cls.class_id}
                                         style={{ background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)', border: 'none' }}>
@@ -260,10 +280,29 @@ const GroomingClasses = () => {
                               <Card.Body className="p-3">
                                 <h5 className="mb-2 fw-bold">{language === 'hi' ? cls.title_hindi || cls.title : cls.title}</h5>
                                 <p className="text-muted small mb-3">{language === 'hi' ? cls.description_hindi || cls.description : cls.description}</p>
-                                <div className="d-flex flex-wrap gap-2">
+                                <div className="d-flex flex-wrap gap-2 mb-3">
                                   <Badge bg="light" text="dark"><FaCalendarAlt className="me-1" size={12} />{formatDateTime(cls.start_date_time)}</Badge>
                                   <Badge bg="success"><FaCheckCircle className="me-1" size={12} />{t.enrolled}</Badge>
                                 </div>
+                                {(() => {
+                                  const now = new Date()
+                                  const start = cls.start_date_time ? new Date(cls.start_date_time) : null
+                                  const end = cls.end_date_time ? new Date(cls.end_date_time) : null
+                                  const isLive = start && end && now >= start && now <= end
+                                  
+                                  if (isLive && cls.class_link) {
+                                    return (
+                                      <Button 
+                                        className="w-100" 
+                                        style={{ background: '#667eea', border: 'none' }}
+                                        onClick={() => window.open(cls.class_link, '_blank')}
+                                      >
+                                        <FaVideo className="me-2" />Join Class
+                                      </Button>
+                                    )
+                                  }
+                                  return null
+                                })()}
                               </Card.Body>
                             </Card>
                           </Col>
