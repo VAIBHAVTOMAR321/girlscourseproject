@@ -150,7 +150,7 @@ const ManageGroomingClasses = () => {
                       </div>
                     </Card.Header>
                     <Card.Body className="p-0">
-                      <div className="table-responsive">
+                      <div className="table-responsive d-none d-md-block">
                         <Table hover className="custom-table align-middle mb-0">
                           <thead className="table-light custom-table">
                             <tr>
@@ -227,6 +227,64 @@ const ManageGroomingClasses = () => {
                             )}
                           </tbody>
                         </Table>
+                      </div>
+                      <div className="mobile-card-view d-md-none">
+                        {currentRecords.length === 0 ? (
+                          <div className="text-center py-4 text-muted">
+                            No grooming classes found
+                          </div>
+                        ) : (
+                          currentRecords.map((groomingClass) => (
+                            <div key={groomingClass.class_id} className="grooming-class-card">
+                              <div className="card-header">
+                                <span className="class-id">ID: {groomingClass.class_id}</span>
+                              </div>
+                              <div className="class-title">{groomingClass.title}</div>
+                              {groomingClass.title_hindi && (
+                                <div className="class-title-hindi">{groomingClass.title_hindi}</div>
+                              )}
+                              <div className="class-description">
+                                {groomingClass.description || 'No description'}
+                              </div>
+                              <div className="class-info">
+                                <div className="info-item">
+                                  <span className="label">Link:</span>{' '}
+                                  <span className="value">
+                                    {groomingClass.class_link ? (
+                                      <a href={groomingClass.class_link} target="_blank" rel="noopener noreferrer" className="text-primary">
+                                        View
+                                      </a>
+                                    ) : '-'}
+                                  </span>
+                                </div>
+                                <div className="info-item">
+                                  <span className="label">Start:</span>{' '}
+                                  <span className="value">{formatDateTime(groomingClass.start_date_time)}</span>
+                                </div>
+                                <div className="info-item">
+                                  <span className="label">End:</span>{' '}
+                                  <span className="value">{formatDateTime(groomingClass.end_date_time)}</span>
+                                </div>
+                              </div>
+                              <div className="card-actions">
+                                <Button
+                                  variant="outline-warning"
+                                  size="sm"
+                                  onClick={() => handleEdit(groomingClass)}
+                                >
+                                  <FaEdit className="me-1" /> Edit
+                                </Button>
+                                <Button
+                                  variant="outline-danger"
+                                  size="sm"
+                                  onClick={() => handleDelete(groomingClass)}
+                                >
+                                  <FaTrash className="me-1" /> Delete
+                                </Button>
+                              </div>
+                            </div>
+                          ))
+                        )}
                       </div>
                     </Card.Body>
                     {totalPages > 1 && (
