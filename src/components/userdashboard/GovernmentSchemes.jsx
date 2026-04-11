@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Container, Card, Button, Row, Col, Badge, Form, Modal, Alert, Tab, Nav, Spinner } from 'react-bootstrap'
-import { FaGraduationCap, FaArrowLeft, FaCheckCircle, FaInfoCircle, FaBook, FaMoneyBillWave, FaBriefcase, FaLaptop, FaUniversity, FaBus, FaUtensils, FaHouseUser, FaHeart, FaShieldAlt, FaLaptopCode, FaUserGraduate, FaAward, FaPiggyBank, FaHandHoldingUsd, FaTools, FaMedal, FaBaby, FaFemale } from 'react-icons/fa'
+import { FaGraduationCap, FaArrowLeft, FaCheckCircle, FaInfoCircle, FaBook, FaMoneyBillWave, FaBriefcase, FaLaptop, FaUniversity, FaBus, FaUtensils, FaHeart, FaShieldAlt, FaLaptopCode, FaUserGraduate, FaAward, FaPiggyBank, FaHandHoldingUsd, FaTools, FaMedal, FaBaby, FaFemale } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import UseLeftNav from './UseLeftNav'
@@ -8,7 +8,6 @@ import UserTopNav from './UserTopNav'
 import { useAuth } from '../../contexts/AuthContext'
 import { useLanguage } from '../../contexts/LanguageContext'
 import TransText from '../TransText'
-import { getTranslation } from '../../utils/translations'
 import '../../assets/css/UserSettings.css'
 
 const GovernmentSchemes = () => {
@@ -26,208 +25,7 @@ const GovernmentSchemes = () => {
   const [error, setError] = useState(null)
   const [retryCount, setRetryCount] = useState(0)
 
-  // Detailed scheme information (fallback/enhancement data)
-  const detailedSchemesInfo = {
-    education: [
-      {
-        id: 1,
-        nameKey: 'schemes.nsp',
-        icon: <FaGraduationCap />,
-        descriptionKey: 'schemes.nspDesc',
-        benefits: ['Multiple scholarship schemes', 'Single window application', 'Direct benefit transfer'],
-        eligibility: 'Students from Class 1 to PhD level',
-        documents: ['Aadhaar Card', 'Income Certificate', 'Marksheet', 'Bank Account Details'],
-        applicationProcess: 'Online application through national scholarship portal',
-        amount: 'Varies by scheme'
-      },
-      {
-        id: 2,
-        nameKey: 'schemes.scScholarship',
-        icon: <FaBook />,
-        benefits: ['Tuition fee reimbursement', 'Monthly maintenance allowance', 'Book grant'],
-        eligibility: 'SC students with family income below specified limit',
-        documents: ['Caste Certificate', 'Income Certificate', 'Previous Year Marksheet', 'Bank Account'],
-        applicationProcess: 'Apply through state welfare department',
-        amount: 'Up to ₹15,000 per annum'
-      },
-      {
-        id: 3,
-        nameKey: 'schemes.stScholarship',
-        icon: <FaBook />,
-        benefits: ['Full tuition fee', 'Living allowance', 'Book allowance'],
-        eligibility: 'ST students with annual family income below ₹2.5 Lakh',
-        documents: ['ST Certificate', 'Income Certificate', 'Marksheets', 'Hostel Certificate (if applicable)'],
-        applicationProcess: 'Apply through tribal development department',
-        amount: 'Up to ₹15,000 per annum'
-      },
-      {
-        id: 4,
-        nameKey: 'schemes.centralScholarship',
-        icon: <FaAward />,
-        benefits: ['₹10,000 per annum for first 3 years', '₹20,000 for 4th and 5th year', 'Book grant'],
-        eligibility: 'Students above 80th percentile in Class 12 board exams',
-        documents: ['Class 12 Marksheet', 'Income Certificate', 'Aadhaar Card', 'Bank Account'],
-        applicationProcess: 'Online application through National Scholarship Portal',
-        amount: '₹10,000 - ₹20,000 per annum'
-      },
-      {
-        id: 5,
-        nameKey: 'schemes.nandaGoraHigher',
-        icon: <FaGraduationCap />,
-        benefits: ['Educational loan up to ₹10 Lakhs', 'Scholarship for merit holders', 'Educational material support', 'Career counseling'],
-        eligibility: 'Students who have passed Class 12 with minimum 50% marks and annual family income below ₹3 Lakh',
-        documents: ['Class 12 Certificate', 'College Admission Letter', 'Income Certificate', 'Aadhaar Card', 'Bank Account Details'],
-        applicationProcess: 'Apply through Ministry of Education or partner financial institutions',
-        amount: 'Loan up to ₹10 Lakhs + Merit scholarship'
-      }
-    ],
-    scholarship: [
-      {
-        id: 6,
-        nameKey: 'schemes.pmScholarship',
-        icon: <FaPiggyBank />,
-        benefits: ['₹2,500 per month for boys', '₹3,000 per month for girls', 'Annual book grant'],
-        eligibility: 'Children of CAPF/RPF personnel pursuing professional courses',
-        documents: ['Parent Service Certificate', 'Class 12 Marksheet', 'Admission Letter', 'Aadhaar Card'],
-        applicationProcess: 'Online application through National Scholarship Portal',
-        amount: '₹2,500 - ₹3,000 per month'
-      },
-      {
-        id: 7,
-        nameKey: 'schemes.obcScholarship',
-        icon: <FaHandHoldingUsd />,
-        benefits: ['₹600 per month for Classes 1-5', '₹1,000 per month for Classes 6-10'],
-        eligibility: 'OBC students with family income below ₹2.5 Lakh per annum',
-        documents: ['OBC Certificate', 'Income Certificate', 'School ID', 'Bank Account Details'],
-        applicationProcess: 'Apply through state social welfare department',
-        amount: '₹600 - ₹1,000 per month'
-      },
-      {
-        id: 8,
-        nameKey: 'schemes.minorityScholarship',
-        icon: <FaMedal />,
-        benefits: ['100% tuition fee waiver', '₹10,000 per annum for books', 'Monthly maintenance'],
-        eligibility: 'Minority community students with 50% marks and family income below ₹2 Lakh',
-        documents: ['Minority Certificate', 'Income Certificate', 'Marksheets', 'College Fee Receipt'],
-        applicationProcess: 'Apply through Ministry of Minority Affairs portal',
-        amount: '100% fee waiver + ₹10,000'
-      },
-      {
-        id: 9,
-        nameKey: 'schemes.nandaGora',
-        icon: <FaPiggyBank />,
-        benefits: ['Monthly stipend of ₹3,000', 'Skill development training', 'Business support and mentoring', 'Microfinance assistance up to ₹50,000'],
-        eligibility: 'Women from rural areas aged 18-45 years with family income below ₹1.5 Lakh per annum',
-        documents: ['Aadhaar Card', 'Address Proof', 'Income Certificate', 'Bank Account Details'],
-        applicationProcess: 'Apply through Women Development Block Office or online portal',
-        amount: '₹3,000 per month + training'
-      }
-    ],
-    skills: [
-      {
-        id: 10,
-        nameKey: 'schemes.skillIndia',
-        icon: <FaTools />,
-        benefits: ['Free skill training', 'Industry-recognized certification', 'Placement assistance'],
-        eligibility: 'Youth aged 15 years and above',
-        documents: ['Aadhaar Card', 'Educational Certificate', 'Photo', 'Bank Account'],
-        applicationProcess: 'Register at nearest Skill India Centre or online',
-        amount: 'Free training with stipend'
-      },
-      {
-        id: 11,
-        nameKey: 'schemes.pmkvy',
-        icon: <FaLaptopCode />,
-        benefits: ['Free skill training', 'Industry-recognized certificate', 'Placement support', 'Market fee'],
-        eligibility: 'Youth seeking skill development and employment',
-        documents: ['Aadhaar Card', 'Educational Qualification Proof', 'Bank Account'],
-        applicationProcess: 'Enroll at nearest PMKVY center or online portal',
-        amount: 'Training free + placement'
-      },
-      {
-        id: 12,
-        nameKey: 'schemes.apprenticeship',
-        icon: <FaBriefcase />,
-        benefits: ['Monthly stipend', 'Certificate from NIOS', 'Practical work experience'],
-        eligibility: 'Candidates who have completed Class 10 or above',
-        documents: ['Aadhaar Card', 'Educational Certificate', 'Bank Account', 'Photo'],
-        applicationProcess: 'Apply through apprenticeship portal',
-        amount: '₹5,000 - ₹9,000 per month'
-      },
-      {
-        id: 13,
-        nameKey: 'schemes.digitalIndia',
-        icon: <FaLaptop />,
-        benefits: ['Free computer training', 'Digital certificate', 'Basic IT skills'],
-        eligibility: 'All citizens, especially women and rural population',
-        documents: ['Aadhaar Card', 'Photo', 'Basic education proof'],
-        applicationProcess: 'Enroll at Common Service Centre or online',
-        amount: 'Free training'
-      }
-    ],
-    women: [
-      {
-        id: 14,
-        nameKey: 'schemes.betiBachao',
-        icon: <FaFemale />,
-        benefits: ['Awareness programs', 'Educational support', 'Health services'],
-        eligibility: 'Girls from birth to Class 12',
-        documents: ['Birth Certificate', 'Aadhaar Card', 'School ID', 'Parent ID'],
-        applicationProcess: 'Through local Anganwadi or school',
-        amount: 'Various benefits'
-      },
-      {
-        id: 15,
-        nameKey: 'schemes.sukanya',
-        icon: <FaPiggyBank />,
-        benefits: ['High interest rate (8.2%)', 'Tax benefits', 'Tax-free maturity amount'],
-        eligibility: 'Parents/guardians of girl child below 10 years',
-        documents: ['Girl Child Birth Certificate', 'Parent ID Proof', 'Address Proof', 'Photo'],
-        applicationProcess: 'Open account at Post Office or authorized bank',
-        amount: 'Investment with high returns'
-      },
-      {
-        id: 16,
-        nameKey: 'schemes.matruVandana',
-        icon: <FaBaby />,
-        benefits: ['₹5,000 in three installments', 'DBT to bank account', 'Health checkups'],
-        eligibility: 'Pregnant women and lactating mothers',
-        documents: ['Aadhaar Card', 'MCP Card', 'Bank Account', 'Pregnancy Proof'],
-        applicationProcess: 'Apply through Anganwadi center or hospital',
-        amount: '₹5,000 in installments'
-      },
-      {
-        id: 17,
-        nameKey: 'schemes.womenHelpline',
-        icon: <FaShieldAlt />,
-        benefits: ['Emergency assistance', 'Legal aid', 'Counseling', 'Shelter referral'],
-        eligibility: 'All women in distress',
-        documents: ['No documents required for emergency'],
-        applicationProcess: 'Call 181 (national) or 1091 (state)',
-        amount: 'Free service'
-      },
-      {
-        id: 18,
-        nameKey: 'schemes.oneStopCentre',
-        icon: <FaHeart />,
-        benefits: ['Legal aid', 'Medical assistance', 'Psychological support', 'Shelter'],
-        eligibility: 'All women facing violence',
-        documents: ['No documents required'],
-        applicationProcess: 'Visit nearest OSC or call 181',
-        amount: 'Free services'
-      },
-      {
-        id: 19,
-        nameKey: 'schemes.mahilaShakti',
-        icon: <FaFemale />,
-        benefits: ['Skill training', 'Employment guidance', 'Legal aid', 'Scholarship information'],
-        eligibility: 'Women from rural areas',
-        documents: ['Aadhaar Card', 'Any ID Proof'],
-        applicationProcess: 'Visit nearest MSK center in your block',
-        amount: 'Free services'
-      }
-    ]
-  }
+  
 
   useEffect(() => {
     const handleResize = () => {
@@ -269,6 +67,7 @@ const GovernmentSchemes = () => {
                 description: scheme.description || 'No description available',
                 description_hindi: scheme.description_hindi || scheme.description || 'विवरण उपलब्ध नहीं',
                 web_link: scheme.web_link || '#',
+                total_amount: scheme.total_amount || '',
                 sub_mod: scheme.sub_mod || [],
                 sub_mod_hindi: scheme.sub_mod_hindi || []
               }))
@@ -355,37 +154,96 @@ const GovernmentSchemes = () => {
     setSelectedCategory(categoryId)
   }
 
-  // Enrich scheme data with detailed information
+  // Helper to parse comma or newline-separated values into array
+  const parseListField = (value) => {
+    if (!value) return []
+    if (Array.isArray(value)) return value
+    if (typeof value === 'string') {
+      let items = value.split(/,|\n/).map(item => item.trim()).filter(item => item)
+      return items
+    }
+    return [value]
+  }
+
+  // Helper to get title from sub_mod item (handles both string and object)
+  const getSubModTitle = (item) => {
+    if (typeof item === 'string') return item
+    if (item && typeof item === 'object') return item.title || item.description || item.name || ''
+    return ''
+  }
+
+  // Helper to get description from sub_mod item
+  const getSubModDesc = (item) => {
+    if (item && typeof item === 'object') return item.description || ''
+    return ''
+  }
+
+  // Check if title matches a section (order matters - more specific first)
+  const getSectionFromTitle = (title) => {
+    const t = title?.toLowerCase().replace(/^-*\s*/, '') || '' // remove leading dashes/spaces
+    if (t.includes('documents needed')) return 'documents'
+    if (t.includes('how to apply')) return 'howToApply'
+    if (t.includes('important tips')) return 'tips'
+    if (t.includes('who can apply') || t.includes('eligibility')) return 'eligibility'
+    if (t.includes('documents')) return 'documents'
+    if (t.includes('tips')) return 'tips'
+    if (t.includes('benefits')) return 'benefits'
+    return '' // no default - skip items that don't match any section
+  }
+
+  // Enrich scheme data with API information
   const enrichSchemeData = (apiScheme) => {
-    // Find in all detailed schemes by matching title
-    for (const categoryKey in detailedSchemesInfo) {
-      const found = detailedSchemesInfo[categoryKey].find(
-        s => s.name === apiScheme.title || 
-             (s.nameKey && getTranslation(s.nameKey, 'en') === apiScheme.title)
-      )
-      if (found) {
-        return {
-          ...apiScheme,
-          icon: found.icon,
-          benefits: found.benefits,
-          eligibility: found.eligibility,
-          documents: found.documents,
-          applicationProcess: found.applicationProcess,
-          amount: found.amount,
-          officialLink: 'https://example.com'
+    const subMod = language === 'hi' ? apiScheme.sub_mod_hindi : apiScheme.sub_mod
+    // Section 1: About this Scheme - only description
+    const about = language === 'hi' ? apiScheme.description_hindi : apiScheme.description
+    
+    // Initialize arrays for each section
+    let benefits = []
+    let eligibility = []
+    let documents = []
+    let howToApply = []
+    let tips = []
+    // Get total_amount from API, fallback to "Visit Website"
+    const totalAmount = apiScheme.total_amount || 'Visit Website'
+    
+    // Process sub_mod array - use title to determine section
+    if (subMod && Array.isArray(subMod) && subMod.length > 0) {
+      subMod.forEach(item => {
+        const title = getSubModTitle(item)
+        const description = getSubModDesc(item)
+        
+        // Parse comma/newline separated values from description
+        const items = parseListField(description).filter(i => i && i.trim())
+        
+        // Determine which section based on title
+        const section = getSectionFromTitle(title)
+        
+        if (section === 'eligibility') {
+          eligibility = [...eligibility, ...items]
+        } else if (section === 'documents') {
+          documents = [...documents, ...items]
+        } else if (section === 'howToApply') {
+          howToApply = [...howToApply, ...items]
+        } else if (section === 'tips') {
+          tips = [...tips, ...items]
+        } else if (section === 'benefits' && items.length > 0) {
+          // Only add to benefits if title explicitly contains "benefits"
+          benefits = [...benefits, ...items]
         }
-      }
+        // Items with non-matching titles are skipped
+      })
     }
     
-    // Fallback: create from API data
     return {
       ...apiScheme,
       icon: <FaAward />,
-      benefits: apiScheme.sub_mod?.map(m => m.title) || [],
-      eligibility: 'Check official website for eligibility.',
-      documents: ['See official website for documents'],
-      applicationProcess: apiScheme.description || 'Visit official website for application',
-      amount: 'See website',
+      about: about || 'No description available',
+      benefits,
+      eligibility,
+      documents,
+      howToApply,
+      tips,
+      amount: totalAmount,
       officialLink: apiScheme.web_link || 'https://example.com'
     }
   }
@@ -574,7 +432,7 @@ const GovernmentSchemes = () => {
                                           </div>
                                         </div>
                                         <p className="text-muted small mb-3">
-                                          {scheme.description}
+                                          {scheme.about}
                                         </p>
                                         <div className="mt-auto">
                                           <small className="text-muted d-block mb-2"><TransText k="schemes.keyBenefits" as="span" /></small>
@@ -612,7 +470,7 @@ const GovernmentSchemes = () => {
                                           </div>
                                         </div>
                                         <p className="text-muted small mb-3">
-                                          {scheme.description}
+                                          {scheme.about}
                                         </p>
                                         <div className="mt-auto">
                                           <small className="text-muted d-block mb-2"><TransText k="schemes.keyBenefits" as="span" /></small>
@@ -656,7 +514,7 @@ const GovernmentSchemes = () => {
       </div>
 
       <Modal show={showModal} onHide={() => setShowModal(false)} size="lg" centered scrollable className="government-schemes-modal">
-        <Modal.Header closeButton className="border-0" style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', padding: '2rem 1.5rem', borderRadius: '8px 8px 0 0'}}>
+        <Modal.Header closeButton className="border-0" style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', borderRadius: '8px 8px 0 0'}}>
           <Modal.Title className="w-100">
             <div className="d-flex align-items-center gap-3" style={{color: 'white'}}>
               <div style={{fontSize: '2.5rem', display: 'flex', alignItems: 'center'}}>
@@ -684,112 +542,103 @@ const GovernmentSchemes = () => {
                 </div>
               </div>
 
-              {/* Description */}
+              {/* Section 1: About this Scheme */}
               <div className="mb-4 p-4 bg-white rounded border-start border-5" style={{borderColor: '#667eea'}}>
                 <h6 className="text-dark mb-3 fw-bold" style={{fontSize: '1rem'}}>
                   {language === 'hi' ? '📌 योजना का विवरण' : '📌 About this Scheme'}
                 </h6>
-                <p className="mb-0 text-muted" style={{lineHeight: '1.6'}}>{selectedScheme.description}</p>
+                <p className="mb-0 text-muted" style={{lineHeight: '1.6'}}>{selectedScheme.about}</p>
               </div>
 
-              {/* Benefits - Highlighted */}
-              <div className="mb-4 p-4 bg-white rounded">
-                <h6 className="text-dark mb-3 fw-bold" style={{fontSize: '1rem'}}>
-                  <span style={{color: '#28a745'}}>✨ {language === 'hi' ? 'मुख्य लाभ' : 'Key Benefits'}</span>
-                </h6>
-                <div className="ps-2">
-                  {selectedScheme.benefits.map((benefit, idx) => (
-                    <div key={idx} className="mb-3 d-flex align-items-start">
-                      <span style={{color: '#28a745', marginRight: '0.75rem', marginTop: '0.25rem', fontSize: '1.2rem'}}>✓</span>
-                      <span className="text-muted" style={{fontSize: '0.95rem'}}>{benefit}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Eligibility - Important */}
-              <div className="mb-4 p-4 bg-white rounded border-start border-5" style={{borderColor: '#0d6efd'}}>
-                <h6 className="text-dark mb-3 fw-bold" style={{fontSize: '1rem'}}>
-                  <span style={{color: '#0d6efd'}}>👤 {language === 'hi' ? 'कौन आवेदन कर सकता है?' : 'Who Can Apply?'}</span>
-                </h6>
-                <p className="mb-0 text-muted" style={{lineHeight: '1.6', fontSize: '0.95rem'}}>{selectedScheme.eligibility}</p>
-              </div>
-
-              {/* Documents Required */}
-              <div className="mb-4 p-4 bg-white rounded">
-                <h6 className="text-dark mb-3 fw-bold" style={{fontSize: '1rem'}}>
-                  <span style={{color: '#fd7e14'}}>📄 {language === 'hi' ? 'आवश्यक दस्तावेज़' : 'Documents Needed'}</span>
-                </h6>
-                <div className="row g-3 ps-2">
-                  {selectedScheme.documents.map((doc, idx) => (
-                    <div key={idx} className="col-md-6">
-                      <div className="p-3 rounded d-flex align-items-start" style={{background: '#fff3cd', border: '1px solid #ffc107'}}>
-                        <span style={{color: '#fd7e14', marginRight: '0.75rem', fontSize: '1rem'}}>📋</span>
-                        <span className="text-muted small" style={{fontSize: '0.9rem'}}>{doc}</span>
+              {/* Section 2: Key Benefits */}
+              {selectedScheme.benefits && selectedScheme.benefits.length > 0 && (
+                <div className="mb-4 p-4 bg-white rounded">
+                  <h6 className="text-dark mb-3 fw-bold" style={{fontSize: '1rem'}}>
+                    <span style={{color: '#28a745'}}>✨ {language === 'hi' ? 'मुख्य लाभ' : 'Key Benefits'}</span>
+                  </h6>
+                  <div className="ps-2">
+                    {selectedScheme.benefits.map((benefit, idx) => (
+                      <div key={idx} className="mb-3 d-flex align-items-start">
+                        <span style={{color: '#28a745', marginRight: '0.75rem', marginTop: '0.25rem', fontSize: '1.2rem'}}>✓</span>
+                        <span className="text-muted" style={{fontSize: '0.95rem'}}>{benefit}</span>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
 
-              {/* Step by Step Application Guide */}
-              <div className="mb-4 p-4 bg-white rounded border-top border-5" style={{borderColor: '#0dcaf0'}}>
-                <h6 className="text-dark mb-4 fw-bold" style={{fontSize: '1.05rem'}}>
-                  <span style={{color: '#0dcaf0'}}>📍 {language === 'hi' ? 'आवेदन कैसे करें? (सरल चरण)' : 'How to Apply? (Simple Steps)'}</span>
-                </h6>
-                <div className="ms-2">
-                  {[
-                    {
-                      title: language === 'hi' ? 'सभी दस्तावेज़ तैयार करें' : 'Gather All Documents',
-                      desc: language === 'hi' ? 'ऊपर दिए गए सभी दस्तावेज़ों की मूल प्रति या फोटोकॉपी तैयार करें।' : 'Collect original or photocopy of all documents listed above.'
-                    },
-                    {
-                      title: language === 'hi' ? 'आधिकारिक वेबसाइट पर जाएं' : 'Visit Official Website',
-                      desc: language === 'hi' ? 'नीचे दिए गए लिंक पर क्लिक करें और आधिकारिक वेबसाइट खोलें।' : 'Click the link below to open the official government website.'
-                    },
-                    {
-                      title: language === 'hi' ? 'आवेदन फॉर्म भरें' : 'Fill Application Form',
-                      desc: language === 'hi' ? 'वेबसाइट पर "आवेदन करें" या "नया आवेदन" बटन खोजें और फॉर्म भरें।' : 'Look for "Apply Now" or "New Application" button and fill in all details.'
-                    },
-                    {
-                      title: language === 'hi' ? 'दस्तावेज़ अपलोड करें' : 'Upload Documents',
-                      desc: language === 'hi' ? 'फॉर्म में सभी आवश्यक दस्तावेज़ों की स्कैन प्रति अपलोड करें।' : 'Upload scanned copies of all required documents in the form.'
-                    },
-                    {
-                      title: language === 'hi' ? 'आवेदन सबमिट करें' : 'Submit Application',
-                      desc: language === 'hi' ? 'सभी विवरण जांचें और "सबमिट" बटन पर क्लिक करें।' : 'Double-check all details and click "Submit" button.'
-                    },
-                    {
-                      title: language === 'hi' ? 'पुष्टिकरण प्राप्त करें' : 'Get Confirmation',
-                      desc: language === 'hi' ? 'आपको एक संदर्भ संख्या/पावती मिलेगी। इसे सुरक्षित रखें।' : 'You will receive a reference number/receipt. Keep it safe for future updates.'
-                    }
-                  ].map((step, idx) => (
-                    <div key={idx} className="mb-3 d-flex gap-3">
-                      <div className="d-flex align-items-center justify-content-center" style={{minWidth: '40px', height: '40px', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', borderRadius: '50%', fontWeight: 'bold', fontSize: '1rem'}}>
-                        {idx + 1}
+              {/* Section 3: Who Can Apply? */}
+              {selectedScheme.eligibility && selectedScheme.eligibility.length > 0 && (
+                <div className="mb-4 p-4 bg-white rounded border-start border-5" style={{borderColor: '#0d6efd'}}>
+                  <h6 className="text-dark mb-3 fw-bold" style={{fontSize: '1rem'}}>
+                    <span style={{color: '#0d6efd'}}>👤 {language === 'hi' ? 'कौन आवेदन कर सकता है?' : 'Who Can Apply?'}</span>
+                  </h6>
+                  <div className="ps-2">
+                    {selectedScheme.eligibility.map((elig, idx) => (
+                      <div key={idx} className="mb-2 d-flex align-items-start">
+                        <span style={{color: '#0d6efd', marginRight: '0.75rem', marginTop: '0.25rem', fontSize: '1rem'}}>•</span>
+                        <span className="text-muted" style={{fontSize: '0.95rem'}}>{elig}</span>
                       </div>
-                      <div style={{flex: 1}}>
-                        <strong className="text-dark d-block" style={{fontSize: '0.95rem', marginBottom: '0.25rem'}}>{step.title}</strong>
-                        <p className="mb-0 text-muted small" style={{fontSize: '0.85rem', lineHeight: '1.5'}}>{step.desc}</p>
-                      </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
 
-              {/* Tips */}
-              <div className="mb-4 p-4 rounded" style={{background: '#fff3cd', border: '2px solid #ffc107'}}>
-                <h6 className="text-dark mb-3 fw-bold" style={{fontSize: '1rem'}}>
-                  <span style={{color: '#fd7e14'}}>⚠️ {language === 'hi' ? 'महत्वपूर्ण सुझाव' : 'Important Tips'}</span>
-                </h6>
-                <ul className="mb-0 ps-4 small" style={{color: '#856404', fontSize: '0.9rem'}}>
-                  <li className="mb-2">{language === 'hi' ? 'गलत या अधूरे आवेदन को अस्वीकार किया जा सकता है।' : 'Incomplete applications may be rejected.'}</li>
-                  <li className="mb-2">{language === 'hi' ? 'आवेदन की समय सीमा को मिस न करें।' : 'Do not miss the application deadline.'}</li>
-                  <li>{language === 'hi' ? 'सभी दस्तावेज़ स्पष्ट और वैध होने चाहिए।' : 'All documents must be clear and valid.'}</li>
-                </ul>
-              </div>
+              {/* Section 4: Documents Needed */}
+              {selectedScheme.documents && selectedScheme.documents.length > 0 && (
+                <div className="mb-4 p-4 bg-white rounded">
+                  <h6 className="text-dark mb-3 fw-bold" style={{fontSize: '1rem'}}>
+                    <span style={{color: '#fd7e14'}}>📄 {language === 'hi' ? 'आवश्यक दस्तावेज़' : 'Documents Needed'}</span>
+                  </h6>
+                  <div className="row g-3 ps-2">
+                    {selectedScheme.documents.map((doc, idx) => (
+                      <div key={idx} className="col-md-6">
+                        <div className="p-3 rounded d-flex align-items-start" style={{background: '#fff3cd', border: '1px solid #ffc107'}}>
+                          <span style={{color: '#fd7e14', marginRight: '0.75rem', fontSize: '1rem'}}>📋</span>
+                          <span className="text-muted small" style={{fontSize: '0.9rem'}}>{doc}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
-              {/* Official Link */}
+              {/* Section 5: How to Apply? */}
+              {selectedScheme.howToApply && selectedScheme.howToApply.length > 0 && (
+                <div className="mb-4 p-4 bg-white rounded border-top border-5" style={{borderColor: '#0dcaf0'}}>
+                  <h6 className="text-dark mb-4 fw-bold" style={{fontSize: '1.05rem'}}>
+                    <span style={{color: '#0dcaf0'}}>📍 {language === 'hi' ? 'आवेदन कैसे करें?' : 'How to Apply?'}</span>
+                  </h6>
+                  <div className="ms-2">
+                    {selectedScheme.howToApply.map((step, idx) => (
+                      <div key={idx} className="mb-3 d-flex gap-3">
+                        <div className="d-flex align-items-center justify-content-center" style={{minWidth: '40px', height: '40px', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', borderRadius: '50%', fontWeight: 'bold', fontSize: '1rem'}}>
+                          {idx + 1}
+                        </div>
+                        <div style={{flex: 1}}>
+                          <span className="text-muted" style={{fontSize: '0.95rem'}}>{step}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Section 6: Important Tips */}
+              {selectedScheme.tips && selectedScheme.tips.length > 0 && (
+                <div className="mb-4 p-4 rounded" style={{background: '#fff3cd', border: '2px solid #ffc107'}}>
+                  <h6 className="text-dark mb-3 fw-bold" style={{fontSize: '1rem'}}>
+                    <span style={{color: '#fd7e14'}}>⚠️ {language === 'hi' ? 'महत्वपूर्ण सुझाव' : 'Important Tips'}</span>
+                  </h6>
+                  <ul className="mb-0 ps-4 small" style={{color: '#856404', fontSize: '0.9rem'}}>
+                    {selectedScheme.tips.map((tip, idx) => (
+                      <li key={idx} className="mb-2">{tip}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* Section 7: Official Website */}
               <div className="p-4 rounded" style={{background: '#e7f3ff', border: '2px solid #0d6efd'}}>
                 <h6 className="text-dark mb-3 fw-bold" style={{fontSize: '1rem'}}>
                   <span style={{color: '#0d6efd'}}>🔗 {language === 'hi' ? 'आधिकारिक वेबसाइट' : 'Official Website'}</span>
