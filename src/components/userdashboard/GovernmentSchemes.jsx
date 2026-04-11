@@ -192,13 +192,12 @@ const GovernmentSchemes = () => {
   // Check if title matches a section (order matters - more specific first)
   const getSectionFromTitle = (title) => {
     const t = title?.toLowerCase().replace(/^-*\s*/, '') || '' // remove leading dashes/spaces
-    if (t.includes('documents needed')) return 'documents'
-    if (t.includes('how to apply')) return 'howToApply'
-    if (t.includes('important tips')) return 'tips'
-    if (t.includes('who can apply') || t.includes('eligibility')) return 'eligibility'
-    if (t.includes('documents')) return 'documents'
-    if (t.includes('tips')) return 'tips'
-    if (t.includes('benefits')) return 'benefits'
+    if (t.includes('documents needed') || t.includes('आवश्यक दस्तावेज़') || t.includes('documents') || t.includes('दस्तावेज़')) return 'documents'
+    if (t.includes('how to apply') || t.includes('आवेदन कैसे करें') || t.includes('apply')) return 'howToApply'
+    if (t.includes('important tips') || t.includes('महत्वपूर्ण सुझाव') || t.includes('tips') || t.includes('सुझाव')) return 'tips'
+    if (t.includes('who can apply') || t.includes('आवेदन कौन कर सकते हैं') || t.includes('eligibility') || t.includes('कौन')) return 'eligibility'
+    if (t.includes('benefits') || t.includes('मुख्य लाभ') || t.includes('लाभ')) return 'benefits'
+    if (t.includes('about') || t.includes('योजना के बारे में') || t.includes('विवरण')) return 'about'
     return '' // no default - skip items that don't match any section
   }
 
