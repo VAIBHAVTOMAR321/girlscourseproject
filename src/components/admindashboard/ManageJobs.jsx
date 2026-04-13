@@ -39,6 +39,8 @@ const ManageJobs = () => {
   const [workshopFilter, setWorkshopFilter] = useState('all')
   const [workshopCurrentPage, setWorkshopCurrentPage] = useState(1)
 
+  const isJobActive = (job) => job.is_active === true || job.is_active === 'true' || job.is_active === 1 || job.is_active === '1'
+
   useEffect(() => {
     fetchJobs()
     fetchSeminars()
@@ -54,8 +56,9 @@ const ManageJobs = () => {
   const fetchJobs = async () => {
     try {
       setLoading(true)
-      const response = await axios.get(JOB_API_URL, getAuthConfig())
+      const response = await axios.get(JOB_API_URL + '?_t=' + new Date().getTime(), getAuthConfig())
       if (response.data && response.data.data) {
+        console.log('Jobs API response:', JSON.stringify(response.data.data))
         setJobs(response.data.data)
       }
     } catch (error) {
@@ -130,11 +133,15 @@ const ManageJobs = () => {
 
   const toggleJobStatus = async (job) => {
     try {
-      const newStatus = !job.status
+      const currentStatus = isJobActive(job)
+      const newStatus = !currentStatus
+      console.log('Toggle job:', job.job_id, 'from is_active:', job.is_active, 'to', newStatus)
+      
       await axios.put(JOB_API_URL, {
         job_id: job.job_id,
-        status: newStatus
+        is_active: newStatus
       }, getAuthConfig())
+      
       fetchJobs()
       alert(`Job ${newStatus ? 'activated' : 'deactivated'} successfully!`)
     } catch (error) {
@@ -178,7 +185,10 @@ const ManageJobs = () => {
   
   const filteredJobs = statusFilter === 'all' 
     ? jobs 
-    : jobs.filter(job => statusFilter === 'active' ? job.status : !job.status)
+    : jobs.filter(job => {
+      const isActive = isJobActive(job)
+      return statusFilter === 'active' ? isActive : !isActive
+    })
   
   const currentRecords = filteredJobs.slice(indexOfFirstRecord, indexOfLastRecord)
   const totalPages = Math.ceil(filteredJobs.length / recordsPerPage)
@@ -357,7 +367,7 @@ const ManageJobs = () => {
                   <Button variant="outline-secondary" size="sm" onClick={() => navigate('/AdminDashboard')} className="me-2">
                     <FaArrowLeft /> Dashboard
                   </Button>
-                  <h4 className="mb-0">Manage Jobs & Seminars</h4>
+                  <h4 className="mb-0">Manage Jobs, Seminars & Workshops</h4>
                 </div>
                 <Button variant="primary" size="sm" onClick={() => activeTab === 'jobs' ? navigate('/AddJob') : activeTab === 'seminars' ? navigate('/AddSeminar') : navigate('/AddWorkshop')}>
                   <FaPlus className="me-1" /> {activeTab === 'jobs' ? 'Add New Job' : activeTab === 'seminars' ? 'Add New Seminar' : 'Add New Workshop'}
@@ -467,21 +477,21 @@ const ManageJobs = () => {
                                     {formatDate(job.last_date_to_apply)}
                                   </td>
                                   <td className="small">
-                                    <Badge bg={job.status ? 'success' : 'danger'}>
-                                      {job.status ? 'Active' : 'Inactive'}
+                                    <Badge bg={isJobActive(job) ? 'success' : 'danger'}>
+                                      {isJobActive(job) ? 'Active' : 'Inactive'}
                                     </Badge>
                                   </td>
                                   <td className="text-end pe-3">
                                     <div className="d-flex gap-1 justify-content-end">
                                       <Button
-                                        variant={job.status ? 'outline-success' : 'outline-secondary'}
+                                        variant={isJobActive(job) ? 'outline-success' : 'outline-secondary'}
                                         size="sm"
                                         className="p-1"
                                         style={{ width: '28px', height: '28px' }}
                                         onClick={() => toggleJobStatus(job)}
-                                        title={job.status ? 'Deactivate' : 'Activate'}
+                                        title={isJobActive(job) ? 'Deactivate' : 'Activate'}
                                       >
-                                        {job.status ? <FaToggleOn style={{ fontSize: '12px' }} /> : <FaToggleOff style={{ fontSize: '12px' }} />}
+                                        {isJobActive(job) ? <FaToggleOn style={{ fontSize: '12px', color: 'green' }} /> : <FaToggleOff style={{ fontSize: '12px', color: 'gray' }} />}
                                       </Button>
                                       <Button
                                         variant="outline-primary"
@@ -553,20 +563,20 @@ const ManageJobs = () => {
                                   <span className="label"><FaCalendar className="me-1" />Last Date:</span>{' '}
                                   <span className="value">{formatDate(job.last_date_to_apply)}</span>
                                 </div>
-                                <div className="info-item">
-                                  <span className="label">Status:</span>{' '}
-                                  <Badge bg={job.status ? 'success' : 'danger'}>{job.status ? 'Active' : 'Inactive'}</Badge>
-                                </div>
-                              </div>
-                              <div className="card-actions">
-                                <Button
-                                  variant={job.status ? 'outline-success' : 'outline-secondary'}
-                                  size="sm"
-                                  onClick={() => toggleJobStatus(job)}
-                                >
-                                  {job.status ? <FaToggleOn className="me-1" /> : <FaToggleOff className="me-1" />} 
-                                  {job.status ? 'Active' : 'Inactive'}
-                                </Button>
+<div className="info-item">
+                                   <span className="label">Status:</span>{' '}
+                                   <Badge bg={isJobActive(job) ? 'success' : 'danger'}>{isJobActive(job) ? 'Active' : 'Inactive'}</Badge>
+                                 </div>
+                               </div>
+                               <div className="card-actions">
+                                 <Button
+                                   variant={isJobActive(job) ? 'outline-success' : 'outline-secondary'}
+                                   size="sm"
+                                   onClick={() => toggleJobStatus(job)}
+                                 >
+                                   {isJobActive(job) ? <FaToggleOn className="me-1" /> : <FaToggleOff className="me-1" />} 
+                                   {isJobActive(job) ? 'Active' : 'Inactive'}
+                                 </Button>
                                 <Button
                                   variant="outline-primary"
                                   size="sm"
@@ -1135,7 +1145,7 @@ const ManageJobs = () => {
                 </Col>
                 <Col md={6}>
                   <p><strong><FaCalendar className="me-1" />Last Date to Apply:</strong> {formatDate(selectedJob.last_date_to_apply)}</p>
-                  <p><strong>Status:</strong> <Badge bg={selectedJob.status ? 'success' : 'danger'}>{selectedJob.status ? 'Active' : 'Inactive'}</Badge></p>
+                  <p><strong>Status:</strong> <Badge bg={isJobActive(selectedJob) ? 'success' : 'danger'}>{isJobActive(selectedJob) ? 'Active' : 'Inactive'}</Badge></p>
                   {selectedJob.apply_link && (
                     <p><strong><FaLink className="me-1" />Apply Link:</strong> <a href={selectedJob.apply_link} target="_blank" rel="noopener noreferrer">Apply Here</a></p>
                   )}

@@ -38,10 +38,18 @@ const AddWorkshop = () => {
     last_date_to_register: ''
   })
 
-  const [descriptionInput, setDescriptionInput] = useState('')
-  const [descriptionHindiInput, setDescriptionHindiInput] = useState('')
-  const [eligibilityInput, setEligibilityInput] = useState('')
-  const [benefitInput, setBenefitInput] = useState('')
+const [descriptionInput, setDescriptionInput] = useState('')
+const [descriptionHindiInput, setDescriptionHindiInput] = useState('')
+const [customElInput, setCustomElInput] = useState('')
+const [customBenInput, setCustomBenInput] = useState('')
+
+const eligibilityOptions = [
+  '10th Pass', '12th Pass', 'Graduate', 'Post Graduate', 'Diploma', 'ITI', 'Polytechnic', 'Working Professional', 'Student', 'Unemployed'
+]
+
+const benefitOptions = [
+  'Certificate', 'Networking', 'Free Study Materials', 'Hands-on Practice', 'Live Projects', 'Job Placement', 'Internship', 'Mentorship', 'Refreshments', 'Certificate of Participation'
+]
 
   useEffect(() => {
     if (location.state?.editData) {
@@ -137,6 +145,56 @@ const AddWorkshop = () => {
   const removeBenefit = (index) => {
     const newBenefits = formData.benefits.filter((_, i) => i !== index)
     setFormData({ ...formData, benefits: newBenefits })
+  }
+
+  const toggleEligibility = (el) => {
+    const exists = formData.eligibility.includes(el)
+    if (exists) {
+      setFormData({
+        ...formData,
+        eligibility: formData.eligibility.filter(e => e !== el)
+      })
+    } else {
+      setFormData({
+        ...formData,
+        eligibility: [...formData.eligibility, el]
+      })
+    }
+  }
+
+  const toggleBenefit = (ben) => {
+    const exists = formData.benefits.includes(ben)
+    if (exists) {
+      setFormData({
+        ...formData,
+        benefits: formData.benefits.filter(b => b !== ben)
+      })
+    } else {
+      setFormData({
+        ...formData,
+        benefits: [...formData.benefits, ben]
+      })
+    }
+  }
+
+  const addCustomEligibility = () => {
+    if (customElInput.trim() && !formData.eligibility.includes(customElInput.trim())) {
+      setFormData({
+        ...formData,
+        eligibility: [...formData.eligibility, customElInput.trim()]
+      })
+      setCustomElInput('')
+    }
+  }
+
+  const addCustomBenefit = () => {
+    if (customBenInput.trim() && !formData.benefits.includes(customBenInput.trim())) {
+      setFormData({
+        ...formData,
+        benefits: [...formData.benefits, customBenInput.trim()]
+      })
+      setCustomBenInput('')
+    }
   }
 
   const handleSubmit = async (e) => {
@@ -443,52 +501,62 @@ const AddWorkshop = () => {
 
                           <Col md={12}>
                             <Form.Group className="mb-3">
-                              <Form.Label><FaGraduationCap className="me-1" /> Eligibility - Add multiple</Form.Label>
-                              <div className="d-flex gap-2 mb-2">
+                              <Form.Label><FaGraduationCap className="me-1" /> Eligibility</Form.Label>
+                              <div className="checkbox-grid">
+                                {eligibilityOptions.map(el => (
+                                  <Form.Check
+                                    key={el}
+                                    type="checkbox"
+                                    id={`el-${el}`}
+                                    label={el}
+                                    checked={formData.eligibility.includes(el)}
+                                    onChange={() => toggleEligibility(el)}
+                                    className="mb-1"
+                                  />
+                                ))}
+                              </div>
+                              <div className="d-flex gap-2 mt-2">
                                 <Form.Control
                                   type="text"
-                                  value={eligibilityInput}
-                                  onChange={(e) => setEligibilityInput(e.target.value)}
-                                  placeholder="e.g. 12th, graduate"
-                                  onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addEligibility())}
+                                  value={customElInput}
+                                  onChange={(e) => setCustomElInput(e.target.value)}
+                                  placeholder="Add custom eligibility"
+                                  onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addCustomEligibility())}
                                 />
-                                <Button variant="outline-primary" onClick={addEligibility}>
+                                <Button variant="outline-primary" onClick={addCustomEligibility}>
                                   <FaPlus />
                                 </Button>
-                              </div>
-                              <div className="d-flex flex-wrap gap-2">
-                                {formData.eligibility.map((el, index) => (
-                                  <Badge key={index} bg="info" className="d-flex align-items-center gap-1 p-2">
-                                    {el}
-                                    <button type="button" className="btn-close btn-close-white ms-1" style={{ fontSize: '10px' }} onClick={() => removeEligibility(index)}></button>
-                                  </Badge>
-                                ))}
                               </div>
                             </Form.Group>
                           </Col>
 
                           <Col md={12}>
                             <Form.Group className="mb-3">
-                              <Form.Label><FaGift className="me-1" /> Benefits - Add multiple</Form.Label>
-                              <div className="d-flex gap-2 mb-2">
+                              <Form.Label><FaGift className="me-1" /> Benefits</Form.Label>
+                              <div className="checkbox-grid">
+                                {benefitOptions.map(ben => (
+                                  <Form.Check
+                                    key={ben}
+                                    type="checkbox"
+                                    id={`ben-${ben}`}
+                                    label={ben}
+                                    checked={formData.benefits.includes(ben)}
+                                    onChange={() => toggleBenefit(ben)}
+                                    className="mb-1"
+                                  />
+                                ))}
+                              </div>
+                              <div className="d-flex gap-2 mt-2">
                                 <Form.Control
                                   type="text"
-                                  value={benefitInput}
-                                  onChange={(e) => setBenefitInput(e.target.value)}
-                                  placeholder="e.g. Certificate, Hands-on Practice"
-                                  onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addBenefit())}
+                                  value={customBenInput}
+                                  onChange={(e) => setCustomBenInput(e.target.value)}
+                                  placeholder="Add custom benefit"
+                                  onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addCustomBenefit())}
                                 />
-                                <Button variant="outline-primary" onClick={addBenefit}>
+                                <Button variant="outline-primary" onClick={addCustomBenefit}>
                                   <FaPlus />
                                 </Button>
-                              </div>
-                              <div className="d-flex flex-wrap gap-2">
-                                {formData.benefits.map((ben, index) => (
-                                  <Badge key={index} bg="warning" text="dark" className="d-flex align-items-center gap-1 p-2">
-                                    {ben}
-                                    <button type="button" className="btn-close btn-close-white ms-1" style={{ fontSize: '10px' }} onClick={() => removeBenefit(index)}></button>
-                                  </Badge>
-                                ))}
                               </div>
                             </Form.Group>
                           </Col>

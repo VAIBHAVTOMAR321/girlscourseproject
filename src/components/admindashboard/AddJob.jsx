@@ -37,10 +37,24 @@ const AddJob = () => {
     is_active: true
   })
 
-  const [descriptionInput, setDescriptionInput] = useState('')
-  const [descriptionHindiInput, setDescriptionHindiInput] = useState('')
-  const [qualificationInput, setQualificationInput] = useState('')
-  const [skillInput, setSkillInput] = useState('')
+const [descriptionInput, setDescriptionInput] = useState('')
+const [descriptionHindiInput, setDescriptionHindiInput] = useState('')
+const [skillInput, setSkillInput] = useState('')
+const [customQualInput, setCustomQualInput] = useState('')
+const [customSkillInput, setCustomSkillInput] = useState('')
+
+const qualificationOptions = [
+  '10th Pass', '12th Pass', 'Graduate', 'Post Graduate', 'Diploma', 'ITI', 'Polytechnic'
+]
+
+const skillOptions = [
+  'Python', 'JavaScript', 'React', 'Angular', 'Node.js', 'Django', 'Flask',
+  'Java', 'C++', 'C#', 'PHP', 'Ruby', 'Swift', 'Kotlin',
+  'HTML', 'CSS', 'Bootstrap', 'Tailwind',
+  'MySQL', 'MongoDB', 'PostgreSQL', 'SQLite',
+  'AWS', 'Azure', 'Google Cloud', 'Docker', 'Kubernetes',
+  'Machine Learning', 'Data Science', 'AI', 'Excel', 'Tally', 'Accounting'
+]
 
   useEffect(() => {
     if (location.state?.editData) {
@@ -135,6 +149,56 @@ const AddJob = () => {
   const removeSkill = (index) => {
     const newSkills = formData.skills_required.filter((_, i) => i !== index)
     setFormData({ ...formData, skills_required: newSkills })
+  }
+
+  const toggleQualification = (qual) => {
+    const exists = formData.qualifications_required.includes(qual)
+    if (exists) {
+      setFormData({
+        ...formData,
+        qualifications_required: formData.qualifications_required.filter(q => q !== qual)
+      })
+    } else {
+      setFormData({
+        ...formData,
+        qualifications_required: [...formData.qualifications_required, qual]
+      })
+    }
+  }
+
+  const toggleSkill = (skill) => {
+    const exists = formData.skills_required.includes(skill)
+    if (exists) {
+      setFormData({
+        ...formData,
+        skills_required: formData.skills_required.filter(s => s !== skill)
+      })
+    } else {
+      setFormData({
+        ...formData,
+        skills_required: [...formData.skills_required, skill]
+      })
+    }
+  }
+
+  const addCustomQual = () => {
+    if (customQualInput.trim() && !formData.qualifications_required.includes(customQualInput.trim())) {
+      setFormData({
+        ...formData,
+        qualifications_required: [...formData.qualifications_required, customQualInput.trim()]
+      })
+      setCustomQualInput('')
+    }
+  }
+
+  const addCustomSkill = () => {
+    if (customSkillInput.trim() && !formData.skills_required.includes(customSkillInput.trim())) {
+      setFormData({
+        ...formData,
+        skills_required: [...formData.skills_required, customSkillInput.trim()]
+      })
+      setCustomSkillInput('')
+    }
   }
 
   const handleSubmit = async (e) => {
@@ -431,52 +495,62 @@ const AddJob = () => {
 
                           <Col md={12}>
                             <Form.Group className="mb-3">
-                              <Form.Label><FaGraduationCap className="me-1" /> Qualifications Required - Add multiple</Form.Label>
-                              <div className="d-flex gap-2 mb-2">
+                              <Form.Label><FaGraduationCap className="me-1" /> Qualifications Required</Form.Label>
+                              <div className="checkbox-grid">
+                                {qualificationOptions.map(qual => (
+                                  <Form.Check
+                                    key={qual}
+                                    type="checkbox"
+                                    id={`qual-${qual}`}
+                                    label={qual}
+                                    checked={formData.qualifications_required.includes(qual)}
+                                    onChange={() => toggleQualification(qual)}
+                                    className="mb-1"
+                                  />
+                                ))}
+                              </div>
+                              <div className="d-flex gap-2 mt-2">
                                 <Form.Control
                                   type="text"
-                                  value={qualificationInput}
-                                  onChange={(e) => setQualificationInput(e.target.value)}
-                                  placeholder="e.g. 10th, 12th, graduate"
-                                  onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addQualification())}
+                                  value={customQualInput}
+                                  onChange={(e) => setCustomQualInput(e.target.value)}
+                                  placeholder="Add custom qualification"
+                                  onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addCustomQual())}
                                 />
-                                <Button variant="outline-primary" onClick={addQualification}>
+                                <Button variant="outline-primary" onClick={addCustomQual}>
                                   <FaPlus />
                                 </Button>
-                              </div>
-                              <div className="d-flex flex-wrap gap-2">
-                                {formData.qualifications_required.map((qual, index) => (
-                                  <Badge key={index} bg="info" className="d-flex align-items-center gap-1 p-2">
-                                    {qual}
-                                    <button type="button" className="btn-close btn-close-white ms-1" style={{ fontSize: '10px' }} onClick={() => removeQualification(index)}></button>
-                                  </Badge>
-                                ))}
                               </div>
                             </Form.Group>
                           </Col>
 
                           <Col md={12}>
                             <Form.Group className="mb-3">
-                              <Form.Label><FaTools className="me-1" /> Skills Required - Add multiple</Form.Label>
-                              <div className="d-flex gap-2 mb-2">
+                              <Form.Label><FaTools className="me-1" /> Skills Required</Form.Label>
+                              <div className="checkbox-grid">
+                                {skillOptions.map(skill => (
+                                  <Form.Check
+                                    key={skill}
+                                    type="checkbox"
+                                    id={`skill-${skill}`}
+                                    label={skill}
+                                    checked={formData.skills_required.includes(skill)}
+                                    onChange={() => toggleSkill(skill)}
+                                    className="mb-1"
+                                  />
+                                ))}
+                              </div>
+                              <div className="d-flex gap-2 mt-2">
                                 <Form.Control
                                   type="text"
-                                  value={skillInput}
-                                  onChange={(e) => setSkillInput(e.target.value)}
-                                  placeholder="e.g. Python, Django, REST API"
-                                  onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addSkill())}
+                                  value={customSkillInput}
+                                  onChange={(e) => setCustomSkillInput(e.target.value)}
+                                  placeholder="Add custom skill"
+                                  onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addCustomSkill())}
                                 />
-                                <Button variant="outline-primary" onClick={addSkill}>
+                                <Button variant="outline-primary" onClick={addCustomSkill}>
                                   <FaPlus />
                                 </Button>
-                              </div>
-                              <div className="d-flex flex-wrap gap-2">
-                                {formData.skills_required.map((skill, index) => (
-                                  <Badge key={index} bg="warning" text="dark" className="d-flex align-items-center gap-1 p-2">
-                                    {skill}
-                                    <button type="button" className="btn-close btn-close-white ms-1" style={{ fontSize: '10px' }} onClick={() => removeSkill(index)}></button>
-                                  </Badge>
-                                ))}
                               </div>
                             </Form.Group>
                           </Col>
