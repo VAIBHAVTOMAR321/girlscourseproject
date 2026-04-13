@@ -247,7 +247,7 @@ const AddWorkshop = () => {
 
               <Row>
                 <Col xs={12}>
-                  <Card className="enrollments-table-card border">
+                  <Card className="enrollments-table-card border p-3">
                     <Card.Header className="bg-light border-bottom py-2 px-3 d-flex justify-content-between align-items-center">
                       <div className="d-flex align-items-center paid-btn gap-2">
                         <h5 className="mb-0 fw-semibold text-secondary">
