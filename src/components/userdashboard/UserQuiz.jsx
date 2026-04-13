@@ -386,7 +386,7 @@ const UserQuiz = () => {
 
   const startQuiz = async (quiz) => {
     try {
-      // Register as quiz participant and fetch questions
+      // Register as quiz participant and fetch questions 
       const participantData = {
         quiz_id: quiz.quiz_id,
         student_id: uniqueId
