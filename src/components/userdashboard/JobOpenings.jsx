@@ -392,7 +392,7 @@ const JobOpenings = () => {
                   {uniqueQualifications.length > 0 && (
                     <Row className="mb-4">
                       <Col xs={12}>
-                        <div className="d-flex align-items-center gap-3 flex-wrap">
+                        <div className="d-flex align-items-center gap-3 ">
                           <div className="d-flex align-items-center">
                             <FaFilter className="me-2 text-primary" />
                             <span className="fw-semibold me-2">
@@ -596,7 +596,7 @@ const JobOpenings = () => {
                   {uniqueSeminarEligibility.length > 0 && (
                     <Row className="mb-4">
                       <Col xs={12}>
-                        <div className="d-flex align-items-center gap-3 flex-wrap">
+                        <div className="d-flex align-items-center gap-3 ">
                           <div className="d-flex align-items-center">
                             <FaFilter className="me-2 text-success" />
                             <span className="fw-semibold me-2">
@@ -790,7 +790,7 @@ const JobOpenings = () => {
                   {uniqueWorkshopEligibility.length > 0 && (
                     <Row className="mb-4">
                       <Col xs={12}>
-                        <div className="d-flex align-items-center gap-3 flex-wrap">
+                        <div className="d-flex align-items-center gap-3 ">
                           <div className="d-flex align-items-center">
                             <FaFilter className="me-2 text-warning" />
                             <span className="fw-semibold me-2">
