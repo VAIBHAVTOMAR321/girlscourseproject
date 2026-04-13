@@ -100,7 +100,10 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas, onNavAttempt }) => {
                    )}
 
 <Nav.Link className="text-white" onClick={() => handleNavClick('/GovernmentSchemes')} style={{ cursor: 'pointer' }}>
-                      <i className="bi bi-file-earmark-text me-2"></i> <TransText k="settings.govtSchemes" as="span" />
+                       <i className="bi bi-file-earmark-text me-2"></i> <TransText k="settings.govtSchemes" as="span" />
+                     </Nav.Link>
+                    <Nav.Link className="text-white" onClick={() => handleNavClick('/JobOpenings')} style={{ cursor: 'pointer' }}>
+                      <i className="bi bi-briefcase me-2"></i> <TransText k="menu.jobOpenings" as="span" />
                     </Nav.Link>
                    
                    <div className="guidelines-menu">
@@ -154,6 +157,9 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas, onNavAttempt }) => {
 <Nav.Link className="text-white" onClick={() => handleNavClick('/GovernmentSchemes')} title="Govt. Schemes" style={{ cursor: 'pointer' }}>
                       <i className="bi bi-file-earmark-text fs-5"></i>
                     </Nav.Link>
+                  <Nav.Link className="text-white" onClick={() => handleNavClick('/JobOpenings')} title="Job Openings" style={{ cursor: 'pointer' }}>
+                    <i className="bi bi-briefcase fs-5"></i>
+                  </Nav.Link>
                   <Nav.Link className="text-white" onClick={() => handleNavClick('/UserNotifications')} style={{ cursor: 'pointer' }}>
                     <i className="bi bi-bell fs-5"></i>
                   </Nav.Link>
@@ -200,8 +206,11 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas, onNavAttempt }) => {
                     <i className="bi bi-currency-exchange me-2"></i> Refund Request
                   </Nav.Link>
                 )}
-                <Nav.Link className="text-white" onClick={() => { setShowOffcanvas(false); handleNavClick('/GovernmentSchemes'); }} style={{ cursor: 'pointer' }}>
-                  <i className="bi bi-file-earmark-text me-2"></i> <TransText k="settings.govtSchemes" as="span" />
+<Nav.Link className="text-white" onClick={() => { setShowOffcanvas(false); handleNavClick('/GovernmentSchemes'); }} style={{ cursor: 'pointer' }}>
+                   <i className="bi bi-file-earmark-text me-2"></i> <TransText k="settings.govtSchemes" as="span" />
+                 </Nav.Link>
+                <Nav.Link className="text-white" onClick={() => { setShowOffcanvas(false); handleNavClick('/JobOpenings'); }} style={{ cursor: 'pointer' }}>
+                  <i className="bi bi-briefcase me-2"></i> <TransText k="menu.jobOpenings" as="span" />
                 </Nav.Link>
                 <div className="guidelines-menu">
                   <div 
