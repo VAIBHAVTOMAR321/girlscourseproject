@@ -355,6 +355,7 @@ export const translations = {
     "settings.lawyer": "Lawyer",
     "settings.electricianCareer": "Electrician",
     "settings.governmentSchemes": "Government Schemes for Students",
+    "settings.govtSchemes": "Govt Schemes",
     "settings.schemesDescription":
       "Explore various government schemes available for educational support, financial assistance, and career development",
 
@@ -1291,6 +1292,7 @@ export const translations = {
     "settings.lawyer": "वकील",
     "settings.electricianCareer": "इलेक्ट्रीशियन",
     "settings.governmentSchemes": "छात्रों के लिए सरकारी योजनाएं",
+    "settings.govtSchemes": "सरकारी योजनाएं",
     "settings.schemesDescription":
       "शैक्षणिक सहायता, वित्तीय सहायता और कैरियर विकास के लिए उपलब्ध विभिन्न सरकारी योजनाओं का अन्वेषण करें",
 
