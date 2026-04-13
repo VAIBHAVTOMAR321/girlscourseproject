@@ -984,6 +984,15 @@ const JobOpenings = () => {
           transform: translateY(-5px);
           box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
         }
+        .job-card .btn {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 100%;
+          padding-left: 8px;
+          padding-right: 8px;
+          font-size: 0.75rem;
+        }
       `}</style>
 
       <Modal show={showJobModal} onHide={closeModal} size="lg" centered key={language}>
