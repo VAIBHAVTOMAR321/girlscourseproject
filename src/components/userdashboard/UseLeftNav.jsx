@@ -170,7 +170,6 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas, onNavAttempt }) => {
       )}
 
 
-
       {/* Mobile offcanvas sidebar */}
       {isMobile && (
         <Offcanvas 
