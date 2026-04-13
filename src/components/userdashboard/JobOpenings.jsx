@@ -345,7 +345,7 @@ const JobOpenings = () => {
             marginLeft: isMobile ? '0px' : '220px', 
             padding: isMobile ? '10px' : '20px', 
             minHeight: 'calc(100vh - 70px)',
-            backgroundColor: '#f5f5f5'
+           
           }}
         >
           <Container className="container-top-fixed" key={forceUpdate}>
@@ -469,11 +469,7 @@ const JobOpenings = () => {
                         return (
                           <Col key={job.id || index} xs={12} md={6} lg={4}>
                             <Card 
-                              className="h-100 job-card" 
-                              style={{ 
-                                transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-                                border: isExpired ? '2px solid #dee2e6' : '1px solid #dee2e6'
-                              }}
+                              className={`h-100 job-card ${isExpired ? 'job-card-expired' : ''}`}
                             >
                               <Card.Body className="d-flex flex-column">
                                 <div className="d-flex justify-content-between align-items-start mb-2">
@@ -667,11 +663,7 @@ const JobOpenings = () => {
                         return (
                           <Col key={seminar.id || index} xs={12} md={6} lg={4}>
                             <Card 
-                              className="h-100 job-card" 
-                              style={{ 
-                                transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-                                border: isExpired ? '2px solid #dee2e6' : '1px solid #dee2e6'
-                              }}
+                              className={`h-100 job-card ${isExpired ? 'job-card-expired' : ''}`}
                             >
                               <Card.Body className="d-flex flex-column">
                                 <div className="d-flex justify-content-between align-items-start mb-2">
@@ -865,11 +857,7 @@ const JobOpenings = () => {
                         return (
                           <Col key={workshop.id || index} xs={12} md={6} lg={4}>
                             <Card 
-                              className="h-100 job-card" 
-                              style={{ 
-                                transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-                                border: isExpired ? '2px solid #dee2e6' : '1px solid #dee2e6'
-                              }}
+                              className={`h-100 job-card ${isExpired ? 'job-card-expired' : ''}`}
                             >
                               <Card.Body className="d-flex flex-column">
                                 <div className="d-flex justify-content-between align-items-start mb-2">
