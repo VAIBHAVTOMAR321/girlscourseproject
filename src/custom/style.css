@@ -89,7 +89,26 @@ font-size: 20px;
   font-size: 12px !important;
   padding: 4px !important;
 }
-
+.grooming-class {
+  font-size: 12px !important;
+    border-radius: 8px !important;
+    padding: 0.5rem 1rem;
+    border: 1px solid rgba(102, 126, 234, 0.3);
+    color: #667eea;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+.grooming-style {
+    border-radius: 8px;
+    font-size: 12px !important;
+    padding: 0.5rem 1rem;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    border: none;
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(240, 147, 251, 0.4);
+}
 /* This CSS applies ONLY when the viewport is exactly 500px wide */
 /* For screens up to 568px (mobile-first approach) */
 @media (max-width: 568px) {
