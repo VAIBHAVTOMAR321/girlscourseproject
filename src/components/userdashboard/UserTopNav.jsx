@@ -98,17 +98,8 @@ const UserTopNav = ({ onMenuToggle, isMobile }) => {
           <Button
             variant="light"
             onClick={toggleLanguage}
-            className="me-3 d-flex align-items-center"
-            style={{
-              borderRadius: '8px',
-              padding: '0.5rem 1rem',
-             
-              border: '1px solid rgba(102, 126, 234, 0.3)',
-              color: '#667eea',
-              fontWeight: '500',
-              transition: 'all 0.3s ease',
-              cursor: 'pointer'
-            }}
+            className="me-3 d-flex align-items-center grooming-class"
+           
             title={language === 'en' ? 'Switch to Hindi' : 'Switch to English'}
           >
             <i className="bi bi-globe me-2"></i>
@@ -117,16 +108,8 @@ const UserTopNav = ({ onMenuToggle, isMobile }) => {
 
           <Button
             onClick={() => navigate('/GroomingClasses')}
-            className="me-3 d-flex align-items-center"
-            style={{
-              borderRadius: '8px',
-              padding: '0.5rem 1rem',
-              background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-              border: 'none',
-              color: 'white',
-              fontWeight: 'bold',
-              boxShadow: '0 2px 8px rgba(240, 147, 251, 0.4)'
-            }}
+            className="me-3 d-flex align-items-center grooming-style"
+           
             title={language === 'en' ? 'Grooming Classes' : 'ग्रूमिंग क्लासेस'}
           >
             <i className="bi bi-mortarboard-fill me-2"></i>
