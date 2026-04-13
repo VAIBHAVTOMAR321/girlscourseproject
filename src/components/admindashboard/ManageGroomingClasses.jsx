@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom'
 import { FaArrowLeft, FaPlus, FaEdit, FaTrash, FaCalendar, FaClock, FaUsers, FaLink } from 'react-icons/fa'
 
 const API_URL = 'https://brjobsedu.com/girls_course/girls_course_backend/api/grooming-classes/'
+const PARTICIPATION_URL = 'https://brjobsedu.com/girls_course/girls_course_backend/api/grooming-participation/'
 
 const ManageGroomingClasses = () => {
   const { accessToken } = useAuth()
@@ -20,6 +21,9 @@ const ManageGroomingClasses = () => {
   const [selectedClass, setSelectedClass] = useState(null)
   const [currentPage, setCurrentPage] = useState(1)
   const [recordsPerPage] = useState(10)
+  const [showParticipantsModal, setShowParticipantsModal] = useState(false)
+  const [participants, setParticipants] = useState([])
+  const [loadingParticipants, setLoadingParticipants] = useState(false)
 
   useEffect(() => {
     fetchClasses()
@@ -80,6 +84,28 @@ const ManageGroomingClasses = () => {
       hour: '2-digit',
       minute: '2-digit'
     })
+  }
+
+  const fetchParticipants = async (classId) => {
+    try {
+      setLoadingParticipants(true)
+      const response = await axios.get(PARTICIPATION_URL, getAuthConfig())
+      if (response.data && response.data.data) {
+        const filteredParticipants = response.data.data.filter(p => p.class_id === classId)
+        setParticipants(filteredParticipants)
+        setShowParticipantsModal(true)
+      }
+    } catch (error) {
+      console.error('Error fetching participants:', error)
+      setParticipants([])
+    } finally {
+      setLoadingParticipants(false)
+    }
+  }
+
+  const handleViewParticipants = (groomingClass) => {
+    setSelectedClass(groomingClass)
+    fetchParticipants(groomingClass.class_id)
   }
 
   const indexOfLastRecord = currentPage * recordsPerPage
@@ -160,13 +186,14 @@ const ManageGroomingClasses = () => {
                               <th><FaLink className="me-1" /> Link</th>
                               <th><FaCalendar className="me-1" /> Start Time</th>
                               <th><FaClock className="me-1" /> End Time</th>
+                              <th><FaUsers className="me-1" /> Participants</th>
                               <th className="text-end pe-3">Actions</th>
                             </tr>
                           </thead>
                           <tbody>
                             {currentRecords.length === 0 ? (
                               <tr>
-                                <td colSpan="7" className="text-center py-4 text-muted">
+                                <td colSpan="8" className="text-center py-4 text-muted">
                                   No grooming classes found
                                 </td>
                               </tr>
@@ -197,6 +224,18 @@ const ManageGroomingClasses = () => {
                                   </td>
                                   <td className="small">
                                     {formatDateTime(groomingClass.end_date_time)}
+                                  </td>
+                                  <td className="text-center">
+                                    <Button
+                                      variant="outline-primary"
+                                      size="sm"
+                                      className="p-1"
+                                      style={{ width: '28px', height: '28px' }}
+                                      onClick={() => handleViewParticipants(groomingClass)}
+                                      title="View Participants"
+                                    >
+                                      <FaUsers style={{ fontSize: '12px' }} />
+                                    </Button>
                                   </td>
                                   <td className="text-end pe-3">
                                     <div className="d-flex gap-1 justify-content-end">
@@ -268,6 +307,13 @@ const ManageGroomingClasses = () => {
                               </div>
                               <div className="card-actions">
                                 <Button
+                                  variant="outline-primary"
+                                  size="sm"
+                                  onClick={() => handleViewParticipants(groomingClass)}
+                                >
+                                  <FaUsers className="me-1" /> Participants
+                                </Button>
+                                <Button
                                   variant="outline-warning"
                                   size="sm"
                                   onClick={() => handleEdit(groomingClass)}
@@ -330,6 +376,49 @@ const ManageGroomingClasses = () => {
           </Button>
           <Button variant="danger" onClick={confirmDelete}>
             <FaTrash className="me-1" /> Delete
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal show={showParticipantsModal} onHide={() => setShowParticipantsModal(false)} centered size="lg">
+        <Modal.Header closeButton>
+          <Modal.Title>Participants - {selectedClass?.title}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {loadingParticipants ? (
+            <div className="text-center py-4">
+              <Spinner animation="border" variant="primary" />
+            </div>
+          ) : participants.length === 0 ? (
+            <p className="text-center text-muted py-4">No participants found for this class</p>
+          ) : (
+            <Table hover responsive>
+              <thead className="table-light">
+                <tr>
+                  <th>Student ID</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Joined At</th>
+                </tr>
+              </thead>
+              <tbody>
+                {participants.map((participant) => (
+                  <tr key={participant.id}>
+                    <td>{participant.student_details?.student_id || '-'}</td>
+                    <td>{participant.student_details?.full_name || '-'}</td>
+                    <td>{participant.student_details?.email || '-'}</td>
+                    <td>{participant.student_details?.phone || '-'}</td>
+                    <td>{formatDateTime(participant.joined_at)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowParticipantsModal(false)}>
+            Close
           </Button>
         </Modal.Footer>
       </Modal>

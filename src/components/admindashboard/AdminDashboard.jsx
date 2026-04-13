@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { 
   Container, Row, Col, Card, Spinner, Button, Modal, Form, 
-  Accordion, Badge, InputGroup, FormControl, Image, Nav, Tab 
+  Accordion, Badge, InputGroup, FormControl, Image, Nav, Tab, Table 
 } from 'react-bootstrap'
 import AdminLeftNav from './AdminLeftNav'
 import AdminTopNav from './AdminTopNav'
@@ -11,7 +11,7 @@ import '../../assets/css/AdminDashboard.css'
 import { renderContentWithLineBreaks } from '../../utils/contentRenderer'
 import { 
   FaPlus, FaArrowLeft, FaBook, FaUsers, FaLayerGroup, 
-  FaTrash, FaImage, FaList, FaEye, FaEdit 
+  FaTrash, FaImage, FaList, FaEye, FaEdit, FaComments, FaQuestionCircle 
 } from 'react-icons/fa'
 import { useAuth } from '../../contexts/AuthContext'
 
@@ -97,6 +97,13 @@ const AdminDashboard = () => {
   })
   const [loadingExercises, setLoadingExercises] = useState(false)
 
+  // State for Counseling Management
+  const [counselingData, setCounselingData] = useState([])
+  const [selectedCounseling, setSelectedCounseling] = useState(null)
+  const [showCounselingModal, setShowCounselingModal] = useState(false)
+  const [counselingPage, setCounselingPage] = useState(1)
+  const counselingItemsPerPage = 10
+
   useEffect(() => {
     if (isMounted.current) {
       fetchData()
@@ -158,11 +165,22 @@ const AdminDashboard = () => {
         setCourses([])
       }
 
+      // Fetch counseling data
+      try {
+        const counselingRes = await axios.get('https://brjobsedu.com/girls_course/girls_course_backend/api/student-cousult/', config)
+        if (counselingRes.data && counselingRes.data.status) {
+          setCounselingData(counselingRes.data.data)
+        }
+      } catch (counselingError) {
+        setCounselingData([])
+      }
+
     } catch (error) {
       // Fallback data in case of error
       setPaidEnrollmentCount(0)
       setUnpaidEnrollmentCount(0)
       setCourses([])
+      setCounselingData([])
     } finally {
       setLoading(false)
     }
@@ -170,6 +188,20 @@ const AdminDashboard = () => {
 
   // --- Navigation Handlers ---
   const handleEnrollmentsClick = (type = 'paid') => navigate('/Enrollments', { state: { enrollmentType: type } })
+  const handleCounselingClick = () => {
+    setCounselingPage(1)
+    setCurrentView('counseling')
+  }
+
+  const handleViewCounseling = (counseling) => {
+    setSelectedCounseling(counseling)
+    setShowCounselingModal(true)
+  }
+
+  const handleCloseCounselingModal = () => {
+    setShowCounselingModal(false)
+    setSelectedCounseling(null)
+  }
   const handleCoursesClick = (type = 'paid') => {
     setCourseType(type)
     setCurrentView('list')
@@ -842,6 +874,21 @@ const AdminDashboard = () => {
               <div>
                 <h6 className="stat-label text-muted mb-1">Unpaid Courses</h6>
                 <h2 className="stat-value mb-0">{loading ? <Spinner size="sm" animation="border" /> : courses.filter(c => c.course_status === 'unpaid').length}</h2>
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+      <Row className="g-4 mt-2">
+        <Col xs={12} sm={6} md={3} lg={3}>
+          <Card className="stat-card h-100 shadow-sm border-0" onClick={handleCounselingClick} style={{ cursor: 'pointer' }}>
+            <Card.Body className="d-flex align-items-center">
+              <div className="stat-icon-wrapper courses me-3">
+                <FaComments className="stat-icon" />
+              </div>
+              <div>
+                <h6 className="stat-label text-muted mb-1">Counseling Requests</h6>
+                <h2 className="stat-value mb-0">{loading ? <Spinner size="sm" animation="border" /> : counselingData.length}</h2>
               </div>
             </Card.Body>
           </Card>
@@ -1866,6 +1913,111 @@ const AdminDashboard = () => {
     </div>
   )
 
+  const renderCounselingView = () => {
+    const totalPages = Math.ceil(counselingData.length / counselingItemsPerPage)
+    const startIndex = (counselingPage - 1) * counselingItemsPerPage
+    const endIndex = startIndex + counselingItemsPerPage
+    const currentItems = counselingData.slice(startIndex, endIndex)
+
+    return (
+      <div className="fade-in">
+        <div className="d-flex justify-content-between align-items-center mb-4 page-header">
+          <Button variant="outline-secondary" size="sm" onClick={handleBackToDashboard}>
+            <FaArrowLeft /> Dashboard
+          </Button>
+          <h4 className="mb-0">Counseling Requests</h4>
+        </div>
+
+        <Card className="shadow-sm border-0">
+          <Card.Header className="bg-info text-white">
+            <FaComments className="me-2" /> Counseling Details
+          </Card.Header>
+          <Card.Body>
+            {loading ? (
+              <div className="text-center">
+                <Spinner animation="border" variant="primary" />
+                <p className="mt-2">Loading...</p>
+              </div>
+            ) : counselingData.length === 0 ? (
+              <p className="text-muted text-center mb-0">No counseling requests found</p>
+            ) : (
+              <>
+                <div className="table-responsive">
+                  <Table striped bordered hover responsive>
+                    <thead>
+                      <tr>
+                        <th>Student ID</th>
+                        <th>Full Name</th>
+                        <th>Phone</th>
+                        <th>District</th>
+                        <th>Block</th>
+                        <th>State</th>
+                        <th>Category</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {currentItems.map((counseling) => (
+                        <tr key={counseling.id}>
+                          <td>{counseling.student_id}</td>
+                          <td>{counseling.full_name}</td>
+                          <td>{counseling.phone}</td>
+                          <td>{counseling.district}</td>
+                          <td>{counseling.block}</td>
+                          <td>{counseling.state}</td>
+                          <td>{Array.isArray(counseling.category_consulting) ? counseling.category_consulting.join(', ') : counseling.category_consulting}</td>
+                          <td>
+                            <Badge bg={counseling.status === 'pending' ? 'warning' : counseling.status === 'approved' ? 'success' : 'danger'}>
+                              {counseling.status}
+                            </Badge>
+                          </td>
+                          <td>
+                            <Button variant="info" size="sm" onClick={() => handleViewCounseling(counseling)}>
+                              <FaEye className="me-1" /> View
+                            </Button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </Table>
+                </div>
+                {totalPages > 1 && (
+                  <div className="d-flex justify-content-between align-items-center mt-3">
+                    <span className="text-muted small">
+                      Showing {startIndex + 1}-{Math.min(endIndex, counselingData.length)} of {counselingData.length}
+                    </span>
+                    <div className="d-flex gap-2">
+                      <Button
+                        variant="outline-primary"
+                        size="sm"
+                        onClick={() => setCounselingPage(prev => Math.max(1, prev - 1))}
+                        disabled={counselingPage === 1}
+                      >
+                        Previous
+                      </Button>
+                      <span className="d-flex align-items-center px-2">
+                        Page {counselingPage} of {totalPages}
+                      </span>
+                      <Button
+                        variant="outline-primary"
+                        size="sm"
+                        onClick={() => setCounselingPage(prev => Math.min(totalPages, prev + 1))}
+                        disabled={counselingPage === totalPages}
+                      >
+                        Next
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
+          </Card.Body>
+        </Card>
+      </div>
+    )
+  }
+
   return (
     <div className="admin-layout">
       <div className="admin-wrapper d-flex">
@@ -1881,6 +2033,7 @@ const AdminDashboard = () => {
               {currentView === 'submodules' && renderSubmodulesView()}
               {currentView === 'questions' && renderQuestionsView()}
               {currentView === 'exercises' && renderExercisesView()}
+              {currentView === 'counseling' && renderCounselingView()}
             </Container>
           </div>
         </div>
@@ -1999,6 +2152,66 @@ const AdminDashboard = () => {
             </div>
           )}
         </Modal.Body>
+      </Modal>
+
+      <Modal show={showCounselingModal} onHide={handleCloseCounselingModal} size="lg" centered>
+        <Modal.Header closeButton className="bg-info text-white">
+          <Modal.Title>
+            <FaComments className="me-2" /> Counseling Details
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {selectedCounseling && (
+            <div>
+              <Row className="g-3">
+                <Col md={6}>
+                  <Card className="h-100 shadow-sm border-0">
+                    <Card.Header className="bg-light">
+                      <h6 className="mb-0">Personal Information</h6>
+                    </Card.Header>
+                    <Card.Body>
+                      <p><strong>ID:</strong> {selectedCounseling.id}</p>
+                      <p><strong>Student ID:</strong> {selectedCounseling.student_id}</p>
+                      <p><strong>Full Name:</strong> {selectedCounseling.full_name}</p>
+                      <p><strong>Aadhaar No:</strong> {selectedCounseling.aadhaar_no}</p>
+                      <p><strong>Phone:</strong> {selectedCounseling.phone}</p>
+                      <p><strong>Email:</strong> {selectedCounseling.email || 'N/A'}</p>
+                      <p><strong>Associate Wings:</strong> {selectedCounseling.associate_wings || 'N/A'}</p>
+                    </Card.Body>
+                  </Card>
+                </Col>
+                <Col md={6}>
+                  <Card className="h-100 shadow-sm border-0">
+                    <Card.Header className="bg-light">
+                      <h6 className="mb-0">Location Details</h6>
+                    </Card.Header>
+                    <Card.Body>
+                      <p><strong>State:</strong> {selectedCounseling.state}</p>
+                      <p><strong>District:</strong> {selectedCounseling.district}</p>
+                      <p><strong>Block:</strong> {selectedCounseling.block}</p>
+                    </Card.Body>
+                  </Card>
+                </Col>
+                <Col md={12}>
+                  <Card className="shadow-sm border-0 mt-2">
+                    <Card.Header className="bg-light">
+                      <h6 className="mb-0">Counseling Information</h6>
+                    </Card.Header>
+                    <Card.Body>
+                      <p><strong>Category Consulting:</strong> {Array.isArray(selectedCounseling.category_consulting) ? selectedCounseling.category_consulting.join(', ') : selectedCounseling.category_consulting}</p>
+                      <p><strong>Status:</strong> <Badge bg={selectedCounseling.status === 'pending' ? 'warning' : selectedCounseling.status === 'approved' ? 'success' : 'danger'}>{selectedCounseling.status}</Badge></p>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              </Row>
+            </div>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseCounselingModal}>
+            Close
+          </Button>
+        </Modal.Footer>
       </Modal>
     </div>
   )
