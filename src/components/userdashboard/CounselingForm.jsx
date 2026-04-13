@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Card, Button, Form, Row, Col, Alert } from 'react-bootstrap'
+import { Card, Button, Form, Row, Col } from 'react-bootstrap'
 import { FaLightbulb } from 'react-icons/fa'
 import TransText from '../TransText'
 import { useLanguage } from '../../contexts/LanguageContext'
@@ -39,7 +39,6 @@ const CounselingForm = ({ onSubmit, initialData = {}, showForm: propShowForm, on
   
   const [submitted, setSubmitted] = useState(false)
   const [submitting, setSubmitting] = useState(false)
-  const [error, setError] = useState('')
 
   const handleChange = (field, value) => {
     if (field === 'category_consulting') {
@@ -93,7 +92,6 @@ const CounselingForm = ({ onSubmit, initialData = {}, showForm: propShowForm, on
     setSubmitting(true)
 
     try {
-      setError('') // Clear any previous errors
 
       // Clean phone number (remove spaces)
       const cleanData = {
@@ -107,8 +105,8 @@ const CounselingForm = ({ onSubmit, initialData = {}, showForm: propShowForm, on
       // Call the parent submit handler
       await onSubmit(cleanData)
 
-      // Show success message and reset form
-      setSubmitted(true)
+      // Show browser alert and reset form
+      alert('Your counselling request has been submitted')
       setFormData({
         student_id: initialData.student_id || initialData.student_id || '',
         full_name: initialData.full_name || initialData.candidate_name || '',
@@ -128,11 +126,8 @@ const CounselingForm = ({ onSubmit, initialData = {}, showForm: propShowForm, on
         otherCategory: '',
         status: 'pending'
       })
-
-      // Hide success message after 3 seconds
-      setTimeout(() => setSubmitted(false), 3000)
     } catch (error) {
-      setError(error.message || getTranslation('counseling.error', language))
+      alert(error.message || getTranslation('counseling.error', language))
     } finally {
       setSubmitting(false)
     }
@@ -140,14 +135,6 @@ const CounselingForm = ({ onSubmit, initialData = {}, showForm: propShowForm, on
 
   return (
     <>
-    
-
-      {/* Error Alert */}
-      {error && (
-        <Alert variant="success" className="mb-4">
-          <strong></strong> {error}
-        </Alert>
-      )}
 
       <Card className="mb-4 shadow-sm border-0" style={{ borderRadius: '10px' }}>
         <Card.Body>
