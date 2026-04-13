@@ -1,29 +1,42 @@
 import React, { useState, useEffect } from 'react'
-import { Container, Row, Col, Card, Table, Button, Spinner, Modal, Badge } from 'react-bootstrap'
+import { Container, Row, Col, Card, Table, Button, Spinner, Modal, Badge, Nav, Tab } from 'react-bootstrap'
 import AdminLeftNav from './AdminLeftNav'
 import AdminTopNav from './AdminTopNav'
 import axios from 'axios'
 import '../../assets/css/Enrollments.css'
 import { useAuth } from '../../contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
-import { FaArrowLeft, FaPlus, FaEdit, FaTrash, FaCalendar, FaClock, FaBriefcase, FaLink, FaMapMarkerAlt, FaMoneyBillWave, FaGraduationCap, FaTools } from 'react-icons/fa'
+import { FaArrowLeft, FaPlus, FaEdit, FaTrash, FaCalendar, FaClock, FaBriefcase, FaLink, FaMapMarkerAlt, FaMoneyBillWave, FaGraduationCap, FaTools, FaToggleOn, FaToggleOff, FaChalkboardTeacher, FaUser, FaVideo } from 'react-icons/fa'
 
-const API_URL = 'https://brjobsedu.com/girls_course/girls_course_backend/api/job-openings/'
+const JOB_API_URL = 'https://brjobsedu.com/girls_course/girls_course_backend/api/job-openings/'
+const SEMINAR_API_URL = 'https://brjobsedu.com/girls_course/girls_course_backend/api/seminar-items/'
+
+const statusLabels = {
+  active: 'Active',
+  inactive: 'Inactive'
+}
 
 const ManageJobs = () => {
   const { accessToken } = useAuth()
   const navigate = useNavigate()
   const [jobs, setJobs] = useState([])
+  const [seminars, setSeminars] = useState([])
   const [loading, setLoading] = useState(true)
   const [showSidebar, setShowSidebar] = useState(true)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [showViewModal, setShowViewModal] = useState(false)
   const [selectedJob, setSelectedJob] = useState(null)
+  const [selectedSeminar, setSelectedSeminar] = useState(null)
   const [currentPage, setCurrentPage] = useState(1)
   const [recordsPerPage] = useState(10)
+  const [statusFilter, setStatusFilter] = useState('all')
+  const [activeTab, setActiveTab] = useState('jobs')
+  const [seminarFilter, setSeminarFilter] = useState('all')
+  const [seminarCurrentPage, setSeminarCurrentPage] = useState(1)
 
   useEffect(() => {
     fetchJobs()
+    fetchSeminars()
   }, [])
 
   const getAuthConfig = () => ({
@@ -35,7 +48,7 @@ const ManageJobs = () => {
   const fetchJobs = async () => {
     try {
       setLoading(true)
-      const response = await axios.get(API_URL, getAuthConfig())
+      const response = await axios.get(JOB_API_URL, getAuthConfig())
       if (response.data && response.data.data) {
         setJobs(response.data.data)
       }
@@ -44,6 +57,18 @@ const ManageJobs = () => {
       setJobs([])
     } finally {
       setLoading(false)
+    }
+  }
+
+  const fetchSeminars = async () => {
+    try {
+      const response = await axios.get(SEMINAR_API_URL, getAuthConfig())
+      if (response.data && response.data.data) {
+        setSeminars(response.data.data)
+      }
+    } catch (error) {
+      console.error('Error fetching seminars:', error)
+      setSeminars([])
     }
   }
 
@@ -58,16 +83,54 @@ const ManageJobs = () => {
 
   const confirmDelete = async () => {
     try {
-      await axios.delete(API_URL, {
-        data: { job_id: selectedJob.job_id },
-        ...getAuthConfig()
-      })
+      if (activeTab === 'jobs') {
+        await axios.delete(JOB_API_URL, {
+          data: { job_id: selectedJob.job_id },
+          ...getAuthConfig()
+        })
+        fetchJobs()
+      } else {
+        await axios.delete(SEMINAR_API_URL, {
+          data: { seminar_id: selectedSeminar.seminar_id },
+          ...getAuthConfig()
+        })
+        fetchSeminars()
+      }
       setShowDeleteModal(false)
-      fetchJobs()
-      alert('Job deleted successfully!')
+      alert(`${activeTab === 'jobs' ? 'Job' : 'Seminar'} deleted successfully!`)
     } catch (error) {
-      console.error('Error deleting job:', error)
-      alert('Failed to delete job')
+      console.error('Error deleting:', error)
+      alert('Failed to delete')
+    }
+  }
+
+  const toggleJobStatus = async (job) => {
+    try {
+      const newStatus = !job.status
+      await axios.put(JOB_API_URL, {
+        job_id: job.job_id,
+        status: newStatus
+      }, getAuthConfig())
+      fetchJobs()
+      alert(`Job ${newStatus ? 'activated' : 'deactivated'} successfully!`)
+    } catch (error) {
+      console.error('Error toggling job status:', error)
+      alert('Failed to update job status')
+    }
+  }
+
+  const toggleSeminarStatus = async (seminar) => {
+    try {
+      const newStatus = seminar.status === 'active' ? 'inactive' : 'active'
+      await axios.put(SEMINAR_API_URL, {
+        seminar_id: seminar.seminar_id,
+        status: newStatus
+      }, getAuthConfig())
+      fetchSeminars()
+      alert(`Seminar ${newStatus === 'active' ? 'activated' : 'deactivated'} successfully!`)
+    } catch (error) {
+      console.error('Error toggling seminar status:', error)
+      alert('Failed to update seminar status')
     }
   }
 
@@ -88,8 +151,13 @@ const ManageJobs = () => {
 
   const indexOfLastRecord = currentPage * recordsPerPage
   const indexOfFirstRecord = indexOfLastRecord - recordsPerPage
-  const currentRecords = jobs.slice(indexOfFirstRecord, indexOfLastRecord)
-  const totalPages = Math.ceil(jobs.length / recordsPerPage)
+  
+  const filteredJobs = statusFilter === 'all' 
+    ? jobs 
+    : jobs.filter(job => statusFilter === 'active' ? job.status : !job.status)
+  
+  const currentRecords = filteredJobs.slice(indexOfFirstRecord, indexOfLastRecord)
+  const totalPages = Math.ceil(filteredJobs.length / recordsPerPage)
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber)
@@ -101,6 +169,79 @@ const ManageJobs = () => {
 
   const handleNextPage = () => {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1)
+  }
+
+  const handleFilterChange = (status) => {
+    setStatusFilter(status)
+    setCurrentPage(1)
+  }
+
+  const handleSeminarFilterChange = (status) => {
+    setSeminarFilter(status)
+    setSeminarCurrentPage(1)
+  }
+
+  const formatDateTime = (dateString) => {
+    if (!dateString) return '-'
+    const date = new Date(dateString)
+    return date.toLocaleString('en-IN', { 
+      day: '2-digit', 
+      month: 'short', 
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    })
+  }
+
+  const seminarIndexOfLastRecord = seminarCurrentPage * recordsPerPage
+  const seminarIndexOfFirstRecord = seminarIndexOfLastRecord - recordsPerPage
+  
+  const filteredSeminars = seminarFilter === 'all' 
+    ? seminars 
+    : seminars.filter(seminar => seminarFilter === 'active' ? seminar.status === 'active' : seminar.status === 'inactive')
+  
+  const seminarCurrentRecords = filteredSeminars.slice(seminarIndexOfFirstRecord, seminarIndexOfLastRecord)
+  const seminarTotalPages = Math.ceil(filteredSeminars.length / recordsPerPage)
+
+  const handleSeminarPageChange = (pageNumber) => {
+    setSeminarCurrentPage(pageNumber)
+  }
+
+  const handleSeminarPreviousPage = () => {
+    if (seminarCurrentPage > 1) setSeminarCurrentPage(seminarCurrentPage - 1)
+  }
+
+  const handleSeminarNextPage = () => {
+    if (seminarCurrentPage < seminarTotalPages) setSeminarCurrentPage(seminarCurrentPage + 1)
+  }
+
+  const handleEditSeminar = (seminar) => {
+    navigate('/AddSeminar', { state: { editData: seminar } })
+  }
+
+  const handleViewSeminar = (seminar) => {
+    setSelectedSeminar(seminar)
+    setShowViewModal(true)
+  }
+
+  const handleDeleteSeminar = (seminar) => {
+    setSelectedSeminar(seminar)
+    setShowDeleteModal(true)
+  }
+
+  const toggleSeminarStatusNew = async (seminar) => {
+    try {
+      const newStatus = seminar.status === 'active' ? 'inactive' : 'active'
+      await axios.put(SEMINAR_API_URL, {
+        seminar_id: seminar.seminar_id,
+        status: newStatus
+      }, getAuthConfig())
+      fetchSeminars()
+      alert(`Seminar ${newStatus === 'active' ? 'activated' : 'deactivated'} successfully!`)
+    } catch (error) {
+      console.error('Error toggling seminar status:', error)
+      alert('Failed to update seminar status')
+    }
   }
 
   if (loading) {
@@ -136,21 +277,60 @@ const ManageJobs = () => {
                   <Button variant="outline-secondary" size="sm" onClick={() => navigate('/AdminDashboard')} className="me-2">
                     <FaArrowLeft /> Dashboard
                   </Button>
-                  <h4 className="mb-0">Manage Jobs</h4>
+                  <h4 className="mb-0">Manage Jobs & Seminars</h4>
                 </div>
-                <Button variant="primary" size="sm" onClick={() => navigate('/AddJob')}>
-                  <FaPlus className="me-1" /> Add New Job
-                </Button>
+                <Button variant="primary" size="sm" onClick={() => navigate(activeTab === 'jobs' ? '/AddJob' : '/AddSeminar')}>
+                  <FaPlus className="me-1" /> {activeTab === 'jobs' ? 'Add New Job' : 'Add New Seminar'}
+                </Button> 
               </div>
 
+              <Nav variant="tabs" activeKey={activeTab} onSelect={(k) => setActiveTab(k)} className="mb-3">
+                <Nav.Item>
+                  <Nav.Link eventKey="jobs">
+                    <FaBriefcase className="me-1" /> Jobs ({jobs.length})
+                  </Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link eventKey="seminars">
+                    <FaChalkboardTeacher className="me-1" /> Seminars ({seminars.length})
+                  </Nav.Link>
+                </Nav.Item>
+              </Nav>
+
+              {activeTab === 'jobs' && (
               <Row>
                 <Col xs={12}>
                   <Card className="enrollments-table-card border">
-                    <Card.Header className="bg-light border-bottom py-2 px-3 d-flex justify-content-between align-items-center">
+                    <Card.Header className="bg-light border-bottom py-2 px-3 d-flex justify-content-between align-items-center flex-wrap">
                       <div className="d-flex align-items-center paid-btn gap-2">
                         <h5 className="mb-0 fw-semibold text-secondary">
-                          All Jobs ({jobs.length})
+                          All Jobs ({filteredJobs.length})
                         </h5>
+                      </div>
+                      <div className="d-flex align-items-center gap-2 flex-wrap">
+                        <div className="btn-group btn-group-sm" role="group">
+                          <button
+                            type="button"
+                            className={`btn ${statusFilter === 'all' ? 'btn-primary' : 'btn-outline-primary'}`}
+                            onClick={() => handleFilterChange('all')}
+                          >
+                            All
+                          </button>
+                          <button
+                            type="button"
+                            className={`btn ${statusFilter === 'active' ? 'btn-success' : 'btn-outline-success'}`}
+                            onClick={() => handleFilterChange('active')}
+                          >
+                            Active
+                          </button>
+                          <button
+                            type="button"
+                            className={`btn ${statusFilter === 'inactive' ? 'btn-danger' : 'btn-outline-danger'}`}
+                            onClick={() => handleFilterChange('inactive')}
+                          >
+                            Inactive
+                          </button>
+                        </div>
                       </div>
                     </Card.Header>
                     <Card.Body className="p-0">
@@ -164,13 +344,14 @@ const ManageJobs = () => {
                               <th><FaBriefcase className="me-1" /> Type</th>
                               <th><FaMoneyBillWave className="me-1" /> Salary</th>
                               <th><FaCalendar className="me-1" /> Last Date</th>
+                              <th>Status</th>
                               <th className="text-end pe-3">Actions</th>
                             </tr>
                           </thead>
                           <tbody>
                             {currentRecords.length === 0 ? (
                               <tr>
-                                <td colSpan="7" className="text-center py-4 text-muted">
+                                <td colSpan="8" className="text-center py-4 text-muted">
                                   No jobs found
                                 </td>
                               </tr>
@@ -200,8 +381,23 @@ const ManageJobs = () => {
                                   <td className="small">
                                     {formatDate(job.last_date_to_apply)}
                                   </td>
+                                  <td className="small">
+                                    <Badge bg={job.status ? 'success' : 'danger'}>
+                                      {job.status ? 'Active' : 'Inactive'}
+                                    </Badge>
+                                  </td>
                                   <td className="text-end pe-3">
                                     <div className="d-flex gap-1 justify-content-end">
+                                      <Button
+                                        variant={job.status ? 'outline-success' : 'outline-secondary'}
+                                        size="sm"
+                                        className="p-1"
+                                        style={{ width: '28px', height: '28px' }}
+                                        onClick={() => toggleJobStatus(job)}
+                                        title={job.status ? 'Deactivate' : 'Activate'}
+                                      >
+                                        {job.status ? <FaToggleOn style={{ fontSize: '12px' }} /> : <FaToggleOff style={{ fontSize: '12px' }} />}
+                                      </Button>
                                       <Button
                                         variant="outline-primary"
                                         size="sm"
@@ -272,8 +468,20 @@ const ManageJobs = () => {
                                   <span className="label"><FaCalendar className="me-1" />Last Date:</span>{' '}
                                   <span className="value">{formatDate(job.last_date_to_apply)}</span>
                                 </div>
+                                <div className="info-item">
+                                  <span className="label">Status:</span>{' '}
+                                  <Badge bg={job.status ? 'success' : 'danger'}>{job.status ? 'Active' : 'Inactive'}</Badge>
+                                </div>
                               </div>
                               <div className="card-actions">
+                                <Button
+                                  variant={job.status ? 'outline-success' : 'outline-secondary'}
+                                  size="sm"
+                                  onClick={() => toggleJobStatus(job)}
+                                >
+                                  {job.status ? <FaToggleOn className="me-1" /> : <FaToggleOff className="me-1" />} 
+                                  {job.status ? 'Active' : 'Inactive'}
+                                </Button>
                                 <Button
                                   variant="outline-primary"
                                   size="sm"
@@ -325,6 +533,245 @@ const ManageJobs = () => {
                   </Card>
                 </Col>
               </Row>
+              )}
+
+              {activeTab === 'seminars' && (
+              <Row>
+                <Col xs={12}>
+                  <Card className="enrollments-table-card border">
+                    <Card.Header className="bg-light border-bottom py-2 px-3 d-flex justify-content-between align-items-center flex-wrap">
+                      <div className="d-flex align-items-center paid-btn gap-2">
+                        <h5 className="mb-0 fw-semibold text-secondary">
+                          All Seminars ({filteredSeminars.length})
+                        </h5>
+                      </div>
+                      <div className="d-flex align-items-center gap-2 flex-wrap">
+                        <div className="btn-group btn-group-sm" role="group">
+                          <button
+                            type="button"
+                            className={`btn ${seminarFilter === 'all' ? 'btn-primary' : 'btn-outline-primary'}`}
+                            onClick={() => handleSeminarFilterChange('all')}
+                          >
+                            All
+                          </button>
+                          <button
+                            type="button"
+                            className={`btn ${seminarFilter === 'active' ? 'btn-success' : 'btn-outline-success'}`}
+                            onClick={() => handleSeminarFilterChange('active')}
+                          >
+                            Active
+                          </button>
+                          <button
+                            type="button"
+                            className={`btn ${seminarFilter === 'inactive' ? 'btn-danger' : 'btn-outline-danger'}`}
+                            onClick={() => handleSeminarFilterChange('inactive')}
+                          >
+                            Inactive
+                          </button>
+                        </div>
+                      </div>
+                    </Card.Header>
+                    <Card.Body className="p-0">
+                      <div className="table-responsive d-none d-md-block">
+                        <Table hover className="custom-table align-middle mb-0">
+                          <thead className="table-light custom-table">
+                            <tr>
+                              <th className="ps-2">Seminar ID</th>
+                              <th>Title</th>
+                              <th><FaUser className="me-1" /> Speaker</th>
+                              <th><FaMapMarkerAlt className="me-1" /> Location</th>
+                              <th><FaVideo className="me-1" /> Mode</th>
+                              <th><FaCalendar className="me-1" /> Date</th>
+                              <th>Status</th>
+                              <th className="text-end pe-3">Actions</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {seminarCurrentRecords.length === 0 ? (
+                              <tr>
+                                <td colSpan="8" className="text-center py-4 text-muted">
+                                  No seminars found
+                                </td>
+                              </tr>
+                            ) : (
+                              seminarCurrentRecords.map((seminar) => (
+                                <tr key={seminar.seminar_id}>
+                                  <td className="ps-2">
+                                    <span className="text-muted small fw-medium">{seminar.seminar_id}</span>
+                                  </td>
+                                  <td className="fw-medium text-dark">
+                                    {seminar.title}
+                                    {seminar.title_hindi && (
+                                      <div className="small text-muted">{seminar.title_hindi}</div>
+                                    )}
+                                  </td>
+                                  <td className="small">
+                                    {seminar.speaker_name || '-'}
+                                  </td>
+                                  <td className="small">
+                                    {seminar.location || '-'}
+                                  </td>
+                                  <td className="small">
+                                    <Badge bg={seminar.mode === 'online' ? 'info' : 'secondary'}>
+                                      {seminar.mode || '-'}
+                                    </Badge>
+                                  </td>
+                                  <td className="small">
+                                    {formatDate(seminar.start_date_time)}
+                                  </td>
+                                  <td className="small">
+                                    <Badge bg={seminar.status === 'active' ? 'success' : 'danger'}>
+                                      {seminar.status === 'active' ? 'Active' : 'Inactive'}
+                                    </Badge>
+                                  </td>
+                                  <td className="text-end pe-3">
+                                    <div className="d-flex gap-1 justify-content-end">
+                                      <Button
+                                        variant={seminar.status === 'active' ? 'outline-success' : 'outline-secondary'}
+                                        size="sm"
+                                        className="p-1"
+                                        style={{ width: '28px', height: '28px' }}
+                                        onClick={() => toggleSeminarStatus(seminar)}
+                                        title={seminar.status === 'active' ? 'Deactivate' : 'Activate'}
+                                      >
+                                        {seminar.status === 'active' ? <FaToggleOn style={{ fontSize: '12px' }} /> : <FaToggleOff style={{ fontSize: '12px' }} />}
+                                      </Button>
+                                      <Button
+                                        variant="outline-primary"
+                                        size="sm"
+                                        className="p-1"
+                                        style={{ width: '28px', height: '28px' }}
+                                        onClick={() => handleViewSeminar(seminar)}
+                                        title="View"
+                                      >
+                                        <i className="bi bi-eye" style={{ fontSize: '12px' }}></i>
+                                      </Button>
+                                      <Button
+                                        variant="outline-warning"
+                                        size="sm"
+                                        className="p-1"
+                                        style={{ width: '28px', height: '28px' }}
+                                        onClick={() => handleEditSeminar(seminar)}
+                                        title="Edit"
+                                      >
+                                        <FaEdit style={{ fontSize: '12px' }} />
+                                      </Button>
+                                      <Button
+                                        variant="outline-danger"
+                                        size="sm"
+                                        className="p-1"
+                                        style={{ width: '28px', height: '28px' }}
+                                        onClick={() => handleDeleteSeminar(seminar)}
+                                        title="Delete"
+                                      >
+                                        <FaTrash style={{ fontSize: '12px' }} />
+                                      </Button>
+                                    </div>
+                                  </td>
+                                </tr>
+                              ))
+                            )}
+                          </tbody>
+                        </Table>
+                      </div>
+                      <div className="mobile-card-view d-md-none">
+                        {seminarCurrentRecords.length === 0 ? (
+                          <div className="text-center py-4 text-muted">
+                            No seminars found
+                          </div>
+                        ) : (
+                          seminarCurrentRecords.map((seminar) => (
+                            <div key={seminar.seminar_id} className="grooming-class-card">
+                              <div className="card-header">
+                                <span className="class-id">ID: {seminar.seminar_id}</span>
+                              </div>
+                              <div className="class-title">{seminar.title}</div>
+                              {seminar.title_hindi && (
+                                <div className="class-title-hindi">{seminar.title_hindi}</div>
+                              )}
+                              <div className="class-info">
+                                <div className="info-item">
+                                  <span className="label"><FaUser className="me-1" />Speaker:</span>{' '}
+                                  <span className="value">{seminar.speaker_name || '-'}</span>
+                                </div>
+                                <div className="info-item">
+                                  <span className="label"><FaMapMarkerAlt className="me-1" />Location:</span>{' '}
+                                  <span className="value">{seminar.location || '-'}</span>
+                                </div>
+                                <div className="info-item">
+                                  <span className="label"><FaVideo className="me-1" />Mode:</span>{' '}
+                                  <span className="value">{seminar.mode || '-'}</span>
+                                </div>
+                                <div className="info-item">
+                                  <span className="label"><FaCalendar className="me-1" />Date:</span>{' '}
+                                  <span className="value">{formatDate(seminar.start_date_time)}</span>
+                                </div>
+                                <div className="info-item">
+                                  <span className="label">Status:</span>{' '}
+                                  <Badge bg={seminar.status === 'active' ? 'success' : 'danger'}>{seminar.status === 'active' ? 'Active' : 'Inactive'}</Badge>
+                                </div>
+                              </div>
+                              <div className="card-actions">
+                                <Button
+                                  variant={seminar.status === 'active' ? 'outline-success' : 'outline-secondary'}
+                                  size="sm"
+                                  onClick={() => toggleSeminarStatus(seminar)}
+                                >
+                                  {seminar.status === 'active' ? <FaToggleOn className="me-1" /> : <FaToggleOff className="me-1" />} 
+                                  {seminar.status === 'active' ? 'Active' : 'Inactive'}
+                                </Button>
+                                <Button
+                                  variant="outline-primary"
+                                  size="sm"
+                                  onClick={() => handleViewSeminar(seminar)}
+                                >
+                                  <i className="bi bi-eye me-1"></i> View
+                                </Button>
+                                <Button
+                                  variant="outline-warning"
+                                  size="sm"
+                                  onClick={() => handleEditSeminar(seminar)}
+                                >
+                                  <FaEdit className="me-1" /> Edit
+                                </Button>
+                                <Button
+                                  variant="outline-danger"
+                                  size="sm"
+                                  onClick={() => handleDeleteSeminar(seminar)}
+                                >
+                                  <FaTrash className="me-1" /> Delete
+                                </Button>
+                              </div>
+                            </div>
+                          ))
+                        )}
+                      </div>
+                    </Card.Body>
+                    {seminarTotalPages > 1 && (
+                      <Card.Footer className="bg-light border-top py-2 px-3">
+                        <nav aria-label="Seminars pagination">
+                          <ul className="pagination justify-content-center pagination-sm mb-0">
+                            <li className={`page-item ${seminarCurrentPage === 1 ? 'disabled' : ''}`}>
+                              <button className="page-link" onClick={handleSeminarPreviousPage}>‹</button>
+                            </li>
+                            {Array.from({ length: seminarTotalPages }, (_, i) => i + 1).filter(page => {
+                              return page >= seminarCurrentPage - 1 && page <= seminarCurrentPage + 1 && page <= seminarTotalPages && page >= 1
+                            }).map(page => (
+                              <li key={page} className={`page-item ${page === seminarCurrentPage ? 'active' : ''}`}>
+                                <button className="page-link" onClick={() => handleSeminarPageChange(page)}>{page}</button>
+                              </li>
+                            ))}
+                            <li className={`page-item ${seminarCurrentPage === seminarTotalPages ? 'disabled' : ''}`}>
+                              <button className="page-link" onClick={handleSeminarNextPage}>›</button>
+                            </li>
+                          </ul>
+                        </nav>
+                      </Card.Footer>
+                    )}
+                  </Card>
+                </Col>
+              </Row>
+              )}
             </Container>
           </div>
         </div>
@@ -335,8 +782,8 @@ const ManageJobs = () => {
           <Modal.Title>Confirm Delete</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>Are you sure you want to delete this job?</p>
-          <p className="text-muted">Job ID: {selectedJob?.job_id}</p>
+          <p>Are you sure you want to delete this {activeTab === 'jobs' ? 'job' : 'seminar'}?</p>
+          <p className="text-muted">{activeTab === 'jobs' ? 'Job ID: ' : 'Seminar ID: '}{activeTab === 'jobs' ? selectedJob?.job_id : selectedSeminar?.seminar_id}</p>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
@@ -350,10 +797,10 @@ const ManageJobs = () => {
 
       <Modal show={showViewModal} onHide={() => setShowViewModal(false)} centered size="lg">
         <Modal.Header closeButton>
-          <Modal.Title>Job Details - {selectedJob?.title}</Modal.Title>
+          <Modal.Title>{activeTab === 'jobs' ? 'Job' : 'Seminar'} Details - {activeTab === 'jobs' ? selectedJob?.title : selectedSeminar?.title}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {selectedJob && (
+          {activeTab === 'jobs' && selectedJob && (
             <div className="job-details">
               <Row className="mb-3">
                 <Col md={6}>
@@ -365,6 +812,7 @@ const ManageJobs = () => {
                 </Col>
                 <Col md={6}>
                   <p><strong><FaCalendar className="me-1" />Last Date to Apply:</strong> {formatDate(selectedJob.last_date_to_apply)}</p>
+                  <p><strong>Status:</strong> <Badge bg={selectedJob.status ? 'success' : 'danger'}>{selectedJob.status ? 'Active' : 'Inactive'}</Badge></p>
                   {selectedJob.apply_link && (
                     <p><strong><FaLink className="me-1" />Apply Link:</strong> <a href={selectedJob.apply_link} target="_blank" rel="noopener noreferrer">Apply Here</a></p>
                   )}
@@ -414,6 +862,72 @@ const ManageJobs = () => {
                   </div>
                 </div>
               )}
+            </div>
+          )}
+          {activeTab === 'seminars' && selectedSeminar && (
+            <div className="seminar-details">
+              <Row className="mb-3">
+                <Col md={6}>
+                  <p><strong>Seminar ID:</strong> {selectedSeminar.seminar_id}</p>
+                  <p><strong><FaUser className="me-1" />Speaker:</strong> {selectedSeminar.speaker_name || '-'}</p>
+                  <p><strong><FaMapMarkerAlt className="me-1" />Location:</strong> {selectedSeminar.location || '-'}</p>
+                  <p><strong><FaVideo className="me-1" />Mode:</strong> {selectedSeminar.mode || '-'}</p>
+                </Col>
+                <Col md={6}>
+                  <p><strong><FaCalendar className="me-1" />Start DateTime:</strong> {formatDateTime(selectedSeminar.start_date_time)}</p>
+                  <p><strong><FaClock className="me-1" />End DateTime:</strong> {formatDateTime(selectedSeminar.end_date_time)}</p>
+                  <p><strong>Status:</strong> <Badge bg={selectedSeminar.status === 'active' ? 'success' : 'danger'}>{selectedSeminar.status === 'active' ? 'Active' : 'Inactive'}</Badge></p>
+                  {selectedSeminar.registration_link && (
+                    <p><strong><FaLink className="me-1" />Registration Link:</strong> <a href={selectedSeminar.registration_link} target="_blank" rel="noopener noreferrer">Register Here</a></p>
+                  )}
+                </Col>
+              </Row>
+              
+              {selectedSeminar.description && selectedSeminar.description.length > 0 && (
+                <div className="mb-3">
+                  <h6>Description (English)</h6>
+                  <ul>
+                    {selectedSeminar.description.map((desc, index) => (
+                      <li key={index}>{desc}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {selectedSeminar.description_hindi && selectedSeminar.description_hindi.length > 0 && (
+                <div className="mb-3">
+                  <h6>Description (Hindi)</h6>
+                  <ul>
+                    {selectedSeminar.description_hindi.map((desc, index) => (
+                      <li key={index}>{desc}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {selectedSeminar.eligibility && selectedSeminar.eligibility.length > 0 && (
+                <div className="mb-3">
+                  <h6><FaGraduationCap className="me-1" />Eligibility</h6>
+                  <div className="d-flex flex-wrap gap-2">
+                    {selectedSeminar.eligibility.map((elg, index) => (
+                      <Badge key={index} bg="info">{elg}</Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {selectedSeminar.benefits && selectedSeminar.benefits.length > 0 && (
+                <div className="mb-3">
+                  <h6><FaTools className="me-1" />Benefits</h6>
+                  <div className="d-flex flex-wrap gap-2">
+                    {selectedSeminar.benefits.map((ben, index) => (
+                      <Badge key={index} bg="success">{ben}</Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <p><strong><FaCalendar className="me-1" />Last Date to Register:</strong> {formatDate(selectedSeminar.last_date_to_register)}</p>
             </div>
           )}
         </Modal.Body>

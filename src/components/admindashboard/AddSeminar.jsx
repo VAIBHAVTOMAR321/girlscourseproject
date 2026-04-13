@@ -6,11 +6,11 @@ import axios from 'axios'
 import '../../assets/css/Enrollments.css'
 import { useAuth } from '../../contexts/AuthContext'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { FaArrowLeft, FaPlus, FaEdit, FaTrash, FaClock, FaCalendar, FaBriefcase, FaLink, FaGraduationCap, FaTools } from 'react-icons/fa'
+import { FaArrowLeft, FaPlus, FaEdit, FaTrash, FaClock, FaCalendar, FaChalkboardTeacher, FaLink, FaGraduationCap, FaGift, FaUser, FaMapMarkerAlt, FaGlobe } from 'react-icons/fa'
 
-const API_URL = 'https://brjobsedu.com/girls_course/girls_course_backend/api/job-openings/'
+const API_URL = 'https://brjobsedu.com/girls_course/girls_course_backend/api/seminar-items/'
 
-const AddJob = () => {
+const AddSeminar = () => {
   const { accessToken } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
@@ -19,48 +19,50 @@ const AddJob = () => {
   const [showSidebar, setShowSidebar] = useState(true)
   const [showSuccessModal, setShowSuccessModal] = useState(false)
   const [editMode, setEditMode] = useState(false)
-  const [editJobId, setEditJobId] = useState(null)
+  const [editSeminarId, setEditSeminarId] = useState(null)
 
   const [formData, setFormData] = useState({
     title: '',
     title_hindi: '',
     description: [],
     description_hindi: [],
+    status: 'active',
+    speaker_name: '',
     location: '',
-    job_type: 'full_time',
-    experience_required: '',
-    salary: '',
-    qualifications_required: [],
-    skills_required: [],
-    apply_link: '',
-    last_date_to_apply: '',
-    is_active: true
+    mode: 'offline',
+    start_date_time: '',
+    end_date_time: '',
+    registration_link: '',
+    eligibility: [],
+    benefits: [],
+    last_date_to_register: ''
   })
 
   const [descriptionInput, setDescriptionInput] = useState('')
   const [descriptionHindiInput, setDescriptionHindiInput] = useState('')
-  const [qualificationInput, setQualificationInput] = useState('')
-  const [skillInput, setSkillInput] = useState('')
+  const [eligibilityInput, setEligibilityInput] = useState('')
+  const [benefitInput, setBenefitInput] = useState('')
 
   useEffect(() => {
     if (location.state?.editData) {
       const data = location.state.editData
       setEditMode(true)
-      setEditJobId(data.job_id)
+      setEditSeminarId(data.seminar_id)
       setFormData({
         title: data.title || '',
         title_hindi: data.title_hindi || '',
         description: data.description || [],
         description_hindi: data.description_hindi || [],
+        status: data.status || 'active',
+        speaker_name: data.speaker_name || '',
         location: data.location || '',
-        job_type: data.job_type || 'full_time',
-        experience_required: data.experience_required || '',
-        salary: data.salary || '',
-        qualifications_required: data.qualifications_required || [],
-        skills_required: data.skills_required || [],
-        apply_link: data.apply_link || '',
-        last_date_to_apply: data.last_date_to_apply ? data.last_date_to_apply.slice(0, 10) : '',
-        is_active: data.is_active ?? true
+        mode: data.mode || 'offline',
+        start_date_time: data.start_date_time ? data.start_date_time.slice(0, 16) : '',
+        end_date_time: data.end_date_time ? data.end_date_time.slice(0, 16) : '',
+        registration_link: data.registration_link || '',
+        eligibility: data.eligibility || [],
+        benefits: data.benefits || [],
+        last_date_to_register: data.last_date_to_register ? data.last_date_to_register.slice(0, 10) : ''
       })
     }
   }, [location.state])
@@ -107,34 +109,34 @@ const AddJob = () => {
     setFormData({ ...formData, description_hindi: newDescriptions })
   }
 
-  const addQualification = () => {
-    if (qualificationInput.trim()) {
+  const addEligibility = () => {
+    if (eligibilityInput.trim()) {
       setFormData({
         ...formData,
-        qualifications_required: [...formData.qualifications_required, qualificationInput.trim()]
+        eligibility: [...formData.eligibility, eligibilityInput.trim()]
       })
-      setQualificationInput('')
+      setEligibilityInput('')
     }
   }
 
-  const removeQualification = (index) => {
-    const newQualifications = formData.qualifications_required.filter((_, i) => i !== index)
-    setFormData({ ...formData, qualifications_required: newQualifications })
+  const removeEligibility = (index) => {
+    const newEligibility = formData.eligibility.filter((_, i) => i !== index)
+    setFormData({ ...formData, eligibility: newEligibility })
   }
 
-  const addSkill = () => {
-    if (skillInput.trim()) {
+  const addBenefit = () => {
+    if (benefitInput.trim()) {
       setFormData({
         ...formData,
-        skills_required: [...formData.skills_required, skillInput.trim()]
+        benefits: [...formData.benefits, benefitInput.trim()]
       })
-      setSkillInput('')
+      setBenefitInput('')
     }
   }
 
-  const removeSkill = (index) => {
-    const newSkills = formData.skills_required.filter((_, i) => i !== index)
-    setFormData({ ...formData, skills_required: newSkills })
+  const removeBenefit = (index) => {
+    const newBenefits = formData.benefits.filter((_, i) => i !== index)
+    setFormData({ ...formData, benefits: newBenefits })
   }
 
   const handleSubmit = async (e) => {
@@ -153,19 +155,20 @@ const AddJob = () => {
         title_hindi: formData.title_hindi?.trim() || '',
         description: formData.description,
         description_hindi: formData.description_hindi,
+        status: formData.status,
+        speaker_name: formData.speaker_name?.trim() || '',
         location: formData.location?.trim() || '',
-        job_type: formData.job_type,
-        experience_required: formData.experience_required?.trim() || '',
-        salary: formData.salary?.trim() || '',
-        qualifications_required: formData.qualifications_required,
-        skills_required: formData.skills_required,
-        apply_link: formData.apply_link?.trim() || '',
-        last_date_to_apply: formData.last_date_to_apply,
-        is_active: formData.is_active
+        mode: formData.mode,
+        start_date_time: formData.start_date_time ? new Date(formData.start_date_time).toISOString() : '',
+        end_date_time: formData.end_date_time ? new Date(formData.end_date_time).toISOString() : '',
+        registration_link: formData.registration_link?.trim() || '',
+        eligibility: formData.eligibility,
+        benefits: formData.benefits,
+        last_date_to_register: formData.last_date_to_register
       }
 
-      if (editMode && editJobId) {
-        payload.job_id = editJobId
+      if (editMode && editSeminarId) {
+        payload.seminar_id = editSeminarId
         await axios.put(API_URL, payload, getAuthConfig())
       } else {
         await axios.post(API_URL, payload, getAuthConfig())
@@ -175,7 +178,7 @@ const AddJob = () => {
       resetForm()
     } catch (error) {
       console.error('Error:', error)
-      alert('Failed to save job')
+      alert('Failed to save seminar')
     } finally {
       setSubmitting(false)
     }
@@ -187,18 +190,19 @@ const AddJob = () => {
       title_hindi: '',
       description: [],
       description_hindi: [],
+      status: 'active',
+      speaker_name: '',
       location: '',
-      job_type: 'full_time',
-      experience_required: '',
-      salary: '',
-      qualifications_required: [],
-      skills_required: [],
-      apply_link: '',
-      last_date_to_apply: '',
-      is_active: true
+      mode: 'offline',
+      start_date_time: '',
+      end_date_time: '',
+      registration_link: '',
+      eligibility: [],
+      benefits: [],
+      last_date_to_register: ''
     })
     setEditMode(false)
-    setEditJobId(null)
+    setEditSeminarId(null)
   }
 
   if (loading) {
@@ -234,10 +238,10 @@ const AddJob = () => {
                   <Button variant="outline-secondary" size="sm" onClick={() => navigate('/AdminDashboard')} className="me-2">
                     <FaArrowLeft /> Dashboard
                   </Button>
-                  <h4 className="mb-0">{editMode ? 'Edit Job' : 'Add Job'}</h4>
+                  <h4 className="mb-0">{editMode ? 'Edit Seminar' : 'Add Seminar'}</h4>
                 </div>
                 <Button variant="outline-primary" size="sm" onClick={() => navigate('/ManageJobs')}>
-                  <FaBriefcase className="me-1" /> Manage Jobs
+                  <FaChalkboardTeacher className="me-1" /> Manage Seminars
                 </Button>
               </div>
 
@@ -247,7 +251,7 @@ const AddJob = () => {
                     <Card.Header className="bg-light border-bottom py-2 px-3 d-flex justify-content-between align-items-center">
                       <div className="d-flex align-items-center paid-btn gap-2">
                         <h5 className="mb-0 fw-semibold text-secondary">
-                          Job Details
+                          Seminar Details
                         </h5>
                       </div>
                       {editMode && (
@@ -261,61 +265,60 @@ const AddJob = () => {
                         <Row className="g-3">
                           <Col md={6}>
                             <Form.Group className="mb-3">
-                              <Form.Label>Job Title (English) *</Form.Label>
+                              <Form.Label>Seminar Title (English) *</Form.Label>
                               <Form.Control
                                 type="text"
                                 name="title"
                                 value={formData.title}
                                 onChange={handleChange}
-                                placeholder="e.g. Backend Developer"
+                                placeholder="e.g. AI & Future Technology Seminar"
                                 required
                               />
                             </Form.Group>
                           </Col>
                           <Col md={6}>
                             <Form.Group className="mb-3">
-                              <Form.Label>Job Title (Hindi)</Form.Label>
+                              <Form.Label>Seminar Title (Hindi)</Form.Label>
                               <Form.Control
                                 type="text"
                                 name="title_hindi"
                                 value={formData.title_hindi}
                                 onChange={handleChange}
-                                placeholder="e.g. बैकएंड डेवलपर"
+                                placeholder="e.g. एआई और भविष्य की तकनीक सेमिनार"
                               />
                             </Form.Group>
                           </Col>
 
                           <Col md={6}>
                             <Form.Group className="mb-3">
-                              <Form.Label><FaBriefcase className="me-1" /> Job Type</Form.Label>
+                              <Form.Label><FaUser className="me-1" /> Speaker Name</Form.Label>
+                              <Form.Control
+                                type="text"
+                                name="speaker_name"
+                                value={formData.speaker_name}
+                                onChange={handleChange}
+                                placeholder="e.g. Dr. Amit Sharma"
+                              />
+                            </Form.Group>
+                          </Col>
+                          <Col md={6}>
+                            <Form.Group className="mb-3">
+                              <Form.Label><FaGlobe className="me-1" /> Mode</Form.Label>
                               <Form.Select
-                                name="job_type"
-                                value={formData.job_type}
+                                name="mode"
+                                value={formData.mode}
                                 onChange={handleChange}
                               >
-                                <option value="full_time">Full Time</option>
-                                <option value="part_time">Part Time</option>
-                                <option value="internship">Internship</option>
-                                <option value="contract">Contract</option>
+                                <option value="offline">Offline</option>
+                                <option value="online">Online</option>
+                                <option value="hybrid">Hybrid</option>
                               </Form.Select>
                             </Form.Group>
                           </Col>
-                          <Col md={6}>
-                            <Form.Group className="mb-3">
-                              <Form.Label><FaClock className="me-1" /> Experience Required</Form.Label>
-                              <Form.Control
-                                type="text"
-                                name="experience_required"
-                                value={formData.experience_required}
-                                onChange={handleChange}
-                                placeholder="e.g. 1-3 years"
-                              />
-                            </Form.Group>
-                          </Col>
 
                           <Col md={6}>
                             <Form.Group className="mb-3">
-                              <Form.Label>Location</Form.Label>
+                              <Form.Label><FaMapMarkerAlt className="me-1" /> Location</Form.Label>
                               <Form.Control
                                 type="text"
                                 name="location"
@@ -327,53 +330,62 @@ const AddJob = () => {
                           </Col>
                           <Col md={6}>
                             <Form.Group className="mb-3">
-                              <Form.Label>Salary</Form.Label>
-                              <Form.Control
-                                type="text"
-                                name="salary"
-                                value={formData.salary}
-                                onChange={handleChange}
-                                placeholder="e.g. 3-6 LPA"
-                              />
-                            </Form.Group>
-                          </Col>
-
-                          <Col md={12}>
-                            <Form.Group className="mb-3">
-                              <Form.Label><FaLink className="me-1" /> Apply Link</Form.Label>
-                              <Form.Control
-                                type="url"
-                                name="apply_link"
-                                value={formData.apply_link}
-                                onChange={handleChange}
-                                placeholder="e.g. https://example.com/apply"
-                              />
-                            </Form.Group>
-                          </Col>
-
-                          <Col md={6}>
-                            <Form.Group className="mb-3">
-                              <Form.Label><FaCalendar className="me-1" /> Last Date to Apply</Form.Label>
-                              <Form.Control
-                                type="date"
-                                name="last_date_to_apply"
-                                value={formData.last_date_to_apply}
-                                onChange={handleChange}
-                              />
-                            </Form.Group>
-                          </Col>
-
-                          <Col md={6}>
-                            <Form.Group className="mb-3">
                               <Form.Label>Status</Form.Label>
                               <Form.Select
-                                name="is_active"
-                                value={formData.is_active.toString()}
-                                onChange={(e) => setFormData({ ...formData, is_active: e.target.value === 'true' })}
+                                name="status"
+                                value={formData.status}
+                                onChange={handleChange}
                               >
-                                <option value="true">Active</option>
-                                <option value="false">Inactive</option>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
                               </Form.Select>
+                            </Form.Group>
+                          </Col>
+
+                          <Col md={6}>
+                            <Form.Group className="mb-3">
+                              <Form.Label><FaClock className="me-1" /> Start Date & Time</Form.Label>
+                              <Form.Control
+                                type="datetime-local"
+                                name="start_date_time"
+                                value={formData.start_date_time}
+                                onChange={handleChange}
+                              />
+                            </Form.Group>
+                          </Col>
+                          <Col md={6}>
+                            <Form.Group className="mb-3">
+                              <Form.Label><FaClock className="me-1" /> End Date & Time</Form.Label>
+                              <Form.Control
+                                type="datetime-local"
+                                name="end_date_time"
+                                value={formData.end_date_time}
+                                onChange={handleChange}
+                              />
+                            </Form.Group>
+                          </Col>
+
+                          <Col md={6}>
+                            <Form.Group className="mb-3">
+                              <Form.Label><FaCalendar className="me-1" /> Last Date to Register</Form.Label>
+                              <Form.Control
+                                type="date"
+                                name="last_date_to_register"
+                                value={formData.last_date_to_register}
+                                onChange={handleChange}
+                              />
+                            </Form.Group>
+                          </Col>
+                          <Col md={6}>
+                            <Form.Group className="mb-3">
+                              <Form.Label><FaLink className="me-1" /> Registration Link</Form.Label>
+                              <Form.Control
+                                type="url"
+                                name="registration_link"
+                                value={formData.registration_link}
+                                onChange={handleChange}
+                                placeholder="e.g. https://example.com/register"
+                              />
                             </Form.Group>
                           </Col>
 
@@ -385,7 +397,7 @@ const AddJob = () => {
                                   type="text"
                                   value={descriptionInput}
                                   onChange={(e) => setDescriptionInput(e.target.value)}
-                                  placeholder="e.g. Develop REST APIs using Django"
+                                  placeholder="e.g. Introduction to Artificial Intelligence"
                                   onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addDescription())}
                                 />
                                 <Button variant="outline-primary" onClick={addDescription}>
@@ -411,7 +423,7 @@ const AddJob = () => {
                                   type="text"
                                   value={descriptionHindiInput}
                                   onChange={(e) => setDescriptionHindiInput(e.target.value)}
-                                  placeholder="e.g. Django का उपयोग करके API बनाना"
+                                  placeholder="e.g. आर्टिफिशियल इंटेलिजेंस का परिचय"
                                   onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addDescriptionHindi())}
                                 />
                                 <Button variant="outline-primary" onClick={addDescriptionHindi}>
@@ -431,24 +443,24 @@ const AddJob = () => {
 
                           <Col md={12}>
                             <Form.Group className="mb-3">
-                              <Form.Label><FaGraduationCap className="me-1" /> Qualifications Required - Add multiple</Form.Label>
+                              <Form.Label><FaGraduationCap className="me-1" /> Eligibility - Add multiple</Form.Label>
                               <div className="d-flex gap-2 mb-2">
                                 <Form.Control
                                   type="text"
-                                  value={qualificationInput}
-                                  onChange={(e) => setQualificationInput(e.target.value)}
-                                  placeholder="e.g. 10th, 12th, graduate"
-                                  onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addQualification())}
+                                  value={eligibilityInput}
+                                  onChange={(e) => setEligibilityInput(e.target.value)}
+                                  placeholder="e.g. 12th, graduate"
+                                  onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addEligibility())}
                                 />
-                                <Button variant="outline-primary" onClick={addQualification}>
+                                <Button variant="outline-primary" onClick={addEligibility}>
                                   <FaPlus />
                                 </Button>
                               </div>
                               <div className="d-flex flex-wrap gap-2">
-                                {formData.qualifications_required.map((qual, index) => (
+                                {formData.eligibility.map((el, index) => (
                                   <Badge key={index} bg="info" className="d-flex align-items-center gap-1 p-2">
-                                    {qual}
-                                    <button type="button" className="btn-close btn-close-white ms-1" style={{ fontSize: '10px' }} onClick={() => removeQualification(index)}></button>
+                                    {el}
+                                    <button type="button" className="btn-close btn-close-white ms-1" style={{ fontSize: '10px' }} onClick={() => removeEligibility(index)}></button>
                                   </Badge>
                                 ))}
                               </div>
@@ -457,24 +469,24 @@ const AddJob = () => {
 
                           <Col md={12}>
                             <Form.Group className="mb-3">
-                              <Form.Label><FaTools className="me-1" /> Skills Required - Add multiple</Form.Label>
+                              <Form.Label><FaGift className="me-1" /> Benefits - Add multiple</Form.Label>
                               <div className="d-flex gap-2 mb-2">
                                 <Form.Control
                                   type="text"
-                                  value={skillInput}
-                                  onChange={(e) => setSkillInput(e.target.value)}
-                                  placeholder="e.g. Python, Django, REST API"
-                                  onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addSkill())}
+                                  value={benefitInput}
+                                  onChange={(e) => setBenefitInput(e.target.value)}
+                                  placeholder="e.g. Certificate, Networking"
+                                  onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addBenefit())}
                                 />
-                                <Button variant="outline-primary" onClick={addSkill}>
+                                <Button variant="outline-primary" onClick={addBenefit}>
                                   <FaPlus />
                                 </Button>
                               </div>
                               <div className="d-flex flex-wrap gap-2">
-                                {formData.skills_required.map((skill, index) => (
+                                {formData.benefits.map((ben, index) => (
                                   <Badge key={index} bg="warning" text="dark" className="d-flex align-items-center gap-1 p-2">
-                                    {skill}
-                                    <button type="button" className="btn-close btn-close-white ms-1" style={{ fontSize: '10px' }} onClick={() => removeSkill(index)}></button>
+                                    {ben}
+                                    <button type="button" className="btn-close btn-close-white ms-1" style={{ fontSize: '10px' }} onClick={() => removeBenefit(index)}></button>
                                   </Badge>
                                 ))}
                               </div>
@@ -488,7 +500,7 @@ const AddJob = () => {
                               <Spinner animation="border" size="sm" />
                             ) : (
                               <>
-                                <FaPlus className="me-1" /> {editMode ? 'Update Job' : 'Add Job'}
+                                <FaPlus className="me-1" /> {editMode ? 'Update Seminar' : 'Add Seminar'}
                               </>
                             )}
                           </Button>
@@ -511,7 +523,7 @@ const AddJob = () => {
           <Modal.Title>Success</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>Job has been {editMode ? 'updated' : 'added'} successfully!</p>
+          <p>Seminar has been {editMode ? 'updated' : 'added'} successfully!</p>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="primary" onClick={() => setShowSuccessModal(false)}>
@@ -523,4 +535,4 @@ const AddJob = () => {
   )
 }
 
-export default AddJob
+export default AddSeminar

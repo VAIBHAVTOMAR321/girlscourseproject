@@ -44,6 +44,7 @@ import ManageGroomingClasses from "./components/admindashboard/ManageGroomingCla
 import CreateGroomingClass from "./components/admindashboard/CreateGroomingClass.jsx";
 import AddJob from "./components/admindashboard/AddJob.jsx";
 import ManageJobs from "./components/admindashboard/ManageJobs.jsx";
+import AddSeminar from "./components/admindashboard/AddSeminar.jsx";
 
 function AppContent() {
   const location = useLocation();
@@ -75,8 +76,8 @@ function AppContent() {
     };
   }, [isAuthenticated, logout]);
 
-  const hideFooter = location.pathname.includes("/AdminDashboard") || location.pathname.includes("/UserDashboard") || location.pathname.includes("/UserProfile") || location.pathname.includes("/UserTest") || location.pathname.includes("/Enrollments") || location.pathname.includes("/RefundRequest") || location.pathname.includes("/UserSettings") || location.pathname.includes("/UserNotifications") || location.pathname.includes("/OccupationDetails") || location.pathname.includes("/Feedback") || location.pathname.includes("/UserQuery") || location.pathname.includes("/StudentIssues") || location.pathname.includes("/QuizManagement") || location.pathname.includes("/UserQuiz") || location.pathname.includes("/GovernmentSchemes") || location.pathname.includes("/ManageGovtSchemes") || location.pathname.includes("/AddGovtSchemes") || location.pathname.includes("/GroomingClasses") || location.pathname.includes("/ManageGroomingClasses") || location.pathname.includes("/CreateGroomingClass") || location.pathname.includes("/JobOpenings") || location.pathname.includes("/AddJob") || location.pathname.includes("/ManageJobs");
-  const hideNavBar = location.pathname.includes("/AdminDashboard") || location.pathname.includes("/UserDashboard") || location.pathname.includes("/UserProfile") || location.pathname.includes("/UserTest") || location.pathname.includes("/Enrollments") || location.pathname.includes("/RefundRequest") || location.pathname.includes("/UserSettings") || location.pathname.includes("/UserNotifications") || location.pathname.includes("/OccupationDetails") || location.pathname.includes("/Feedback") || location.pathname.includes("/UserQuery") || location.pathname.includes("/StudentIssues") || location.pathname.includes("/QuizManagement") || location.pathname.includes("/UserQuiz") || location.pathname.includes("/GovernmentSchemes") || location.pathname.includes("/ManageGovtSchemes") || location.pathname.includes("/AddGovtSchemes") || location.pathname.includes("/GroomingClasses") || location.pathname.includes("/ManageGroomingClasses") || location.pathname.includes("/CreateGroomingClass") || location.pathname.includes("/JobOpenings") || location.pathname.includes("/AddJob") || location.pathname.includes("/ManageJobs");
+  const hideFooter = location.pathname.includes("/AdminDashboard") || location.pathname.includes("/UserDashboard") || location.pathname.includes("/UserProfile") || location.pathname.includes("/UserTest") || location.pathname.includes("/Enrollments") || location.pathname.includes("/RefundRequest") || location.pathname.includes("/UserSettings") || location.pathname.includes("/UserNotifications") || location.pathname.includes("/OccupationDetails") || location.pathname.includes("/Feedback") || location.pathname.includes("/UserQuery") || location.pathname.includes("/StudentIssues") || location.pathname.includes("/QuizManagement") || location.pathname.includes("/UserQuiz") || location.pathname.includes("/GovernmentSchemes") || location.pathname.includes("/ManageGovtSchemes") || location.pathname.includes("/AddGovtSchemes") || location.pathname.includes("/GroomingClasses") || location.pathname.includes("/ManageGroomingClasses") || location.pathname.includes("/CreateGroomingClass") || location.pathname.includes("/JobOpenings") || location.pathname.includes("/AddJob") || location.pathname.includes("/ManageJobs") || location.pathname.includes("/AddSeminar");
+  const hideNavBar = location.pathname.includes("/AdminDashboard") || location.pathname.includes("/UserDashboard") || location.pathname.includes("/UserProfile") || location.pathname.includes("/UserTest") || location.pathname.includes("/Enrollments") || location.pathname.includes("/RefundRequest") || location.pathname.includes("/UserSettings") || location.pathname.includes("/UserNotifications") || location.pathname.includes("/OccupationDetails") || location.pathname.includes("/Feedback") || location.pathname.includes("/UserQuery") || location.pathname.includes("/StudentIssues") || location.pathname.includes("/QuizManagement") || location.pathname.includes("/UserQuiz") || location.pathname.includes("/GovernmentSchemes") || location.pathname.includes("/ManageGovtSchemes") || location.pathname.includes("/AddGovtSchemes") || location.pathname.includes("/GroomingClasses") || location.pathname.includes("/ManageGroomingClasses") || location.pathname.includes("/CreateGroomingClass") || location.pathname.includes("/JobOpenings") || location.pathname.includes("/AddJob") || location.pathname.includes("/ManageJobs") || location.pathname.includes("/AddSeminar");
 
   return (
     <>
@@ -252,6 +253,8 @@ function AppContent() {
               </ProtectedRoute>
             }
           />
+         
+          
           <Route
             path="/QuizManagement"
             element={
@@ -305,6 +308,14 @@ function AppContent() {
             element={
               <ProtectedRoute allowedRoles={["admin"]}>
                 <ManageJobs />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/AddSeminar"
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <AddSeminar />
               </ProtectedRoute>
             }
           />
