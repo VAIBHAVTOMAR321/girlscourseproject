@@ -92,6 +92,14 @@ const AdminLeftNav = ({ show, setShow }) => {
               <i className="bi bi-calendar-check nav-icon"></i>
               <span className="nav-text">Manage Grooming</span>
             </Nav.Link>
+            <Nav.Link as={Link} to="/AddJob" className="nav-link-custom ">
+              <i className="bi bi-briefcase nav-icon"></i>
+              <span className="nav-text">Add Job</span>
+            </Nav.Link>
+            <Nav.Link as={Link} to="/ManageJobs" className="nav-link-custom ">
+              <i className="bi bi-briefcase-fill nav-icon"></i>
+              <span className="nav-text">Manage Jobs</span>
+            </Nav.Link>
           </Nav>
         </div>
       )}
@@ -134,6 +142,12 @@ const AdminLeftNav = ({ show, setShow }) => {
             </Nav.Link>
             <Nav.Link as={Link} to="/ManageGroomingClasses" className="nav-link-custom" onClick={() => setShowOffcanvas(false)}>
               <i className="bi bi-calendar-check nav-icon me-2"></i> Manage Grooming
+            </Nav.Link>
+            <Nav.Link as={Link} to="/AddJob" className="nav-link-custom" onClick={() => setShowOffcanvas(false)}>
+              <i className="bi bi-briefcase nav-icon me-2"></i> Add Job
+            </Nav.Link>
+            <Nav.Link as={Link} to="/ManageJobs" className="nav-link-custom" onClick={() => setShowOffcanvas(false)}>
+              <i className="bi bi-briefcase-fill nav-icon me-2"></i> Manage Jobs
             </Nav.Link>
           </Nav>
         </Offcanvas.Body>
