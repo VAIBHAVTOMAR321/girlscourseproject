@@ -830,6 +830,10 @@ import '../../assets/css/UserNotifications.css'
       alert(getTranslation('notifications.alertMaxPercentage', language))
       return
     }
+    if (Number(percentage) < 33) {
+      alert(getTranslation('notifications.notEligible', language) || 'You are not eligible for career guidance. You need at least 33% to get recommendations.')
+      return
+    }
     setShowResults(true)
     // Auto-scroll to results after a short delay
     setTimeout(() => {

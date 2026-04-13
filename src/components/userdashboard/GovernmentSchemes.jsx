@@ -20,6 +20,7 @@ const GovernmentSchemes = () => {
   const [loading, setLoading] = useState(true)
   const [showModal, setShowModal] = useState(false)
   const [selectedScheme, setSelectedScheme] = useState(null)
+  const [activeTab, setActiveTab] = useState('category')
   const [apiCategories, setApiCategories] = useState([])
   const [apiSchemesData, setApiSchemesData] = useState({})
   const [error, setError] = useState(null)
@@ -163,6 +164,9 @@ const GovernmentSchemes = () => {
 
   const handleCategoryChange = (categoryId) => {
     setSelectedCategory(categoryId)
+    if (!categoryId) {
+      setActiveTab('all')
+    }
   }
 
   // Helper to parse comma or newline-separated values into array
@@ -284,6 +288,8 @@ const GovernmentSchemes = () => {
   const displayedSchemes = selectedCategory ? getCategorySchemes() : []
   const allSchemes = getAllSchemes()
   const categories = getCategoriesForDisplay()
+
+  const schemesToDisplay = activeTab === 'all' ? allSchemes : displayedSchemes
 
   return (
     <div className="d-flex flex-column">
@@ -415,23 +421,23 @@ const GovernmentSchemes = () => {
                   </Card.Body>
                 </Card>
 
-                {selectedCategory && displayedSchemes.length > 0 && (
+                {(selectedCategory || activeTab === 'all') && (
                   <>
                     <Card className="shadow-sm mb-4 border-0" style={{ borderRadius: '10px' }}>
                       <Card.Header className="bg-white border-0 pt-4 pb-0">
                         <h5 className="mb-0">
                           <FaUniversity className="me-2 text-primary" />
-                          <TransText k="schemes.availableSchemes" as="span" /> - {language === 'hi' ? categories.find(c => c.id === selectedCategory)?.name_hindi : categories.find(c => c.id === selectedCategory)?.name}
+                          <TransText k="schemes.availableSchemes" as="span" /> - {activeTab === 'all' ? (language === 'hi' ? 'सभी योजनाएं' : 'All Schemes') : (language === 'hi' ? categories.find(c => c.id === selectedCategory)?.name_hindi : categories.find(c => c.id === selectedCategory)?.name)}
                         </h5>
                         <p className="text-muted mb-0">
                           <TransText k="schemes.browseSchemes" as="span" />
                         </p>
                       </Card.Header>
                       <Card.Body className="">
-                        <Tab.Container id="schemes-tabs" defaultActiveKey="category">
+                        <Tab.Container id="schemes-tabs" activeKey={activeTab} onSelect={(k) => setActiveTab(k)}>
                           <Nav variant="tabs" className="mb-4">
                             <Nav.Item>
-                              <Nav.Link eventKey="category">
+                              <Nav.Link eventKey="category" disabled={!selectedCategory}>
                                 <FaBook className="me-2" />
                                 <TransText k="schemes.categorySchemes" as="span" />
                               </Nav.Link>
@@ -445,8 +451,71 @@ const GovernmentSchemes = () => {
                           </Nav>
                           <Tab.Content>
                             <Tab.Pane eventKey="category">
+                              {selectedCategory ? (
+                                <Row>
+                                  {displayedSchemes.map((scheme) => (
+                                    <Col lg={4} md={6} className="mb-4" key={scheme.id || scheme.gov_scheme_id}>
+                                      <Card 
+                                        className="h-100 border course-card"
+                                        style={{ cursor: 'pointer', overflow: 'hidden', width: '100%' }}
+                                        onClick={() => handleSchemeClick(scheme)}
+                                      >
+                                      {scheme.scheme_image ? (
+                                          <div style={{
+                                            height: '120px',
+                                            width: '100%',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                          
+                                            borderBottom: '1px solid #e0e0e0'
+                                          }}>
+                                            <img
+                                              src={scheme.scheme_image}
+                                              alt={scheme.title}
+                                              style={{
+                                                maxHeight: '100%',
+                                                maxWidth: '100%',
+                                                objectFit: 'contain',
+                                                padding: '8px'
+                                              }}
+                                              onError={(e) => { e.target.style.display = 'none' }}
+                                            />
+                                          </div>
+                                        ) : null}
+                                        <Card.Body className="p-3 text-center">
+                                          <h6 className="mb-1">{language === 'hi' ? scheme.title_hindi : scheme.title}</h6>
+                                          {scheme.amount && scheme.amount !== 'Visit Website' ? (
+                                            <Badge bg="success" className="mb-2">₹{Number(scheme.amount).toLocaleString('en-IN')}</Badge>
+                                          ) : (
+                                            <Badge bg="warning" text="dark" className="mb-2">{scheme.amount}</Badge>
+                                          )}
+                                          <p className="text-muted small mb-2">
+                                            {scheme.about}
+                                          </p>
+                                          <div className="d-flex flex-wrap gap-1 justify-content-center">
+                                            {scheme.benefits?.slice(0, 3).map((benefit, idx) => (
+                                              <Badge bg="light" text="dark" key={idx} className="small">
+                                                {benefit}
+                                              </Badge>
+                                            ))}
+                                          </div>
+                                        </Card.Body>
+                                      </Card>
+                                    </Col>
+                                  ))}
+                                </Row>
+                              ) : (
+                                <div className="text-center py-4">
+                                  <p className="text-muted mb-0">
+                                    {language === 'hi' ? 'कृपया ऊपर से कोई श्रेणी चुनें' : 'Please select a category above'}
+                                  </p>
+                                </div>
+                              )}
+                            </Tab.Pane>
+                            <Tab.Pane eventKey="all">
                               <Row>
-                                {displayedSchemes.map((scheme) => (
+                                {allSchemes.map((scheme) => (
                                   <Col lg={4} md={6} className="mb-4" key={scheme.id || scheme.gov_scheme_id}>
                                     <Card 
                                       className="h-100 border course-card"
@@ -460,7 +529,7 @@ const GovernmentSchemes = () => {
                                           display: 'flex',
                                           alignItems: 'center',
                                           justifyContent: 'center',
-                                       
+                                        
                                           borderBottom: '1px solid #e0e0e0'
                                         }}>
                                           <img
