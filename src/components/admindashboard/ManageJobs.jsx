@@ -10,6 +10,7 @@ import { FaArrowLeft, FaPlus, FaEdit, FaTrash, FaCalendar, FaClock, FaBriefcase,
 
 const JOB_API_URL = 'https://brjobsedu.com/girls_course/girls_course_backend/api/job-openings/'
 const SEMINAR_API_URL = 'https://brjobsedu.com/girls_course/girls_course_backend/api/seminar-items/'
+const WORKSHOP_API_URL = 'https://brjobsedu.com/girls_course/girls_course_backend/api/workshop-items/'
 
 const statusLabels = {
   active: 'Active',
@@ -21,22 +22,27 @@ const ManageJobs = () => {
   const navigate = useNavigate()
   const [jobs, setJobs] = useState([])
   const [seminars, setSeminars] = useState([])
+  const [workshops, setWorkshops] = useState([])
   const [loading, setLoading] = useState(true)
   const [showSidebar, setShowSidebar] = useState(true)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [showViewModal, setShowViewModal] = useState(false)
   const [selectedJob, setSelectedJob] = useState(null)
   const [selectedSeminar, setSelectedSeminar] = useState(null)
+  const [selectedWorkshop, setSelectedWorkshop] = useState(null)
   const [currentPage, setCurrentPage] = useState(1)
   const [recordsPerPage] = useState(10)
   const [statusFilter, setStatusFilter] = useState('all')
   const [activeTab, setActiveTab] = useState('jobs')
   const [seminarFilter, setSeminarFilter] = useState('all')
   const [seminarCurrentPage, setSeminarCurrentPage] = useState(1)
+  const [workshopFilter, setWorkshopFilter] = useState('all')
+  const [workshopCurrentPage, setWorkshopCurrentPage] = useState(1)
 
   useEffect(() => {
     fetchJobs()
     fetchSeminars()
+    fetchWorkshops()
   }, [])
 
   const getAuthConfig = () => ({
@@ -72,6 +78,18 @@ const ManageJobs = () => {
     }
   }
 
+  const fetchWorkshops = async () => {
+    try {
+      const response = await axios.get(WORKSHOP_API_URL, getAuthConfig())
+      if (response.data && response.data.data) {
+        setWorkshops(response.data.data)
+      }
+    } catch (error) {
+      console.error('Error fetching workshops:', error)
+      setWorkshops([])
+    }
+  }
+
   const handleEdit = (job) => {
     navigate('/AddJob', { state: { editData: job } })
   }
@@ -89,15 +107,21 @@ const ManageJobs = () => {
           ...getAuthConfig()
         })
         fetchJobs()
-      } else {
+      } else if (activeTab === 'seminars') {
         await axios.delete(SEMINAR_API_URL, {
           data: { seminar_id: selectedSeminar.seminar_id },
           ...getAuthConfig()
         })
         fetchSeminars()
+      } else {
+        await axios.delete(WORKSHOP_API_URL, {
+          data: { workshop_id: selectedWorkshop.workshop_id },
+          ...getAuthConfig()
+        })
+        fetchWorkshops()
       }
       setShowDeleteModal(false)
-      alert(`${activeTab === 'jobs' ? 'Job' : 'Seminar'} deleted successfully!`)
+      alert(`${activeTab === 'jobs' ? 'Job' : activeTab === 'seminars' ? 'Seminar' : 'Workshop'} deleted successfully!`)
     } catch (error) {
       console.error('Error deleting:', error)
       alert('Failed to delete')
@@ -244,6 +268,62 @@ const ManageJobs = () => {
     }
   }
 
+  const handleEditWorkshop = (workshop) => {
+    navigate('/AddWorkshop', { state: { editData: workshop } })
+  }
+
+  const handleViewWorkshop = (workshop) => {
+    setSelectedWorkshop(workshop)
+    setShowViewModal(true)
+  }
+
+  const handleDeleteWorkshop = (workshop) => {
+    setSelectedWorkshop(workshop)
+    setShowDeleteModal(true)
+  }
+
+  const toggleWorkshopStatus = async (workshop) => {
+    try {
+      const newStatus = workshop.status === 'active' ? 'inactive' : 'active'
+      await axios.put(WORKSHOP_API_URL, {
+        workshop_id: workshop.workshop_id,
+        status: newStatus
+      }, getAuthConfig())
+      fetchWorkshops()
+      alert(`Workshop ${newStatus === 'active' ? 'activated' : 'deactivated'} successfully!`)
+    } catch (error) {
+      console.error('Error toggling workshop status:', error)
+      alert('Failed to update workshop status')
+    }
+  }
+
+  const workshopIndexOfLastRecord = workshopCurrentPage * recordsPerPage
+  const workshopIndexOfFirstRecord = workshopIndexOfLastRecord - recordsPerPage
+  
+  const filteredWorkshops = workshopFilter === 'all' 
+    ? workshops 
+    : workshops.filter(workshop => workshopFilter === 'active' ? workshop.status === 'active' : workshop.status === 'inactive')
+  
+  const workshopCurrentRecords = filteredWorkshops.slice(workshopIndexOfFirstRecord, workshopIndexOfLastRecord)
+  const workshopTotalPages = Math.ceil(filteredWorkshops.length / recordsPerPage)
+
+  const handleWorkshopPageChange = (pageNumber) => {
+    setWorkshopCurrentPage(pageNumber)
+  }
+
+  const handleWorkshopPreviousPage = () => {
+    if (workshopCurrentPage > 1) setWorkshopCurrentPage(workshopCurrentPage - 1)
+  }
+
+  const handleWorkshopNextPage = () => {
+    if (workshopCurrentPage < workshopTotalPages) setWorkshopCurrentPage(workshopCurrentPage + 1)
+  }
+
+  const handleWorkshopFilterChange = (status) => {
+    setWorkshopFilter(status)
+    setWorkshopCurrentPage(1)
+  }
+
   if (loading) {
     return (
       <div className="admin-layout">
@@ -279,8 +359,8 @@ const ManageJobs = () => {
                   </Button>
                   <h4 className="mb-0">Manage Jobs & Seminars</h4>
                 </div>
-                <Button variant="primary" size="sm" onClick={() => navigate(activeTab === 'jobs' ? '/AddJob' : '/AddSeminar')}>
-                  <FaPlus className="me-1" /> {activeTab === 'jobs' ? 'Add New Job' : 'Add New Seminar'}
+                <Button variant="primary" size="sm" onClick={() => activeTab === 'jobs' ? navigate('/AddJob') : activeTab === 'seminars' ? navigate('/AddSeminar') : navigate('/AddWorkshop')}>
+                  <FaPlus className="me-1" /> {activeTab === 'jobs' ? 'Add New Job' : activeTab === 'seminars' ? 'Add New Seminar' : 'Add New Workshop'}
                 </Button> 
               </div>
 
@@ -293,6 +373,11 @@ const ManageJobs = () => {
                 <Nav.Item>
                   <Nav.Link eventKey="seminars">
                     <FaChalkboardTeacher className="me-1" /> Seminars ({seminars.length})
+                  </Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link eventKey="workshops">
+                    <FaTools className="me-1" /> Workshops ({workshops.length})
                   </Nav.Link>
                 </Nav.Item>
               </Nav>
@@ -772,6 +857,244 @@ const ManageJobs = () => {
                 </Col>
               </Row>
               )}
+
+              {activeTab === 'workshops' && (
+              <Row>
+                <Col xs={12}>
+                  <Card className="enrollments-table-card border">
+                    <Card.Header className="bg-light border-bottom py-2 px-3 d-flex justify-content-between align-items-center flex-wrap">
+                      <div className="d-flex align-items-center paid-btn gap-2">
+                        <h5 className="mb-0 fw-semibold text-secondary">
+                          All Workshops ({filteredWorkshops.length})
+                        </h5>
+                      </div>
+                      <div className="d-flex align-items-center gap-2 flex-wrap">
+                        <div className="btn-group btn-group-sm" role="group">
+                          <button
+                            type="button"
+                            className={`btn ${workshopFilter === 'all' ? 'btn-primary' : 'btn-outline-primary'}`}
+                            onClick={() => handleWorkshopFilterChange('all')}
+                          >
+                            All
+                          </button>
+                          <button
+                            type="button"
+                            className={`btn ${workshopFilter === 'active' ? 'btn-success' : 'btn-outline-success'}`}
+                            onClick={() => handleWorkshopFilterChange('active')}
+                          >
+                            Active
+                          </button>
+                          <button
+                            type="button"
+                            className={`btn ${workshopFilter === 'inactive' ? 'btn-danger' : 'btn-outline-danger'}`}
+                            onClick={() => handleWorkshopFilterChange('inactive')}
+                          >
+                            Inactive
+                          </button>
+                        </div>
+                      </div>
+                    </Card.Header>
+                    <Card.Body className="p-0">
+                      <div className="table-responsive d-none d-md-block">
+                        <Table hover className="custom-table align-middle mb-0">
+                          <thead className="table-light custom-table">
+                            <tr>
+                              <th className="ps-2">Workshop ID</th>
+                              <th>Title</th>
+                              <th><FaUser className="me-1" /> Instructor</th>
+                              <th><FaMapMarkerAlt className="me-1" /> Location</th>
+                              <th><FaVideo className="me-1" /> Mode</th>
+                              <th><FaCalendar className="me-1" /> Date</th>
+                              <th>Status</th>
+                              <th className="text-end pe-3">Actions</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {workshopCurrentRecords.length === 0 ? (
+                              <tr>
+                                <td colSpan="8" className="text-center py-4 text-muted">
+                                  No workshops found
+                                </td>
+                              </tr>
+                            ) : (
+                              workshopCurrentRecords.map((workshop) => (
+                                <tr key={workshop.workshop_id}>
+                                  <td className="ps-2">
+                                    <span className="text-muted small fw-medium">{workshop.workshop_id}</span>
+                                  </td>
+                                  <td className="fw-medium text-dark">
+                                    {workshop.title}
+                                    {workshop.title_hindi && (
+                                      <div className="small text-muted">{workshop.title_hindi}</div>
+                                    )}
+                                  </td>
+                                  <td className="small">
+                                    {workshop.instructor_name || '-'}
+                                  </td>
+                                  <td className="small">
+                                    {workshop.location || '-'}
+                                  </td>
+                                  <td className="small">
+                                    <Badge bg={workshop.mode === 'online' ? 'info' : 'secondary'}>
+                                      {workshop.mode || '-'}
+                                    </Badge>
+                                  </td>
+                                  <td className="small">
+                                    {formatDate(workshop.start_date_time)}
+                                  </td>
+                                  <td className="small">
+                                    <Badge bg={workshop.status === 'active' ? 'success' : 'danger'}>
+                                      {workshop.status === 'active' ? 'Active' : 'Inactive'}
+                                    </Badge>
+                                  </td>
+                                  <td className="text-end pe-3">
+                                    <div className="d-flex gap-1 justify-content-end">
+                                      <Button
+                                        variant={workshop.status === 'active' ? 'outline-success' : 'outline-secondary'}
+                                        size="sm"
+                                        className="p-1"
+                                        style={{ width: '28px', height: '28px' }}
+                                        onClick={() => toggleWorkshopStatus(workshop)}
+                                        title={workshop.status === 'active' ? 'Deactivate' : 'Activate'}
+                                      >
+                                        {workshop.status === 'active' ? <FaToggleOn style={{ fontSize: '12px' }} /> : <FaToggleOff style={{ fontSize: '12px' }} />}
+                                      </Button>
+                                      <Button
+                                        variant="outline-primary"
+                                        size="sm"
+                                        className="p-1"
+                                        style={{ width: '28px', height: '28px' }}
+                                        onClick={() => handleViewWorkshop(workshop)}
+                                        title="View"
+                                      >
+                                        <i className="bi bi-eye" style={{ fontSize: '12px' }}></i>
+                                      </Button>
+                                      <Button
+                                        variant="outline-warning"
+                                        size="sm"
+                                        className="p-1"
+                                        style={{ width: '28px', height: '28px' }}
+                                        onClick={() => handleEditWorkshop(workshop)}
+                                        title="Edit"
+                                      >
+                                        <FaEdit style={{ fontSize: '12px' }} />
+                                      </Button>
+                                      <Button
+                                        variant="outline-danger"
+                                        size="sm"
+                                        className="p-1"
+                                        style={{ width: '28px', height: '28px' }}
+                                        onClick={() => handleDeleteWorkshop(workshop)}
+                                        title="Delete"
+                                      >
+                                        <FaTrash style={{ fontSize: '12px' }} />
+                                      </Button>
+                                    </div>
+                                  </td>
+                                </tr>
+                              ))
+                            )}
+                          </tbody>
+                        </Table>
+                      </div>
+                      <div className="mobile-card-view d-md-none">
+                        {workshopCurrentRecords.length === 0 ? (
+                          <div className="text-center py-4 text-muted">
+                            No workshops found
+                          </div>
+                        ) : (
+                          workshopCurrentRecords.map((workshop) => (
+                            <div key={workshop.workshop_id} className="grooming-class-card">
+                              <div className="card-header">
+                                <span className="class-id">ID: {workshop.workshop_id}</span>
+                              </div>
+                              <div className="class-title">{workshop.title}</div>
+                              {workshop.title_hindi && (
+                                <div className="class-title-hindi">{workshop.title_hindi}</div>
+                              )}
+                              <div className="class-info">
+                                <div className="info-item">
+                                  <span className="label"><FaUser className="me-1" />Instructor:</span>{' '}
+                                  <span className="value">{workshop.instructor_name || '-'}</span>
+                                </div>
+                                <div className="info-item">
+                                  <span className="label"><FaMapMarkerAlt className="me-1" />Location:</span>{' '}
+                                  <span className="value">{workshop.location || '-'}</span>
+                                </div>
+                                <div className="info-item">
+                                  <span className="label"><FaVideo className="me-1" />Mode:</span>{' '}
+                                  <span className="value">{workshop.mode || '-'}</span>
+                                </div>
+                                <div className="info-item">
+                                  <span className="label"><FaCalendar className="me-1" />Date:</span>{' '}
+                                  <span className="value">{formatDate(workshop.start_date_time)}</span>
+                                </div>
+                                <div className="info-item">
+                                  <span className="label">Status:</span>{' '}
+                                  <Badge bg={workshop.status === 'active' ? 'success' : 'danger'}>{workshop.status === 'active' ? 'Active' : 'Inactive'}</Badge>
+                                </div>
+                              </div>
+                              <div className="card-actions">
+                                <Button
+                                  variant={workshop.status === 'active' ? 'outline-success' : 'outline-secondary'}
+                                  size="sm"
+                                  onClick={() => toggleWorkshopStatus(workshop)}
+                                >
+                                  {workshop.status === 'active' ? <FaToggleOn className="me-1" /> : <FaToggleOff className="me-1" />} 
+                                  {workshop.status === 'active' ? 'Active' : 'Inactive'}
+                                </Button>
+                                <Button
+                                  variant="outline-primary"
+                                  size="sm"
+                                  onClick={() => handleViewWorkshop(workshop)}
+                                >
+                                  <i className="bi bi-eye me-1"></i> View
+                                </Button>
+                                <Button
+                                  variant="outline-warning"
+                                  size="sm"
+                                  onClick={() => handleEditWorkshop(workshop)}
+                                >
+                                  <FaEdit className="me-1" /> Edit
+                                </Button>
+                                <Button
+                                  variant="outline-danger"
+                                  size="sm"
+                                  onClick={() => handleDeleteWorkshop(workshop)}
+                                >
+                                  <FaTrash className="me-1" /> Delete
+                                </Button>
+                              </div>
+                            </div>
+                          ))
+                        )}
+                      </div>
+                    </Card.Body>
+                    {workshopTotalPages > 1 && (
+                      <Card.Footer className="bg-light border-top py-2 px-3">
+                        <nav aria-label="Workshops pagination">
+                          <ul className="pagination justify-content-center pagination-sm mb-0">
+                            <li className={`page-item ${workshopCurrentPage === 1 ? 'disabled' : ''}`}>
+                              <button className="page-link" onClick={handleWorkshopPreviousPage}>‹</button>
+                            </li>
+                            {Array.from({ length: workshopTotalPages }, (_, i) => i + 1).filter(page => {
+                              return page >= workshopCurrentPage - 1 && page <= workshopCurrentPage + 1 && page <= workshopTotalPages && page >= 1
+                            }).map(page => (
+                              <li key={page} className={`page-item ${page === workshopCurrentPage ? 'active' : ''}`}>
+                                <button className="page-link" onClick={() => handleWorkshopPageChange(page)}>{page}</button>
+                              </li>
+                            ))}
+                            <li className={`page-item ${workshopCurrentPage === workshopTotalPages ? 'disabled' : ''}`}>
+                              <button className="page-link" onClick={handleWorkshopNextPage}>›</button>
+                            </li>
+                          </ul>
+                        </nav>
+                      </Card.Footer>
+                    )}
+                  </Card>
+                </Col>
+              </Row>
+              )}
             </Container>
           </div>
         </div>
@@ -782,8 +1105,8 @@ const ManageJobs = () => {
           <Modal.Title>Confirm Delete</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>Are you sure you want to delete this {activeTab === 'jobs' ? 'job' : 'seminar'}?</p>
-          <p className="text-muted">{activeTab === 'jobs' ? 'Job ID: ' : 'Seminar ID: '}{activeTab === 'jobs' ? selectedJob?.job_id : selectedSeminar?.seminar_id}</p>
+          <p>Are you sure you want to delete this {activeTab === 'jobs' ? 'job' : activeTab === 'seminars' ? 'seminar' : 'workshop'}?</p>
+          <p className="text-muted">{activeTab === 'jobs' ? 'Job ID: ' : activeTab === 'seminars' ? 'Seminar ID: ' : 'Workshop ID: '}{activeTab === 'jobs' ? selectedJob?.job_id : activeTab === 'seminars' ? selectedSeminar?.seminar_id : selectedWorkshop?.workshop_id}</p>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
@@ -797,7 +1120,7 @@ const ManageJobs = () => {
 
       <Modal show={showViewModal} onHide={() => setShowViewModal(false)} centered size="lg">
         <Modal.Header closeButton>
-          <Modal.Title>{activeTab === 'jobs' ? 'Job' : 'Seminar'} Details - {activeTab === 'jobs' ? selectedJob?.title : selectedSeminar?.title}</Modal.Title>
+          <Modal.Title>{activeTab === 'jobs' ? 'Job' : activeTab === 'seminars' ? 'Seminar' : 'Workshop'} Details - {activeTab === 'jobs' ? selectedJob?.title : activeTab === 'seminars' ? selectedSeminar?.title : selectedWorkshop?.title}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {activeTab === 'jobs' && selectedJob && (
@@ -928,6 +1251,72 @@ const ManageJobs = () => {
               )}
 
               <p><strong><FaCalendar className="me-1" />Last Date to Register:</strong> {formatDate(selectedSeminar.last_date_to_register)}</p>
+            </div>
+          )}
+          {activeTab === 'workshops' && selectedWorkshop && (
+            <div className="workshop-details">
+              <Row className="mb-3">
+                <Col md={6}>
+                  <p><strong>Workshop ID:</strong> {selectedWorkshop.workshop_id}</p>
+                  <p><strong><FaUser className="me-1" />Instructor:</strong> {selectedWorkshop.instructor_name || '-'}</p>
+                  <p><strong><FaMapMarkerAlt className="me-1" />Location:</strong> {selectedWorkshop.location || '-'}</p>
+                  <p><strong><FaVideo className="me-1" />Mode:</strong> {selectedWorkshop.mode || '-'}</p>
+                </Col>
+                <Col md={6}>
+                  <p><strong><FaCalendar className="me-1" />Start DateTime:</strong> {formatDateTime(selectedWorkshop.start_date_time)}</p>
+                  <p><strong><FaClock className="me-1" />End DateTime:</strong> {formatDateTime(selectedWorkshop.end_date_time)}</p>
+                  <p><strong>Status:</strong> <Badge bg={selectedWorkshop.status === 'active' ? 'success' : 'danger'}>{selectedWorkshop.status === 'active' ? 'Active' : 'Inactive'}</Badge></p>
+                  {selectedWorkshop.registration_link && (
+                    <p><strong><FaLink className="me-1" />Registration Link:</strong> <a href={selectedWorkshop.registration_link} target="_blank" rel="noopener noreferrer">Register Here</a></p>
+                  )}
+                </Col>
+              </Row>
+              
+              {selectedWorkshop.description && selectedWorkshop.description.length > 0 && (
+                <div className="mb-3">
+                  <h6>Description (English)</h6>
+                  <ul>
+                    {selectedWorkshop.description.map((desc, index) => (
+                      <li key={index}>{desc}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {selectedWorkshop.description_hindi && selectedWorkshop.description_hindi.length > 0 && (
+                <div className="mb-3">
+                  <h6>Description (Hindi)</h6>
+                  <ul>
+                    {selectedWorkshop.description_hindi.map((desc, index) => (
+                      <li key={index}>{desc}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {selectedWorkshop.eligibility && selectedWorkshop.eligibility.length > 0 && (
+                <div className="mb-3">
+                  <h6><FaGraduationCap className="me-1" />Eligibility</h6>
+                  <div className="d-flex flex-wrap gap-2">
+                    {selectedWorkshop.eligibility.map((elg, index) => (
+                      <Badge key={index} bg="info">{elg}</Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {selectedWorkshop.benefits && selectedWorkshop.benefits.length > 0 && (
+                <div className="mb-3">
+                  <h6><FaGift className="me-1" />Benefits</h6>
+                  <div className="d-flex flex-wrap gap-2">
+                    {selectedWorkshop.benefits.map((ben, index) => (
+                      <Badge key={index} bg="success">{ben}</Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <p><strong><FaCalendar className="me-1" />Last Date to Register:</strong> {formatDate(selectedWorkshop.last_date_to_register)}</p>
             </div>
           )}
         </Modal.Body>

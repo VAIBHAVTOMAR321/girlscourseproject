@@ -1,0 +1,538 @@
+import React, { useState, useEffect } from 'react'
+import { Container, Row, Col, Card, Button, Spinner, Modal, Form, Badge } from 'react-bootstrap'
+import AdminLeftNav from './AdminLeftNav'
+import AdminTopNav from './AdminTopNav'
+import axios from 'axios'
+import '../../assets/css/Enrollments.css'
+import { useAuth } from '../../contexts/AuthContext'
+import { useNavigate, useLocation } from 'react-router-dom'
+import { FaArrowLeft, FaPlus, FaEdit, FaTrash, FaClock, FaCalendar, FaChalkboardTeacher, FaLink, FaGraduationCap, FaGift, FaUser, FaMapMarkerAlt, FaGlobe } from 'react-icons/fa'
+
+const API_URL = 'https://brjobsedu.com/girls_course/girls_course_backend/api/workshop-items/'
+
+const AddWorkshop = () => {
+  const { accessToken } = useAuth()
+  const navigate = useNavigate()
+  const location = useLocation()
+  const [loading, setLoading] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [showSidebar, setShowSidebar] = useState(true)
+  const [showSuccessModal, setShowSuccessModal] = useState(false)
+  const [editMode, setEditMode] = useState(false)
+  const [editWorkshopId, setEditWorkshopId] = useState(null)
+
+  const [formData, setFormData] = useState({
+    title: '',
+    title_hindi: '',
+    description: [],
+    description_hindi: [],
+    status: 'active',
+    instructor_name: '',
+    location: '',
+    mode: 'offline',
+    start_date_time: '',
+    end_date_time: '',
+    registration_link: '',
+    eligibility: [],
+    benefits: [],
+    last_date_to_register: ''
+  })
+
+  const [descriptionInput, setDescriptionInput] = useState('')
+  const [descriptionHindiInput, setDescriptionHindiInput] = useState('')
+  const [eligibilityInput, setEligibilityInput] = useState('')
+  const [benefitInput, setBenefitInput] = useState('')
+
+  useEffect(() => {
+    if (location.state?.editData) {
+      const data = location.state.editData
+      setEditMode(true)
+      setEditWorkshopId(data.workshop_id)
+      setFormData({
+        title: data.title || '',
+        title_hindi: data.title_hindi || '',
+        description: data.description || [],
+        description_hindi: data.description_hindi || [],
+        status: data.status || 'active',
+        instructor_name: data.instructor_name || '',
+        location: data.location || '',
+        mode: data.mode || 'offline',
+        start_date_time: data.start_date_time ? data.start_date_time.slice(0, 16) : '',
+        end_date_time: data.end_date_time ? data.end_date_time.slice(0, 16) : '',
+        registration_link: data.registration_link || '',
+        eligibility: data.eligibility || [],
+        benefits: data.benefits || [],
+        last_date_to_register: data.last_date_to_register ? data.last_date_to_register.slice(0, 10) : ''
+      })
+    }
+  }, [location.state])
+
+  const getAuthConfig = () => ({
+    headers: {
+      'Authorization': `Bearer ${accessToken}`,
+      'Content-Type': 'application/json'
+    }
+  })
+
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setFormData({ ...formData, [name]: value })
+  }
+
+  const addDescription = () => {
+    if (descriptionInput.trim()) {
+      setFormData({
+        ...formData,
+        description: [...formData.description, descriptionInput.trim()]
+      })
+      setDescriptionInput('')
+    }
+  }
+
+  const removeDescription = (index) => {
+    const newDescriptions = formData.description.filter((_, i) => i !== index)
+    setFormData({ ...formData, description: newDescriptions })
+  }
+
+  const addDescriptionHindi = () => {
+    if (descriptionHindiInput.trim()) {
+      setFormData({
+        ...formData,
+        description_hindi: [...formData.description_hindi, descriptionHindiInput.trim()]
+      })
+      setDescriptionHindiInput('')
+    }
+  }
+
+  const removeDescriptionHindi = (index) => {
+    const newDescriptions = formData.description_hindi.filter((_, i) => i !== index)
+    setFormData({ ...formData, description_hindi: newDescriptions })
+  }
+
+  const addEligibility = () => {
+    if (eligibilityInput.trim()) {
+      setFormData({
+        ...formData,
+        eligibility: [...formData.eligibility, eligibilityInput.trim()]
+      })
+      setEligibilityInput('')
+    }
+  }
+
+  const removeEligibility = (index) => {
+    const newEligibility = formData.eligibility.filter((_, i) => i !== index)
+    setFormData({ ...formData, eligibility: newEligibility })
+  }
+
+  const addBenefit = () => {
+    if (benefitInput.trim()) {
+      setFormData({
+        ...formData,
+        benefits: [...formData.benefits, benefitInput.trim()]
+      })
+      setBenefitInput('')
+    }
+  }
+
+  const removeBenefit = (index) => {
+    const newBenefits = formData.benefits.filter((_, i) => i !== index)
+    setFormData({ ...formData, benefits: newBenefits })
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    
+    if (!formData.title.trim()) {
+      alert('Please enter title')
+      return
+    }
+
+    setSubmitting(true)
+
+    try {
+      const payload = {
+        title: formData.title.trim(),
+        title_hindi: formData.title_hindi?.trim() || '',
+        description: formData.description,
+        description_hindi: formData.description_hindi,
+        status: formData.status,
+        instructor_name: formData.instructor_name?.trim() || '',
+        location: formData.location?.trim() || '',
+        mode: formData.mode,
+        start_date_time: formData.start_date_time ? new Date(formData.start_date_time).toISOString() : '',
+        end_date_time: formData.end_date_time ? new Date(formData.end_date_time).toISOString() : '',
+        registration_link: formData.registration_link?.trim() || '',
+        eligibility: formData.eligibility,
+        benefits: formData.benefits,
+        last_date_to_register: formData.last_date_to_register
+      }
+
+      if (editMode && editWorkshopId) {
+        payload.workshop_id = editWorkshopId
+        await axios.put(API_URL, payload, getAuthConfig())
+      } else {
+        await axios.post(API_URL, payload, getAuthConfig())
+      }
+
+      setShowSuccessModal(true)
+      resetForm()
+    } catch (error) {
+      console.error('Error:', error)
+      alert('Failed to save workshop')
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  const resetForm = () => {
+    setFormData({
+      title: '',
+      title_hindi: '',
+      description: [],
+      description_hindi: [],
+      status: 'active',
+      instructor_name: '',
+      location: '',
+      mode: 'offline',
+      start_date_time: '',
+      end_date_time: '',
+      registration_link: '',
+      eligibility: [],
+      benefits: [],
+      last_date_to_register: ''
+    })
+    setEditMode(false)
+    setEditWorkshopId(null)
+  }
+
+  if (loading) {
+    return (
+      <div className="admin-layout">
+        <div className="admin-wrapper d-flex">
+          <AdminLeftNav show={showSidebar} setShow={setShowSidebar} />
+          <div className={`admin-main-content flex-grow-1 ${!showSidebar ? 'sidebar-compact' : ''}`}>
+            <AdminTopNav />
+            <div className="content-area">
+              <Container fluid className=''>
+                <div className="d-flex align-items-center justify-content-center h-100">
+                  <Spinner animation="border" variant="primary" style={{ width: '3rem', height: '3rem' }} />
+                </div>
+              </Container>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="admin-layout">
+      <div className="admin-wrapper d-flex">
+        <AdminLeftNav show={showSidebar} setShow={setShowSidebar} />
+        <div className={`admin-main-content flex-grow-1 ${!showSidebar ? 'sidebar-compact' : ''}`}>
+          <AdminTopNav />
+          <div className="content-area">
+            <Container className='mob-top-view'>
+              <div className="d-flex justify-content-between align-items-center mb-4 page-header">
+                <div className="d-flex align-items-center all-en-box gap-3">
+                  <Button variant="outline-secondary" size="sm" onClick={() => navigate('/AdminDashboard')} className="me-2">
+                    <FaArrowLeft /> Dashboard
+                  </Button>
+                  <h4 className="mb-0">{editMode ? 'Edit Workshop' : 'Add Workshop'}</h4>
+                </div>
+                <Button variant="outline-primary" size="sm" onClick={() => navigate('/ManageJobs')}>
+                  <FaChalkboardTeacher className="me-1" /> Manage Workshops
+                </Button>
+              </div>
+
+              <Row>
+                <Col xs={12}>
+                  <Card className="enrollments-table-card border">
+                    <Card.Header className="bg-light border-bottom py-2 px-3 d-flex justify-content-between align-items-center">
+                      <div className="d-flex align-items-center paid-btn gap-2">
+                        <h5 className="mb-0 fw-semibold text-secondary">
+                          Workshop Details
+                        </h5>
+                      </div>
+                      {editMode && (
+                        <Button variant="outline-secondary" size="sm" onClick={resetForm}>
+                          Cancel Edit
+                        </Button>
+                      )}
+                    </Card.Header>
+                    <Card.Body className="p-4">
+                      <Form onSubmit={handleSubmit}>
+                        <Row className="g-3">
+                          <Col md={6}>
+                            <Form.Group className="mb-3">
+                              <Form.Label>Workshop Title (English) *</Form.Label>
+                              <Form.Control
+                                type="text"
+                                name="title"
+                                value={formData.title}
+                                onChange={handleChange}
+                                placeholder="e.g. Full Stack Development Workshop"
+                                required
+                              />
+                            </Form.Group>
+                          </Col>
+                          <Col md={6}>
+                            <Form.Group className="mb-3">
+                              <Form.Label>Workshop Title (Hindi)</Form.Label>
+                              <Form.Control
+                                type="text"
+                                name="title_hindi"
+                                value={formData.title_hindi}
+                                onChange={handleChange}
+                                placeholder="e.g. फुल स्टैक डेवलपमेंट वर्कशॉप"
+                              />
+                            </Form.Group>
+                          </Col>
+
+                          <Col md={6}>
+                            <Form.Group className="mb-3">
+                              <Form.Label><FaUser className="me-1" /> Instructor Name</Form.Label>
+                              <Form.Control
+                                type="text"
+                                name="instructor_name"
+                                value={formData.instructor_name}
+                                onChange={handleChange}
+                                placeholder="e.g. Rahul Sharma"
+                              />
+                            </Form.Group>
+                          </Col>
+                          <Col md={6}>
+                            <Form.Group className="mb-3">
+                              <Form.Label><FaGlobe className="me-1" /> Mode</Form.Label>
+                              <Form.Select
+                                name="mode"
+                                value={formData.mode}
+                                onChange={handleChange}
+                              >
+                                <option value="offline">Offline</option>
+                                <option value="online">Online</option>
+                                <option value="hybrid">Hybrid</option>
+                              </Form.Select>
+                            </Form.Group>
+                          </Col>
+
+                          <Col md={6}>
+                            <Form.Group className="mb-3">
+                              <Form.Label><FaMapMarkerAlt className="me-1" /> Location</Form.Label>
+                              <Form.Control
+                                type="text"
+                                name="location"
+                                value={formData.location}
+                                onChange={handleChange}
+                                placeholder="e.g. Dehradun"
+                              />
+                            </Form.Group>
+                          </Col>
+                          <Col md={6}>
+                            <Form.Group className="mb-3">
+                              <Form.Label>Status</Form.Label>
+                              <Form.Select
+                                name="status"
+                                value={formData.status}
+                                onChange={handleChange}
+                              >
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                              </Form.Select>
+                            </Form.Group>
+                          </Col>
+
+                          <Col md={6}>
+                            <Form.Group className="mb-3">
+                              <Form.Label><FaClock className="me-1" /> Start Date & Time</Form.Label>
+                              <Form.Control
+                                type="datetime-local"
+                                name="start_date_time"
+                                value={formData.start_date_time}
+                                onChange={handleChange}
+                              />
+                            </Form.Group>
+                          </Col>
+                          <Col md={6}>
+                            <Form.Group className="mb-3">
+                              <Form.Label><FaClock className="me-1" /> End Date & Time</Form.Label>
+                              <Form.Control
+                                type="datetime-local"
+                                name="end_date_time"
+                                value={formData.end_date_time}
+                                onChange={handleChange}
+                              />
+                            </Form.Group>
+                          </Col>
+
+                          <Col md={6}>
+                            <Form.Group className="mb-3">
+                              <Form.Label><FaCalendar className="me-1" /> Last Date to Register</Form.Label>
+                              <Form.Control
+                                type="date"
+                                name="last_date_to_register"
+                                value={formData.last_date_to_register}
+                                onChange={handleChange}
+                              />
+                            </Form.Group>
+                          </Col>
+                          <Col md={6}>
+                            <Form.Group className="mb-3">
+                              <Form.Label><FaLink className="me-1" /> Registration Link</Form.Label>
+                              <Form.Control
+                                type="url"
+                                name="registration_link"
+                                value={formData.registration_link}
+                                onChange={handleChange}
+                                placeholder="e.g. https://example.com/workshop-register"
+                              />
+                            </Form.Group>
+                          </Col>
+
+                          <Col md={12}>
+                            <Form.Group className="mb-3">
+                              <Form.Label>Description (English) - Add multiple items</Form.Label>
+                              <div className="d-flex gap-2 mb-2">
+                                <Form.Control
+                                  type="text"
+                                  value={descriptionInput}
+                                  onChange={(e) => setDescriptionInput(e.target.value)}
+                                  placeholder="e.g. Introduction to Web Development"
+                                  onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addDescription())}
+                                />
+                                <Button variant="outline-primary" onClick={addDescription}>
+                                  <FaPlus />
+                                </Button>
+                              </div>
+                              <div className="d-flex flex-wrap gap-2">
+                                {formData.description.map((desc, index) => (
+                                  <Badge key={index} bg="primary" className="d-flex align-items-center gap-1 p-2">
+                                    {desc}
+                                    <button type="button" className="btn-close btn-close-white ms-1" style={{ fontSize: '10px' }} onClick={() => removeDescription(index)}></button>
+                                  </Badge>
+                                ))}
+                              </div>
+                            </Form.Group>
+                          </Col>
+
+                          <Col md={12}>
+                            <Form.Group className="mb-3">
+                              <Form.Label>Description (Hindi) - Add multiple items</Form.Label>
+                              <div className="d-flex gap-2 mb-2">
+                                <Form.Control
+                                  type="text"
+                                  value={descriptionHindiInput}
+                                  onChange={(e) => setDescriptionHindiInput(e.target.value)}
+                                  placeholder="e.g. वेब डेवलपमेंट का परिचय"
+                                  onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addDescriptionHindi())}
+                                />
+                                <Button variant="outline-primary" onClick={addDescriptionHindi}>
+                                  <FaPlus />
+                                </Button>
+                              </div>
+                              <div className="d-flex flex-wrap gap-2">
+                                {formData.description_hindi.map((desc, index) => (
+                                  <Badge key={index} bg="success" className="d-flex align-items-center gap-1 p-2">
+                                    {desc}
+                                    <button type="button" className="btn-close btn-close-white ms-1" style={{ fontSize: '10px' }} onClick={() => removeDescriptionHindi(index)}></button>
+                                  </Badge>
+                                ))}
+                              </div>
+                            </Form.Group>
+                          </Col>
+
+                          <Col md={12}>
+                            <Form.Group className="mb-3">
+                              <Form.Label><FaGraduationCap className="me-1" /> Eligibility - Add multiple</Form.Label>
+                              <div className="d-flex gap-2 mb-2">
+                                <Form.Control
+                                  type="text"
+                                  value={eligibilityInput}
+                                  onChange={(e) => setEligibilityInput(e.target.value)}
+                                  placeholder="e.g. 12th, graduate"
+                                  onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addEligibility())}
+                                />
+                                <Button variant="outline-primary" onClick={addEligibility}>
+                                  <FaPlus />
+                                </Button>
+                              </div>
+                              <div className="d-flex flex-wrap gap-2">
+                                {formData.eligibility.map((el, index) => (
+                                  <Badge key={index} bg="info" className="d-flex align-items-center gap-1 p-2">
+                                    {el}
+                                    <button type="button" className="btn-close btn-close-white ms-1" style={{ fontSize: '10px' }} onClick={() => removeEligibility(index)}></button>
+                                  </Badge>
+                                ))}
+                              </div>
+                            </Form.Group>
+                          </Col>
+
+                          <Col md={12}>
+                            <Form.Group className="mb-3">
+                              <Form.Label><FaGift className="me-1" /> Benefits - Add multiple</Form.Label>
+                              <div className="d-flex gap-2 mb-2">
+                                <Form.Control
+                                  type="text"
+                                  value={benefitInput}
+                                  onChange={(e) => setBenefitInput(e.target.value)}
+                                  placeholder="e.g. Certificate, Hands-on Practice"
+                                  onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addBenefit())}
+                                />
+                                <Button variant="outline-primary" onClick={addBenefit}>
+                                  <FaPlus />
+                                </Button>
+                              </div>
+                              <div className="d-flex flex-wrap gap-2">
+                                {formData.benefits.map((ben, index) => (
+                                  <Badge key={index} bg="warning" text="dark" className="d-flex align-items-center gap-1 p-2">
+                                    {ben}
+                                    <button type="button" className="btn-close btn-close-white ms-1" style={{ fontSize: '10px' }} onClick={() => removeBenefit(index)}></button>
+                                  </Badge>
+                                ))}
+                              </div>
+                            </Form.Group>
+                          </Col>
+                        </Row>
+
+                        <div className="d-flex gap-2 mt-4">
+                          <Button variant="primary" type="submit" disabled={submitting}>
+                            {submitting ? (
+                              <Spinner animation="border" size="sm" />
+                            ) : (
+                              <>
+                                <FaPlus className="me-1" /> {editMode ? 'Update Workshop' : 'Add Workshop'}
+                              </>
+                            )}
+                          </Button>
+                          <Button variant="outline-secondary" onClick={resetForm}>
+                            Reset
+                          </Button>
+                        </div>
+                      </Form>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              </Row>
+            </Container>
+          </div>
+        </div>
+      </div>
+
+      <Modal show={showSuccessModal} onHide={() => setShowSuccessModal(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Success</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>Workshop has been {editMode ? 'updated' : 'added'} successfully!</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={() => setShowSuccessModal(false)}>
+            OK
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </div>
+  )
+}
+
+export default AddWorkshop
