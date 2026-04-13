@@ -6,6 +6,9 @@ import '../../assets/css/AdminLeftNav.css' // Import specific CSS
 const AdminLeftNav = ({ show, setShow }) => {
   const [showOffcanvas, setShowOffcanvas] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
+  const [showSchemesMenu, setShowSchemesMenu] = useState(false)
+  const [showGroomingMenu, setShowGroomingMenu] = useState(false)
+  const [showJobsMenu, setShowJobsMenu] = useState(false)
 
   useEffect(() => {
     const checkMobile = () => {
@@ -76,30 +79,86 @@ const AdminLeftNav = ({ show, setShow }) => {
               <i className="bi bi-question-circle nav-icon"></i>
               <span className="nav-text">Quiz Management</span>
             </Nav.Link>
-            <Nav.Link as={Link} to="/ManageGovtSchemes" className="nav-link-custom ">
-              <i className="bi bi-file-earmark-text nav-icon"></i>
-              <span className="nav-text">Manage Schemes</span>
-            </Nav.Link>
-            <Nav.Link as={Link} to="/AddGovtSchemes" className="nav-link-custom ">
-              <i className="bi bi-plus-circle nav-icon"></i>
-              <span className="nav-text">Add Scheme</span>
-            </Nav.Link>
-            <Nav.Link as={Link} to="/CreateGroomingClass" className="nav-link-custom ">
-              <i className="bi bi-person-badge nav-icon"></i>
-              <span className="nav-text">Create Grooming</span>
-            </Nav.Link>
-            <Nav.Link as={Link} to="/ManageGroomingClasses" className="nav-link-custom ">
-              <i className="bi bi-calendar-check nav-icon"></i>
-              <span className="nav-text">Manage Grooming</span>
-            </Nav.Link>
-            <Nav.Link as={Link} to="/AddJob" className="nav-link-custom ">
-              <i className="bi bi-briefcase nav-icon"></i>
-              <span className="nav-text">Add Job</span>
-            </Nav.Link>
-            <Nav.Link as={Link} to="/ManageJobs" className="nav-link-custom ">
-              <i className="bi bi-briefcase-fill nav-icon"></i>
-              <span className="nav-text">Manage Jobs</span>
-            </Nav.Link>
+
+            {/* Schemes Dropdown */}
+            <div className="dropdown-menu-wrapper">
+              <div 
+                className="nav-link-custom d-flex align-items-center justify-content-between"
+                onClick={() => setShowSchemesMenu(!showSchemesMenu)}
+                style={{ cursor: 'pointer' }}
+              >
+                <span><i className="bi bi-file-earmark-text nav-icon"></i> <span className="nav-text">Schemes</span></span>
+                <i className={`bi bi-chevron-${showSchemesMenu ? 'up' : 'down'}`}></i>
+              </div>
+              {showSchemesMenu && (
+                <div className="dropdown-submenu">
+                  <Nav.Link as={Link} to="/ManageGovtSchemes" className="nav-link-custom ">
+                    <i className="bi bi-list nav-icon"></i>
+                    <span className="nav-text">Manage Schemes</span>
+                  </Nav.Link>
+                  <Nav.Link as={Link} to="/AddGovtSchemes" className="nav-link-custom ">
+                    <i className="bi bi-plus-circle nav-icon"></i>
+                    <span className="nav-text">Add Scheme</span>
+                  </Nav.Link>
+                </div>
+              )}
+            </div>
+
+            {/* Grooming Dropdown */}
+            <div className="dropdown-menu-wrapper">
+              <div 
+                className="nav-link-custom d-flex align-items-center justify-content-between"
+                onClick={() => setShowGroomingMenu(!showGroomingMenu)}
+                style={{ cursor: 'pointer' }}
+              >
+                <span><i className="bi bi-person-badge nav-icon"></i> <span className="nav-text">Grooming</span></span>
+                <i className={`bi bi-chevron-${showGroomingMenu ? 'up' : 'down'}`}></i>
+              </div>
+              {showGroomingMenu && (
+                <div className="dropdown-submenu">
+                  <Nav.Link as={Link} to="/CreateGroomingClass" className="nav-link-custom ">
+                    <i className="bi bi-plus-circle nav-icon"></i>
+                    <span className="nav-text">Create Grooming</span>
+                  </Nav.Link>
+                  <Nav.Link as={Link} to="/ManageGroomingClasses" className="nav-link-custom ">
+                    <i className="bi bi-calendar-check nav-icon"></i>
+                    <span className="nav-text">Manage Grooming</span>
+                  </Nav.Link>
+                </div>
+              )}
+            </div>
+
+            {/* Jobs/Seminars/Workshops Dropdown */}
+            <div className="dropdown-menu-wrapper">
+              <div 
+                className="nav-link-custom d-flex align-items-center justify-content-between"
+                onClick={() => setShowJobsMenu(!showJobsMenu)}
+                style={{ cursor: 'pointer' }}
+              >
+                <span><i className="bi bi-briefcase nav-icon"></i> <span className="nav-text">Jobs & More</span></span>
+                <i className={`bi bi-chevron-${showJobsMenu ? 'up' : 'down'}`}></i>
+              </div>
+              {showJobsMenu && (
+                <div className="dropdown-submenu">
+                  <Nav.Link as={Link} to="/AddJob" className="nav-link-custom ">
+                    <i className="bi bi-plus-circle nav-icon"></i>
+                    <span className="nav-text">Add Job</span>
+                  </Nav.Link>
+                  <Nav.Link as={Link} to="/ManageJobs" className="nav-link-custom ">
+                    <i className="bi bi-briefcase-fill nav-icon"></i>
+                    <span className="nav-text">Manage Jobs</span>
+                  </Nav.Link>
+                  <Nav.Link as={Link} to="/AddSeminar" className="nav-link-custom ">
+                    <i className="bi bi-plus-circle nav-icon"></i>
+                    <span className="nav-text">Add Seminar</span>
+                  </Nav.Link>
+                  <Nav.Link as={Link} to="/AddWorkshop" className="nav-link-custom ">
+                    <i className="bi bi-hammer nav-icon"></i>
+                    <span className="nav-text">Add Workshop</span>
+                  </Nav.Link>
+                </div>
+              )}
+            </div>
           </Nav>
         </div>
       )}
