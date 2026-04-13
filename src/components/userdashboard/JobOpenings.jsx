@@ -993,6 +993,19 @@ const JobOpenings = () => {
           padding-right: 8px;
           font-size: 0.75rem;
         }
+        .nav-tabs .nav-link {
+          transition: all 0.3s ease;
+        }
+        .nav-tabs .nav-link.active {
+          background-color: #0d6efd !important;
+          color: white !important;
+          border-color: #0d6efd !important;
+          font-weight: 600;
+        }
+        .nav-tabs .nav-link:not(.active):hover {
+          background-color: #f0f4ff !important;
+          color: #0d6efd !important;
+        }
       `}</style>
 
       <Modal show={showJobModal} onHide={closeModal} size="lg" centered key={language}>
