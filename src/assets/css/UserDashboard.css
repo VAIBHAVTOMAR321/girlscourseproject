@@ -124,9 +124,9 @@ body.sidebar-compact .dashboard-content {
 }
 
 /* Content Wrapper Styles */
-.content-wrapper {
+/* .content-wrapper {
   padding: 15px;
-}
+} */
 
 .content-section {
   background: #ffffff;
@@ -241,13 +241,13 @@ padding: 8px !important;
 
 /* Image Wrapper Styles */
 .image-wrapper {
-  padding: 25px;
+  /* padding: 25px; */
   padding-top: 0;
 }
 
 .book-image-container {
   position: relative;
-  height: 350px;
+  /* height: 350px; */
   overflow: hidden;
   border-radius: 15px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
