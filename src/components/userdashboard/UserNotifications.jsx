@@ -114,7 +114,152 @@ import '../../assets/css/UserNotifications.css'
 
   const govtExamTypes = ['IIT-JEE', 'NEET', 'UPSC', 'SSC', 'Banking', 'Railway', 'StatePSC']
 
-  const govtExamData = {
+  // Get translated exam data based on current language
+  const getExamData = () => {
+    const isHindi = language === 'hi'
+    return {
+      'IIT-JEE': {
+        title: isHindi ? getTranslation('exam.iitJee', language) : 'IIT-JEE (Engineering)',
+        titleKey: 'exam.iitJee',
+        icon: <FaCog />,
+        fullPath: isHindi ? '12वीं (PCM) → JEE Main → JEE Advanced → IIT/NIT/IIIT → B.Tech' : '12th (PCM) → JEE Main → JEE Advanced → IIT/NIT/IIIT → B.Tech',
+        steps: [
+          { step: 1, titleKey: 'step.complete12thPcm', title: isHindi ? getTranslation('step.complete12thPcm', language) : 'Complete 12th with PCM', description: isHindi ? '75%+ के साथ Physics, Chemistry, Mathematics पूरा करें' : 'Complete 12th with Physics, Chemistry, Mathematics with 75%+', duration: isHindi ? '2 साल' : '2 Years' },
+          { step: 2, titleKey: 'step.prepareJeeMain', title: isHindi ? getTranslation('step.prepareJeeMain', language) : 'Prepare for JEE Main', description: isHindi ? 'PCM का पूरा पाठ्यक्रम कवर करें' : 'Cover complete syllabus of PCM', duration: isHindi ? '1-2 साल' : '1-2 Years' },
+          { step: 3, titleKey: 'step.appearJeeMain', title: isHindi ? getTranslation('step.appearJeeMain', language) : 'Appear for JEE Main', description: isHindi ? 'JEE Main exam क्लियर करें' : 'Clear JEE Main exam', duration: isHindi ? 'परीक्षा' : 'Exam' },
+          { step: 4, titleKey: 'step.prepareJeeAdvanced', title: isHindi ? getTranslation('step.prepareJeeAdvanced', language) : 'Prepare for JEE Advanced', description: isHindi ? 'JEE Main क्वालिफाई होने पर' : 'If qualified in JEE Main', duration: isHindi ? '6-12 महीने' : '6-12 Months' },
+          { step: 5, titleKey: 'step.josaaCounseling', title: isHindi ? getTranslation('step.josaaCounseling', language) : 'JoSAA Counseling', description: isHindi ? 'काउंसलिंग में भाग लें' : 'Participate in counseling', duration: isHindi ? 'परिणाम के बाद' : 'After Results' },
+          { step: 6, titleKey: 'step.completeBtech', title: isHindi ? getTranslation('step.completeBtech', language) : 'Complete B.Tech', description: isHindi ? '4 साल का इंजीनियरिंग डिग्री' : '4-year engineering degree', duration: isHindi ? '4 साल' : '4 Years' }
+        ],
+        colleges: [
+          { name: isHindi ? 'IIT मुंबई' : 'IIT Bombay', location: isHindi ? 'मुंबई' : 'Mumbai', seats: '~1000' },
+          { name: isHindi ? 'IIT दिल्ली' : 'IIT Delhi', location: isHindi ? 'दिल्ली' : 'Delhi', seats: '~900' },
+          { name: isHindi ? 'IIT मद्रास' : 'IIT Madras', location: isHindi ? 'चेन्नई' : 'Chennai', seats: '~800' },
+          { name: isHindi ? 'NIT त्रिची' : 'NIT Trichy', location: isHindi ? 'तिरुचिरापल्ली' : 'Tiruchirappalli', seats: '~1500' },
+          { name: isHindi ? 'NIT सुराथकल' : 'NIT Surathkal', location: isHindi ? 'कर्नाटक' : 'Karnataka', seats: '~1200' }
+        ]
+      },
+      'NEET': {
+        title: isHindi ? getTranslation('exam.neet', language) : 'NEET (Medical)',
+        titleKey: 'exam.neet',
+        icon: <FaHeartbeat />,
+        fullPath: isHindi ? '12वीं (PCB) → NEET → MBBS → डॉक्टर' : '12th (PCB) → NEET → MBBS → Doctor',
+        steps: [
+          { step: 1, titleKey: 'step.complete12thPcb', title: isHindi ? getTranslation('step.complete12thPcb', language) : 'Complete 12th with PCB', description: isHindi ? 'Physics, Chemistry, Biology के साथ 12वीं पूरा करें' : 'Complete 12th with Physics, Chemistry, Biology', duration: isHindi ? '2 साल' : '2 Years' },
+          { step: 2, titleKey: 'step.prepareNeet', title: isHindi ? getTranslation('step.prepareNeet', language) : 'Prepare for NEET', description: isHindi ? 'PCB का पूरा पाठ्यक्रम कवर करें' : 'Cover complete PCB syllabus', duration: isHindi ? '1-2 साल' : '1-2 Years' },
+          { step: 3, titleKey: 'step.appearNeet', title: isHindi ? getTranslation('step.appearNeet', language) : 'Appear for NEET', description: isHindi ? 'NEET exam क्लियर करें' : 'Clear NEET exam', duration: isHindi ? 'परीक्षा' : 'Exam' },
+          { step: 4, titleKey: 'step.neetCounseling', title: isHindi ? getTranslation('step.neetCounseling', language) : 'NEET Counseling', description: isHindi ? 'All India Quota में भाग लें' : 'Participate in All India Quota', duration: isHindi ? 'परिणाम के बाद' : 'After Results' },
+          { step: 5, titleKey: 'step.completeMbbs', title: isHindi ? getTranslation('step.completeMbbs', language) : 'Complete MBBS', description: isHindi ? 'इंटर्नशिप सहित 5.5 साल' : '5.5 years including internship', duration: isHindi ? '5.5 साल' : '5.5 Years' }
+        ],
+        colleges: [
+          { name: isHindi ? 'AIIMS दिल्ली' : 'AIIMS Delhi', location: isHindi ? 'दिल्ली' : 'Delhi', seats: '~100' },
+          { name: isHindi ? 'मौलाना आजाद मेडिकल कॉलेज' : 'Maulana Azad Medical College', location: isHindi ? 'दिल्ली' : 'Delhi', seats: '~250' },
+          { name: isHindi ? 'लेडी हार्डिंग मेडिकल कॉलेज' : 'Lady Hardinge Medical College', location: isHindi ? 'दिल्ली' : 'Delhi', seats: '~200' },
+          { name: isHindi ? 'ग्रांट मेडिकल कॉलेज' : 'Grant Medical College', location: isHindi ? 'मुंबई' : 'Mumbai', seats: '~200' }
+        ]
+      },
+      'UPSC': {
+        title: isHindi ? getTranslation('exam.upsc', language) : 'UPSC Civil Services',
+        titleKey: 'exam.upsc',
+        icon: <FaLandmark />,
+        fullPath: isHindi ? 'ग्रेजुएशन → UPSC CSE → IAS/IPS/IFS' : 'Graduate → UPSC CSE → IAS/IPS/IFS',
+        steps: [
+          { step: 1, titleKey: 'step.completeGraduation', title: isHindi ? getTranslation('step.completeGraduation', language) : 'Complete Graduation', description: isHindi ? 'किसी भी स्ट्रीम में ग्रेजुएट करें' : 'Graduate in any stream', duration: isHindi ? '3 साल' : '3 Years' },
+          { step: 2, titleKey: 'step.basicPrep', title: isHindi ? getTranslation('step.basicPrep', language) : 'Basic Preparation', description: isHindi ? 'NCERTs, बुनियादी किताबें पढ़ें' : 'Read NCERTs, basic books', duration: isHindi ? '6-12 महीने' : '6-12 Months' },
+          { step: 3, titleKey: 'step.deepPrep', title: isHindi ? getTranslation('step.deepPrep', language) : 'Deep Preparation', description: isHindi ? 'मानक किताबें, उत्तर लेखन' : 'Standard books, answer writing', duration: isHindi ? '1-2 साल' : '1-2 Years' },
+          { step: 4, titleKey: 'step.appearPrelims', title: isHindi ? getTranslation('step.appearPrelims', language) : 'Appear for Prelims', description: isHindi ? 'UPSC Prelims क्लियर करें' : 'Clear UPSC Prelims', duration: isHindi ? 'परीक्षा' : 'Exam' },
+          { step: 5, titleKey: 'step.appearMains', title: isHindi ? getTranslation('step.appearMains', language) : 'Appear for Mains', description: isHindi ? 'Mains क्लियर करें (9 पेपर)' : 'Clear Mains (9 papers)', duration: isHindi ? 'परीक्षा' : 'Exam' },
+          { step: 6, titleKey: 'step.interview', title: isHindi ? getTranslation('step.interview', language) : 'Interview', description: isHindi ? 'व्यक्तित्व परीक्षण' : 'Personality Test', duration: isHindi ? '30 मिनट' : '30 Minutes' },
+          { step: 7, titleKey: 'step.serviceAllocation', title: isHindi ? getTranslation('step.serviceAllocation', language) : 'Service Allocation', description: isHindi ? 'IAS/IPS/IFS सेवा प्राप्त करें' : 'Get IAS/IPS/IFS service', duration: isHindi ? 'परिणाम के बाद' : 'After Result' }
+        ],
+        colleges: [
+          { name: isHindi ? 'IAS (भारतीय प्रशासनिक सेवा)' : 'IAS (Indian Administrative Service)', location: isHindi ? 'पूरा भारत' : 'All India', seats: isHindi ? 'विभिन्न' : 'Various' },
+          { name: isHindi ? 'IPS (भारतीय पुलिस सेवा)' : 'IPS (Indian Police Service)', location: isHindi ? 'पूरा भारत' : 'All India', seats: isHindi ? 'विभिन्न' : 'Various' },
+          { name: isHindi ? 'IFS (भारतीय विदेश सेवा)' : 'IFS (Indian Foreign Service)', location: isHindi ? 'पूरा भारत' : 'All India', seats: isHindi ? 'विभिन्न' : 'Various' }
+        ]
+      },
+      'SSC': {
+        title: isHindi ? getTranslation('exam.ssc', language) : 'SSC Exams',
+        titleKey: 'exam.ssc',
+        icon: <FaUserShield />,
+        fullPath: isHindi ? '12वीं/ग्रेजुएशन → SSC Exams → सरकारी नौकरी' : '12th/Graduate → SSC Exams → Government Job',
+        steps: [
+          { step: 1, titleKey: 'step.checkEligibility', title: isHindi ? getTranslation('step.checkEligibility', language) : 'Check Eligibility', description: isHindi ? 'शैक्षिक योग्यता जांचें' : 'Check education qualification', duration: isHindi ? 'परीक्षा से पहले' : 'Before Exam' },
+          { step: 2, titleKey: 'step.basicPrep', title: isHindi ? getTranslation('step.basicPrep', language) : 'Basic Preparation', description: isHindi ? 'English, Math, Reasoning, GK' : 'English, Math, Reasoning, GK', duration: isHindi ? '3-6 महीने' : '3-6 Months' },
+          { step: 3, titleKey: 'step.deepPrep', title: isHindi ? getTranslation('step.deepPrep', language) : 'Deep Preparation', description: isHindi ? 'पिछले पेपर सॉल्व करें' : 'Solve previous papers', duration: isHindi ? '6-12 महीने' : '6-12 Months' },
+          { step: 4, titleKey: 'step.appearTier1', title: isHindi ? getTranslation('step.appearTier1', language) : 'Appear for Tier 1', description: isHindi ? 'CBT exam क्लियर करें' : 'Clear CBT exam', duration: isHindi ? 'परीक्षा' : 'Exam' },
+          { step: 5, titleKey: 'step.tier2Dv', title: isHindi ? getTranslation('step.tier2Dv', language) : 'Tier 2 & DV', description: isHindi ? 'Descriptive/Typing + Document Verification' : 'Descriptive/Typing + Document Verification', duration: isHindi ? 'Tier 1 के बाद' : 'After Tier 1' },
+          { step: 6, titleKey: 'step.joining', title: isHindi ? getTranslation('step.joining', language) : 'Joining', description: isHindi ? 'जॉइनिंग लेटर प्राप्त करें' : 'Get joining letter', duration: isHindi ? 'DV के बाद' : 'After DV' }
+        ],
+        colleges: [
+          { name: isHindi ? 'इनकम टैक्स इंस्पेक्टर' : 'Income Tax Inspector', location: isHindi ? 'केंद्रीय' : 'Central', seats: isHindi ? 'विभिन्न' : 'Various' },
+          { name: isHindi ? 'एक्साइज इंस्पेक्टर' : 'Excise Inspector', location: isHindi ? 'केंद्रीय' : 'Central', seats: isHindi ? 'विभिन्न' : 'Various' },
+          { name: isHindi ? 'सहायक वर्ग अधिकारी' : 'Assistant Section Officer', location: isHindi ? 'मंत्रालय' : 'Ministries', seats: isHindi ? 'विभिन्न' : 'Various' }
+        ]
+      },
+      'Banking': {
+        title: isHindi ? getTranslation('exam.banking', language) : 'Banking Exams',
+        titleKey: 'exam.banking',
+        icon: <FaMoneyBillWave />,
+        fullPath: isHindi ? 'ग्रेजुएशन → PO/Clerk Exam → बैंक नौकरी' : 'Graduate → PO/Clerk Exam → Bank Job',
+        steps: [
+          { step: 1, titleKey: 'step.completeGraduation', title: isHindi ? getTranslation('step.completeGraduation', language) : 'Complete Graduation', description: isHindi ? 'किसी भी स्ट्रीम में ग्रेजुएट करें' : 'Graduate in any stream', duration: isHindi ? '3 साल' : '3 Years' },
+          { step: 2, titleKey: 'step.checkEligibility', title: isHindi ? getTranslation('step.checkEligibility', language) : 'Check Eligibility', description: isHindi ? 'उम्र सीमा, प्रतिशत जांचें' : 'Check age limit, percentage', duration: isHindi ? 'परीक्षा से पहले' : 'Before Exam' },
+          { step: 3, titleKey: 'step.basicPrep', title: isHindi ? getTranslation('step.basicPrep', language) : 'Basic Preparation', description: isHindi ? 'Quant, Reasoning, English, GA' : 'Quant, Reasoning, English, GA', duration: isHindi ? '3-6 महीने' : '3-6 Months' },
+          { step: 4, titleKey: 'step.appearPrelims', title: isHindi ? getTranslation('step.appearPrelims', language) : 'Appear for Prelims', description: isHindi ? 'Prelims क्लियर करें' : 'Clear Prelims', duration: isHindi ? 'परीक्षा' : 'Exam' },
+          { step: 5, titleKey: 'step.appearMains', title: isHindi ? getTranslation('step.appearMains', language) : 'Appear for Mains', description: isHindi ? 'Mains क्लियर करें' : 'Clear Mains', duration: isHindi ? 'Prelims के बाद' : 'After Prelims' },
+          { step: 6, titleKey: 'step.interview', title: isHindi ? getTranslation('step.interview', language) : 'GD & Interview', description: isHindi ? 'Group Discussion + PI' : 'Group Discussion + PI', duration: isHindi ? 'Mains के बाद' : 'After Mains' },
+          { step: 7, titleKey: 'step.joining', title: isHindi ? getTranslation('step.joining', language) : 'Joining', description: isHindi ? 'PO/Clerk पद प्राप्त करें' : 'Get PO/Clerk position', duration: isHindi ? 'परिणाम के बाद' : 'After Result' }
+        ],
+        colleges: [
+          { name: isHindi ? 'SBI PO' : 'SBI PO', location: isHindi ? 'पूरा भारत' : 'All India', seats: isHindi ? 'विभिन्न' : 'Various' },
+          { name: isHindi ? 'IBPS PO' : 'IBPS PO', location: isHindi ? 'पूरा भारत' : 'All India', seats: isHindi ? 'विभिन्न' : 'Various' },
+          { name: isHindi ? 'RRB क्लर्क' : 'RRB Clerk', location: isHindi ? 'राज्यवार' : 'State-wise', seats: isHindi ? 'विभिन्न' : 'Various' }
+        ]
+      },
+      'Railway': {
+        title: isHindi ? getTranslation('exam.railway', language) : 'Railway Exams (RRB)',
+        titleKey: 'exam.railway',
+        icon: <FaTrain />,
+        fullPath: isHindi ? '12वीं/ग्रेजुएशन → RRB Exam → रेलवे नौकरी' : '12th/Graduate → RRB Exam → Railway Job',
+        steps: [
+          { step: 1, titleKey: 'step.checkEligibility', title: isHindi ? getTranslation('step.checkEligibility', language) : 'Check Eligibility', description: isHindi ? 'योग्यता, उम्र जांचें' : 'Check qualification, age', duration: isHindi ? 'परीक्षा से पहले' : 'Before Exam' },
+          { step: 2, titleKey: 'step.basicPrep', title: isHindi ? getTranslation('step.basicPrep', language) : 'Basic Preparation', description: isHindi ? 'Math, Reasoning, GA' : 'Math, Reasoning, GA', duration: isHindi ? '2-3 महीने' : '2-3 Months' },
+          { step: 3, titleKey: 'step.deepPrep', title: isHindi ? getTranslation('step.deepPrep', language) : 'Deep Preparation', description: isHindi ? 'पिछले पेपर सॉल्व करें' : 'Solve previous papers', duration: isHindi ? '6-12 महीने' : '6-12 Months' },
+          { step: 4, titleKey: 'step.appearCBT', title: isHindi ? 'CBT में बैठें' : 'Appear for CBT', description: isHindi ? 'Computer Based Test क्लियर करें' : 'Clear Computer Based Test', duration: isHindi ? 'परीक्षा' : 'Exam' },
+          { step: 5, titleKey: 'step.skillTest', title: isHindi ? 'Skill Test/DV' : 'Skill Test/DV', description: isHindi ? 'Typing + Document Verification' : 'Typing + Document Verification', duration: isHindi ? 'CBT के बाद' : 'After CBT' },
+          { step: 6, titleKey: 'step.medical', title: isHindi ? 'मेडिकल' : 'Medical', description: isHindi ? 'मेडिकल टेस्ट क्लियर करें' : 'Clear medical test', duration: isHindi ? 'Skill Test के बाद' : 'After Skill Test' },
+          { step: 7, titleKey: 'step.joining', title: isHindi ? getTranslation('step.joining', language) : 'Joining', description: isHindi ? 'रेलवे में शामिल हों' : 'Join Railway', duration: isHindi ? 'मेडिकल के बाद' : 'After Medical' }
+        ],
+        colleges: [
+          { name: isHindi ? 'RRB NTPC' : 'RRB NTPC', location: isHindi ? 'पूरा भारत' : 'All India', seats: isHindi ? 'विभिन्न' : 'Various' },
+          { name: isHindi ? 'RRB Group D' : 'RRB Group D', location: isHindi ? 'पूरा भारत' : 'All India', seats: isHindi ? 'विभिन्न' : 'Various' },
+          { name: isHindi ? 'RRB JE' : 'RRB JE', location: isHindi ? 'पूरा भारत' : 'All India', seats: isHindi ? 'विभिन्न' : 'Various' }
+        ]
+      },
+      'StatePSC': {
+        title: isHindi ? getTranslation('exam.statePsc', language) : 'State PSC Exams',
+        titleKey: 'exam.statePsc',
+        icon: <FaFlag />,
+        fullPath: isHindi ? 'ग्रेजुएशन → State PSC Exam → राज्य सरकारी नौकरी' : 'Graduate → State PSC Exam → State Government Job',
+        steps: [
+          { step: 1, titleKey: 'step.completeGraduation', title: isHindi ? getTranslation('step.completeGraduation', language) : 'Complete Graduation', description: isHindi ? 'किसी भी स्ट्रीम में ग्रेजुएट करें' : 'Graduate in any stream', duration: isHindi ? '3 साल' : '3 Years' },
+          { step: 2, titleKey: 'step.checkNotification', title: isHindi ? getTranslation('step.checkNotification', language) : 'Check Notification', description: isHindi ? 'State PSC सूचना जांचें' : 'Check state PSC notification', duration: isHindi ? 'सूचना मिलने पर' : 'When Notified' },
+          { step: 3, titleKey: 'step.preliminary', title: isHindi ? getTranslation('step.preliminary', language) : 'Prepare for Preliminary', description: isHindi ? 'राज्य पाठ्यक्रम, पेपर' : 'State syllabus, papers', duration: isHindi ? '3-6 महीने' : '3-6 Months' },
+          { step: 4, titleKey: 'step.mains', title: isHindi ? getTranslation('step.mains', language) : 'Prepare for Mains', description: isHindi ? 'राज्य-विशिष्ट विषय' : 'State-specific topics', duration: isHindi ? '6-12 महीने' : '6-12 Months' },
+          { step: 5, titleKey: 'step.interview', title: isHindi ? getTranslation('step.interview', language) : 'Interview', description: isHindi ? 'व्यक्तित्व परीक्षण' : 'Personality Test', duration: isHindi ? 'Mains के बाद' : 'After Mains' },
+          { step: 6, titleKey: 'step.joining', title: isHindi ? getTranslation('step.joining', language) : 'Joining', description: isHindi ? 'राज्य विभाग में शामिल हों' : 'Join state department', duration: isHindi ? 'परिणाम के बाद' : 'After Result' }
+        ],
+        colleges: [
+          { name: isHindi ? 'राज्य प्रशासनिक सेवा' : 'State Administrative Service', location: isHindi ? 'राज्य की राजधानी' : 'State Capital', seats: isHindi ? 'विभिन्न' : 'Various' },
+          { name: isHindi ? 'राज्य पुलिस सेवा' : 'State Police Service', location: isHindi ? 'पूरा राज्य' : 'State-wide', seats: isHindi ? 'विभिन्न' : 'Various' },
+          { name: isHindi ? 'विभिन्न विभाग नौकरियां' : 'Various Dept Jobs', location: isHindi ? 'पूरा राज्य' : 'State-wide', seats: isHindi ? 'विभिन्न' : 'Various' }
+        ]
+      }
+    }
+  }
+
+  const govtExamData = getExamData()
     'IIT-JEE': {
       title: 'IIT-JEE (Engineering)',
       icon: <FaCog />,
@@ -250,7 +395,134 @@ import '../../assets/css/UserNotifications.css'
 
   const govtCollegeTypes = ['IIT', 'NIT', 'IIIT', 'Medical', 'NDA']
 
-  const govtCollegeData = {
+  // Get translated college data based on current language
+  const getCollegeData = () => {
+    const isHindi = language === 'hi'
+    return {
+      'IIT': {
+        title: isHindi ? 'IIT (भारतीय प्रौद्योगिकी संस्थान)' : 'IIT (Indian Institutes of Technology)',
+        titleKey: 'college.iit',
+        icon: <FaCog />,
+        fullPath: isHindi ? '12वीं (PCM) → JEE Main → JEE Advanced → IIT प्रवेश' : '12th (PCM) → JEE Main → JEE Advanced → IIT Admission',
+        eligibility: isHindi ? 'PCM में 75%+, JEE Main + Advanced क्वालिफाई' : '75%+ in PCM, JEE Main + Advanced qualified',
+        seats: isHindi ? 'सभी IIT में ~17,000 सीट' : '~17,000 seats across all IITs',
+        courses: isHindi ? ['B.Tech', 'M.Tech', 'B.Sc', 'M.Sc', 'MBA', 'PhD'] : ['B.Tech', 'M.Tech', 'B.Sc', 'M.Sc', 'MBA', 'PhD'],
+        steps: [
+          { step: 1, title: isHindi ? 'PCM के साथ 12वीं पूरी करें' : 'Complete 12th with PCM', description: isHindi ? '75%+ के साथ Physics, Chemistry, Mathematics' : 'Physics, Chemistry, Mathematics with 75%+', duration: isHindi ? '2 साल' : '2 Years' },
+          { step: 2, title: isHindi ? 'JEE Main की तैयारी करें' : 'Prepare for JEE Main', description: isHindi ? 'PCM का पूरा पाठ्यक्रम कवर करें' : 'Cover complete PCM syllabus', duration: isHindi ? '1-2 साल' : '1-2 Years' },
+          { step: 3, title: isHindi ? 'JEE Main में बैठें' : 'Appear for JEE Main', description: isHindi ? 'JEE Main exam क्लियर करें' : 'Clear JEE Main exam', duration: isHindi ? 'परीक्षा' : 'Exam' },
+          { step: 4, title: isHindi ? 'JEE Advanced की तैयारी करें' : 'Prepare for JEE Advanced', description: isHindi ? 'JEE Main क्वालिफाई होने पर' : 'If qualified in JEE Main', duration: isHindi ? '6-12 महीने' : '6-12 Months' },
+          { step: 5, title: isHindi ? 'JoSAA काउंसलिंग' : 'JoSAA Counseling', description: isHindi ? 'काउंसलिंग में भाग लें' : 'Participate in counseling', duration: isHindi ? 'परिणाम के बाद' : 'After Results' },
+          { step: 6, title: isHindi ? 'IIT सीट प्राप्त करें' : 'Get IIT Seat', description: isHindi ? 'चॉइस फिलिंग में सीट लॉक करें' : 'Lock seat in choice filling', duration: isHindi ? 'प्रक्रिया' : 'Process' }
+        ],
+        colleges: [
+          { name: isHindi ? 'IIT मुंबई' : 'IIT Bombay', location: isHindi ? 'मुंबई' : 'Mumbai', ranking: '#1', seats: '~1000' },
+          { name: isHindi ? 'IIT दिल्ली' : 'IIT Delhi', location: isHindi ? 'दिल्ली' : 'Delhi', ranking: '#2', seats: '~900' },
+          { name: isHindi ? 'IIT मद्रास' : 'IIT Madras', location: isHindi ? 'चेन्नई' : 'Chennai', ranking: '#3', seats: '~800' },
+          { name: isHindi ? 'IIT कानपुर' : 'IIT Kanpur', location: isHindi ? 'कानपुर' : 'Kanpur', ranking: '#4', seats: '~850' },
+          { name: isHindi ? 'IIT खड़गपुर' : 'IIT Kharagpur', location: isHindi ? 'खड़गपुर' : 'Kharagpur', ranking: '#5', seats: '~900' }
+        ]
+      },
+      'NIT': {
+        title: isHindi ? 'NIT (राष्ट्रीय प्रौद्योगिकी संस्थान)' : 'NIT (National Institutes of Technology)',
+        titleKey: 'college.nit',
+        icon: <FaUniversity />,
+        fullPath: isHindi ? '12वीं (PCM) → JEE Main → CSAB काउंसलिंग → NIT प्रवेश' : '12th (PCM) → JEE Main → CSAB Counseling → NIT Admission',
+        eligibility: isHindi ? 'PCM में 75%+, JEE Main क्वालिफाई' : '75%+ in PCM, JEE Main qualified',
+        seats: isHindi ? 'सभी NIT में ~25,000 सीट' : '~25,000 seats across all NITs',
+        courses: isHindi ? ['B.Tech', 'M.Tech', 'MBA', 'M.Sc', 'PhD'] : ['B.Tech', 'M.Tech', 'MBA', 'M.Sc', 'PhD'],
+        steps: [
+          { step: 1, title: isHindi ? 'PCM के साथ 12वीं पूरी करें' : 'Complete 12th with PCM', description: isHindi ? '75%+ के साथ Physics, Chemistry, Mathematics' : 'Physics, Chemistry, Mathematics with 75%+', duration: isHindi ? '2 साल' : '2 Years' },
+          { step: 2, title: isHindi ? 'JEE Main की तैयारी करें' : 'Prepare for JEE Main', description: isHindi ? 'PCM का पूरा पाठ्यक्रम कवर करें' : 'Cover complete PCM syllabus', duration: isHindi ? '1-2 साल' : '1-2 Years' },
+          { step: 3, title: isHindi ? 'JEE Main में बैठें' : 'Appear for JEE Main', description: isHindi ? 'JEE Main exam क्लियर करें' : 'Clear JEE Main exam', duration: isHindi ? 'परीक्षा' : 'Exam' },
+          { step: 4, title: isHindi ? 'रिजल्ट और रैंक जांचें' : 'Check Result & Rank', description: isHindi ? 'अपना JEE Main रैंक जांचें' : 'Check your JEE Main rank', duration: isHindi ? 'परिणाम के बाद' : 'After Result' },
+          { step: 5, title: isHindi ? 'CSAB काउंसलिंग' : 'CSAB Counseling', description: isHindi ? 'काउंसलिंग में भाग लें' : 'Participate in counseling', duration: isHindi ? 'परिणाम के बाद' : 'After Result' },
+          { step: 6, title: isHindi ? 'NIT सीट प्राप्त करें' : 'Get NIT Seat', description: isHindi ? 'चॉइस फिलिंग में सीट लॉक करें' : 'Lock seat in choice filling', duration: isHindi ? 'प्रक्रिया' : 'Process' }
+        ],
+        colleges: [
+          { name: isHindi ? 'NIT त्रिची' : 'NIT Trichy', location: isHindi ? 'तिरुचिरापल्ली' : 'Tiruchirappalli', ranking: '#1', seats: '~1500' },
+          { name: isHindi ? 'NIT सुराथकल' : 'NIT Surathkal', location: isHindi ? 'कर्नाटक' : 'Karnataka', ranking: '#2', seats: '~1200' },
+          { name: isHindi ? 'NIT वरंगल' : 'NIT Warangal', location: isHindi ? 'तेलंगाना' : 'Telangana', ranking: '#3', seats: '~1000' },
+          { name: isHindi ? 'NIT कालिकट' : 'NIT Calicut', location: isHindi ? 'केरल' : 'Kerala', ranking: '#4', seats: '~1100' },
+          { name: isHindi ? 'NIT राउरकेला' : 'NIT Rourkela', location: isHindi ? 'उड़ीसा' : 'Odisha', ranking: '#5', seats: '~900' }
+        ]
+      },
+      'IIIT': {
+        title: isHindi ? 'IIIT (भारतीय सूचना प्रौद्योगिकी संस्थान)' : 'IIIT (Indian Institutes of Information Technology)',
+        titleKey: 'college.iiit',
+        icon: <FaMicrochip />,
+        fullPath: isHindi ? '12वीं (PCM) → JEE Main → CSAB/JoSAA → IIIT प्रवेश' : '12th (PCM) → JEE Main → CSAB/JoSAA → IIIT Admission',
+        eligibility: isHindi ? 'PCM में 75%+, JEE Main क्वालिफाई' : '75%+ in PCM, JEE Main qualified',
+        seats: isHindi ? 'सभी IIIT में ~5,000 सीट' : '~5000 seats across all IIITs',
+        courses: isHindi ? ['B.Tech', 'M.Tech', 'PhD'] : ['B.Tech', 'M.Tech', 'PhD'],
+        steps: [
+          { step: 1, title: isHindi ? 'PCM के साथ 12वीं पूरी करें' : 'Complete 12th with PCM', description: isHindi ? '75%+ के साथ Physics, Chemistry, Mathematics' : 'Physics, Chemistry, Mathematics with 75%+', duration: isHindi ? '2 साल' : '2 Years' },
+          { step: 2, title: isHindi ? 'JEE Main की तैयारी करें' : 'Prepare for JEE Main', description: isHindi ? 'Mathematics और Physics पर फोकस करें' : 'Focus on Mathematics and Physics', duration: isHindi ? '1-2 साल' : '1-2 Years' },
+          { step: 3, title: isHindi ? 'JEE Main में बैठें' : 'Appear for JEE Main', description: isHindi ? 'JEE Main exam क्लियर करें' : 'Clear JEE Main exam', duration: isHindi ? 'परीक्षा' : 'Exam' },
+          { step: 4, title: isHindi ? 'रिजल्ट और रैंक जांचें' : 'Check Result & Rank', description: isHindi ? 'अपना JEE Main रैंक जांचें' : 'Check your JEE Main rank', duration: isHindi ? 'परिणाम के बाद' : 'After Result' },
+          { step: 5, title: isHindi ? 'काउंसलिंग' : 'Counseling', description: isHindi ? 'काउंसलिंग में भाग लें' : 'Participate in counseling', duration: isHindi ? 'परिणाम के बाद' : 'After Result' },
+          { step: 6, title: isHindi ? 'IIIT सीट प्राप्त करें' : 'Get IIIT Seat', description: isHindi ? 'चॉइस फिलिंग में सीट लॉक करें' : 'Lock seat in choice filling', duration: isHindi ? 'प्रक्रिया' : 'Process' }
+        ],
+        colleges: [
+          { name: isHindi ? 'IIIT हैदराबाद' : 'IIIT Hyderabad', location: isHindi ? 'हैदराबाद' : 'Hyderabad', ranking: '#1', seats: '~300' },
+          { name: isHindi ? 'IIIT बैंगलोर' : 'IIIT Bangalore', location: isHindi ? 'बैंगलोर' : 'Bangalore', ranking: '#2', seats: '~200' },
+          { name: isHindi ? 'IIIT दिल्ली' : 'IIIT Delhi', location: isHindi ? 'दिल्ली' : 'Delhi', ranking: '#3', seats: '~150' },
+          { name: isHindi ? 'IIIT इलाहाबाद' : 'IIIT Allahabad', location: isHindi ? 'प्रयागराज' : 'Prayagraj', ranking: '#4', seats: '~250' },
+          { name: isHindi ? 'IIIT पुणे' : 'IIIT Pune', location: isHindi ? 'पुणे' : 'Pune', ranking: '#5', seats: '~180' }
+        ]
+      },
+      'Medical': {
+        title: isHindi ? 'सरकारी मेडिकल कॉलेज' : 'Government Medical Colleges',
+        titleKey: 'college.medical',
+        icon: <FaHeartbeat />,
+        fullPath: isHindi ? '12वीं (PCB) → NEET → AIQ/State काउंसलिंग → MBBS' : '12th (PCB) → NEET → AIQ/State Counseling → MBBS',
+        eligibility: isHindi ? 'PCB में 50%+ (GEN), NEET क्वालिफाई' : '50%+ in PCB (GEN), NEET qualified',
+        seats: isHindi ? '~50,000 सीट (सरकारी + प्राइवेट)' : '~50,000 seats (Govt + Pvt)',
+        courses: isHindi ? ['MBBS', 'BDS', 'BAMS', 'BHMS', 'BNYS', 'BVSc', 'B.Sc Nursing'] : ['MBBS', 'BDS', 'BAMS', 'BHMS', 'BNYS', 'BVSc', 'B.Sc Nursing'],
+        steps: [
+          { step: 1, title: isHindi ? 'PCB के साथ 12वीं पूरी करें' : 'Complete 12th with PCB', description: isHindi ? 'Physics, Chemistry, Biology' : 'Physics, Chemistry, Biology', duration: isHindi ? '2 साल' : '2 Years' },
+          { step: 2, title: isHindi ? 'NEET की तैयारी करें' : 'Prepare for NEET', description: isHindi ? 'PCB का पूरा पाठ्यक्रम कवर करें' : 'Cover complete PCB syllabus', duration: isHindi ? '1-2 साल' : '1-2 Years' },
+          { step: 3, title: isHindi ? 'NEET में बैठें' : 'Appear for NEET', description: isHindi ? 'NEET exam क्लियर करें' : 'Clear NEET exam', duration: isHindi ? 'परीक्षा' : 'Exam' },
+          { step: 4, title: isHindi ? 'रिजल्ट जांचें' : 'Check Result', description: isHindi ? 'अपना NEET स्कोर और रैंक जांचें' : 'Check your NEET score and rank', duration: isHindi ? 'परिणाम के बाद' : 'After Result' },
+          { step: 5, title: isHindi ? 'AIQ काउंसलिंग' : 'AIQ Counseling', description: isHindi ? 'All India Quota काउंसलिंग' : 'All India Quota counseling', duration: isHindi ? 'परिणाम के बाद' : 'After Result' },
+          { step: 6, title: isHindi ? 'मेडिकल कॉलेज प्राप्त करें' : 'Get Medical College', description: isHindi ? 'चॉइस फिलिंग में सीट लॉक करें' : 'Lock seat in choice filling', duration: isHindi ? 'प्रक्रिया' : 'Process' }
+        ],
+        colleges: [
+          { name: isHindi ? 'AIIMS दिल्ली' : 'AIIMS Delhi', location: isHindi ? 'दिल्ली' : 'Delhi', ranking: '#1', seats: '~100' },
+          { name: isHindi ? 'मौलाना आजाद मेडिकल कॉलेज' : 'Maulana Azad Medical College', location: isHindi ? 'दिल्ली' : 'Delhi', ranking: '#2', seats: '~250' },
+          { name: isHindi ? 'लेडी हार्डिंग मेडिकल कॉलेज' : 'Lady Hardinge Medical College', location: isHindi ? 'दिल्ली' : 'Delhi', ranking: '#3', seats: '~200' },
+          { name: isHindi ? 'ग्रांट मेडिकल कॉलेज' : 'Grant Medical College', location: isHindi ? 'मुंबई' : 'Mumbai', ranking: '#4', seats: '~200' },
+          { name: isHindi ? 'किंग जॉर्ज मेडिकल यूनिवर्सिटी' : 'King George Medical University', location: isHindi ? 'लखनऊ' : 'Lucknow', ranking: '#5', seats: '~250' }
+        ]
+      },
+      'NDA': {
+        title: isHindi ? 'NDA (राष्ट्रीय रक्षा अकादमी)' : 'NDA (National Defence Academy)',
+        titleKey: 'college.nda',
+        icon: <FaFlag />,
+        fullPath: isHindi ? '12वीं → NDA Exam → SSB Interview → अकादमी प्रशिक्षण' : '12th → NDA Exam → SSB Interview → Academy Training',
+        eligibility: isHindi ? '12वीं पास (सेना के लिए Science), उम्र 16.5-19.5 साल' : '12th Pass (Science for Army), Age 16.5-19.5 years',
+        seats: isHindi ? 'प्रति कोर्स ~400 सीट' : '~400 seats per course',
+        courses: isHindi ? ['B.Sc', 'B.A', 'B.Com', 'BBA'] : ['B.Sc', 'B.A', 'B.Com', 'BBA'],
+        steps: [
+          { step: 1, title: isHindi ? '12वीं पूरी करें' : 'Complete 12th', description: isHindi ? 'किसी भी स्ट्रीम में 12वीं पास करें' : 'Pass 12th in any stream', duration: isHindi ? '2 साल' : '2 Years' },
+          { step: 2, title: isHindi ? 'पात्रता जांचें' : 'Check Eligibility', description: isHindi ? 'उम्र 16.5-19.5 साल' : 'Age 16.5-19.5 years', duration: isHindi ? 'परीक्षा से पहले' : 'Before Exam' },
+          { step: 3, title: isHindi ? 'NDA के लिए आवेदन करें' : 'Apply for NDA', description: isHindi ? 'NDA आवेदन पत्र भरें' : 'Fill NDA application form', duration: isHindi ? 'सूचना मिलने पर' : 'When Notified' },
+          { step: 4, title: isHindi ? 'लिखित परीक्षा में बैठें' : 'Appear for Written', description: isHindi ? 'NDA लिखित exam क्लियर करें' : 'Clear NDA written exam', duration: isHindi ? 'परीक्षा' : 'Exam' },
+          { step: 5, title: isHindi ? 'SSB Interview' : 'SSB Interview', description: isHindi ? '5-दिन का चयन प्रक्रिया' : '5-day selection process', duration: isHindi ? 'परिणाम के बाद' : 'After Result' },
+          { step: 6, title: isHindi ? 'प्रशिक्षण' : 'Training', description: isHindi ? 'NDA में 3 साल का प्रशिक्षण' : '3-year training at NDA', duration: isHindi ? '3 साल' : '3 Years' }
+        ],
+        colleges: [
+          { name: isHindi ? 'NDA (सेना)' : 'NDA (Army)', location: isHindi ? 'पुणे' : 'Pune', seats: '~300' },
+          { name: isHindi ? 'NDA (नौसेना)' : 'NDA (Navy)', location: isHindi ? 'पुणे' : 'Pune', seats: '~50' },
+          { name: isHindi ? 'NDA (वायुसेना)' : 'NDA (Air Force)', location: isHindi ? 'पुणे' : 'Pune', seats: '~50' },
+          { name: isHindi ? 'IMA देहरादून' : 'IMA Dehradun', location: isHindi ? 'देहरादून' : 'Dehradun', seats: '~250' },
+          { name: isHindi ? 'AFCAT Entry' : 'AFCAT Entry', location: isHindi ? 'विभिन्न' : 'Various', seats: isHindi ? 'विभिन्न' : 'Various' }
+        ]
+      }
+    }
+  }
+
+  const govtCollegeData = getCollegeData()
     'IIT': {
       title: 'IIT (Indian Institutes of Technology)',
       icon: <FaCog />,
@@ -1125,9 +1397,9 @@ setPrepType('govtCollege')
 
   const getPerformanceLevel = () => {
     const perc = Number(percentage)
-    if (perc >= 75) return { level: 'Excellent', color: 'success', icon: <FaCheckCircle /> }
-    if (perc >= 60) return { level: 'Good', color: 'warning', icon: <FaInfoCircle /> }
-    return { level: 'Average', color: 'danger', icon: <FaInfoCircle /> }
+    if (perc >= 75) return { levelKey: 'notifications.excellent', color: 'success', icon: <FaCheckCircle /> }
+    if (perc >= 60) return { levelKey: 'notifications.good', color: 'warning', icon: <FaInfoCircle /> }
+    return { levelKey: 'notifications.average', color: 'danger', icon: <FaInfoCircle /> }
   }
 
   // Handle counseling form submission
@@ -1698,12 +1970,12 @@ setPrepType('govtCollege')
                           <div>
                             <h5 className="mb-1"><TransText k="notifications.yourPerformance" as="span" /></h5>
                             <p className="text-muted mb-0">
-                              <TransText k="notifications.basedOn" as="span" /> {percentage}% <TransText k="notifications.in" as="span" /> {getStreamName(selectedStream)}
+                              <TransText k="notifications.basedOn" as="span" /> {percentage}<TransText k="notifications.percentIn" as="span" /> {getStreamName(selectedStream)}
                             </p>
                           </div>
                           <div className="text-end">
                             <Badge bg={performance.color} className="fs-5 p-3">
-                              {performance.icon} {performance.level}
+                              {performance.icon} <TransText k={performance.levelKey} as="span" />
                             </Badge>
                           </div>
                         </div>
@@ -1720,8 +1992,8 @@ setPrepType('govtCollege')
                     {/* Private/Govt College/Govt Job Selection */}
                     <Card className="shadow-sm mb-4 border-0" style={{ borderRadius: '10px' }}>
                       <Card.Body className="p-4">
-                        <h5 className="mb-3">Choose Your Path:</h5>
-                        <p className="text-muted mb-3">Select your preferred career path</p>
+                        <h5 className="mb-3"><TransText k="notifications.choosePath" as="span" /></h5>
+                        <p className="text-muted mb-3"><TransText k="notifications.selectPreferredPath" as="span" /></p>
                         <Row className="g-3">
                           <Col md={4}>
                             <Card 
@@ -1731,8 +2003,8 @@ setPrepType('govtCollege')
                             >
                               <Card.Body className="p-4 text-center">
                                 <FaUniversity className={`fs-2 mb-2 ${prepType === 'govtCollege' ? 'text-primary' : 'text-muted'}`} />
-                                <h6 className={prepType === 'govtCollege' ? 'text-primary fw-bold' : ''}>Govt College Path</h6>
-                                <small className="text-muted">IIT, NIT, IIIT, Medical & premier govt institutions</small>
+                                <h6 className={prepType === 'govtCollege' ? 'text-primary fw-bold' : ''}><TransText k="notifications.govtCollegePath" as="span" /></h6>
+                                <small className="text-muted"><TransText k="notifications.govtCollegeDesc" as="span" /></small>
                               </Card.Body>
                             </Card>
                           </Col>
@@ -1744,8 +2016,8 @@ setPrepType('govtCollege')
                             >
                               <Card.Body className="p-4 text-center">
                                 <FaShieldAlt className={`fs-2 mb-2 ${prepType === 'govtJob' ? 'text-primary' : 'text-muted'}`} />
-                                <h6 className={prepType === 'govtJob' ? 'text-primary fw-bold' : ''}>Government Job Path</h6>
-                                <small className="text-muted">Prepare for competitive exams (UPSC, SSC, Banking, etc.)</small>
+                                <h6 className={prepType === 'govtJob' ? 'text-primary fw-bold' : ''}><TransText k="notifications.govtJobPath" as="span" /></h6>
+                                <small className="text-muted"><TransText k="notifications.govtJobDesc" as="span" /></small>
                               </Card.Body>
                             </Card>
                           </Col>
@@ -1757,8 +2029,8 @@ setPrepType('govtCollege')
                             >
                               <Card.Body className="p-4 text-center">
                                 <FaBriefcase className={`fs-2 mb-2 ${prepType === 'private' ? 'text-primary' : 'text-muted'}`} />
-                                <h6 className={prepType === 'private' ? 'text-primary fw-bold' : ''}>Private College Path</h6>
-                                <small className="text-muted">Admission in private colleges for degree programs</small>
+                                <h6 className={prepType === 'private' ? 'text-primary fw-bold' : ''}><TransText k="notifications.privatePath" as="span" /></h6>
+                                <small className="text-muted"><TransText k="notifications.privateDesc" as="span" /></small>
                               </Card.Body>
                             </Card>
                           </Col>
@@ -1773,12 +2045,12 @@ setPrepType('govtCollege')
                           {prepType === 'govtJob' ? (
                             <>
                               <FaShieldAlt className="me-2 text-primary" />
-                              Government Job Preparation Roadmap
+                              <TransText k="notifications.govtJobRoadmap" as="span" />
                             </>
                           ) : prepType === 'govtCollege' ? (
                             <>
                               <FaUniversity className="me-2 text-primary" />
-                              Government College Admission Roadmap
+                              <TransText k="notifications.govtCollegeRoadmap" as="span" />
                             </>
                           ) : (
                             <>
@@ -1789,9 +2061,9 @@ setPrepType('govtCollege')
                         </h5>
                         <p className="text-muted mb-0">
                           {prepType === 'govtJob' 
-                            ? "Select a government exam to see complete preparation roadmap and colleges"
+                            ? <TransText k="notifications.selectExamPath" as="span" />
                             : prepType === 'govtCollege'
-                            ? "Select a college type to see admission roadmap and top institutions"
+                            ? <TransText k="notifications.selectCollegePath" as="span" />
                             : <TransText k="notifications.coursesBrowseDesc" as="span" />
                           }
                         </p>
@@ -1839,11 +2111,11 @@ setPrepType('govtCollege')
                                       <span className="ms-2">{govtExamData[selectedGovtExam].title}</span>
                                     </h5>
                                     <p className="text-muted mb-3">
-                                      <strong>Complete Path:</strong> {govtExamData[selectedGovtExam].fullPath}
+                                      <strong><TransText k="notifications.completePath" as="span" /></strong> {govtExamData[selectedGovtExam].fullPath}
                                     </p>
                                   </div>
                                   
-                                  <h6 className="mb-3">Step-by-Step Roadmap:</h6>
+                                  <h6 className="mb-3"><TransText k="notifications.stepByStepRoadmap" as="span" /></h6>
                                   <Row className="mb-4">
                                     {govtExamData[selectedGovtExam].steps.map((step, idx) => (
                                       <Col md={6} key={idx} className="mb-3">
@@ -1863,7 +2135,7 @@ setPrepType('govtCollege')
                                     ))}
                                   </Row>
                                   
-                                  <h6 className="mb-3">Top Colleges/Recruitment:</h6>
+                                  <h6 className="mb-3"><TransText k="notifications.topCollegesRecruitment" as="span" /></h6>
                                   <Row>
                                     {govtExamData[selectedGovtExam].colleges.map((college, idx) => (
                                       <Col md={6} key={idx} className="mb-2">
@@ -1927,17 +2199,17 @@ setPrepType('govtCollege')
                                       <span className="ms-2">{govtCollegeData[selectedGovtCollege].title}</span>
                                     </h5>
                                     <p className="text-muted mb-2">
-                                      <strong>Complete Path:</strong> {govtCollegeData[selectedGovtCollege].fullPath}
+                                      <strong><TransText k="notifications.completePath" as="span" /></strong> {govtCollegeData[selectedGovtCollege].fullPath}
                                     </p>
                                     <p className="text-muted mb-2">
-                                      <strong>Eligibility:</strong> {govtCollegeData[selectedGovtCollege].eligibility}
+                                      <strong><TransText k="notifications.eligibility" as="span" /></strong> {govtCollegeData[selectedGovtCollege].eligibility}
                                     </p>
                                     <p className="text-muted mb-0">
-                                      <strong>Total Seats:</strong> {govtCollegeData[selectedGovtCollege].seats}
+                                      <strong><TransText k="notifications.totalSeats" as="span" /></strong> {govtCollegeData[selectedGovtCollege].seats}
                                     </p>
                                   </div>
                                   
-                                  <h6 className="mb-3">Step-by-Step Roadmap:</h6>
+                                  <h6 className="mb-3"><TransText k="notifications.stepByStepRoadmap" as="span" /></h6>
                                   <Row className="mb-4">
                                     {govtCollegeData[selectedGovtCollege].steps.map((step, idx) => (
                                       <Col md={6} key={idx} className="mb-3">
@@ -1957,14 +2229,9 @@ setPrepType('govtCollege')
                                     ))}
                                   </Row>
                                   
-                                  <h6 className="mb-3">Available Courses:</h6>
-                                  <div className="mb-4">
-                                    {govtCollegeData[selectedGovtCollege].courses.map((course, idx) => (
-                                      <Badge bg="info" className="me-2 mb-2" key={idx}>{course}</Badge>
-                                    ))}
-                                  </div>
+<h6 className="mb-3"><TransText k="notifications.availableCourses" as="span" /></h6>
                                   
-                                  <h6 className="mb-3">Top Colleges:</h6>
+                                  <h6 className="mb-3"><TransText k="notifications.topColleges" as="span" /></h6>
                                   <Row>
                                     {govtCollegeData[selectedGovtCollege].colleges.map((college, idx) => (
                                       <Col md={6} key={idx} className="mb-2">
@@ -2046,7 +2313,7 @@ setPrepType('govtCollege')
                                 ) : (
                                   <Alert variant="info">
                                     <FaInfoCircle className="me-2" />
-                                    No recommended courses available. Please adjust your percentage or select a different stream.
+                                    <TransText k="notifications.noRecommendedCourses" as="span" />
                                   </Alert>
                                 )}
                               </Tab.Pane>
@@ -2072,7 +2339,7 @@ setPrepType('govtCollege')
                                             </div>
                                             <p className="text-muted small mb-3">{getCourseDescription(course.name)}</p>
                                             <div className="mt-auto">
-                                              <small className="text-muted d-block mb-2">Career Opportunities:</small>
+                                              <small className="text-muted d-block mb-2"><TransText k="notifications.careerOpportunities" as="span" /></small>
                                               <div className="d-flex flex-wrap gap-1">
                                                 {course.careers.slice(0, 3).map((career, idx) => (
                                                   <Badge bg="light" text="dark" key={idx} className="small">
@@ -2089,7 +2356,7 @@ setPrepType('govtCollege')
                                 ) : (
                                   <Alert variant="info">
                                     <FaInfoCircle className="me-2" />
-                                    No courses available for this stream.
+                                    <TransText k="notifications.noCoursesAvailable" as="span" />
                                   </Alert>
                                 )}
                               </Tab.Pane>
