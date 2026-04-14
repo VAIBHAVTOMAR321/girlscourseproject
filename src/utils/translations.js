@@ -285,7 +285,7 @@ export const translations = {
     "settings.instructionStep2": "Enter your 10th percentage",
     "settings.instructionStep3":
       'Click "Get 11th Stream Guidance" to see personalized 11th stream recommendations and career paths',
-    "settings.percentagePlaceholder": "Enter your percentage (e.g., 75)",
+    "settings.percentagePlaceholder": "Enter your %",
     "settings.alertSelectStream": "Please select your 10th stream first",
     "settings.alertValidPercentage":
       "Please enter a valid percentage greater than 0",
@@ -559,7 +559,7 @@ export const translations = {
     "notifications.step2": "Step 2",
     "notifications.step3": "Step 3",
     "notifications.careerOpportunities": "Career Opportunities",
-    "notifications.percentagePlaceholder": "Enter your percentage (e.g., 75)",
+    "notifications.percentagePlaceholder": "Enter your %",
     "notifications.percentIn": "percent in",
     "notifications.alertSelectStream": "Please select your 12th stream first",
     "notifications.alertValidPercentage":
@@ -1296,7 +1296,7 @@ export const translations = {
     "settings.instructionStep2": "अपना 10वीं प्रतिशत दर्ज करें",
     "settings.instructionStep3":
       'व्यक्तिगत 11वीं स्ट्रीम सिफारिशें और कैरियर पथ देखने के लिए "11वीं स्ट्रीम मार्गदर्शन प्राप्त करें" पर क्लिक करें',
-    "settings.percentagePlaceholder": "अपना प्रतिशत दर्ज करें (जैसे, 75)",
+    "settings.percentagePlaceholder": "अपना % दर्ज करें",
     "settings.alertSelectStream": "कृपया पहले अपनी 10वीं स्ट्रीम चुनें",
     "settings.alertValidPercentage": "कृपया 0 से अधिक वैध प्रतिशत दर्ज करें",
     "settings.alertMaxPercentage": "प्रतिशत 100 से अधिक नहीं हो सकता",
@@ -1550,7 +1550,7 @@ export const translations = {
     "notifications.step2": "चरण 2",
     "notifications.step3": "चरण 3",
     "notifications.careerOpportunities": "कैरियर के अवसर",
-    "notifications.percentagePlaceholder": "अपना प्रतिशत दर्ज करें (जैसे, 75)",
+    "notifications.percentagePlaceholder": "अपना % दर्ज करें",
     "notifications.percentIn": "में प्रतिशत",
     "notifications.notEligible": "आप कैरियर मार्गदर्शन के लिए पात्र नहीं हैं। सिफारिशें प्राप्त करने के लिए आपको कम से कम 33% की आवश्यकता है।",
     "notifications.stepsToAchieve": "प्राप्त करने के चरण",

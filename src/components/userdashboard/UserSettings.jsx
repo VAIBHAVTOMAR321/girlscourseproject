@@ -691,7 +691,7 @@ const UserSettings = () => {
                           <div className="percentage-input-wrapper">
                             <Form.Control
                               type="number"
-                              placeholder={<TransText k="settings.percentagePlaceholder" as="span" />}
+                              placeholder="Enter percentage"
                               value={percentage}
                               onChange={handlePercentageChange}
                               min="0"
