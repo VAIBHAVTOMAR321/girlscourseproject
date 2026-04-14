@@ -74,7 +74,7 @@ const skillOptions = [
         skills_required: data.skills_required || [],
         apply_link: data.apply_link || '',
         last_date_to_apply: data.last_date_to_apply ? data.last_date_to_apply.slice(0, 10) : '',
-        is_active: data.is_active ?? true
+        status: data.status || 'active'
       })
     }
   }, [location.state])
@@ -225,7 +225,7 @@ const skillOptions = [
         skills_required: formData.skills_required,
         apply_link: formData.apply_link?.trim() || '',
         last_date_to_apply: formData.last_date_to_apply,
-        is_active: formData.is_active
+        status: formData.status === 'active' ? 'active' : 'inactive'
       }
 
       if (editMode && editJobId) {
@@ -259,7 +259,7 @@ const skillOptions = [
       skills_required: [],
       apply_link: '',
       last_date_to_apply: '',
-      is_active: true
+      status: 'active'
     })
     setEditMode(false)
     setEditJobId(null)
@@ -431,12 +431,12 @@ const skillOptions = [
                             <Form.Group className="mb-3">
                               <Form.Label>Status</Form.Label>
                               <Form.Select
-                                name="is_active"
-                                value={formData.is_active.toString()}
-                                onChange={(e) => setFormData({ ...formData, is_active: e.target.value === 'true' })}
+                                name="status"
+                                value={formData.status}
+                                onChange={(e) => setFormData({ ...formData, status: e.target.value })}
                               >
-                                <option value="true">Active</option>
-                                <option value="false">Inactive</option>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
                               </Form.Select>
                             </Form.Group>
                           </Col>

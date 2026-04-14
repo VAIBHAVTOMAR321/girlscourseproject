@@ -39,7 +39,7 @@ const ManageJobs = () => {
   const [workshopFilter, setWorkshopFilter] = useState('all')
   const [workshopCurrentPage, setWorkshopCurrentPage] = useState(1)
 
-  const isJobActive = (job) => job.is_active === true || job.is_active === 'true' || job.is_active === 1 || job.is_active === '1'
+  const isJobActive = (job) => job.status === 'active' || job.status === true || job.status === 1 || job.status === '1'
 
   useEffect(() => {
     fetchJobs()
@@ -135,11 +135,11 @@ const ManageJobs = () => {
     try {
       const currentStatus = isJobActive(job)
       const newStatus = !currentStatus
-      console.log('Toggle job:', job.job_id, 'from is_active:', job.is_active, 'to', newStatus)
+      console.log('Toggle job:', job.job_id, 'from status:', job.status, 'to', newStatus)
       
       await axios.put(JOB_API_URL, {
         job_id: job.job_id,
-        is_active: newStatus
+        status: newStatus ? 'active' : 'inactive'
       }, getAuthConfig())
       
       fetchJobs()

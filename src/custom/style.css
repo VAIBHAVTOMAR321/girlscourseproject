@@ -75,6 +75,12 @@ font-size: 18px;
 color: #000;
 font-size: 20px;
 }
+
+.form-label {
+    margin-bottom: .5rem;
+    color: #000 !important;
+    font-weight: 600 !important;
+}
  .awc-title {
     color: #fff !important;
     line-height:16px;
