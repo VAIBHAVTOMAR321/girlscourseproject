@@ -114,6 +114,21 @@ import '../../assets/css/UserNotifications.css'
 
   const govtExamTypes = ['IIT-JEE', 'NEET', 'UPSC', 'SSC', 'Banking', 'Railway', 'StatePSC']
 
+  const getFilteredExamTypes = () => {
+    if (selectedStream === 'science') {
+      return ['IIT-JEE', 'NEET']
+    } else if (selectedStream === 'commerce') {
+      return ['UPSC', 'SSC', 'Banking', 'Railway', 'StatePSC']
+    } else if (selectedStream === 'arts') {
+      return ['UPSC', 'SSC', 'Banking', 'Railway', 'StatePSC']
+    } else if (selectedStream === 'computer') {
+      return ['IIT-JEE', 'NEET']
+    }
+    return govtExamTypes
+  }
+
+  const filteredExamTypes = selectedStream ? getFilteredExamTypes() : govtExamTypes
+
   // Get translated exam data based on current language
   const getExamData = () => {
     const isHindi = language === 'hi'
@@ -259,7 +274,22 @@ import '../../assets/css/UserNotifications.css'
     }
   }
 
-  const govtCollegeTypes = ['IIT', 'NIT', 'IIIT', 'Medical', 'NDA']
+  const govtCollegeTypes = ['IIT', 'NIT', 'IIIT', 'Medical', 'NDA', 'ArtsCollege', 'CommerceCollege']
+
+  const getFilteredCollegeTypes = () => {
+    if (selectedStream === 'science') {
+      return ['IIT', 'NIT', 'IIIT', 'Medical']
+    } else if (selectedStream === 'commerce') {
+      return ['NDA', 'CommerceCollege']
+    } else if (selectedStream === 'arts') {
+      return ['NDA', 'ArtsCollege']
+    } else if (selectedStream === 'computer') {
+      return ['IIT', 'NIT', 'IIIT']
+    }
+    return govtCollegeTypes
+  }
+
+  const filteredCollegeTypes = selectedStream ? getFilteredCollegeTypes() : govtCollegeTypes
 
   const [govtExamData, setGovtExamData] = useState({})
   const [govtCollegeData, setGovtCollegeData] = useState({})
@@ -394,6 +424,52 @@ import '../../assets/css/UserNotifications.css'
           { name: isHindi ? 'NDA (वायुसेना)' : 'NDA (Air Force)', location: isHindi ? 'पुणे' : 'Pune', seats: '~50' },
           { name: isHindi ? 'IMA देहरादून' : 'IMA Dehradun', location: isHindi ? 'देहरादून' : 'Dehradun', seats: '~250' },
           { name: isHindi ? 'AFCAT Entry' : 'AFCAT Entry', location: isHindi ? 'विभिन्न' : 'Various', seats: isHindi ? 'विभिन्न' : 'Various' }
+        ]
+      },
+      'ArtsCollege': {
+        title: isHindi ? 'सरकारी कला एवं विज्ञान महाविद्यालय' : 'Government Arts & Science Colleges',
+        titleKey: 'college.arts',
+        icon: <FaBook />,
+        fullPath: isHindi ? '12वीं (कला) → CUET/राज्य प्रवेश → BA/B.Com प्रवेश' : '12th (Arts) → CUET/State Admission → BA/B.Com Admission',
+        eligibility: isHindi ? '12वीं पास, कुछ कॉलेज में CUET' : '12th Pass, CUET for some colleges',
+        seats: isHindi ? 'हजारों सीट' : 'Thousands of seats',
+        courses: isHindi ? ['BA', 'B.Com', 'B.Sc', 'MA', 'M.Com'] : ['BA', 'B.Com', 'B.Sc', 'MA', 'M.Com'],
+        steps: [
+          { step: 1, title: isHindi ? '12वीं पूरी करें' : 'Complete 12th', description: isHindi ? 'किसी भी स्ट्रीम में 12वीं पास करें' : 'Pass 12th in any stream', duration: isHindi ? '2 साल' : '2 Years' },
+          { step: 2, title: isHindi ? 'CUET की तैयारी करें' : 'Prepare for CUET', description: isHindi ? 'CUET के लिए आवेदन करें' : 'Apply for CUET', duration: isHindi ? '2-3 महीने' : '2-3 Months' },
+          { step: 3, title: isHindi ? 'CUET में बैठें' : 'Appear for CUET', description: isHindi ? 'CUET exam क्लियर करें' : 'Clear CUET exam', duration: isHindi ? 'परीक्षा' : 'Exam' },
+          { step: 4, title: isHindi ? 'काउंसलिंग में भाग लें' : 'Participate in Counseling', description: isHindi ? 'कॉलेज चुनें और प्रवेश लें' : 'Choose college and get admission', duration: isHindi ? 'प्रक्रिया' : 'Process' },
+          { step: 5, title: isHindi ? 'डिग्री पूरी करें' : 'Complete Degree', description: isHindi ? '3 साल का BA/B.Com कोर्स' : '3-year BA/B.Com course', duration: isHindi ? '3 साल' : '3 Years' }
+        ],
+        colleges: [
+          { name: isHindi ? 'दिल्ली विश्वविद्यालय (DU)' : 'Delhi University (DU)', location: isHindi ? 'दिल्ली' : 'Delhi', ranking: '#1', seats: '~5000' },
+          { name: isHindi ? 'बनारस हिन्दू विश्वविद्यालय (BHU)' : 'Banaras Hindu University (BHU)', location: isHindi ? 'वाराणसी' : 'Varanasi', ranking: '#2', seats: '~3000' },
+          { name: isHindi ? 'जवाहरलाल नेहरू विश्वविद्यालय' : 'Jawaharlal Nehru University', location: isHindi ? 'दिल्ली' : 'Delhi', ranking: '#3', seats: '~2000' },
+          { name: isHindi ? 'अलीगढ़ मुस्लिम विश्वविद्यालय' : 'Aligarh Muslim University', location: isHindi ? 'अलीगढ़' : 'Aligarh', ranking: '#4', seats: '~2500' },
+          { name: isHindi ? 'हायदराबाद विश्वविद्यालय' : 'University of Hyderabad', location: isHindi ? 'हैदराबाद' : 'Hyderabad', ranking: '#5', seats: '~1500' }
+        ]
+      },
+      'CommerceCollege': {
+        title: isHindi ? 'सरकारी वाणिज्य महाविद्यालय' : 'Government Commerce Colleges',
+        titleKey: 'college.commerce',
+        icon: <FaBriefcase />,
+        fullPath: isHindi ? '12वीं (वाणिज्य/कला) → CUET/राज्य प्रवेश → B.Com प्रवेश' : '12th (Commerce/Arts) → CUET/State Admission → B.Com Admission',
+        eligibility: isHindi ? '12वीं पास, कुछ कॉलेज में CUET' : '12th Pass, CUET for some colleges',
+        seats: isHindi ? 'हजारों सीट' : 'Thousands of seats',
+        courses: isHindi ? ['B.Com', 'BBA', 'M.Com', 'MBA'] : ['B.Com', 'BBA', 'M.Com', 'MBA'],
+        steps: [
+          { step: 1, title: isHindi ? '12वीं पूरी करें' : 'Complete 12th', description: isHindi ? 'वाणिज्य या कला स्ट्रीम में 12वीं' : '12th in Commerce or Arts stream', duration: isHindi ? '2 साल' : '2 Years' },
+          { step: 2, title: isHindi ? 'CUET की तैयारी करें' : 'Prepare for CUET', description: isHindi ? 'CUET के लिए आवेदन करें' : 'Apply for CUET', duration: isHindi ? '2-3 महीने' : '2-3 Months' },
+          { step: 3, title: isHindi ? 'CUET में बैठें' : 'Appear for CUET', description: isHindi ? 'CUET exam क्लियर करें' : 'Clear CUET exam', duration: isHindi ? 'परीक्षा' : 'Exam' },
+          { step: 4, title: isHindi ? 'काउंसलिंग में भाग लें' : 'Participate in Counseling', description: isHindi ? 'कॉलेज चुनें और प्रवेश लें' : 'Choose college and get admission', duration: isHindi ? 'प्रक्रिया' : 'Process' },
+          { step: 5, title: isHindi ? 'डिग्री पूरी करें' : 'Complete Degree', description: isHindi ? '3 साल का B.Com कोर्स' : '3-year B.Com course', duration: isHindi ? '3 साल' : '3 Years' }
+        ],
+        colleges: [
+          { name: isHindi ? 'श्री राम कॉलेज ऑफ कॉमर्स' : 'Sri Ram College of Commerce', location: isHindi ? 'दिल्ली' : 'Delhi', ranking: '#1', seats: '~1000' },
+          { name: isHindi ? 'दिल्ली स्कूल ऑफ इकोनॉमिक्स' : 'Delhi School of Economics', location: isHindi ? 'दिल्ली' : 'Delhi', ranking: '#2', seats: '~800' },
+          { name: isHindi ? 'माधव कॉलेज' : 'Madhav College', location: isHindi ? 'दिल्ली' : 'Delhi', ranking: '#3', seats: '~600' },
+          { name: isHindi ? 'सेंट स्टीफंस कॉलेज' : 'St. Stephens College', location: isHindi ? 'दिल्ली' : 'Delhi', ranking: '#4', seats: '~500' },
+          { name: isHindi ? 'हिंदू कॉलेज' : 'Hindu College', location: isHindi ? 'दिल्ली' : 'Delhi', ranking: '#5', seats: '~700' }
         ]
       }
     }
@@ -1833,7 +1909,7 @@ setPrepType('govtCollege')
                           <div className="mb-4">
                             {/* Exam Selection Cards */}
                             <Row className="mb-4">
-                              {govtExamTypes.map((examType, index) => {
+                              {filteredExamTypes.map((examType, index) => {
                                 const examInfo = govtExamData[examType]
                                 if (!examInfo) return null
                                 return (
@@ -1919,9 +1995,15 @@ setPrepType('govtCollege')
                         ) : prepType === 'govtCollege' ? (
                           /* Govt College Content */
                           <div className="mb-4">
+                            {filteredCollegeTypes.length === 0 ? (
+                              <Alert variant="info">
+                                <TransText k="notifications.noCollegeOptions" as="p" />
+                              </Alert>
+                            ) : (
+                            <>
                             {/* College Type Selection Cards */}
                             <Row className="mb-4">
-                              {govtCollegeTypes.map((collegeType, index) => {
+                              {filteredCollegeTypes.map((collegeType, index) => {
                                 const collegeInfo = govtCollegeData[collegeType]
                                 if (!collegeInfo) return null
                                 return (
@@ -2013,6 +2095,8 @@ setPrepType('govtCollege')
                                   </Row>
                                 </Card.Body>
                               </Card>
+                            )}
+                            </>
                             )}
                           </div>
                         ) : (
