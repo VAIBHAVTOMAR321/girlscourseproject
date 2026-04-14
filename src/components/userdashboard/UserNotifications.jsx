@@ -26,7 +26,7 @@ import '../../assets/css/UserNotifications.css'
   const [selectedCareerPath, setSelectedCareerPath] = useState(null)
   const [showCounseling, setShowCounseling] = useState(false)
   const [userData, setUserData] = useState(null)
-  const [prepType, setPrepType] = useState('private') // 'private', 'govtCollege', or 'govtJob'
+  const [prepType, setPrepType] = useState('govtCollege') // 'private', 'govtCollege', or 'govtJob'
   const [selectedGovtExam, setSelectedGovtExam] = useState('IIT-JEE')
   const [selectedGovtCollege, setSelectedGovtCollege] = useState('IIT')
   const navigate = useNavigate()
@@ -1066,7 +1066,7 @@ import '../../assets/css/UserNotifications.css'
     setSelectedStream(e.target.value)
     setShowResults(false)
     setPercentage('')
-    setPrepType('private')
+setPrepType('govtCollege')
   }
 
   const handlePercentageChange = (e) => {
@@ -1725,26 +1725,13 @@ import '../../assets/css/UserNotifications.css'
                         <Row className="g-3">
                           <Col md={4}>
                             <Card 
-                              className={`h-100 border ${prepType === 'private' ? 'border-primary' : ''}`}
-                              style={{ cursor: 'pointer', borderRadius: '10px' }}
-                              onClick={() => setPrepType('private')}
-                            >
-                              <Card.Body className="p-4 text-center">
-                                <FaBriefcase className={`fs-2 mb-2 ${prepType === 'private' ? 'text-primary' : 'text-muted'}`} />
-                                <h6>Private College Path</h6>
-                                <small className="text-muted">Admission in private colleges for degree programs</small>
-                              </Card.Body>
-                            </Card>
-                          </Col>
-                          <Col md={4}>
-                            <Card 
                               className={`h-100 border ${prepType === 'govtCollege' ? 'border-primary' : ''}`}
-                              style={{ cursor: 'pointer', borderRadius: '10px' }}
+                              style={{ cursor: 'pointer', borderRadius: '10px', backgroundColor: prepType === 'govtCollege' ? '#e7f1ff' : 'white' }}
                               onClick={() => setPrepType('govtCollege')}
                             >
                               <Card.Body className="p-4 text-center">
                                 <FaUniversity className={`fs-2 mb-2 ${prepType === 'govtCollege' ? 'text-primary' : 'text-muted'}`} />
-                                <h6>Govt College Path</h6>
+                                <h6 className={prepType === 'govtCollege' ? 'text-primary fw-bold' : ''}>Govt College Path</h6>
                                 <small className="text-muted">IIT, NIT, IIIT, Medical & premier govt institutions</small>
                               </Card.Body>
                             </Card>
@@ -1752,13 +1739,26 @@ import '../../assets/css/UserNotifications.css'
                           <Col md={4}>
                             <Card 
                               className={`h-100 border ${prepType === 'govtJob' ? 'border-primary' : ''}`}
-                              style={{ cursor: 'pointer', borderRadius: '10px' }}
+                              style={{ cursor: 'pointer', borderRadius: '10px', backgroundColor: prepType === 'govtJob' ? '#e7f1ff' : 'white' }}
                               onClick={() => setPrepType('govtJob')}
                             >
                               <Card.Body className="p-4 text-center">
                                 <FaShieldAlt className={`fs-2 mb-2 ${prepType === 'govtJob' ? 'text-primary' : 'text-muted'}`} />
-                                <h6>Government Job Path</h6>
+                                <h6 className={prepType === 'govtJob' ? 'text-primary fw-bold' : ''}>Government Job Path</h6>
                                 <small className="text-muted">Prepare for competitive exams (UPSC, SSC, Banking, etc.)</small>
+                              </Card.Body>
+                            </Card>
+                          </Col>
+                          <Col md={4}>
+                            <Card 
+                              className={`h-100 border ${prepType === 'private' ? 'border-primary' : ''}`}
+                              style={{ cursor: 'pointer', borderRadius: '10px', backgroundColor: prepType === 'private' ? '#e7f1ff' : 'white' }}
+                              onClick={() => setPrepType('private')}
+                            >
+                              <Card.Body className="p-4 text-center">
+                                <FaBriefcase className={`fs-2 mb-2 ${prepType === 'private' ? 'text-primary' : 'text-muted'}`} />
+                                <h6 className={prepType === 'private' ? 'text-primary fw-bold' : ''}>Private College Path</h6>
+                                <small className="text-muted">Admission in private colleges for degree programs</small>
                               </Card.Body>
                             </Card>
                           </Col>
