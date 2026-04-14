@@ -9,7 +9,7 @@ import UseLeftNav from './UseLeftNav'
 import CounselingForm from './CounselingForm'
 import TransText from '../TransText'
 import { getTranslation } from '../../utils/translations'
-import { FaArrowLeft, FaGraduationCap, FaChartLine, FaLightbulb, FaRocket, FaBook, FaCode, FaPalette, FaCalculator, FaLanguage, FaMusic, FaHeartbeat, FaBusinessTime, FaPercentage, FaUniversity, FaTools, FaLaptopMedical, FaBriefcase, FaCog, FaFlask, FaBalanceScale, FaNewspaper, FaChalkboardTeacher, FaUserTie, FaPaintBrush, FaGuitar, FaRunning, FaHome, FaWrench, FaIndustry, FaPlane, FaCar, FaBuilding, FaHospital, FaSeedling, FaMicrochip, FaNetworkWired, FaDatabase, FaShieldAlt, FaRobot, FaBrain, FaChartBar, FaProjectDiagram, FaBookOpen, FaBolt, FaDna, FaCheckCircle, FaInfoCircle } from 'react-icons/fa'
+import { FaArrowLeft, FaGraduationCap, FaChartLine, FaLightbulb, FaRocket, FaBook, FaCode, FaPalette, FaCalculator, FaLanguage, FaMusic, FaHeartbeat, FaBusinessTime, FaPercentage, FaUniversity, FaTools, FaLaptopMedical, FaBriefcase, FaCog, FaFlask, FaBalanceScale, FaNewspaper, FaChalkboardTeacher, FaUserTie, FaPaintBrush, FaGuitar, FaRunning, FaHome, FaWrench, FaIndustry, FaPlane, FaCar, FaBuilding, FaHospital, FaSeedling, FaMicrochip, FaNetworkWired, FaDatabase, FaShieldAlt, FaRobot, FaBrain, FaChartBar, FaProjectDiagram, FaBookOpen, FaBolt, FaDna, FaCheckCircle, FaInfoCircle, FaTrain, FaLandmark, FaMoneyBillWave, FaUserShield, FaFlag } from 'react-icons/fa'
 import '../../assets/css/UserNotifications.css'
 
   const UserNotifications = () => {
@@ -26,6 +26,9 @@ import '../../assets/css/UserNotifications.css'
   const [selectedCareerPath, setSelectedCareerPath] = useState(null)
   const [showCounseling, setShowCounseling] = useState(false)
   const [userData, setUserData] = useState(null)
+  const [prepType, setPrepType] = useState('private') // 'private', 'govtCollege', or 'govtJob'
+  const [selectedGovtExam, setSelectedGovtExam] = useState('IIT-JEE')
+  const [selectedGovtCollege, setSelectedGovtCollege] = useState('IIT')
   const navigate = useNavigate()
   const resultsRef = useRef(null)
 
@@ -108,6 +111,262 @@ import '../../assets/css/UserNotifications.css'
     { id: 'arts', nameKey: 'notifications.artsStream', icon: <FaPalette className="" />, subjectsKey: 'notifications.artsSubjects' },
     { id: 'computer', nameKey: 'notifications.computerScience', icon: <FaCode className="" />, subjectsKey: 'notifications.computerSubjects' }
   ]
+
+  const govtExamTypes = ['IIT-JEE', 'NEET', 'UPSC', 'SSC', 'Banking', 'Railway', 'StatePSC']
+
+  const govtExamData = {
+    'IIT-JEE': {
+      title: 'IIT-JEE (Engineering)',
+      icon: <FaCog />,
+      fullPath: '12th (PCM) → JEE Main → JEE Advanced → IIT/NIT/IIIT → B.Tech',
+      steps: [
+        { step: 1, title: 'Complete 12th with PCM', description: 'Complete 12th with Physics, Chemistry, Mathematics with 75%+', duration: '2 Years' },
+        { step: 2, title: 'Prepare for JEE Main', description: 'Cover complete syllabus of PCM', duration: '1-2 Years' },
+        { step: 3, title: 'Appear for JEE Main', description: 'Clear JEE Main exam', duration: 'Exam' },
+        { step: 4, title: 'Prepare for JEE Advanced', description: 'If qualified in JEE Main', duration: '6-12 Months' },
+        { step: 5, title: 'JoSAA Counseling', description: 'Participate in counseling', duration: 'After Results' },
+        { step: 6, title: 'Complete B.Tech', description: '4-year engineering degree', duration: '4 Years' }
+      ],
+      colleges: [
+        { name: 'IIT Bombay', location: 'Mumbai', seats: '~1000' },
+        { name: 'IIT Delhi', location: 'Delhi', seats: '~900' },
+        { name: 'IIT Madras', location: 'Chennai', seats: '~800' },
+        { name: 'NIT Trichy', location: 'Tiruchirappalli', seats: '~1500' },
+        { name: 'NIT Surathkal', location: 'Karnataka', seats: '~1200' }
+      ]
+    },
+    'NEET': {
+      title: 'NEET (Medical)',
+      icon: <FaHeartbeat />,
+      fullPath: '12th (PCB) → NEET → MBBS → Doctor',
+      steps: [
+        { step: 1, title: 'Complete 12th with PCB', description: 'Complete 12th with Physics, Chemistry, Biology', duration: '2 Years' },
+        { step: 2, title: 'Prepare for NEET', description: 'Cover complete PCB syllabus', duration: '1-2 Years' },
+        { step: 3, title: 'Appear for NEET', description: 'Clear NEET exam', duration: 'Exam' },
+        { step: 4, title: ' counseling', description: 'Participate in All India Quota', duration: 'After Results' },
+        { step: 5, title: 'Complete MBBS', description: '5.5 years including internship', duration: '5.5 Years' }
+      ],
+      colleges: [
+        { name: 'AIIMS Delhi', location: 'Delhi', seats: '~100' },
+        { name: 'Maulana Azad Medical College', location: 'Delhi', seats: '~250' },
+        { name: 'Lady Hardinge Medical College', location: 'Delhi', seats: '~200' },
+        { name: 'Grant Medical College', location: 'Mumbai', seats: '~200' }
+      ]
+    },
+    'UPSC': {
+      title: 'UPSC Civil Services',
+      icon: <FaLandmark />,
+      fullPath: 'Graduate → UPSC CSE → IAS/IPS/IFS',
+      steps: [
+        { step: 1, title: 'Complete Graduation', description: 'Graduate in any stream', duration: '3 Years' },
+        { step: 2, title: 'Basic Preparation', description: 'Read NCERTs, basic books', duration: '6-12 Months' },
+        { step: 3, title: 'Deep Preparation', description: 'Standard books, answer writing', duration: '1-2 Years' },
+        { step: 4, title: 'Appear for Prelims', description: 'Clear UPSC Prelims', duration: 'Exam' },
+        { step: 5, title: 'Appear for Mains', description: 'Clear Mains (9 papers)', duration: 'Exam' },
+        { step: 6, title: 'Interview', description: 'Personality Test', duration: '30 Minutes' },
+        { step: 7, title: 'Service Allocation', description: 'Get IAS/IPS/IFS service', duration: 'After Result' }
+      ],
+      colleges: [
+        { name: 'IAS (Indian Administrative Service)', location: 'All India', seats: 'Various' },
+        { name: 'IPS (Indian Police Service)', location: 'All India', seats: 'Various' },
+        { name: 'IFS (Indian Foreign Service)', location: 'All India', seats: 'Various' }
+      ]
+    },
+    'SSC': {
+      title: 'SSC Exams',
+      icon: <FaUserShield />,
+      fullPath: '12th/Graduate → SSC Exams → Government Job',
+      steps: [
+        { step: 1, title: 'Check Eligibility', description: 'Check education qualification', duration: 'Before Exam' },
+        { step: 2, title: 'Basic Preparation', description: 'English, Math, Reasoning, GK', duration: '3-6 Months' },
+        { step: 3, title: 'Deep Preparation', description: 'Solve previous papers', duration: '6-12 Months' },
+        { step: 4, title: 'Appear for Tier 1', description: 'Clear CBT exam', duration: 'Exam' },
+        { step: 5, title: 'Tier 2 & DV', description: 'Descriptive/Typing + Document Verification', duration: 'After Tier 1' },
+        { step: 6, title: 'Joining', description: 'Get joining letter', duration: 'After DV' }
+      ],
+      colleges: [
+        { name: 'Income Tax Inspector', location: 'Central', seats: 'Various' },
+        { name: 'Excise Inspector', location: 'Central', seats: 'Various' },
+        { name: 'Assistant Section Officer', location: 'Ministries', seats: 'Various' }
+      ]
+    },
+    'Banking': {
+      title: 'Banking Exams',
+      icon: <FaMoneyBillWave />,
+      fullPath: 'Graduate → PO/Clerk Exam → Bank Job',
+      steps: [
+        { step: 1, title: 'Complete Graduation', description: 'Graduate in any stream', duration: '3 Years' },
+        { step: 2, title: 'Check Eligibility', description: 'Check age limit, percentage', duration: 'Before Exam' },
+        { step: 3, title: 'Basic Preparation', description: 'Quant, Reasoning, English, GA', duration: '3-6 Months' },
+        { step: 4, title: 'Appear for Prelims', description: 'Clear Prelims', duration: 'Exam' },
+        { step: 5, title: 'Appear for Mains', description: 'Clear Mains', duration: 'After Prelims' },
+        { step: 6, title: 'GD & Interview', description: 'Group Discussion + PI', duration: 'After Mains' },
+        { step: 7, title: 'Joining', description: 'Get PO/Clerk position', duration: 'After Result' }
+      ],
+      colleges: [
+        { name: 'SBI PO', location: 'All India', seats: 'Various' },
+        { name: 'IBPS PO', location: 'All India', seats: 'Various' },
+        { name: 'RRB Clerk', location: 'State-wise', seats: 'Various' }
+      ]
+    },
+    'Railway': {
+      title: 'Railway Exams (RRB)',
+      icon: <FaTrain />,
+      fullPath: '12th/Graduate → RRB Exam → Railway Job',
+      steps: [
+        { step: 1, title: 'Check Eligibility', description: 'Check qualification, age', duration: 'Before Exam' },
+        { step: 2, title: 'Basic Preparation', description: 'Math, Reasoning, GA', duration: '2-3 Months' },
+        { step: 3, title: 'Deep Preparation', description: 'Solve previous papers', duration: '6-12 Months' },
+        { step: 4, title: 'Appear for CBT', description: 'Clear Computer Based Test', duration: 'Exam' },
+        { step: 5, title: 'Skill Test/DV', description: 'Typing + Document Verification', duration: 'After CBT' },
+        { step: 6, title: 'Medical', description: 'Clear medical test', duration: 'After Skill Test' },
+        { step: 7, title: 'Joining', description: 'Join Railway', duration: 'After Medical' }
+      ],
+      colleges: [
+        { name: 'RRB NTPC', location: 'All India', seats: 'Various' },
+        { name: 'RRB Group D', location: 'All India', seats: 'Various' },
+        { name: 'RRB JE', location: 'All India', seats: 'Various' }
+      ]
+    },
+    'StatePSC': {
+      title: 'State PSC Exams',
+      icon: <FaFlag />,
+      fullPath: 'Graduate → State PSC Exam → State Government Job',
+      steps: [
+        { step: 1, title: 'Complete Graduation', description: 'Graduate in any stream', duration: '3 Years' },
+        { step: 2, title: 'Check Notification', description: 'Check state PSC notification', duration: 'When Notified' },
+        { step: 3, title: 'Prepare for Preliminary', description: 'State syllabus, papers', duration: '3-6 Months' },
+        { step: 4, title: 'Prepare for Mains', description: 'State-specific topics', duration: '6-12 Months' },
+        { step: 5, title: 'Interview', description: 'Personality Test', duration: 'After Mains' },
+        { step: 6, title: 'Joining', description: 'Join state department', duration: 'After Result' }
+      ],
+      colleges: [
+        { name: 'State Administrative Service', location: 'State Capital', seats: 'Various' },
+        { name: 'State Police Service', location: 'State-wide', seats: 'Various' },
+        { name: 'Various Dept Jobs', location: 'State-wide', seats: 'Various' }
+      ]
+    }
+  }
+
+  const govtCollegeTypes = ['IIT', 'NIT', 'IIIT', 'Medical', 'NDA']
+
+  const govtCollegeData = {
+    'IIT': {
+      title: 'IIT (Indian Institutes of Technology)',
+      icon: <FaCog />,
+      fullPath: '12th (PCM) → JEE Main → JEE Advanced → IIT Admission',
+      eligibility: '75%+ in PCM, JEE Main + Advanced qualified',
+      seats: '~17,000 seats across all IITs',
+      courses: ['B.Tech', 'M.Tech', 'B.Sc', 'M.Sc', 'MBA', 'PhD'],
+      steps: [
+        { step: 1, title: 'Complete 12th with PCM', description: 'Physics, Chemistry, Mathematics with 75%+', duration: '2 Years' },
+        { step: 2, title: 'Prepare for JEE Main', description: 'Cover complete PCM syllabus', duration: '1-2 Years' },
+        { step: 3, title: 'Appear for JEE Main', description: 'Clear JEE Main exam', duration: 'Exam' },
+        { step: 4, title: 'Prepare for JEE Advanced', description: 'If qualified in JEE Main', duration: '6-12 Months' },
+        { step: 5, title: 'JoSAA Counseling', description: 'Participate in counseling', duration: 'After Results' },
+        { step: 6, title: 'Get IIT Seat', description: 'Lock seat in choice filling', duration: 'Process' }
+      ],
+      colleges: [
+        { name: 'IIT Bombay', location: 'Mumbai', ranking: '#1', seats: '~1000' },
+        { name: 'IIT Delhi', location: 'Delhi', ranking: '#2', seats: '~900' },
+        { name: 'IIT Madras', location: 'Chennai', ranking: '#3', seats: '~800' },
+        { name: 'IIT Kanpur', location: 'Kanpur', ranking: '#4', seats: '~850' },
+        { name: 'IIT Kharagpur', location: 'Kharagpur', ranking: '#5', seats: '~900' }
+      ]
+    },
+    'NIT': {
+      title: 'NIT (National Institutes of Technology)',
+      icon: <FaUniversity />,
+      fullPath: '12th (PCM) → JEE Main → CSAB Counseling → NIT Admission',
+      eligibility: '75%+ in PCM, JEE Main qualified',
+      seats: '~25,000 seats across all NITs',
+      courses: ['B.Tech', 'M.Tech', 'MBA', 'M.Sc', 'PhD'],
+      steps: [
+        { step: 1, title: 'Complete 12th with PCM', description: 'Physics, Chemistry, Mathematics with 75%+', duration: '2 Years' },
+        { step: 2, title: 'Prepare for JEE Main', description: 'Cover complete PCM syllabus', duration: '1-2 Years' },
+        { step: 3, title: 'Appear for JEE Main', description: 'Clear JEE Main exam', duration: 'Exam' },
+        { step: 4, title: 'Check Result & Rank', description: 'Check your JEE Main rank', duration: 'After Result' },
+        { step: 5, title: 'CSAB Counseling', description: 'Participate in counseling', duration: 'After Result' },
+        { step: 6, title: 'Get NIT Seat', description: 'Lock seat in choice filling', duration: 'Process' }
+      ],
+      colleges: [
+        { name: 'NIT Trichy', location: 'Tiruchirappalli', ranking: '#1', seats: '~1500' },
+        { name: 'NIT Surathkal', location: 'Karnataka', ranking: '#2', seats: '~1200' },
+        { name: 'NIT Warangal', location: 'Telangana', ranking: '#3', seats: '~1000' },
+        { name: 'NIT Calicut', location: 'Kerala', ranking: '#4', seats: '~1100' },
+        { name: 'NIT Rourkela', location: 'Odisha', ranking: '#5', seats: '~900' }
+      ]
+    },
+    'IIIT': {
+      title: 'IIIT (Indian Institutes of Information Technology)',
+      icon: <FaMicrochip />,
+      fullPath: '12th (PCM) → JEE Main → CSAB/JoSAA → IIIT Admission',
+      eligibility: '75%+ in PCM, JEE Main qualified',
+      seats: '~5000 seats across all IIITs',
+      courses: ['B.Tech', 'M.Tech', 'PhD'],
+      steps: [
+        { step: 1, title: 'Complete 12th with PCM', description: 'Physics, Chemistry, Mathematics with 75%+', duration: '2 Years' },
+        { step: 2, title: 'Prepare for JEE Main', description: 'Focus on Mathematics and Physics', duration: '1-2 Years' },
+        { step: 3, title: 'Appear for JEE Main', description: 'Clear JEE Main exam', duration: 'Exam' },
+        { step: 4, title: 'Check Result & Rank', description: 'Check your JEE Main rank', duration: 'After Result' },
+        { step: 5, title: 'Counseling', description: 'Participate in counseling', duration: 'After Result' },
+        { step: 6, title: 'Get IIIT Seat', description: 'Lock seat in choice filling', duration: 'Process' }
+      ],
+      colleges: [
+        { name: 'IIIT Hyderabad', location: 'Hyderabad', ranking: '#1', seats: '~300' },
+        { name: 'IIIT Bangalore', location: 'Bangalore', ranking: '#2', seats: '~200' },
+        { name: 'IIIT Delhi', location: 'Delhi', ranking: '#3', seats: '~150' },
+        { name: 'IIIT Allahabad', location: 'Prayagraj', ranking: '#4', seats: '~250' },
+        { name: 'IIIT Pune', location: 'Pune', ranking: '#5', seats: '~180' }
+      ]
+    },
+    'Medical': {
+      title: 'Government Medical Colleges',
+      icon: <FaHeartbeat />,
+      fullPath: '12th (PCB) → NEET → AIQ/State Counseling → MBBS',
+      eligibility: '50%+ in PCB (GEN), NEET qualified',
+      seats: '~50,000 seats (Govt + Pvt)',
+      courses: ['MBBS', 'BDS', 'BAMS', 'BHMS', 'BNYS', 'BVSc', 'B.Sc Nursing'],
+      steps: [
+        { step: 1, title: 'Complete 12th with PCB', description: 'Physics, Chemistry, Biology', duration: '2 Years' },
+        { step: 2, title: 'Prepare for NEET', description: 'Cover complete PCB syllabus', duration: '1-2 Years' },
+        { step: 3, title: 'Appear for NEET', description: 'Clear NEET exam', duration: 'Exam' },
+        { step: 4, title: 'Check Result', description: 'Check your NEET score and rank', duration: 'After Result' },
+        { step: 5, title: 'AIQ Counseling', description: 'All India Quota counseling', duration: 'After Result' },
+        { step: 6, title: 'Get Medical College', description: 'Lock seat in choice filling', duration: 'Process' }
+      ],
+      colleges: [
+        { name: 'AIIMS Delhi', location: 'Delhi', ranking: '#1', seats: '~100' },
+        { name: 'Maulana Azad Medical College', location: 'Delhi', ranking: '#2', seats: '~250' },
+        { name: 'Lady Hardinge Medical College', location: 'Delhi', ranking: '#3', seats: '~200' },
+        { name: 'Grant Medical College', location: 'Mumbai', ranking: '#4', seats: '~200' },
+        { name: 'King George Medical University', location: 'Lucknow', ranking: '#5', seats: '~250' }
+      ]
+    },
+    'NDA': {
+      title: 'NDA (National Defence Academy)',
+      icon: <FaFlag />,
+      fullPath: '12th → NDA Exam → SSB Interview → Academy Training',
+      eligibility: '12th Pass (Science for Army), Age 16.5-19.5 years',
+      seats: '~400 seats per course',
+      courses: ['B.Sc', 'B.A', 'B.Com', 'BBA'],
+      steps: [
+        { step: 1, title: 'Complete 12th', description: 'Pass 12th in any stream', duration: '2 Years' },
+        { step: 2, title: 'Check Eligibility', description: 'Age 16.5-19.5 years', duration: 'Before Exam' },
+        { step: 3, title: 'Apply for NDA', description: 'Fill NDA application form', duration: 'When Notified' },
+        { step: 4, title: 'Appear for Written', description: 'Clear NDA written exam', duration: 'Exam' },
+        { step: 5, title: 'SSB Interview', description: '5-day selection process', duration: 'After Result' },
+        { step: 6, title: 'Training', description: '3-year training at NDA', duration: '3 Years' }
+      ],
+      colleges: [
+        { name: 'NDA (Army)', location: 'Pune', seats: '~300' },
+        { name: 'NDA (Navy)', location: 'Pune', seats: '~50' },
+        { name: 'NDA (Air Force)', location: 'Pune', seats: '~50' },
+        { name: 'IMA Dehradun', location: 'Dehradun', seats: '~250' },
+        { name: 'AFCAT Entry', location: 'Various', seats: 'Various' }
+      ]
+    }
+  }
 
   // Helper function to get stream display name
   const getStreamName = (streamId) => {
@@ -807,6 +1066,7 @@ import '../../assets/css/UserNotifications.css'
     setSelectedStream(e.target.value)
     setShowResults(false)
     setPercentage('')
+    setPrepType('private')
   }
 
   const handlePercentageChange = (e) => {
@@ -857,7 +1117,8 @@ import '../../assets/css/UserNotifications.css'
         occupation: path.path.split('→').pop().trim(),
         stream: selectedStream,
         percentage: percentage,
-        course: courseName
+        course: courseName,
+        prepType: prepType
       } 
     })
   }
@@ -1456,108 +1717,385 @@ import '../../assets/css/UserNotifications.css'
                       </Card.Body>
                     </Card>
 
+                    {/* Private/Govt College/Govt Job Selection */}
+                    <Card className="shadow-sm mb-4 border-0" style={{ borderRadius: '10px' }}>
+                      <Card.Body className="p-4">
+                        <h5 className="mb-3">Choose Your Path:</h5>
+                        <p className="text-muted mb-3">Select your preferred career path</p>
+                        <Row className="g-3">
+                          <Col md={4}>
+                            <Card 
+                              className={`h-100 border ${prepType === 'private' ? 'border-primary' : ''}`}
+                              style={{ cursor: 'pointer', borderRadius: '10px' }}
+                              onClick={() => setPrepType('private')}
+                            >
+                              <Card.Body className="p-4 text-center">
+                                <FaBriefcase className={`fs-2 mb-2 ${prepType === 'private' ? 'text-primary' : 'text-muted'}`} />
+                                <h6>Private College Path</h6>
+                                <small className="text-muted">Admission in private colleges for degree programs</small>
+                              </Card.Body>
+                            </Card>
+                          </Col>
+                          <Col md={4}>
+                            <Card 
+                              className={`h-100 border ${prepType === 'govtCollege' ? 'border-primary' : ''}`}
+                              style={{ cursor: 'pointer', borderRadius: '10px' }}
+                              onClick={() => setPrepType('govtCollege')}
+                            >
+                              <Card.Body className="p-4 text-center">
+                                <FaUniversity className={`fs-2 mb-2 ${prepType === 'govtCollege' ? 'text-primary' : 'text-muted'}`} />
+                                <h6>Govt College Path</h6>
+                                <small className="text-muted">IIT, NIT, IIIT, Medical & premier govt institutions</small>
+                              </Card.Body>
+                            </Card>
+                          </Col>
+                          <Col md={4}>
+                            <Card 
+                              className={`h-100 border ${prepType === 'govtJob' ? 'border-primary' : ''}`}
+                              style={{ cursor: 'pointer', borderRadius: '10px' }}
+                              onClick={() => setPrepType('govtJob')}
+                            >
+                              <Card.Body className="p-4 text-center">
+                                <FaShieldAlt className={`fs-2 mb-2 ${prepType === 'govtJob' ? 'text-primary' : 'text-muted'}`} />
+                                <h6>Government Job Path</h6>
+                                <small className="text-muted">Prepare for competitive exams (UPSC, SSC, Banking, etc.)</small>
+                              </Card.Body>
+                            </Card>
+                          </Col>
+                        </Row>
+                      </Card.Body>
+                    </Card>
+
                     {/* Courses Tabs */}
                     <Card className="shadow-sm mb-4 border-0" style={{ borderRadius: '10px' }}>
-                      <Card.Header className="bg-white border-0 pt-4 pb-0">
+<Card.Header className="bg-white border-0 pt-4 pb-0">
                         <h5 className="mb-0">
-                          <FaUniversity className="me-2 text-primary" />
-                          <TransText k="notifications.courseRecommendations" as="span" />
+                          {prepType === 'govtJob' ? (
+                            <>
+                              <FaShieldAlt className="me-2 text-primary" />
+                              Government Job Preparation Roadmap
+                            </>
+                          ) : prepType === 'govtCollege' ? (
+                            <>
+                              <FaUniversity className="me-2 text-primary" />
+                              Government College Admission Roadmap
+                            </>
+                          ) : (
+                            <>
+                              <FaBriefcase className="me-2 text-primary" />
+                              <TransText k="notifications.courseRecommendations" as="span" />
+                            </>
+                          )}
                         </h5>
                         <p className="text-muted mb-0">
-                          <TransText k="notifications.coursesBrowseDesc" as="span" />
+                          {prepType === 'govtJob' 
+                            ? "Select a government exam to see complete preparation roadmap and colleges"
+                            : prepType === 'govtCollege'
+                            ? "Select a college type to see admission roadmap and top institutions"
+                            : <TransText k="notifications.coursesBrowseDesc" as="span" />
+                          }
                         </p>
                       </Card.Header>
                       <Card.Body className="p-4">
-                        <Tab.Container id="courses-tabs" defaultActiveKey="recommended">
-                          <Nav variant="tabs" className="mb-4">
-                            <Nav.Item>
-                              <Nav.Link eventKey="recommended">
-                                <FaUniversity className="me-2" />
-                                <TransText k="notifications.recommendedCourses" as="span" />
-                              </Nav.Link>
-                            </Nav.Item>
-                            <Nav.Item>
-<Nav.Link eventKey="all">
-                              <FaBookOpen className="me-2" />
-                              <TransText k="notifications.allCoursesFor" as="span" /> {getStreamName(selectedStream)}
-                            </Nav.Link>
-                            </Nav.Item>
-                          </Nav>
-                          <Tab.Content>
-                            <Tab.Pane eventKey="recommended">
-                              <Row>
-                                {courses.map((course, index) => (
-                                  <Col lg={4} md={6} className="mb-4" key={index}>
+                        {prepType === 'govtJob' ? (
+                          /* Govt Jobs Content */
+                          <div className="mb-4">
+                            {/* Exam Selection Cards */}
+                            <Row className="mb-4">
+                              {govtExamTypes.map((examType, index) => {
+                                const examInfo = govtExamData[examType]
+                                if (!examInfo) return null
+                                return (
+                                  <Col md={4} key={index} className="mb-3">
                                     <Card 
-                                      className="h-100 border course-card"
+                                      className={`h-100 border ${selectedGovtExam === examType ? 'border-primary' : ''}`}
                                       style={{ cursor: 'pointer' }}
-                                      onClick={() => handleCourseClick(course)}
+                                      onClick={() => setSelectedGovtExam(examType)}
                                     >
-                                      <Card.Body className="p-4">
-                                        <div className="d-flex align-items-start gap-3 mb-3">
+                                      <Card.Body className="p-3">
+                                        <div className="d-flex align-items-center gap-2 mb-2">
                                           <div className="course-icon-large">
-                                            {course.icon}
+                                            {examInfo.icon}
                                           </div>
-                                          <div>
-                                            <h6 className="mb-1">{getCourseName(course.name)}</h6>
-                                            <Badge bg="info">{course.duration}</Badge>
-                                          </div>
+                                          <h6 className="mb-0">{examInfo.title}</h6>
                                         </div>
-                                        <p className="text-muted small mb-3">{getCourseDescription(course.name)}</p>
-                                        <div className="mt-auto">
-                                          <small className="text-muted d-block mb-2"><TransText k="notifications.careerOpportunities" as="span" /></small>
-                                          <div className="d-flex flex-wrap gap-1">
-                                            {course.careers.slice(0, 3).map((career, idx) => (
-                                              <Badge bg="light" text="dark" key={idx} className="small">
-                                                {career}
-                                              </Badge>
-                                            ))}
-                                          </div>
-                                        </div>
+                                        <p className="small text-muted mb-2">
+                                          {examInfo.fullPath.substring(0, 50)}...
+                                        </p>
                                       </Card.Body>
                                     </Card>
                                   </Col>
-                                ))}
-                              </Row>
-                            </Tab.Pane>
-                            <Tab.Pane eventKey="all">
-                              <Row>
-                                {allCourses.map((course, index) => (
-                                  <Col lg={4} md={6} className="mb-4" key={index}>
+                                )
+                              })}
+                            </Row>
+                            
+                            {/* Detailed Exam Roadmap */}
+                            {selectedGovtExam && govtExamData[selectedGovtExam] && (
+                              <Card className="border bg-light">
+                                <Card.Body className="p-4">
+                                  <div className="mb-4">
+                                    <h5 className="mb-3">
+                                      {govtExamData[selectedGovtExam].icon}
+                                      <span className="ms-2">{govtExamData[selectedGovtExam].title}</span>
+                                    </h5>
+                                    <p className="text-muted mb-3">
+                                      <strong>Complete Path:</strong> {govtExamData[selectedGovtExam].fullPath}
+                                    </p>
+                                  </div>
+                                  
+                                  <h6 className="mb-3">Step-by-Step Roadmap:</h6>
+                                  <Row className="mb-4">
+                                    {govtExamData[selectedGovtExam].steps.map((step, idx) => (
+                                      <Col md={6} key={idx} className="mb-3">
+                                        <Card className="h-100 border">
+                                          <Card.Body className="p-3">
+                                            <div className="d-flex align-items-start gap-2">
+                                              <Badge bg="primary" className="fs-6">{step.step}</Badge>
+                                              <div>
+                                                <h6 className="mb-1">{step.title}</h6>
+                                                <p className="small text-muted mb-1">{step.description}</p>
+                                                <Badge bg="secondary">{step.duration}</Badge>
+                                              </div>
+                                            </div>
+                                          </Card.Body>
+                                        </Card>
+                                      </Col>
+                                    ))}
+                                  </Row>
+                                  
+                                  <h6 className="mb-3">Top Colleges/Recruitment:</h6>
+                                  <Row>
+                                    {govtExamData[selectedGovtExam].colleges.map((college, idx) => (
+                                      <Col md={6} key={idx} className="mb-2">
+                                        <Card className="h-100 border">
+                                          <Card.Body className="p-3">
+                                            <div className="d-flex justify-content-between align-items-center">
+                                              <div>
+                                                <h6 className="mb-0">{college.name}</h6>
+                                                <small className="text-muted">{college.location}</small>
+                                              </div>
+                                              <Badge bg="success">{college.seats}</Badge>
+                                            </div>
+                                          </Card.Body>
+                                        </Card>
+                                      </Col>
+                                    ))}
+                                  </Row>
+                                </Card.Body>
+                              </Card>
+                            )}
+                          </div>
+                        ) : prepType === 'govtCollege' ? (
+                          /* Govt College Content */
+                          <div className="mb-4">
+                            {/* College Type Selection Cards */}
+                            <Row className="mb-4">
+                              {govtCollegeTypes.map((collegeType, index) => {
+                                const collegeInfo = govtCollegeData[collegeType]
+                                if (!collegeInfo) return null
+                                return (
+                                  <Col md={4} key={index} className="mb-3">
                                     <Card 
-                                      className="h-100 border course-card"
+                                      className={`h-100 border ${selectedGovtCollege === collegeType ? 'border-primary' : ''}`}
                                       style={{ cursor: 'pointer' }}
-                                      onClick={() => handleCourseClick(course)}
+                                      onClick={() => setSelectedGovtCollege(collegeType)}
                                     >
-                                      <Card.Body className="p-4">
-                                        <div className="d-flex align-items-start gap-3 mb-3">
+                                      <Card.Body className="p-3">
+                                        <div className="d-flex align-items-center gap-2 mb-2">
                                           <div className="course-icon-large">
-                                            {course.icon}
+                                            {collegeInfo.icon}
                                           </div>
-                                          <div>
-                                            <h6 className="mb-1">{getCourseName(course.name)}</h6>
-                                            <Badge bg="info">{course.duration}</Badge>
-                                          </div>
+                                          <h6 className="mb-0">{collegeInfo.title}</h6>
                                         </div>
-                                        <p className="text-muted small mb-3">{getCourseDescription(course.name)}</p>
-                                        <div className="mt-auto">
-                                          <small className="text-muted d-block mb-2">Career Opportunities:</small>
-                                          <div className="d-flex flex-wrap gap-1">
-                                            {course.careers.slice(0, 3).map((career, idx) => (
-                                              <Badge bg="light" text="dark" key={idx} className="small">
-                                                {career}
-                                              </Badge>
-                                            ))}
-                                          </div>
-                                        </div>
+                                        <p className="small text-muted mb-2">
+                                          {collegeInfo.fullPath.substring(0, 50)}...
+                                        </p>
                                       </Card.Body>
                                     </Card>
                                   </Col>
-                                ))}
-                              </Row>
-                            </Tab.Pane>
-                          </Tab.Content>
-                        </Tab.Container>
+                                )
+                              })}
+                            </Row>
+                            
+                            {/* Detailed College Roadmap */}
+                            {selectedGovtCollege && govtCollegeData[selectedGovtCollege] && (
+                              <Card className="border bg-light">
+                                <Card.Body className="p-4">
+                                  <div className="mb-4">
+                                    <h5 className="mb-3">
+                                      {govtCollegeData[selectedGovtCollege].icon}
+                                      <span className="ms-2">{govtCollegeData[selectedGovtCollege].title}</span>
+                                    </h5>
+                                    <p className="text-muted mb-2">
+                                      <strong>Complete Path:</strong> {govtCollegeData[selectedGovtCollege].fullPath}
+                                    </p>
+                                    <p className="text-muted mb-2">
+                                      <strong>Eligibility:</strong> {govtCollegeData[selectedGovtCollege].eligibility}
+                                    </p>
+                                    <p className="text-muted mb-0">
+                                      <strong>Total Seats:</strong> {govtCollegeData[selectedGovtCollege].seats}
+                                    </p>
+                                  </div>
+                                  
+                                  <h6 className="mb-3">Step-by-Step Roadmap:</h6>
+                                  <Row className="mb-4">
+                                    {govtCollegeData[selectedGovtCollege].steps.map((step, idx) => (
+                                      <Col md={6} key={idx} className="mb-3">
+                                        <Card className="h-100 border">
+                                          <Card.Body className="p-3">
+                                            <div className="d-flex align-items-start gap-2">
+                                              <Badge bg="primary" className="fs-6">{step.step}</Badge>
+                                              <div>
+                                                <h6 className="mb-1">{step.title}</h6>
+                                                <p className="small text-muted mb-1">{step.description}</p>
+                                                <Badge bg="secondary">{step.duration}</Badge>
+                                              </div>
+                                            </div>
+                                          </Card.Body>
+                                        </Card>
+                                      </Col>
+                                    ))}
+                                  </Row>
+                                  
+                                  <h6 className="mb-3">Available Courses:</h6>
+                                  <div className="mb-4">
+                                    {govtCollegeData[selectedGovtCollege].courses.map((course, idx) => (
+                                      <Badge bg="info" className="me-2 mb-2" key={idx}>{course}</Badge>
+                                    ))}
+                                  </div>
+                                  
+                                  <h6 className="mb-3">Top Colleges:</h6>
+                                  <Row>
+                                    {govtCollegeData[selectedGovtCollege].colleges.map((college, idx) => (
+                                      <Col md={6} key={idx} className="mb-2">
+                                        <Card className="h-100 border">
+                                          <Card.Body className="p-3">
+                                            <div className="d-flex justify-content-between align-items-center">
+                                              <div>
+                                                <h6 className="mb-0">{college.name}</h6>
+                                                <small className="text-muted">{college.location}</small>
+                                              </div>
+                                              <div className="text-end">
+                                                <Badge bg="success">Rank #{college.ranking}</Badge>
+                                                <Badge bg="secondary" className="ms-1">{college.seats}</Badge>
+                                              </div>
+                                            </div>
+                                          </Card.Body>
+                                        </Card>
+                                      </Col>
+                                    ))}
+                                  </Row>
+                                </Card.Body>
+                              </Card>
+                            )}
+                          </div>
+                        ) : (
+                          /* Private Courses Content */
+                          <Tab.Container id="courses-tabs" defaultActiveKey="recommended">
+                            <Nav variant="tabs" className="mb-4">
+                              <Nav.Item>
+                                <Nav.Link eventKey="recommended">
+                                  <FaUniversity className="me-2" />
+                                  <TransText k="notifications.recommendedCourses" as="span" />
+                                </Nav.Link>
+                              </Nav.Item>
+                              <Nav.Item>
+                                <Nav.Link eventKey="all">
+                                  <FaBookOpen className="me-2" />
+                                  <TransText k="notifications.allCoursesFor" as="span" /> {getStreamName(selectedStream)}
+                                </Nav.Link>
+                              </Nav.Item>
+                            </Nav>
+                            <Tab.Content>
+                              <Tab.Pane eventKey="recommended">
+                                {courses.length > 0 ? (
+                                  <Row>
+                                    {courses.map((course, index) => (
+                                      <Col lg={4} md={6} className="mb-4" key={index}>
+                                        <Card 
+                                          className="h-100 border course-card"
+                                          style={{ cursor: 'pointer' }}
+                                          onClick={() => handleCourseClick(course)}
+                                        >
+                                          <Card.Body className="p-4">
+                                            <div className="d-flex align-items-start gap-3 mb-3">
+                                              <div className="course-icon-large">
+                                                {course.icon}
+                                              </div>
+                                              <div>
+                                                <h6 className="mb-1">{getCourseName(course.name)}</h6>
+                                                <Badge bg="info">{course.duration}</Badge>
+                                              </div>
+                                            </div>
+                                            <p className="text-muted small mb-3">{getCourseDescription(course.name)}</p>
+                                            <div className="mt-auto">
+                                              <small className="text-muted d-block mb-2"><TransText k="notifications.careerOpportunities" as="span" /></small>
+                                              <div className="d-flex flex-wrap gap-1">
+                                                {course.careers.slice(0, 3).map((career, idx) => (
+                                                  <Badge bg="light" text="dark" key={idx} className="small">
+                                                    {career}
+                                                  </Badge>
+                                                ))}
+                                              </div>
+                                            </div>
+                                          </Card.Body>
+                                        </Card>
+                                      </Col>
+                                    ))}
+                                  </Row>
+                                ) : (
+                                  <Alert variant="info">
+                                    <FaInfoCircle className="me-2" />
+                                    No recommended courses available. Please adjust your percentage or select a different stream.
+                                  </Alert>
+                                )}
+                              </Tab.Pane>
+                              <Tab.Pane eventKey="all">
+                                {allCourses.length > 0 ? (
+                                  <Row>
+                                    {allCourses.map((course, index) => (
+                                      <Col lg={4} md={6} className="mb-4" key={index}>
+                                        <Card 
+                                          className="h-100 border course-card"
+                                          style={{ cursor: 'pointer' }}
+                                          onClick={() => handleCourseClick(course)}
+                                        >
+                                          <Card.Body className="p-4">
+                                            <div className="d-flex align-items-start gap-3 mb-3">
+                                              <div className="course-icon-large">
+                                                {course.icon}
+                                              </div>
+                                              <div>
+                                                <h6 className="mb-1">{getCourseName(course.name)}</h6>
+                                                <Badge bg="info">{course.duration}</Badge>
+                                              </div>
+                                            </div>
+                                            <p className="text-muted small mb-3">{getCourseDescription(course.name)}</p>
+                                            <div className="mt-auto">
+                                              <small className="text-muted d-block mb-2">Career Opportunities:</small>
+                                              <div className="d-flex flex-wrap gap-1">
+                                                {course.careers.slice(0, 3).map((career, idx) => (
+                                                  <Badge bg="light" text="dark" key={idx} className="small">
+                                                    {career}
+                                                  </Badge>
+                                                ))}
+                                              </div>
+                                            </div>
+                                          </Card.Body>
+                                        </Card>
+                                      </Col>
+                                    ))}
+                                  </Row>
+                                ) : (
+                                  <Alert variant="info">
+                                    <FaInfoCircle className="me-2" />
+                                    No courses available for this stream.
+                                  </Alert>
+                                )}
+                              </Tab.Pane>
+                            </Tab.Content>
+                          </Tab.Container>
+                        )}
                       </Card.Body>
                     </Card>
 
