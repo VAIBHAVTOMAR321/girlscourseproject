@@ -7,7 +7,7 @@ import UseLeftNav from './UseLeftNav'
 import TransText from '../TransText'
 import { getTranslation } from '../../utils/translations'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { FaArrowLeft, FaGraduationCap, FaChalkboardTeacher, FaBalanceScale, FaNewspaper, FaPaintBrush, FaHeartbeat, FaCog, FaHospital, FaFlask, FaLaptopMedical, FaSeedling, FaDna, FaBriefcase, FaUserTie, FaBuilding, FaChartBar, FaCode, FaMicrochip, FaNetworkWired, FaDatabase, FaRobot, FaCheckCircle, FaInfoCircle, FaLightbulb, FaBook, FaAward, FaCertificate, FaClock, FaRupeeSign, FaChartLine, FaUsers, FaBookOpen, FaClipboardList, FaStar, FaTrophy, FaRocket, FaUniversity, FaMapMarkerAlt, FaShieldAlt, FaTrain, FaLandmark, FaMoneyBillWave, FaUserShield, FaUserGraduate, FaFlag, FaBusAlt } from 'react-icons/fa'
+import { FaArrowLeft, FaGraduationCap, FaChalkboardTeacher, FaBalanceScale, FaNewspaper, FaPaintBrush, FaHeartbeat, FaCog, FaHospital, FaFlask, FaLaptopMedical, FaSeedling, FaDna, FaBriefcase, FaUserTie, FaBuilding, FaChartBar, FaCode, FaMicrochip, FaNetworkWired, FaDatabase, FaRobot, FaCheckCircle, FaInfoCircle, FaLightbulb, FaBook, FaAward, FaCertificate, FaClock, FaChartLine, FaUsers, FaBookOpen, FaClipboardList, FaStar, FaTrophy, FaRocket, FaUniversity, FaMapMarkerAlt, FaShieldAlt, FaTrain, FaLandmark, FaMoneyBillWave, FaUserShield, FaUserGraduate, FaFlag, FaBusAlt } from 'react-icons/fa'
 import '../../assets/css/OccupationDetails.css'
 
 const OccupationDetails = () => {
@@ -803,10 +803,6 @@ tips: ['tip.learnProfessionals', 'tip.handleCases', 'tip.patientRelationships']
                         </div>
                       </div>
                       <div className="d-flex gap-2">
-                        <Badge bg="success" className="fs-6 p-2">
-                          <FaRupeeSign className="me-1" />
-                          {occupationDetails.salaryRange}
-                        </Badge>
                         <Badge bg="info" className="fs-6 p-2">
                           <FaChartLine className="me-1" />
                           {occupationDetails.growthPotential} <TransText k="occupation.growthPotential" as="span" />
@@ -892,17 +888,13 @@ tips: ['tip.learnProfessionals', 'tip.handleCases', 'tip.patientRelationships']
                                             <p className="small text-muted mb-2">
                                               {examDetails.fullPath.substring(0, 80)}...
                                             </p>
-                                        <div className="d-flex justify-content-between align-items-center">
-                                          <Badge bg="success">
-                                            <FaRupeeSign className="me-1" />
-                                            {examDetails.salaryRange}
-                                          </Badge>
-                                          <Badge bg="info">
-                                            <FaChartLine className="me-1" />
-                                            {examDetails.growthPotential}
-                                          </Badge>
-                                        </div>
-                                      </Card.Body>
+                                            <div className="d-flex justify-content-between align-items-center">
+                                              <Badge bg="info">
+                                                <FaChartLine className="me-1" />
+                                                {examDetails.growthPotential}
+                                              </Badge>
+                                            </div>
+                                          </Card.Body>
                                     </Card>
                                   </Col>
                                 )
@@ -1083,10 +1075,6 @@ tips: ['tip.learnProfessionals', 'tip.handleCases', 'tip.patientRelationships']
                                           {getOccupationTranslationKey(occ) ? getTranslation(getOccupationTranslationKey(occ) + 'Desc', language) : details.description.substring(0, 80)}...
                                         </p>
                                         <div className="d-flex justify-content-between align-items-center">
-                                          <Badge bg="success">
-                                            <FaRupeeSign className="me-1" />
-                                            {details.salaryRange}
-                                          </Badge>
                                           <Badge bg="info">
                                             <FaChartLine className="me-1" />
                                             {details.growthPotential}
@@ -1116,8 +1104,7 @@ tips: ['tip.learnProfessionals', 'tip.handleCases', 'tip.patientRelationships']
                                         <FaTrophy />
                                       </div>
                                       <h6 className="mb-1">{level.level}</h6>
-                                      <small className="text-muted d-block mb-2">{level.experience}</small>
-                                      <Badge bg="success">{level.salary}</Badge>
+                                      <small className="text-muted d-block">{level.experience}</small>
                                     </Card.Body>
                                   </Card>
                                 </Col>

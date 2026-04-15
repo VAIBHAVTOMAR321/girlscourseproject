@@ -29,6 +29,7 @@ import '../../assets/css/UserNotifications.css'
   const [prepType, setPrepType] = useState('govtCollege') // 'private', 'govtCollege', or 'govtJob'
   const [selectedGovtExam, setSelectedGovtExam] = useState('IIT-JEE')
   const [selectedGovtCollege, setSelectedGovtCollege] = useState('IIT')
+  const [selectedCollegeTab, setSelectedCollegeTab] = useState('recommended')
   const navigate = useNavigate()
   const resultsRef = useRef(null)
 
@@ -327,7 +328,10 @@ import '../../assets/css/UserNotifications.css'
           { name: isHindi ? 'IIT दिल्ली' : 'IIT Delhi', location: isHindi ? 'दिल्ली' : 'Delhi', ranking: '#2', seats: '~900' },
           { name: isHindi ? 'IIT मद्रास' : 'IIT Madras', location: isHindi ? 'चेन्नई' : 'Chennai', ranking: '#3', seats: '~800' },
           { name: isHindi ? 'IIT कानपुर' : 'IIT Kanpur', location: isHindi ? 'कानपुर' : 'Kanpur', ranking: '#4', seats: '~850' },
-          { name: isHindi ? 'IIT खड़गपुर' : 'IIT Kharagpur', location: isHindi ? 'खड़गपुर' : 'Kharagpur', ranking: '#5', seats: '~900' }
+          { name: isHindi ? 'IIT खड़गपुर' : 'IIT Kharagpur', location: isHindi ? 'खड़गपुर' : 'Kharagpur', ranking: '#5', seats: '~900' },
+          { name: isHindi ? 'IIT रुड़की' : 'IIT Roorkee', location: isHindi ? 'रुड़की' : 'Roorkee', ranking: '#6', seats: '~700' },
+          { name: isHindi ? 'IIT गुवाहाटी' : 'IIT Guwahati', location: isHindi ? 'गुवाहाटी' : 'Guwahati', ranking: '#7', seats: '~650' },
+          { name: isHindi ? 'IIT हैदराबाद' : 'IIT Hyderabad', location: isHindi ? 'हैदराबाद' : 'Hyderabad', ranking: '#8', seats: '~500' }
         ]
       },
       'NIT': {
@@ -351,7 +355,10 @@ import '../../assets/css/UserNotifications.css'
           { name: isHindi ? 'NIT सुराथकल' : 'NIT Surathkal', location: isHindi ? 'कर्नाटक' : 'Karnataka', ranking: '#2', seats: '~1200' },
           { name: isHindi ? 'NIT वरंगल' : 'NIT Warangal', location: isHindi ? 'तेलंगाना' : 'Telangana', ranking: '#3', seats: '~1000' },
           { name: isHindi ? 'NIT कालिकट' : 'NIT Calicut', location: isHindi ? 'केरल' : 'Kerala', ranking: '#4', seats: '~1100' },
-          { name: isHindi ? 'NIT राउरकेला' : 'NIT Rourkela', location: isHindi ? 'उड़ीसा' : 'Odisha', ranking: '#5', seats: '~900' }
+          { name: isHindi ? 'NIT राउरकेला' : 'NIT Rourkela', location: isHindi ? 'उड़ीसा' : 'Odisha', ranking: '#5', seats: '~900' },
+          { name: isHindi ? 'NIT जमशेदपुर' : 'NIT Jamshedpur', location: isHindi ? 'जमशेदपुर' : 'Jamshedpur', ranking: '#6', seats: '~800' },
+          { name: isHindi ? 'NIT पुणे' : 'NIT Pune', location: isHindi ? 'पुणे' : 'Pune', ranking: '#7', seats: '~750' },
+          { name: isHindi ? 'NIT हमीरपुर' : 'NIT Hamirpur', location: isHindi ? 'हमीरपुर' : 'Hamirpur', ranking: '#8', seats: '~700' }
         ]
       },
       'IIIT': {
@@ -399,7 +406,10 @@ import '../../assets/css/UserNotifications.css'
           { name: isHindi ? 'मौलाना आजाद मेडिकल कॉलेज' : 'Maulana Azad Medical College', location: isHindi ? 'दिल्ली' : 'Delhi', ranking: '#2', seats: '~250' },
           { name: isHindi ? 'लेडी हार्डिंग मेडिकल कॉलेज' : 'Lady Hardinge Medical College', location: isHindi ? 'दिल्ली' : 'Delhi', ranking: '#3', seats: '~200' },
           { name: isHindi ? 'ग्रांट मेडिकल कॉलेज' : 'Grant Medical College', location: isHindi ? 'मुंबई' : 'Mumbai', ranking: '#4', seats: '~200' },
-          { name: isHindi ? 'किंग जॉर्ज मेडिकल यूनिवर्सिटी' : 'King George Medical University', location: isHindi ? 'लखनऊ' : 'Lucknow', ranking: '#5', seats: '~250' }
+          { name: isHindi ? 'किंग जॉर्ज मेडिकल यूनिवर्सिटी' : 'King George Medical University', location: isHindi ? 'लखनऊ' : 'Lucknow', ranking: '#5', seats: '~250' },
+          { name: isHindi ? 'CMC वेल्लोर' : 'CMC Vellore', location: isHindi ? 'वेल्लोर' : 'Vellore', ranking: '#6', seats: '~100' },
+          { name: isHindi ? 'AFMC पुणे' : 'AFMC Pune', location: isHindi ? 'पुणे' : 'Pune', ranking: '#7', seats: '~150' },
+          { name: isHindi ? 'जिपमर पुडुचेरी' : 'JIPMER Puducherry', location: isHindi ? 'पुडुचेरी' : 'Puducherry', ranking: '#8', seats: '~200' }
         ]
       },
       'NDA': {
@@ -444,9 +454,12 @@ import '../../assets/css/UserNotifications.css'
         colleges: [
           { name: isHindi ? 'दिल्ली विश्वविद्यालय (DU)' : 'Delhi University (DU)', location: isHindi ? 'दिल्ली' : 'Delhi', ranking: '#1', seats: '~5000' },
           { name: isHindi ? 'बनारस हिन्दू विश्वविद्यालय (BHU)' : 'Banaras Hindu University (BHU)', location: isHindi ? 'वाराणसी' : 'Varanasi', ranking: '#2', seats: '~3000' },
-          { name: isHindi ? 'जवाहरलाल नेहरू विश्वविद्यालय' : 'Jawaharlal Nehru University', location: isHindi ? 'दिल्ली' : 'Delhi', ranking: '#3', seats: '~2000' },
-          { name: isHindi ? 'अलीगढ़ मुस्लिम विश्वविद्यालय' : 'Aligarh Muslim University', location: isHindi ? 'अलीगढ़' : 'Aligarh', ranking: '#4', seats: '~2500' },
-          { name: isHindi ? 'हायदराबाद विश्वविद्यालय' : 'University of Hyderabad', location: isHindi ? 'हैदराबाद' : 'Hyderabad', ranking: '#5', seats: '~1500' }
+          { name: isHindi ? 'जवाहरलाल नेहरू विश्वविद्यालय (JNU)' : 'Jawaharlal Nehru University (JNU)', location: isHindi ? 'दिल्ली' : 'Delhi', ranking: '#3', seats: '~2000' },
+          { name: isHindi ? 'अलीगढ़ मुस्लिम विश्वविद्यालय (AMU)' : 'Aligarh Muslim University (AMU)', location: isHindi ? 'अलीगढ़' : 'Aligarh', ranking: '#4', seats: '~2500' },
+          { name: isHindi ? 'हैदराबाद विश्वविद्यालय (UoH)' : 'University of Hyderabad (UoH)', location: isHindi ? 'हैदराबाद' : 'Hyderabad', ranking: '#5', seats: '~1500' },
+          { name: isHindi ? 'जामिया मिलिया इस्लामिया (JMI)' : 'Jamia Millia Islamia (JMI)', location: isHindi ? 'दिल्ली' : 'Delhi', ranking: '#6', seats: '~2000' },
+          { name: isHindi ? 'पंजाब विश्वविद्यालय' : 'Punjab University', location: isHindi ? 'चंडीगढ़' : 'Chandigarh', ranking: '#7', seats: '~2500' },
+          { name: isHindi ? 'कलकत्ता विश्वविद्यालय' : 'University of Calcutta', location: isHindi ? 'कोलकाता' : 'Kolkata', ranking: '#8', seats: '~3000' }
         ]
       },
       'CommerceCollege': {
@@ -465,11 +478,14 @@ import '../../assets/css/UserNotifications.css'
           { step: 5, title: isHindi ? 'डिग्री पूरी करें' : 'Complete Degree', description: isHindi ? '3 साल का B.Com कोर्स' : '3-year B.Com course', duration: isHindi ? '3 साल' : '3 Years' }
         ],
         colleges: [
-          { name: isHindi ? 'श्री राम कॉलेज ऑफ कॉमर्स' : 'Sri Ram College of Commerce', location: isHindi ? 'दिल्ली' : 'Delhi', ranking: '#1', seats: '~1000' },
-          { name: isHindi ? 'दिल्ली स्कूल ऑफ इकोनॉमिक्स' : 'Delhi School of Economics', location: isHindi ? 'दिल्ली' : 'Delhi', ranking: '#2', seats: '~800' },
-          { name: isHindi ? 'माधव कॉलेज' : 'Madhav College', location: isHindi ? 'दिल्ली' : 'Delhi', ranking: '#3', seats: '~600' },
-          { name: isHindi ? 'सेंट स्टीफंस कॉलेज' : 'St. Stephens College', location: isHindi ? 'दिल्ली' : 'Delhi', ranking: '#4', seats: '~500' },
-          { name: isHindi ? 'हिंदू कॉलेज' : 'Hindu College', location: isHindi ? 'दिल्ली' : 'Delhi', ranking: '#5', seats: '~700' }
+          { name: isHindi ? 'श्री राम कॉलेज ऑफ कॉमर्स (SRCC)' : 'Sri Ram College of Commerce (SRCC)', location: isHindi ? 'दिल्ली' : 'Delhi', ranking: '#1', seats: '~1000' },
+          { name: isHindi ? 'दिल्ली स्कूल ऑफ इकोनॉमिक्स (DSE)' : 'Delhi School of Economics (DSE)', location: isHindi ? 'दिल्ली' : 'Delhi', ranking: '#2', seats: '~800' },
+          { name: isHindi ? 'मिरांडा हाउस' : 'Miranda House', location: isHindi ? 'दिल्ली' : 'Delhi', ranking: '#3', seats: '~600' },
+          { name: isHindi ? 'हंसराज कॉलेज' : 'Hansraj College', location: isHindi ? 'दिल्ली' : 'Delhi', ranking: '#4', seats: '~700' },
+          { name: isHindi ? 'लेडी श्री राम कॉलेज' : 'Lady Shri Ram College', location: isHindi ? 'दिल्ली' : 'Delhi', ranking: '#5', seats: '~500' },
+          { name: isHindi ? 'सेंट स्टीफंस कॉलेज' : 'St. Stephens College', location: isHindi ? 'दिल्ली' : 'Delhi', ranking: '#6', seats: '~500' },
+          { name: isHindi ? 'हिंदू कॉलेज' : 'Hindu College', location: isHindi ? 'दिल्ली' : 'Delhi', ranking: '#7', seats: '~700' },
+          { name: isHindi ? 'श्रीवानाथ कॉलेज' : 'Shri Ram College of Commerce', location: isHindi ? 'दिल्ली' : 'Delhi', ranking: '#8', seats: '~600' }
         ]
       }
     }
@@ -2000,7 +2016,7 @@ setPrepType('govtCollege')
                                 <Nav.Item>
                                   <Nav.Link eventKey="colleges">
                                     <FaUniversity className="me-2" />
-                                    <TransText k="notifications.govtCollegePath" as="span" />
+                                    <TransText k="notifications.topColleges" as="span" />
                                   </Nav.Link>
                                 </Nav.Item>
                                 <Nav.Item>
@@ -2016,7 +2032,7 @@ setPrepType('govtCollege')
                                   </Nav.Link>
                                 </Nav.Item>
                               </Nav>
-                              <Tab.Content>
+<Tab.Content>
                                 <Tab.Pane eventKey="colleges">
                                   {filteredCollegeTypes.length === 0 ? (
                                     <Alert variant="info">
@@ -2092,9 +2108,7 @@ setPrepType('govtCollege')
                                       </Col>
                                     ))}
                                   </Row>
-                                  
-<h6 className="mb-3"><TransText k="notifications.availableCourses" as="span" /></h6>
-                                   
+                                    
                                   <h6 className="mb-3"><TransText k="notifications.topColleges" as="span" /></h6>
                                   <Row>
                                     {govtCollegeData[selectedGovtCollege].colleges.map((college, idx) => (
@@ -2106,10 +2120,7 @@ setPrepType('govtCollege')
                                                 <h6 className="mb-0">{college.name}</h6>
                                                 <small className="text-muted">{college.location}</small>
                                               </div>
-                                              <div className="text-end">
-                                                <Badge bg="success">Rank #{college.ranking}</Badge>
-                                                <Badge bg="secondary" className="ms-1">{college.seats}</Badge>
-                                              </div>
+                                              <Badge bg="secondary">{college.seats}</Badge>
                                             </div>
                                           </Card.Body>
                                         </Card>
@@ -2418,8 +2429,7 @@ setPrepType('govtCollege')
                         >
                           <Card.Body className="p-3" style={{ maxHeight: selectedCareerPath === path ? '400px' : 'auto', overflowY: selectedCareerPath === path ? 'auto' : 'visible' }}>
                             <h6 className="mb-2 text-primary">{path.path}</h6>
-                            <div className="d-flex justify-content-between mb-2">
-                              <Badge bg="success">{path.salary}</Badge>
+                            <div className="d-flex justify-content-start mb-2">
                               <Badge bg="secondary">{path.growth}</Badge>
                             </div>
                             {selectedCareerPath === path && (
