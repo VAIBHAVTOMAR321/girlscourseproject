@@ -313,6 +313,12 @@ import '../../assets/css/UserNotifications.css'
 
   const filteredCollegeTypes = selectedStream ? getFilteredCollegeTypes() : govtCollegeTypes
 
+  useEffect(() => {
+    if (selectedStream && filteredCollegeTypes.length > 0) {
+      setSelectedGovtCollege(filteredCollegeTypes[0])
+    }
+  }, [selectedStream])
+
   const [govtExamData, setGovtExamData] = useState({})
   const [govtCollegeData, setGovtCollegeData] = useState({})
 
