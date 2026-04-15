@@ -631,13 +631,13 @@ const OccupationDetails = () => {
 
   const getFilteredExamTypesByStream = () => {
     if (stream === 'science') {
-      return ['IIT-JEE', 'NEET']
+      return ['IIT-JEE', 'NEET', 'Banking', 'SSC', 'Railway', 'StatePSC', 'NDA']
     } else if (stream === 'commerce') {
-      return ['UPSC', 'SSC', 'Banking', 'Railway', 'StatePSC', 'NDA']
+      return ['Banking', 'UPSC', 'SSC', 'Railway', 'StatePSC', 'NDA']
     } else if (stream === 'arts') {
       return ['UPSC', 'SSC', 'Banking', 'Railway', 'StatePSC', 'NDA']
     } else if (stream === 'computer') {
-      return ['IIT-JEE', 'NEET']
+      return ['IIT-JEE', 'NEET', 'Banking', 'SSC', 'Railway', 'StatePSC', 'NDA']
     }
     return govtExamTypes
   }

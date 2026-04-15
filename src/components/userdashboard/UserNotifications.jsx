@@ -116,13 +116,13 @@ import '../../assets/css/UserNotifications.css'
 
   const getFilteredExamTypes = () => {
     if (selectedStream === 'science') {
-      return ['IIT-JEE', 'NEET']
+      return ['IIT-JEE', 'NEET', 'Banking', 'SSC', 'Railway', 'StatePSC', 'NDA']
     } else if (selectedStream === 'commerce') {
-      return ['UPSC', 'SSC', 'Banking', 'Railway', 'StatePSC']
+      return ['Banking', 'UPSC', 'SSC', 'Railway', 'StatePSC', 'NDA']
     } else if (selectedStream === 'arts') {
-      return ['UPSC', 'SSC', 'Banking', 'Railway', 'StatePSC']
+      return ['UPSC', 'SSC', 'Banking', 'Railway', 'StatePSC', 'NDA']
     } else if (selectedStream === 'computer') {
-      return ['IIT-JEE', 'NEET']
+      return ['IIT-JEE', 'NEET', 'Banking', 'SSC', 'Railway', 'StatePSC', 'NDA']
     }
     return govtExamTypes
   }
