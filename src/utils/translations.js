@@ -975,6 +975,42 @@ export const translations = {
     "step.checkNotification": "Check Notification",
     "step.preliminary": "Preliminary",
     "step.mains": "Mains",
+    "step.complete12thStandard": "Complete 12th Standard",
+    "step.pursueDegree": "Pursue Relevant Degree",
+    "step.gainExperience": "Gain Experience",
+    "step.startCareer": "Start Career",
+
+    // Step Descriptions
+    "stepDesc.complete12thStandard": "Complete your 12th standard with good percentage",
+    "stepDesc.pursueDegree": "Complete bachelor's degree in relevant field",
+    "stepDesc.gainExperience": "Gain practical experience through internships",
+    "stepDesc.startCareer": "Start your professional career",
+
+    // Duration Keys
+    "duration.2Years": "2 Years",
+    "duration.3to4Years": "3-4 Years",
+    "duration.1to2Years": "1-2 Years",
+    "duration.ongoing": "Ongoing",
+    "duration.examSeason": "Exam Season",
+    "duration.afterResults": "After Results",
+    "duration.beforeExam": "Before Exam",
+    "duration.afterTier1": "After Tier 1",
+    "duration.afterDv": "After DV",
+    "duration.afterPrelims": "After Prelims",
+    "duration.afterMains": "After Mains",
+    "duration.afterResult": "After Result",
+    "duration.afterMedical": "After Medical",
+    "duration.whenNotified": "When Notified",
+
+    // Tips Translation Keys
+    "tip.focusAcademics": "Focus on academics",
+    "tip.developSkills": "Develop relevant skills",
+    "tip.chooseGoodCollege": "Choose good college",
+    "tip.buildSkills": "Build practical skills",
+    "tip.learnProfessionals": "Learn from professionals",
+    "tip.buildNetwork": "Build network",
+    "tip.applyJobs": "Apply for jobs",
+    "tip.continueLearning": "Continue learning",
     
     // College Titles
     "college.iit": "IIT (Indian Institutes of Technology)",
@@ -1949,7 +1985,43 @@ export const translations = {
     "step.checkNotification": "सूचना जांचें",
     "step.preliminary": "प्रारंभिक",
     "step.mains": "मुख्य",
+    "step.complete12thStandard": "12वीं पूरी करें",
+    "step.pursueDegree": "डिग्री प्राप्त करें",
+    "step.gainExperience": "अनुभव प्राप्त करें",
+    "step.startCareer": "करियर शुरू करें",
+
+    // Step Descriptions (Hindi)
+    "stepDesc.complete12thStandard": "अपनी 12वीं अच्छे प्रतिशत के साथ पूरी करें",
+    "stepDesc.pursueDegree": "प्रासंगिक क्षेत्र में स्नातक की डिग्री पूरी करें",
+    "stepDesc.gainExperience": "इंटर्नशिप के माध्यम से व्यावहारिक अनुभव प्राप्त करें",
+    "stepDesc.startCareer": "अपना पेशेवर करियर शुरू करें",
     
+    // Duration Keys (Hindi)
+    "duration.2Years": "2 साल",
+    "duration.3to4Years": "3-4 साल",
+    "duration.1to2Years": "1-2 साल",
+    "duration.ongoing": "जारी",
+    "duration.examSeason": "परीक्षा सीजन",
+    "duration.afterResults": "परिणाम के बाद",
+    "duration.beforeExam": "परीक्षा से पहले",
+    "duration.afterTier1": "Tier 1 के बाद",
+    "duration.afterDv": "DV के बाद",
+    "duration.afterPrelims": "Prelims के बाद",
+    "duration.afterMains": "Mains के बाद",
+    "duration.afterResult": "परिणाम के बाद",
+    "duration.afterMedical": "Medical के बाद",
+    "duration.whenNotified": "सूचना मिलने पर",
+    
+    // Tips Translation Keys (Hindi)
+    "tip.focusAcademics": "अकादमिक पर ध्यान दें",
+    "tip.developSkills": "प्रासंगिक कौशल विकसित करें",
+    "tip.chooseGoodCollege": "अच्छा कॉलेज चुनें",
+    "tip.buildSkills": "व्यावहारिक कौशल बनाएं",
+    "tip.learnProfessionals": "पेशेवरों से सीखें",
+    "tip.buildNetwork": "नेटवर्क बनाएं",
+    "tip.applyJobs": "नौकरी के लिए आवेदन करें",
+    "tip.continueLearning": "सीखना जारी रखें",
+
     // College Titles (Hindi)
     "college.iit": "IIT (भारतीय प्रौद्योगिकी संस्थान)",
     "college.nit": "NIT (राष्ट्रीय प्रौद्योगिकी संस्थान)",

@@ -435,10 +435,10 @@ const OccupationDetails = () => {
       growthPotential: 'High',
       demandLevel: 'High',
       steps: [
-        { step: 1, title: 'Complete 12th Standard', description: 'Complete your 12th standard with good percentage', duration: '2 Years', tips: ['Focus on academics', 'Develop relevant skills'] },
-        { step: 2, title: 'Pursue Relevant Degree', description: 'Complete bachelor\'s degree in relevant field', duration: '3-4 Years', tips: ['Choose good college', 'Build practical skills'] },
-        { step: 3, title: 'Gain Experience', description: 'Gain practical experience through internships', duration: '1-2 Years', tips: ['Learn from professionals', 'Build network'] },
-        { step: 4, title: 'Start Career', description: 'Start your professional career', duration: 'Ongoing', tips: ['Apply for jobs', 'Continue learning'] }
+        { step: 1, titleKey: 'step.complete12thStandard', descriptionKey: 'stepDesc.complete12thStandard', durationKey: 'duration.2Years', tips: ['Focus on academics', 'Develop relevant skills'] },
+        { step: 2, titleKey: 'step.pursueDegree', descriptionKey: 'stepDesc.pursueDegree', durationKey: 'duration.3to4Years', tips: ['Choose good college', 'Build practical skills'] },
+        { step: 3, titleKey: 'step.gainExperience', descriptionKey: 'stepDesc.gainExperience', durationKey: 'duration.1to2Years', tips: ['Learn from professionals', 'Build network'] },
+        { step: 4, titleKey: 'step.startCareer', descriptionKey: 'stepDesc.startCareer', durationKey: 'duration.ongoing', tips: ['Apply for jobs', 'Continue learning'] }
       ],
       exams: [],
       skills: ['Communication Skills', 'Problem Solving', 'Teamwork', 'Adaptability'],
@@ -1109,9 +1109,7 @@ const OccupationDetails = () => {
                               {occupationDetails.careerPath.map((level, index) => (
                                 <Col md={4} key={index} className="mb-3">
                                   <Card 
-                                    className="h-100 border career-level-card" 
-                                    style={{ cursor: 'pointer', transition: 'all 0.3s ease' }}
-                                    onClick={() => navigate('/UserNotifications')}
+                                    className="h-100 border career-level-card"
                                   >
                                     <Card.Body className="p-3 text-center">
                                       <div className="icon-wrapper">
@@ -1142,8 +1140,6 @@ const OccupationDetails = () => {
                               <Col md={6} key={index}>
                                 <Card 
                                   className="mb-3 border step-card"
-                                  style={{ cursor: 'pointer', transition: 'all 0.3s ease' }}
-                                  onClick={() => navigate('/UserNotifications')}
                                 >
                                   <Card.Body className="p-3">
                                     <div className="d-flex align-items-start gap-3">
@@ -1153,9 +1149,9 @@ const OccupationDetails = () => {
                                         </Badge>
                                       </div>
                                       <div className="flex-grow-1">
-                                        <h6 className="mb-1">{step.title}</h6>
-                                        <p className="mb-2 fw-bold" style={{ fontSize: '1.1rem' }}>{step.description}</p>
-                                        <Badge bg="info" className="mb-2">{step.duration}</Badge>
+                                        <h6 className="mb-1">{step.titleKey ? getTranslation(step.titleKey, language) : step.title}</h6>
+                                        <p className="mb-2 fw-bold" style={{ fontSize: '1.1rem' }}>{step.descriptionKey ? getTranslation(step.descriptionKey, language) : step.description}</p>
+                                        <Badge bg="info" className="mb-2">{step.durationKey ? getTranslation(step.durationKey, language) : step.duration}</Badge>
                                         <div className="mt-2">
                                           <small className="text-muted d-block mb-1"><TransText k="occupation.tips" as="span" />:</small>
                                           <ul className="mb-0 ps-3">
@@ -1192,8 +1188,6 @@ const OccupationDetails = () => {
                                         bg="light" 
                                         text="dark" 
                                         className="p-2 fs-6"
-                                        style={{ cursor: 'pointer', transition: 'all 0.3s ease' }}
-                                        onClick={() => navigate('/UserNotifications')}
                                       >
                                         <FaCheckCircle className="me-1 text-success" />
                                         {skill}
@@ -1264,8 +1258,6 @@ const OccupationDetails = () => {
                                     <Col md={6} key={index} className="mb-3">
                                       <Card 
                                         className="h-100 border college-card"
-                                        style={{ cursor: 'pointer', transition: 'all 0.3s ease' }}
-                                        onClick={() => navigate('/UserNotifications')}
                                       >
                                         <Card.Body className="p-3">
                                           <div className="d-flex justify-content-between align-items-start">
