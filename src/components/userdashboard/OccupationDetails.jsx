@@ -182,35 +182,35 @@ const OccupationDetails = () => {
             title: 'Complete 12th Standard',
             description: 'Complete your 12th standard with good percentage (preferably 60%+)',
             duration: '2 Years',
-            tips: ['Focus on your favorite subjects', 'Participate in teaching-related activities', 'Develop communication skills']
+            tips: ['tip.favoriteSubjects', 'tip.teachingActivities', 'tip.communicationSkills']
           },
           {
             step: 2,
             title: 'Pursue Bachelor\'s Degree',
             description: 'Complete BA/B.Sc/B.Com in your preferred subject',
             duration: '3 Years',
-            tips: ['Choose subjects you want to teach', 'Maintain good academic record', 'Participate in college events']
+            tips: ['tip.chooseSubjects', 'tip.goodRecord', 'tipcollegeEvents']
           },
           {
             step: 3,
             title: 'Complete B.Ed',
             description: 'Pursue Bachelor of Education (B.Ed) from a recognized university',
             duration: '2 Years',
-            tips: ['Choose good B.Ed college', 'Learn teaching methodologies', 'Practice teaching in schools']
+            tips: ['tip.goodBEDCollege', 'tip.learningMethodologies', 'tip.practiceTeaching']
           },
           {
             step: 4,
             title: 'Clear Teaching Exams',
             description: 'Clear CTET/TET/STET exams as per your state requirements',
             duration: '3-6 Months',
-            tips: ['Study previous year papers', 'Focus on child psychology', 'Practice mock tests']
+            tips: ['tip.studyPreviousPapers', 'tip.childPsychology', 'tip.mockTests']
           },
           {
             step: 5,
             title: 'Apply for Teaching Positions',
             description: 'Apply for government or private school teaching positions',
             duration: 'Ongoing',
-            tips: ['Prepare for interviews', 'Create a good resume', 'Apply to multiple schools']
+            tips: ['tip.prepareInterviews', 'tip.goodResume', 'tip.applyMultipleSchools']
           }
         ],
         exams: [
@@ -247,35 +247,35 @@ const OccupationDetails = () => {
             title: 'Complete 12th Standard',
             description: 'Complete your 12th standard with good percentage',
             duration: '2 Years',
-            tips: ['Focus on humanities subjects', 'Develop reading habits', 'Participate in debates']
+            tips: ['tip.humanitiesSubjects', 'tip.readingHabits', 'tip.participateDebates']
           },
           {
             step: 2,
             title: 'Pursue LLB',
             description: 'Complete LLB (3 years after graduation) or BA LLB (5 years integrated)',
             duration: '3-5 Years',
-            tips: ['Choose good law college', 'Study case laws', 'Participate in moot courts']
+            tips: ['tip.chooseGoodCollege', 'tip.studyCaseLaws', 'tip.mootCourts']
           },
           {
             step: 3,
             title: 'Enroll with Bar Council',
             description: 'Register with State Bar Council after completing LLB',
             duration: '1-2 Months',
-            tips: ['Complete all formalities', 'Get Bar Council registration', 'Start internship']
+            tips: ['tip.barCouncilFormalities', 'tip.barCouncilRegistration', 'tip.startInternship']
           },
           {
             step: 4,
             title: 'Complete Internship',
             description: 'Intern under a senior lawyer to gain practical experience',
             duration: '1-2 Years',
-            tips: ['Learn court procedures', 'Draft legal documents', 'Build network']
+            tips: ['tip.learnCourtProcedures', 'tip.draftDocuments', 'tip.buildNetwork']
           },
           {
             step: 5,
             title: 'Start Practice',
             description: 'Start independent practice or join a law firm',
             duration: 'Ongoing',
-            tips: ['Build client base', 'Specialize in a field', 'Continue learning']
+            tips: ['tip.buildClientBase', 'tip.specializeField', 'tip.continueLearning']
           }
         ],
         exams: [
@@ -311,7 +311,7 @@ const OccupationDetails = () => {
             title: 'Complete 12th Standard',
             description: 'Complete your 12th standard with Physics, Chemistry, and Mathematics',
             duration: '2 Years',
-            tips: ['Focus on Mathematics', 'Learn basic programming', 'Participate in coding competitions']
+            tips: ['tip.mathematics', 'tip.basicProgramming', 'tip.codingCompetitions']
           },
           {
             step: 2,
@@ -325,7 +325,7 @@ const OccupationDetails = () => {
             title: 'Learn Programming Languages',
             description: 'Master programming languages like Java, Python, JavaScript, etc.',
             duration: 'Ongoing',
-            tips: ['Practice daily', 'Build real projects', 'Contribute to open source']
+            tips: ['tip.practiceDaily', 'tip.buildRealProjects', 'tip.openSource']
           },
           {
             step: 4,
@@ -339,7 +339,7 @@ const OccupationDetails = () => {
             title: 'Apply for Jobs',
             description: 'Apply for software engineering positions in IT companies',
             duration: 'Ongoing',
-            tips: ['Prepare for interviews', 'Practice coding problems', 'Network with professionals']
+            tips: ['tip.prepareInterviews', 'tip.codingProblems', 'tip.network']
           }
         ],
         exams: [
@@ -374,21 +374,21 @@ const OccupationDetails = () => {
             title: 'Complete 12th Standard',
             description: 'Complete your 12th standard with Physics, Chemistry, and Biology',
             duration: '2 Years',
-            tips: ['Focus on Biology', 'Develop empathy', 'Volunteer in healthcare']
+            tips: ['tip.biology', 'tip.empathy', 'tip.volunteerHealthcare']
           },
           {
             step: 2,
             title: 'Clear NEET Exam',
             description: 'Qualify NEET (National Eligibility cum Entrance Test)',
             duration: '1 Year',
-            tips: ['Study NCERT thoroughly', 'Practice previous papers', 'Take mock tests']
+            tips: ['tip.understandNCERT', 'tip.solvePreviousPapers', 'tip.takeMockTests']
           },
           {
             step: 3,
             title: 'Complete MBBS',
             description: 'Pursue MBBS (Bachelor of Medicine and Bachelor of Surgery)',
             duration: '5.5 Years',
-            tips: ['Study regularly', 'Gain practical experience', 'Develop bedside manners']
+            tips: ['tip.focusStudies', 'tip.gainClinicalExperience', 'tip.bedsideManners']
           },
           {
             step: 4,
@@ -435,10 +435,10 @@ const OccupationDetails = () => {
       growthPotential: 'High',
       demandLevel: 'High',
       steps: [
-        { step: 1, titleKey: 'step.complete12thStandard', descriptionKey: 'stepDesc.complete12thStandard', durationKey: 'duration.2Years', tips: ['Focus on academics', 'Develop relevant skills'] },
-        { step: 2, titleKey: 'step.pursueDegree', descriptionKey: 'stepDesc.pursueDegree', durationKey: 'duration.3to4Years', tips: ['Choose good college', 'Build practical skills'] },
-        { step: 3, titleKey: 'step.gainExperience', descriptionKey: 'stepDesc.gainExperience', durationKey: 'duration.1to2Years', tips: ['Learn from professionals', 'Build network'] },
-        { step: 4, titleKey: 'step.startCareer', descriptionKey: 'stepDesc.startCareer', durationKey: 'duration.ongoing', tips: ['Apply for jobs', 'Continue learning'] }
+        { step: 1, titleKey: 'step.complete12thStandard', descriptionKey: 'stepDesc.complete12thStandard', durationKey: 'duration.2Years', tips: ['tip.focusAcademics', 'tip.developSkills'] },
+        { step: 2, titleKey: 'step.pursueDegree', descriptionKey: 'stepDesc.pursueDegree', durationKey: 'duration.3to4Years', tips: ['tip.chooseGoodCollege', 'tip.buildSkills'] },
+        { step: 3, titleKey: 'step.gainExperience', descriptionKey: 'stepDesc.gainExperience', durationKey: 'duration.1to2Years', tips: ['tip.learnProfessionals', 'tip.buildNetwork'] },
+        { step: 4, titleKey: 'step.startCareer', descriptionKey: 'stepDesc.startCareer', durationKey: 'duration.ongoing', tips: ['tip.applyJobs', 'tip.continueLearning'] }
       ],
       exams: [],
       skills: ['Communication Skills', 'Problem Solving', 'Teamwork', 'Adaptability'],
@@ -465,8 +465,8 @@ const OccupationDetails = () => {
         demandLevel: 'Very High',
         fullPath: '12th (PCM) → JEE Main → JEE Advanced → Admission in IIT/NIT/IIIT → B.Tech → Campus Placement → Job in Top Companies',
         steps: [
-          { step: 1, title: 'Complete 12th with PCM', description: 'Complete 12th with Physics, Chemistry, Mathematics (PCM) with minimum 75%', duration: '2 Years', tips: ['Focus on NCERT concepts', 'Practice numerical problems daily', 'Join coaching if needed'] },
-          { step: 2, title: 'Prepare for JEE Main', description: 'Cover complete syllabus of Physics, Chemistry, Mathematics for JEE Main', duration: '1-2 Years', tips: ['Solve previous year papers', 'Take mock tests', 'Focus on speed and accuracy'] },
+          { step: 1, title: 'Complete 12th with PCM', description: 'Complete 12th with Physics, Chemistry, Mathematics (PCM) with minimum 75%', duration: '2 Years', tips: ['tip.ncertConcepts', 'tip.practiceNumerical', 'tip.joinCoaching'] },
+          { step: 2, title: 'Prepare for JEE Main', description: 'Cover complete syllabus of Physics, Chemistry, Mathematics for JEE Main', duration: '1-2 Years', tips: ['tip.solvePreviousPapers', 'tip.takeMockTests', 'tip.speedAccuracy'] },
           { step: 3, title: 'Appear for JEE Main', description: 'Appear for JEE Main exam (conducted twice a year)', duration: 'Exam Season', tips: ['Manage time well', 'Attempt easier questions first', 'Stay calm'] },
           { step: 4, title: 'Prepare for JEE Advanced (if qualified)', description: 'If qualified in JEE Main, prepare for JEE Advanced for IITs', duration: '6-12 Months', tips: ['Focus on conceptual clarity', 'Solve advanced problems', 'Take mock tests'] },
           { step: 5, title: 'Participate in Counseling', description: 'Participate in JoSAA counseling for college allocation', duration: 'After Results', tips: ['Fill choices strategically', 'Research colleges', 'Consider branch preferences'] },
@@ -950,7 +950,7 @@ const OccupationDetails = () => {
                                                   <small className="text-muted d-block mb-1"><TransText k="occupation.tips" as="span" />:</small>
                                                   <ul className="mb-0 ps-3">
                                                     {step.tips.map((tip, tipIdx) => (
-                                                      <li key={tipIdx} className="small text-muted">{tip}</li>
+                                                      <li key={tipIdx} className="small text-muted">{tip.startsWith('tip.') ? getTranslation(tip, language) : tip}</li>
                                                     ))}
                                                   </ul>
                                                 </div>
@@ -1156,7 +1156,7 @@ const OccupationDetails = () => {
                                           <small className="text-muted d-block mb-1"><TransText k="occupation.tips" as="span" />:</small>
                                           <ul className="mb-0 ps-3">
                                             {step.tips.map((tip, idx) => (
-                                              <li key={idx} className="small text-muted">{tip}</li>
+                                              <li key={idx} className="small text-muted">{tip.startsWith('tip.') ? getTranslation(tip, language) : tip}</li>
                                             ))}
                                           </ul>
                                         </div>
