@@ -280,9 +280,9 @@ import '../../assets/css/UserNotifications.css'
     if (selectedStream === 'science') {
       return ['IIT', 'NIT', 'IIIT', 'Medical']
     } else if (selectedStream === 'commerce') {
-      return ['NDA', 'CommerceCollege']
+      return ['CommerceCollege', 'NDA', 'ArtsCollege']
     } else if (selectedStream === 'arts') {
-      return ['NDA', 'ArtsCollege']
+      return ['ArtsCollege', 'NDA', 'CommerceCollege']
     } else if (selectedStream === 'computer') {
       return ['IIT', 'NIT', 'IIIT']
     }
@@ -1995,53 +1995,76 @@ setPrepType('govtCollege')
                         ) : prepType === 'govtCollege' ? (
                           /* Govt College Content */
                           <div className="mb-4">
-                            {filteredCollegeTypes.length === 0 ? (
-                              <Alert variant="info">
-                                <TransText k="notifications.noCollegeOptions" as="p" />
-                              </Alert>
-                            ) : (
-                            <>
-                            {/* College Type Selection Cards */}
-                            <Row className="mb-4">
-                              {filteredCollegeTypes.map((collegeType, index) => {
-                                const collegeInfo = govtCollegeData[collegeType]
-                                if (!collegeInfo) return null
-                                return (
-                                  <Col md={4} key={index} className="mb-3">
-                                    <Card 
-                                      className={`h-100 border ${selectedGovtCollege === collegeType ? 'border-primary' : ''}`}
-                                      style={{ cursor: 'pointer' }}
-                                      onClick={() => setSelectedGovtCollege(collegeType)}
-                                    >
-                                      <Card.Body className="p-3">
-                                        <div className="d-flex align-items-center gap-2 mb-2">
-                                          <div className="course-icon-large">
-                                            {collegeInfo.icon}
-                                          </div>
-                                          <h6 className="mb-0">{collegeInfo.title}</h6>
-                                        </div>
-                                        <p className="small text-muted mb-2">
-                                          {collegeInfo.fullPath.substring(0, 50)}...
-                                        </p>
-                                      </Card.Body>
-                                    </Card>
-                                  </Col>
-                                )
-                              })}
-                            </Row>
-                            
-                            {/* Detailed College Roadmap */}
-                            {selectedGovtCollege && govtCollegeData[selectedGovtCollege] && (
-                              <Card className="border bg-light">
-                                <Card.Body className="p-4">
-                                  <div className="mb-4">
-                                    <h5 className="mb-3">
-                                      {govtCollegeData[selectedGovtCollege].icon}
-                                      <span className="ms-2">{govtCollegeData[selectedGovtCollege].title}</span>
-                                    </h5>
-                                    <p className="text-muted mb-2">
-                                      <strong><TransText k="notifications.completePath" as="span" /></strong> {govtCollegeData[selectedGovtCollege].fullPath}
-                                    </p>
+                            <Tab.Container id="govt-college-tabs" defaultActiveKey="colleges">
+                              <Nav variant="tabs" className="mb-4">
+                                <Nav.Item>
+                                  <Nav.Link eventKey="colleges">
+                                    <FaUniversity className="me-2" />
+                                    <TransText k="notifications.govtCollegePath" as="span" />
+                                  </Nav.Link>
+                                </Nav.Item>
+                                <Nav.Item>
+                                  <Nav.Link eventKey="recommended">
+                                    <FaLightbulb className="me-2" />
+                                    <TransText k="notifications.recommendedCourses" as="span" />
+                                  </Nav.Link>
+                                </Nav.Item>
+                                <Nav.Item>
+                                  <Nav.Link eventKey="all">
+                                    <FaBookOpen className="me-2" />
+                                    <TransText k="notifications.allCoursesFor" as="span" /> {getStreamName(selectedStream)}
+                                  </Nav.Link>
+                                </Nav.Item>
+                              </Nav>
+                              <Tab.Content>
+                                <Tab.Pane eventKey="colleges">
+                                  {filteredCollegeTypes.length === 0 ? (
+                                    <Alert variant="info">
+                                      <TransText k="notifications.noCollegeOptions" as="p" />
+                                    </Alert>
+                                  ) : (
+                                  <>
+                                  {/* College Type Selection Cards */}
+                                  <Row className="mb-4">
+                                    {filteredCollegeTypes.map((collegeType, index) => {
+                                      const collegeInfo = govtCollegeData[collegeType]
+                                      if (!collegeInfo) return null
+                                      return (
+                                        <Col md={4} key={index} className="mb-3">
+                                          <Card 
+                                            className={`h-100 border ${selectedGovtCollege === collegeType ? 'border-primary' : ''}`}
+                                            style={{ cursor: 'pointer' }}
+                                            onClick={() => setSelectedGovtCollege(collegeType)}
+                                          >
+                                            <Card.Body className="p-3">
+                                              <div className="d-flex align-items-center gap-2 mb-2">
+                                                <div className="course-icon-large">
+                                                  {collegeInfo.icon}
+                                                </div>
+                                                <h6 className="mb-0">{collegeInfo.title}</h6>
+                                              </div>
+                                              <p className="small text-muted mb-2">
+                                                {collegeInfo.fullPath.substring(0, 50)}...
+                                              </p>
+                                            </Card.Body>
+                                          </Card>
+                                        </Col>
+                                      )
+                                    })}
+                                  </Row>
+                                  
+                                  {/* Detailed College Roadmap */}
+                                  {selectedGovtCollege && govtCollegeData[selectedGovtCollege] && (
+                                    <Card className="border bg-light">
+                                      <Card.Body className="p-4">
+                                        <div className="mb-4">
+                                          <h5 className="mb-3">
+                                            {govtCollegeData[selectedGovtCollege].icon}
+                                            <span className="ms-2">{govtCollegeData[selectedGovtCollege].title}</span>
+                                          </h5>
+                                          <p className="text-muted mb-2">
+                                            <strong><TransText k="notifications.completePath" as="span" /></strong> {govtCollegeData[selectedGovtCollege].fullPath}
+                                          </p>
                                     <p className="text-muted mb-2">
                                       <strong><TransText k="notifications.eligibility" as="span" /></strong> {govtCollegeData[selectedGovtCollege].eligibility}
                                     </p>
@@ -2071,7 +2094,7 @@ setPrepType('govtCollege')
                                   </Row>
                                   
 <h6 className="mb-3"><TransText k="notifications.availableCourses" as="span" /></h6>
-                                  
+                                   
                                   <h6 className="mb-3"><TransText k="notifications.topColleges" as="span" /></h6>
                                   <Row>
                                     {govtCollegeData[selectedGovtCollege].colleges.map((college, idx) => (
@@ -2096,8 +2119,97 @@ setPrepType('govtCollege')
                                 </Card.Body>
                               </Card>
                             )}
-                            </>
-                            )}
+                                  </>
+                                  )}
+                                </Tab.Pane>
+                                <Tab.Pane eventKey="recommended">
+                                  {courses.length > 0 ? (
+                                    <Row>
+                                      {courses.map((course, index) => (
+                                        <Col lg={4} md={6} className="mb-4" key={index}>
+                                          <Card 
+                                            className="h-100 border course-card"
+                                            style={{ cursor: 'pointer' }}
+                                            onClick={() => handleCourseClick(course)}
+                                          >
+                                            <Card.Body className="p-4">
+                                              <div className="d-flex align-items-start gap-3 mb-3">
+                                                <div className="course-icon-large">
+                                                  {course.icon}
+                                                </div>
+                                                <div>
+                                                  <h6 className="mb-1">{getCourseName(course.name)}</h6>
+                                                  <Badge bg="info">{course.duration}</Badge>
+                                                </div>
+                                              </div>
+                                              <p className="text-muted small mb-3">{getCourseDescription(course.name)}</p>
+                                              <div className="mt-auto">
+                                                <small className="text-muted d-block mb-2"><TransText k="notifications.careerOpportunities" as="span" /></small>
+                                                <div className="d-flex flex-wrap gap-1">
+                                                  {course.careers.slice(0, 3).map((career, idx) => (
+                                                    <Badge bg="light" text="dark" key={idx} className="small">
+                                                      {career}
+                                                    </Badge>
+                                                  ))}
+                                                </div>
+                                              </div>
+                                            </Card.Body>
+                                          </Card>
+                                        </Col>
+                                      ))}
+                                    </Row>
+                                  ) : (
+                                    <Alert variant="info">
+                                      <FaInfoCircle className="me-2" />
+                                      <TransText k="notifications.noRecommendedCourses" as="span" />
+                                    </Alert>
+                                  )}
+                                </Tab.Pane>
+                                <Tab.Pane eventKey="all">
+                                  {allCourses.length > 0 ? (
+                                    <Row>
+                                      {allCourses.map((course, index) => (
+                                        <Col lg={4} md={6} className="mb-4" key={index}>
+                                          <Card 
+                                            className="h-100 border course-card"
+                                            style={{ cursor: 'pointer' }}
+                                            onClick={() => handleCourseClick(course)}
+                                          >
+                                            <Card.Body className="p-4">
+                                              <div className="d-flex align-items-start gap-3 mb-3">
+                                                <div className="course-icon-large">
+                                                  {course.icon}
+                                                </div>
+                                                <div>
+                                                  <h6 className="mb-1">{getCourseName(course.name)}</h6>
+                                                  <Badge bg="info">{course.duration}</Badge>
+                                                </div>
+                                              </div>
+                                              <p className="text-muted small mb-3">{getCourseDescription(course.name)}</p>
+                                              <div className="mt-auto">
+                                                <small className="text-muted d-block mb-2"><TransText k="notifications.careerOpportunities" as="span" /></small>
+                                                <div className="d-flex flex-wrap gap-1">
+                                                  {course.careers.slice(0, 3).map((career, idx) => (
+                                                    <Badge bg="light" text="dark" key={idx} className="small">
+                                                      {career}
+                                                    </Badge>
+                                                  ))}
+                                                </div>
+                                              </div>
+                                            </Card.Body>
+                                          </Card>
+                                        </Col>
+                                      ))}
+                                    </Row>
+                                  ) : (
+                                    <Alert variant="info">
+                                      <FaInfoCircle className="me-2" />
+                                      <TransText k="notifications.noCoursesAvailable" as="span" />
+                                    </Alert>
+                                  )}
+                                </Tab.Pane>
+                              </Tab.Content>
+                            </Tab.Container>
                           </div>
                         ) : (
                           /* Private Courses Content */

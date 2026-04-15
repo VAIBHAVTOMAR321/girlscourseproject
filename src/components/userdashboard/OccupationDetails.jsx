@@ -629,6 +629,21 @@ const OccupationDetails = () => {
 
   const govtExamTypes = ['IIT-JEE', 'NEET', 'UPSC', 'SSC', 'Banking', 'Railway', 'StatePSC', 'NDA']
 
+  const getFilteredExamTypesByStream = () => {
+    if (stream === 'science') {
+      return ['IIT-JEE', 'NEET']
+    } else if (stream === 'commerce') {
+      return ['UPSC', 'SSC', 'Banking', 'Railway', 'StatePSC', 'NDA']
+    } else if (stream === 'arts') {
+      return ['UPSC', 'SSC', 'Banking', 'Railway', 'StatePSC', 'NDA']
+    } else if (stream === 'computer') {
+      return ['IIT-JEE', 'NEET']
+    }
+    return govtExamTypes
+  }
+
+  const filteredExamTypes = stream ? getFilteredExamTypesByStream() : govtExamTypes
+
   if (!occupation) {
     return (
       <div className="d-flex flex-column">
@@ -764,7 +779,7 @@ const OccupationDetails = () => {
                                 </p>
                                 
                                 <Row>
-                                  {govtExamTypes.map((examType, index) => {
+                                  {filteredExamTypes.map((examType, index) => {
                                     const examDetails = getGovtExamDetails(examType)
                                     if (!examDetails) return null
                                     return (
