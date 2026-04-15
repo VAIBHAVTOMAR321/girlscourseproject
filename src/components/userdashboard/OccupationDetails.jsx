@@ -179,36 +179,51 @@ const OccupationDetails = () => {
         steps: [
           {
             step: 1,
+            titleKey: 'step.complete12thStandard',
             title: 'Complete 12th Standard',
+            descriptionKey: 'stepDesc.complete12thStandardTeacher',
             description: 'Complete your 12th standard with good percentage (preferably 60%+)',
+            durationKey: 'duration.2Years',
             duration: '2 Years',
             tips: ['tip.favoriteSubjects', 'tip.teachingActivities', 'tip.communicationSkills']
           },
           {
             step: 2,
+            titleKey: 'step.pursueBachelorsDegree',
             title: 'Pursue Bachelor\'s Degree',
+            descriptionKey: 'stepDesc.pursueBachelorsDegree',
             description: 'Complete BA/B.Sc/B.Com in your preferred subject',
+            durationKey: 'duration.3Years',
             duration: '3 Years',
             tips: ['tip.chooseSubjects', 'tip.goodRecord', 'tipcollegeEvents']
           },
           {
             step: 3,
+            titleKey: 'step.completeBED',
             title: 'Complete B.Ed',
+            descriptionKey: 'stepDesc.completeBED',
             description: 'Pursue Bachelor of Education (B.Ed) from a recognized university',
+            durationKey: 'duration.2Years',
             duration: '2 Years',
             tips: ['tip.goodBEDCollege', 'tip.learningMethodologies', 'tip.practiceTeaching']
           },
           {
             step: 4,
+            titleKey: 'step.clearTeachingExams',
             title: 'Clear Teaching Exams',
+            descriptionKey: 'stepDesc.clearTeachingExams',
             description: 'Clear CTET/TET/STET exams as per your state requirements',
+            durationKey: 'duration.3to6Months',
             duration: '3-6 Months',
             tips: ['tip.studyPreviousPapers', 'tip.childPsychology', 'tip.mockTests']
           },
           {
             step: 5,
+            titleKey: 'step.applyTeachingPositions',
             title: 'Apply for Teaching Positions',
+            descriptionKey: 'stepDesc.applyTeachingPositions',
             description: 'Apply for government or private school teaching positions',
+            durationKey: 'duration.ongoing',
             duration: 'Ongoing',
             tips: ['tip.prepareInterviews', 'tip.goodResume', 'tip.applyMultipleSchools']
           }
@@ -244,36 +259,51 @@ const OccupationDetails = () => {
         steps: [
           {
             step: 1,
+            titleKey: 'step.complete12thStandard',
             title: 'Complete 12th Standard',
+            descriptionKey: 'stepDesc.complete12thStandard',
             description: 'Complete your 12th standard with good percentage',
+            durationKey: 'duration.2Years',
             duration: '2 Years',
             tips: ['tip.humanitiesSubjects', 'tip.readingHabits', 'tip.participateDebates']
           },
           {
             step: 2,
+            titleKey: 'step.pursueLLB',
             title: 'Pursue LLB',
+            descriptionKey: 'stepDesc.pursueLLB',
             description: 'Complete LLB (3 years after graduation) or BA LLB (5 years integrated)',
+            durationKey: 'duration.3to4Years',
             duration: '3-5 Years',
             tips: ['tip.chooseGoodCollege', 'tip.studyCaseLaws', 'tip.mootCourts']
           },
           {
             step: 3,
+            titleKey: 'step.enrollBarCouncil',
             title: 'Enroll with Bar Council',
+            descriptionKey: 'stepDesc.enrollBarCouncil',
             description: 'Register with State Bar Council after completing LLB',
+            durationKey: 'duration.2Months',
             duration: '1-2 Months',
             tips: ['tip.barCouncilFormalities', 'tip.barCouncilRegistration', 'tip.startInternship']
           },
           {
             step: 4,
+            titleKey: 'step.completeInternship',
             title: 'Complete Internship',
+            descriptionKey: 'stepDesc.completeInternship',
             description: 'Intern under a senior lawyer to gain practical experience',
+            durationKey: 'duration.1to2Years',
             duration: '1-2 Years',
             tips: ['tip.learnCourtProcedures', 'tip.draftDocuments', 'tip.buildNetwork']
           },
           {
             step: 5,
+            titleKey: 'step.startPractice',
             title: 'Start Practice',
+            descriptionKey: 'stepDesc.startPractice',
             description: 'Start independent practice or join a law firm',
+            durationKey: 'duration.ongoing',
             duration: 'Ongoing',
             tips: ['tip.buildClientBase', 'tip.specializeField', 'tip.continueLearning']
           }
@@ -308,36 +338,51 @@ const OccupationDetails = () => {
         steps: [
           {
             step: 1,
+            titleKey: 'step.complete12thStandard',
             title: 'Complete 12th Standard',
+            descriptionKey: 'stepDesc.complete12thPcm',
             description: 'Complete your 12th standard with Physics, Chemistry, and Mathematics',
+            durationKey: 'duration.2Years',
             duration: '2 Years',
             tips: ['tip.mathematics', 'tip.basicProgramming', 'tip.codingCompetitions']
           },
           {
             step: 2,
+            titleKey: 'step.pursueBTechBCA',
             title: 'Pursue B.Tech/BCA',
+            descriptionKey: 'stepDesc.pursueBTechBCA',
             description: 'Complete B.Tech in Computer Science/IT or BCA',
+            durationKey: 'duration.3to4Years',
             duration: '3-4 Years',
             tips: ['tip.programmingLanguages', 'tip.buildProjects', 'tip.hackathons']
           },
           {
             step: 3,
+            titleKey: 'step.learnProgrammingLanguages',
             title: 'Learn Programming Languages',
+            descriptionKey: 'stepDesc.learnProgrammingLanguages',
             description: 'Master programming languages like Java, Python, JavaScript, etc.',
+            durationKey: 'duration.ongoing',
             duration: 'Ongoing',
             tips: ['tip.practiceDaily', 'tip.buildRealProjects', 'tip.openSource']
           },
           {
             step: 4,
+            titleKey: 'step.buildPortfolio',
             title: 'Build Portfolio',
+            descriptionKey: 'stepDesc.buildPortfolio',
             description: 'Create a portfolio of projects to showcase your skills',
+            durationKey: 'duration.6to12Months',
             duration: '6-12 Months',
             tips: ['tip.diverseProjects', 'tip.documentWork', 'tip.hostGithub']
           },
           {
             step: 5,
+            titleKey: 'step.applyForJobs',
             title: 'Apply for Jobs',
+            descriptionKey: 'stepDesc.applyForJobs',
             description: 'Apply for software engineering positions in IT companies',
+            durationKey: 'duration.ongoing',
             duration: 'Ongoing',
             tips: ['tip.prepareInterviews', 'tip.codingProblems', 'tip.network']
           }
@@ -361,7 +406,7 @@ const OccupationDetails = () => {
           { name: 'BITS Pilani', location: 'Pilani', ranking: 'Top 5' }
         ]
       },
-      'Doctor': {
+'Doctor': {
         title: 'Doctor',
         icon: <FaHospital className="text-primary" />,
         description: 'Doctors diagnose and treat illnesses, injuries, and diseases. They are essential healthcare professionals.',
@@ -371,36 +416,51 @@ const OccupationDetails = () => {
         steps: [
           {
             step: 1,
+            titleKey: 'step.complete12thStandard',
             title: 'Complete 12th Standard',
+            descriptionKey: 'stepDesc.complete12thPcb',
             description: 'Complete your 12th standard with Physics, Chemistry, and Biology',
+            durationKey: 'duration.2Years',
             duration: '2 Years',
             tips: ['tip.biology', 'tip.empathy', 'tip.volunteerHealthcare']
           },
           {
             step: 2,
+            titleKey: 'step.clearNEET',
             title: 'Clear NEET Exam',
+            descriptionKey: 'stepDesc.clearNEET',
             description: 'Qualify NEET (National Eligibility cum Entrance Test)',
+            durationKey: 'duration.1to2Years',
             duration: '1 Year',
             tips: ['tip.understandNCERT', 'tip.solvePreviousPapers', 'tip.takeMockTests']
           },
           {
             step: 3,
+            titleKey: 'step.completeMBBSInternship',
             title: 'Complete MBBS',
+            descriptionKey: 'stepDesc.completeMBBSInternship',
             description: 'Pursue MBBS (Bachelor of Medicine and Bachelor of Surgery)',
+            durationKey: 'duration.5to6Years',
             duration: '5.5 Years',
             tips: ['tip.focusStudies', 'tip.gainClinicalExperience', 'tip.bedsideManners']
           },
           {
             step: 4,
+            titleKey: 'step.completeInternship',
             title: 'Complete Internship',
+            descriptionKey: 'stepDesc.completeInternship',
             description: 'Complete mandatory internship in hospital',
+            durationKey: 'duration.1Year',
             duration: '1 Year',
-tips: ['tip.learnProfessionals', 'tip.handleCases', 'tip.patientRelationships']
+            tips: ['tip.learnProfessionals', 'tip.handleCases', 'tip.patientRelationships']
           },
           {
             step: 5,
+            titleKey: 'step.specializeOptional',
             title: 'Specialize (Optional)',
+            descriptionKey: 'stepDesc.specializeOptional',
             description: 'Pursue MD/MS for specialization',
+            durationKey: 'duration.3Years',
             duration: '3 Years',
             tips: ['tip.specialization', 'tip.neetPG', 'tip.joinHospital']
           }
