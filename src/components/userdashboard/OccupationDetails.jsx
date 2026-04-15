@@ -20,7 +20,97 @@ const OccupationDetails = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const { occupation, stream, percentage, course, prepType: initialPrepType } = location.state || {}
+  
+  console.log('OccupationDetails - Course:', course)
+  console.log('OccupationDetails - Occupation:', occupation)
+  
   const [prepType, setPrepType] = useState(initialPrepType || 'private')
+
+  // Helper function to get related occupations based on course
+  const getRelatedOccupations = () => {
+    const allOccupations = ['Teacher', 'Lawyer', 'Software Engineer', 'Doctor']
+    
+    console.log('getRelatedOccupations - Course:', course)
+    console.log('getRelatedOccupations - Occupation:', occupation)
+    
+    if (!course) {
+      console.log('No course, returning all occupations except current')
+      return allOccupations.filter(occ => occ !== occupation)
+    }
+    
+    const courseLower = course.toLowerCase()
+    console.log('Course lowercase:', courseLower)
+    
+// Map courses to related occupations - using more flexible matching
+    const courseOccupationMap = {
+      'mbbs': ['Doctor'],
+      'medicine': ['Doctor'],
+      'medical': ['Doctor'],
+      'b.tech': ['Software Engineer'],
+      'b.sc': ['Teacher', 'Software Engineer'],
+      'bca': ['Software Engineer'],
+      'm.sc': ['Teacher', 'Software Engineer'],
+      'engineering': ['Software Engineer'],
+      'bca': ['Software Engineer'],
+      'bba': ['Teacher', 'Lawyer'],
+      'b.com': ['Teacher', 'Lawyer'],
+      'b com': ['Teacher', 'Lawyer'],
+      'ba': ['Teacher', 'Lawyer'],
+      'b a': ['Teacher', 'Lawyer'],
+      'llb': ['Lawyer'],
+      'law': ['Lawyer'],
+      'bjmc': ['Teacher'],
+      'journalism': ['Teacher'],
+      'b.ed': ['Teacher'],
+      'b ed': ['Teacher'],
+      'education': ['Teacher'],
+      'nursing': ['Doctor'],
+      'pharma': ['Doctor'],
+      'pharmacy': ['Doctor'],
+      'bds': ['Doctor'],
+      'dental': ['Doctor'],
+      'bsc nursing': ['Doctor'],
+      'bsc': ['Teacher', 'Software Engineer'],
+      'bachelor of technology': ['Software Engineer'],
+      'bachelor of science': ['Teacher', 'Software Engineer'],
+      'bachelor of arts': ['Teacher', 'Lawyer'],
+      'bachelor of commerce': ['Teacher', 'Lawyer'],
+      'bachelor of business': ['Teacher', 'Lawyer'],
+      'bachelor of computer': ['Software Engineer'],
+      'bachelor of medicine': ['Doctor'],
+      'bachelor of nursing': ['Doctor'],
+      'master': ['Teacher', 'Software Engineer'],
+      'diploma': ['Teacher', 'Software Engineer'],
+      'iti': ['Teacher', 'Software Engineer'],
+      'polytechnic': ['Software Engineer'],
+      'technology': ['Software Engineer'],
+      'science': ['Teacher', 'Software Engineer'],
+      'computer': ['Software Engineer'],
+      'information technology': ['Software Engineer']
+    }
+    
+    // Find related occupations based on course - check any key that matches
+    let related = []
+    for (const [key, occs] of Object.entries(courseOccupationMap)) {
+      if (courseLower.includes(key)) {
+        console.log('Match found:', key, '->', occs)
+        related = [...related, ...occs]
+      }
+    }
+    
+    console.log('Related occupations:', related)
+    
+    // If no match, return all occupations except current
+    if (related.length === 0) {
+      console.log('No match found, returning all except current')
+      return allOccupations.filter(occ => occ !== occupation)
+    }
+    
+    // Remove duplicates and current occupation
+    const result = [...new Set(related)].filter(occ => occ !== occupation)
+    console.log('Final result:', result)
+    return result
+  }
 
   // Helper function to get translated occupation descriptions
   const getOccupationTranslationKey = (occupationName) => {
@@ -969,16 +1059,18 @@ const OccupationDetails = () => {
                               <FaRocket className="me-2 text-primary" />
                               <TransText k="occupation.availableCareerOpps" as="span" />
                             </h5>
-                            <p className="text-muted mb-4"><TransText k="occupation.explorePaths" as="span" /></p>
+                            <p className="text-muted mb-4">
+                              {course ? `Related careers for ${course}` : <TransText k="occupation.explorePaths" as="span" />}
+                            </p>
                             <Row>
-                              {['Teacher', 'Lawyer', 'Software Engineer', 'Doctor'].filter(occ => occ !== occupation).map((occ, index) => {
+                              {getRelatedOccupations().map((occ, index) => {
                                 const details = getOccupationDetails(occ)
                                 return (
                                   <Col md={4} key={index} className="mb-3">
                                     <Card 
                                       className="h-100 border career-opportunity-card" 
                                       style={{ cursor: 'pointer', transition: 'all 0.3s ease' }}
-                                      onClick={() => navigate('/OccupationDetails', { state: { occupation: occ, stream, percentage } })}
+                                      onClick={() => navigate('/OccupationDetails', { state: { occupation: occ, stream, percentage, course } })}
                                     >
                                       <Card.Body className="p-3">
                                         <div className="d-flex align-items-center gap-2 mb-2">
