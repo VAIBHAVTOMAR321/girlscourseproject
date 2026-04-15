@@ -2216,7 +2216,7 @@ setPrepType('govtCollege')
                                                 <h6 className="mb-0">IIT Kharagpur</h6>
                                               </div>
                                               <p className="small text-muted mb-2">West Bengal</p>
-                                              <Badge bg="info">#4</Badge>
+                                              <Badge bg="info"></Badge>
                                             </Card.Body>
                                           </Card>
                                         </Col>
@@ -2230,7 +2230,7 @@ setPrepType('govtCollege')
                                                 <h6 className="mb-0">IIT Kanpur</h6>
                                               </div>
                                               <p className="small text-muted mb-2">Uttar Pradesh</p>
-                                              <Badge bg="info">#5</Badge>
+                                              <Badge bg="info"></Badge>
                                             </Card.Body>
                                           </Card>
                                         </Col>
