@@ -526,10 +526,10 @@ import '../../assets/css/UserNotifications.css'
   }
 
   // Helper function to get course description translation key
-  const getCourseDescription = (courseName) => {
+  const getCourseDescription = (courseName, fallbackDescription = '') => {
     const key = courseTranslationMap[courseName]
     const descKey = key ? key + 'Desc' : null
-    return descKey ? getTranslation(descKey, language) : ''
+    return descKey ? getTranslation(descKey, language) : fallbackDescription
   }
 
   // Courses based on stream and percentage
@@ -2142,7 +2142,7 @@ setPrepType('govtCollege')
                                                   <Badge bg="info">{course.duration}</Badge>
                                                 </div>
                                               </div>
-                                              <p className="text-muted small mb-3">{getCourseDescription(course.name)}</p>
+                                              <p className="text-muted small mb-3">{getCourseDescription(course.name, course.description)}</p>
                                               <div className="mt-auto">
                                                 <small className="text-muted d-block mb-2"><TransText k="notifications.careerOpportunities" as="span" /></small>
                                                 <div className="d-flex flex-wrap gap-1">
@@ -2185,7 +2185,7 @@ setPrepType('govtCollege')
                                                   <Badge bg="info">{course.duration}</Badge>
                                                 </div>
                                               </div>
-                                              <p className="text-muted small mb-3">{getCourseDescription(course.name)}</p>
+                                              <p className="text-muted small mb-3">{getCourseDescription(course.name, course.description)}</p>
                                               <div className="mt-auto">
                                                 <small className="text-muted d-block mb-2"><TransText k="notifications.careerOpportunities" as="span" /></small>
                                                 <div className="d-flex flex-wrap gap-1">
@@ -2249,7 +2249,7 @@ setPrepType('govtCollege')
                                                 <Badge bg="info">{course.duration}</Badge>
                                               </div>
                                             </div>
-                                            <p className="text-muted small mb-3">{getCourseDescription(course.name)}</p>
+                                            <p className="text-muted small mb-3">{getCourseDescription(course.name, course.description)}</p>
                                             <div className="mt-auto">
                                               <small className="text-muted d-block mb-2"><TransText k="notifications.careerOpportunities" as="span" /></small>
                                               <div className="d-flex flex-wrap gap-1">
@@ -2292,7 +2292,7 @@ setPrepType('govtCollege')
                                                 <Badge bg="info">{course.duration}</Badge>
                                               </div>
                                             </div>
-                                            <p className="text-muted small mb-3">{getCourseDescription(course.name)}</p>
+                                            <p className="text-muted small mb-3">{getCourseDescription(course.name, course.description)}</p>
                                             <div className="mt-auto">
                                               <small className="text-muted d-block mb-2"><TransText k="notifications.careerOpportunities" as="span" /></small>
                                               <div className="d-flex flex-wrap gap-1">
@@ -2398,7 +2398,7 @@ setPrepType('govtCollege')
               
               <div className="mb-4">
                 <h6 className="text-muted mb-2"><TransText k="notifications.description" as="span" /></h6>
-                <p>{getCourseDescription(selectedCourse.name)}</p>
+                <p>{getCourseDescription(selectedCourse.name, selectedCourse.description)}</p>
               </div>
               
               {/* Career Paths Section */}

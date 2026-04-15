@@ -809,7 +809,7 @@ const OccupationDetails = () => {
                         </Badge>
                         <Badge bg="info" className="fs-6 p-2">
                           <FaChartLine className="me-1" />
-                          {occupationDetails.growthPotential} Growth
+                          {occupationDetails.growthPotential} <TransText k="occupation.growthPotential" as="span" />
                         </Badge>
                       </div>
                     </div>
@@ -1060,7 +1060,7 @@ const OccupationDetails = () => {
                               <TransText k="occupation.availableCareerOpps" as="span" />
                             </h5>
                             <p className="text-muted mb-4">
-                              {course ? `Related careers for ${course}` : <TransText k="occupation.explorePaths" as="span" />}
+                              {course ? <><TransText k="occupation.relatedCareers" as="span" /> {course}</> : <TransText k="occupation.explorePaths" as="span" />}
                             </p>
                             <Row>
                               {getRelatedOccupations().map((occ, index) => {
