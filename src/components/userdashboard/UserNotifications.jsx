@@ -2006,25 +2006,6 @@ setPrepType('govtCollege')
                                       </Col>
                                     ))}
                                   </Row>
-                                  
-                                  <h6 className="mb-3"><TransText k="notifications.topCollegesRecruitment" as="span" /></h6>
-                                  <Row>
-                                    {govtExamData[selectedGovtExam].colleges.map((college, idx) => (
-                                      <Col md={6} key={idx} className="mb-2">
-                                        <Card className="h-100 border">
-                                          <Card.Body className="p-3">
-                                            <div className="d-flex justify-content-between align-items-center">
-                                              <div>
-                                                <h6 className="mb-0">{college.name}</h6>
-                                                <small className="text-muted">{college.location}</small>
-                                              </div>
-                                              <Badge bg="success">{college.seats}</Badge>
-                                            </div>
-                                          </Card.Body>
-                                        </Card>
-                                      </Col>
-                                    ))}
-                                  </Row>
                                 </Card.Body>
                               </Card>
                             )}
@@ -2129,25 +2110,6 @@ setPrepType('govtCollege')
                                                 <p className="small text-muted mb-1">{step.description}</p>
                                                 <Badge bg="secondary">{step.duration}</Badge>
                                               </div>
-                                            </div>
-                                          </Card.Body>
-                                        </Card>
-                                      </Col>
-                                    ))}
-                                  </Row>
-                                    
-                                  <h6 className="mb-3"><TransText k="notifications.topColleges" as="span" /></h6>
-                                  <Row>
-                                    {govtCollegeData[selectedGovtCollege].colleges.map((college, idx) => (
-                                      <Col md={6} key={idx} className="mb-2">
-                                        <Card className="h-100 border">
-                                          <Card.Body className="p-3">
-                                            <div className="d-flex justify-content-between align-items-center">
-                                              <div>
-                                                <h6 className="mb-0">{college.name}</h6>
-                                                <small className="text-muted">{college.location}</small>
-                                              </div>
-                                              <Badge bg="secondary">{college.seats}</Badge>
                                             </div>
                                           </Card.Body>
                                         </Card>
