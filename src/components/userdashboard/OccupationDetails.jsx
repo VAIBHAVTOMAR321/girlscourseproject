@@ -318,7 +318,7 @@ const OccupationDetails = () => {
             title: 'Pursue B.Tech/BCA',
             description: 'Complete B.Tech in Computer Science/IT or BCA',
             duration: '3-4 Years',
-            tips: ['Learn multiple programming languages', 'Build projects', 'Participate in hackathons']
+            tips: ['tip.programmingLanguages', 'tip.buildProjects', 'tip.hackathons']
           },
           {
             step: 3,
@@ -332,7 +332,7 @@ const OccupationDetails = () => {
             title: 'Build Portfolio',
             description: 'Create a portfolio of projects to showcase your skills',
             duration: '6-12 Months',
-            tips: ['Build diverse projects', 'Document your work', 'Host on GitHub']
+            tips: ['tip.diverseProjects', 'tip.documentWork', 'tip.hostGithub']
           },
           {
             step: 5,
@@ -395,14 +395,14 @@ const OccupationDetails = () => {
             title: 'Complete Internship',
             description: 'Complete mandatory internship in hospital',
             duration: '1 Year',
-            tips: ['Learn from seniors', 'Handle different cases', 'Build patient relationships']
+tips: ['tip.learnProfessionals', 'tip.handleCases', 'tip.patientRelationships']
           },
           {
             step: 5,
             title: 'Specialize (Optional)',
             description: 'Pursue MD/MS for specialization',
             duration: '3 Years',
-            tips: ['Choose your specialization', 'Clear NEET PG', 'Join good hospital']
+            tips: ['tip.specialization', 'tip.neetPG', 'tip.joinHospital']
           }
         ],
         exams: [
@@ -465,13 +465,13 @@ const OccupationDetails = () => {
         demandLevel: 'Very High',
         fullPath: '12th (PCM) → JEE Main → JEE Advanced → Admission in IIT/NIT/IIIT → B.Tech → Campus Placement → Job in Top Companies',
         steps: [
-          { step: 1, title: 'Complete 12th with PCM', description: 'Complete 12th with Physics, Chemistry, Mathematics (PCM) with minimum 75%', duration: '2 Years', tips: ['tip.ncertConcepts', 'tip.practiceNumerical', 'tip.joinCoaching'] },
+          { step: 1, titleKey: 'step.complete12thPcm', descriptionKey: 'stepDesc.complete12thPcm', durationKey: 'duration.2Years', tips: ['tip.ncertConcepts', 'tip.practiceNumerical', 'tip.joinCoaching'] },
           { step: 2, title: 'Prepare for JEE Main', description: 'Cover complete syllabus of Physics, Chemistry, Mathematics for JEE Main', duration: '1-2 Years', tips: ['tip.solvePreviousPapers', 'tip.takeMockTests', 'tip.speedAccuracy'] },
-          { step: 3, title: 'Appear for JEE Main', description: 'Appear for JEE Main exam (conducted twice a year)', duration: 'Exam Season', tips: ['Manage time well', 'Attempt easier questions first', 'Stay calm'] },
-          { step: 4, title: 'Prepare for JEE Advanced (if qualified)', description: 'If qualified in JEE Main, prepare for JEE Advanced for IITs', duration: '6-12 Months', tips: ['Focus on conceptual clarity', 'Solve advanced problems', 'Take mock tests'] },
-          { step: 5, title: 'Participate in Counseling', description: 'Participate in JoSAA counseling for college allocation', duration: 'After Results', tips: ['Fill choices strategically', 'Research colleges', 'Consider branch preferences'] },
-          { step: 6, title: 'Complete B.Tech', description: 'Complete B.Tech from allocated college', duration: '4 Years', tips: ['Focus on studies', 'Do internships', 'Build projects'] },
-          { step: 7, title: 'Campus Placement', description: 'Appear for campus placement in top companies', duration: 'Final Year', tips: ['Prepare resume', 'Practice coding', 'Apply to multiple companies'] }
+          { step: 3, title: 'Appear for JEE Main', description: 'Appear for JEE Main exam (conducted twice a year)', duration: 'Exam Season', tips: ['tip.manageTime', 'tip.easierQuestions', 'tip.stayCalm'] },
+          { step: 4, title: 'Prepare for JEE Advanced (if qualified)', description: 'If qualified in JEE Main, prepare for JEE Advanced for IITs', duration: '6-12 Months', tips: ['tip.conceptualClarity', 'tip.advancedProblems', 'tip.takeMockTests'] },
+          { step: 5, title: 'Participate in Counseling', description: 'Participate in JoSAA counseling for college allocation', duration: 'After Results', tips: ['tip.fillChoices', 'tip.researchColleges', 'tip.branchPreferences'] },
+          { step: 6, title: 'Complete B.Tech', description: 'Complete B.Tech from allocated college', duration: '4 Years', tips: ['tip.focusStudies', 'tip.doInternships', 'tip.buildProjects'] },
+          { step: 7, title: 'Campus Placement', description: 'Appear for campus placement in top companies', duration: 'Final Year', tips: ['tip.prepareResume', 'tip.practiceDaily', 'tip.applyCompanies'] }
         ],
         exams: [
           { name: 'JEE Main', eligibility: '12th Pass with PCM', frequency: 'Twice a year', difficulty: 'High' },
@@ -499,13 +499,13 @@ const OccupationDetails = () => {
         demandLevel: 'Very High',
         fullPath: '12th (PCB) → NEET → Admission in Government Medical College → MBBS → Internship → License → Job/PG',
         steps: [
-          { step: 1, title: 'Complete 12th with PCB', description: 'Complete 12th with Physics, Chemistry, Biology (PCB) with minimum 50%', duration: '2 Years', tips: ['Focus on Biology', 'Understand NCERT thoroughly', 'Practice diagrams'] },
-          { step: 2, title: 'Prepare for NEET', description: 'Cover complete syllabus of PCB for NEET', duration: '1-2 Years', tips: ['Focus on NCERT', 'Solve previous year papers', 'Take mock tests'] },
-          { step: 3, title: 'Appear for NEET', description: 'Appear for NEET exam (conducted once a year)', duration: 'Exam Season', tips: ['Manage time well', 'Focus on accuracy', 'Stay calm'] },
-          { step: 4, title: 'Participate in Counseling', description: 'Participate in All India Quota counseling for college allocation', duration: 'After Results', tips: ['Fill choices wisely', 'Research colleges', 'Consider location'] },
-          { step: 5, title: 'Complete MBBS', description: 'Complete MBBS course (5.5 years including internship)', duration: '5.5 Years', tips: ['Focus on studies', 'Gain clinical experience', 'Build skills'] },
-          { step: 6, title: 'Complete Internship', description: 'Complete mandatory internship in hospital', duration: '1 Year', tips: ['Learn from seniors', 'Handle different cases', 'Build patient relationships'] },
-          { step: 7, title: 'Start Career', description: 'Start working as doctor or pursue PG', duration: 'Ongoing', tips: ['Register with Medical Council', 'Apply for jobs', 'Consider specialization'] }
+          { step: 1, title: 'Complete 12th with PCB', description: 'Complete 12th with Physics, Chemistry, Biology (PCB) with minimum 50%', duration: '2 Years', tips: ['tip.biology', 'tip.understandNCERT', 'tip.practiceDiagrams'] },
+          { step: 2, title: 'Prepare for NEET', description: 'Cover complete syllabus of PCB for NEET', duration: '1-2 Years', tips: ['tip.ncert', 'tip.solvePreviousPapers', 'tip.takeMockTests'] },
+          { step: 3, title: 'Appear for NEET', description: 'Appear for NEET exam (conducted once a year)', duration: 'Exam Season', tips: ['tip.manageTime', 'tip.accuracy', 'tip.stayCalm'] },
+          { step: 4, title: 'Participate in Counseling', description: 'Participate in All India Quota counseling for college allocation', duration: 'After Results', tips: ['tip.fillWisely', 'tip.researchColleges', 'tip.considerLocation'] },
+          { step: 5, title: 'Complete MBBS', description: 'Complete MBBS course (5.5 years including internship)', duration: '5.5 Years', tips: ['tip.focusStudies', 'tip.gainClinicalExperience', 'tip.buildSkills'] },
+          { step: 6, title: 'Complete Internship', description: 'Complete mandatory internship in hospital', duration: '1 Year', tips: ['tip.learnProfessionals', 'tip.handleCases', 'tip.patientRelationships'] },
+          { step: 7, title: 'Start Career', description: 'Start working as doctor or pursue PG', duration: 'Ongoing', tips: ['tip.registerMedical', 'tip.applyJobs', 'tip.considerSpecialization'] }
         ],
         exams: [
           { name: 'NEET UG', eligibility: '12th Pass with PCB', frequency: 'Once a year', difficulty: 'Very High' },
@@ -531,13 +531,13 @@ const OccupationDetails = () => {
         demandLevel: 'High',
         fullPath: 'Graduate → UPSC CSE (Pre+Mains+Interview) → IAS/IPS/IFS → Service',
         steps: [
-          { step: 1, title: 'Complete Graduation', description: 'Complete graduation in any stream', duration: '3 Years', tips: ['Choose subjects of interest', 'Read newspapers', 'Develop analytical skills'] },
-          { step: 2, title: 'Basic Preparation', description: 'Start basic preparation - read NCERTs, basic books', duration: '6-12 Months', tips: ['Read NCERT thoroughly', 'Follow current affairs', 'Start answer writing'] },
-          { step: 3, title: '深化 Preparation', description: 'Deep preparation for all subjects', duration: '1-2 Years', tips: ['Refer standard books', 'Practice answer writing', 'Join test series'] },
-          { step: 4, title: 'Appear for UPSC Prelims', description: 'Appear for UPSC Prelims (CSAT + GS)', duration: 'Exam Season', tips: ['Clear cutoff', 'Manage time', 'Stay focused'] },
-          { step: 5, title: 'Appear for UPSC Mains', description: 'Appear for UPSC Mains (9 papers)', duration: 'Exam Season', tips: ['Focus on answer structure', 'Write neatly', 'Manage time'] },
-          { step: 6, title: 'Interview', description: 'Appear for Personality Test/Interview', duration: '30-45 Minutes', tips: ['Be confident', 'Know current affairs', 'Be honest'] },
-          { step: 7, title: 'Service Allocation', description: 'Get allocated to service based on rank', duration: 'After Result', tips: ['Fill preferences wisely', 'Stay updated', 'Join training'] }
+          { step: 1, title: 'Complete Graduation', description: 'Complete graduation in any stream', duration: '3 Years', tips: ['tip.chooseInterestSubjects', 'tip.readNewspapers', 'tip.analyticalSkills'] },
+          { step: 2, title: 'Basic Preparation', description: 'Start basic preparation - read NCERTs, basic books', duration: '6-12 Months', tips: ['tip.ncertBasics', 'tip.currentAffairs', 'tip.answerWriting'] },
+          { step: 3, title: '深化 Preparation', description: 'Deep preparation for all subjects', duration: '1-2 Years', tips: ['tip.standardBooks', 'tip.answerWriting', 'tip.testSeries'] },
+          { step: 4, title: 'Appear for UPSC Prelims', description: 'Appear for UPSC Prelims (CSAT + GS)', duration: 'Exam Season', tips: ['tip.clearCutoff', 'tip.timeManagement', 'tip.stayFocused'] },
+          { step: 5, title: 'Appear for UPSC Mains', description: 'Appear for UPSC Mains (9 papers)', duration: 'Exam Season', tips: ['tip.answerStructure', 'tip.writeNeatly', 'tip.timeManagement'] },
+          { step: 6, title: 'Interview', description: 'Appear for Personality Test/Interview', duration: '30-45 Minutes', tips: ['tip.beConfident', 'tip.currentAffairs', 'tip.beHonest'] },
+          { step: 7, title: 'Service Allocation', description: 'Get allocated to service based on rank', duration: 'After Result', tips: ['tip.fillChoices', 'tip.stayUpdated', 'tip.joinTraining'] }
         ],
         exams: [
           { name: 'UPSC CSE Prelims', eligibility: 'Graduate', frequency: 'Once a year', difficulty: 'Very High' },
@@ -562,13 +562,13 @@ const OccupationDetails = () => {
         demandLevel: 'Very High',
         fullPath: '12th/Graduate → SSC Exams → Document Verification → Joining',
         steps: [
-          { step: 1, title: 'Check Eligibility', description: 'Check eligibility for SSC exams (10th/12th/Graduate as per exam)', duration: 'Before Exam', tips: ['Know eligibility criteria', 'Choose right exam', 'Check age limit'] },
-          { step: 2, title: 'Basic Preparation', description: 'Start preparation with basics of English, Math, Reasoning, GK', duration: '3-6 Months', tips: ['Read NCERT for basics', 'Practice daily', 'Learn formulas'] },
-          { step: 3, title: 'Deep Preparation', description: 'Deep preparation for all sections', duration: '6-12 Months', tips: ['Solve previous papers', 'Take mock tests', 'Focus on weak areas'] },
-          { step: 4, title: 'Appear for Tier 1', description: 'Appear for CBT exam (Objective)', duration: 'Exam Season', tips: ['Clear cutoff', 'Manage time well', 'Attempt all questions'] },
-          { step: 5, title: 'Appear for Tier 2', description: 'Appear for Descriptive/Typing test', duration: 'After Tier 1', tips: ['Practice typing', 'Write essays', 'Prepare for English/Hindi'] },
-          { step: 6, title: 'Document Verification', description: 'Submit documents for verification', duration: 'After Tier 2', tips: ['Keep documents ready', 'Verify details', 'Carry originals'] },
-          { step: 7, title: 'Joining', description: 'Get joining letter and join department', duration: 'After DV', tips: ['Check official website', 'Join on time', 'Complete formalities'] }
+          { step: 1, title: 'Check Eligibility', description: 'Check eligibility for SSC exams (10th/12th/Graduate as per exam)', duration: 'Before Exam', tips: ['tip.eligibilityCriteria', 'tip.chooseExam', 'tip.ageLimit'] },
+          { step: 2, title: 'Basic Preparation', description: 'Start preparation with basics of English, Math, Reasoning, GK', duration: '3-6 Months', tips: ['tip.ncertBasics', 'tip.practiceDaily', 'tip.formulas'] },
+          { step: 3, title: 'Deep Preparation', description: 'Deep preparation for all sections', duration: '6-12 Months', tips: ['tip.solvePreviousPapers', 'tip.takeMockTests', 'tip.weakAreas'] },
+          { step: 4, title: 'Appear for Tier 1', description: 'Appear for CBT exam (Objective)', duration: 'Exam Season', tips: ['tip.clearCutoff', 'tip.manageTime', 'tip.allQuestions'] },
+          { step: 5, title: 'Appear for Tier 2', description: 'Appear for Descriptive/Typing test', duration: 'After Tier 1', tips: ['tip.typing', 'tip.essays', 'tip.englishHindi'] },
+          { step: 6, title: 'Document Verification', description: 'Submit documents for verification', duration: 'After Tier 2', tips: ['tip.documentsReady', 'tip.verifyDetails', 'tip.originals'] },
+          { step: 7, title: 'Joining', description: 'Get joining letter and join department', duration: 'After DV', tips: ['tip.website', 'tip.onTime', 'tip.formalities'] }
         ],
         exams: [
           { name: 'SSC CGL', eligibility: 'Graduate', frequency: 'Once a year', difficulty: 'High' },
@@ -594,14 +594,14 @@ const OccupationDetails = () => {
         demandLevel: 'Very High',
         fullPath: 'Graduate → PO/Clerk Exam → GD/Interview → Appointment in Bank',
         steps: [
-          { step: 1, title: 'Complete Graduation', description: 'Complete graduation in any stream', duration: '3 Years', tips: ['Maintain good percentage', 'Learn basic banking', 'Read financial news'] },
-          { step: 2, title: 'Check Eligibility', description: 'Check eligibility for Banking exams', duration: 'Before Exam', tips: ['Check age limit', 'Check required percentage', 'Check nationality'] },
-          { step: 3, title: 'Basic Preparation', description: 'Start preparation with basics of Quant, Reasoning, English, GA', duration: '3-6 Months', tips: ['Learn formulas', 'Practice tables', 'Read newspapers'] },
-          { step: 4, title: 'Appear for Preliminary', description: 'Appear for Prelims (Quant, Reasoning, English)', duration: 'Exam Season', tips: ['Clear cutoff', 'Manage time', 'Focus on accuracy'] },
-          { step: 5, title: 'Appear for Mains', description: 'Appear for Mains (All sections + Computer)', duration: 'After Prelims', tips: ['Prepare thoroughly', 'Take mock tests', 'Focus on speed'] },
-          { step: 6, title: 'Group Discussion', description: 'Appear for Group Discussion', duration: 'After Mains', tips: ['Know current topics', 'Give opinions confidently', 'Be polite'] },
-          { step: 7, title: 'Personal Interview', description: 'Appear for Personal Interview', duration: 'After GD', tips: ['Be confident', 'Know about bank', 'Dress properly'] },
-          { step: 8, title: 'Joining', description: 'Get joining and become PO/Clerk', duration: 'After Result', tips: ['Check website', 'Join on time', 'Complete training'] }
+          { step: 1, title: 'Complete Graduation', description: 'Complete graduation in any stream', duration: '3 Years', tips: ['tip.percentage', 'tip.banking', 'tip.financialNews'] },
+          { step: 2, title: 'Check Eligibility', description: 'Check eligibility for Banking exams', duration: 'Before Exam', tips: ['tip.ageLimit', 'tip.requiredPercentage', 'tip.nationality'] },
+          { step: 3, title: 'Basic Preparation', description: 'Start preparation with basics of Quant, Reasoning, English, GA', duration: '3-6 Months', tips: ['tip.formulas', 'tip.tables', 'tip.readNewspapers'] },
+          { step: 4, title: 'Appear for Preliminary', description: 'Appear for Prelims (Quant, Reasoning, English)', duration: 'Exam Season', tips: ['tip.clearCutoff', 'tip.timeManagement', 'tip.accuracy'] },
+          { step: 5, title: 'Appear for Mains', description: 'Appear for Mains (All sections + Computer)', duration: 'After Prelims', tips: ['tip.thoroughly', 'tip.takeMockTests', 'tip.speed'] },
+          { step: 6, title: 'Group Discussion', description: 'Appear for Group Discussion', duration: 'After Mains', tips: ['tip.currentTopics', 'tip.opinions', 'tip.polite'] },
+          { step: 7, title: 'Personal Interview', description: 'Appear for Personal Interview', duration: 'After GD', tips: ['tip.beConfident', 'tip.aboutBank', 'tip.dress'] },
+          { step: 8, title: 'Joining', description: 'Get joining and become PO/Clerk', duration: 'After Result', tips: ['tip.website', 'tip.onTime', 'tip.training'] }
         ],
         exams: [
           { name: 'IBPS PO', eligibility: 'Graduate', frequency: 'Once a year', difficulty: 'High' },
@@ -627,13 +627,13 @@ const OccupationDetails = () => {
         demandLevel: 'Very High',
         fullPath: '12th/Graduate → RRB Exam → Document Verification → Joining',
         steps: [
-          { step: 1, title: 'Check Eligibility', description: 'Check eligibility for RRB exams (10th/12th/Graduate)', duration: 'Before Exam', tips: ['Check notification', 'Check age limit', 'Check required qualification'] },
-          { step: 2, title: 'Basic Preparation', description: 'Start preparation with basics', duration: '2-3 Months', tips: ['Read NCERT', 'Practice Math', 'Learn Reasoning'] },
-          { step: 3, title: 'Deep Preparation', description: 'Prepare for all subjects thoroughly', duration: '6-12 Months', tips: ['Solve previous papers', 'Take mock tests', 'Focus on weak areas'] },
-          { step: 4, title: 'Appear for CBT', description: 'Appear for Computer Based Test', duration: 'Exam Season', tips: ['Clear cutoff', 'Manage time', 'Focus on accuracy'] },
-          { step: 5, title: 'Skill Test (if applicable)', description: 'Appear for Typing/Document verification', duration: 'After CBT', tips: ['Practice typing', 'Keep documents ready'] },
-          { step: 6, title: 'Medical Examination', description: 'Clear medical examination', duration: 'After Skill Test', tips: ['Know medical standards', 'Prepare accordingly'] },
-          { step: 7, title: 'Joining', description: 'Get joining and join Railway', duration: 'After Medical', tips: ['Check website', 'Join on time', 'Complete training'] }
+          { step: 1, title: 'Check Eligibility', description: 'Check eligibility for RRB exams (10th/12th/Graduate)', duration: 'Before Exam', tips: ['tip.notification', 'tip.ageLimit', 'tip.qualification'] },
+          { step: 2, title: 'Basic Preparation', description: 'Start preparation with basics', duration: '2-3 Months', tips: ['tip.ncert', 'tip.math', 'tip.reasoning'] },
+          { step: 3, title: 'Deep Preparation', description: 'Prepare for all subjects thoroughly', duration: '6-12 Months', tips: ['tip.solvePreviousPapers', 'tip.takeMockTests', 'tip.weakAreas'] },
+          { step: 4, title: 'Appear for CBT', description: 'Appear for Computer Based Test', duration: 'Exam Season', tips: ['tip.clearCutoff', 'tip.timeManagement', 'tip.accuracy'] },
+          { step: 5, title: 'Skill Test (if applicable)', description: 'Appear for Typing/Document verification', duration: 'After CBT', tips: ['tip.typing', 'tip.documentsReady'] },
+          { step: 6, title: 'Medical Examination', description: 'Clear medical examination', duration: 'After Skill Test', tips: ['tip.medicalStandards', 'tip.prepareMedical'] },
+          { step: 7, title: 'Joining', description: 'Get joining and join Railway', duration: 'After Medical', tips: ['tip.website', 'tip.onTime', 'tip.training'] }
         ],
         exams: [
           { name: 'RRB NTPC', eligibility: '12th/Graduate', frequency: 'When notified', difficulty: 'High' },
@@ -659,12 +659,12 @@ const OccupationDetails = () => {
         demandLevel: 'High',
         fullPath: 'Graduate → State PSC Exam → Interview → Joining',
         steps: [
-          { step: 1, title: 'Complete Graduation', description: 'Complete graduation in any stream', duration: '3 Years', tips: ['Choose subjects strategically', 'Read state-related topics', 'Stay updated with state news'] },
-          { step: 2, title: 'Check State PSC Notification', description: 'Check notification for your state PSC exam', duration: 'When Notified', tips: ['Visit state PSC website', 'Check eligibility', 'Check exam pattern'] },
-          { step: 3, title: 'Prepare for Preliminary', description: 'Prepare for Preliminary exam (if applicable)', duration: '3-6 Months', tips: ['Know state syllabus', 'Solve previous papers', 'Take mock tests'] },
-          { step: 4, title: 'Prepare for Mains', description: 'Prepare for Mains exam', duration: '6-12 Months', tips: ['Prepare state-specific topics', 'Practice answer writing', 'Read about state'] },
-          { step: 5, title: 'Interview', description: 'Appear for Personality Test', duration: 'After Mains', tips: ['Know about state', 'Be confident', 'Know current issues'] },
-          { step: 6, title: 'Joining', description: 'Get joining in state department', duration: 'After Result', tips: ['Check website', 'Join on time', 'Complete training'] }
+          { step: 1, title: 'Complete Graduation', description: 'Complete graduation in any stream', duration: '3 Years', tips: ['tip.strategically', 'tip.knnowledgeState', 'tip.stayUpdated'] },
+          { step: 2, title: 'Check State PSC Notification', description: 'Check notification for your state PSC exam', duration: 'When Notified', tips: ['tip.pscWebsite', 'tip.eligibility', 'tip.examPattern'] },
+          { step: 3, title: 'Prepare for Preliminary', description: 'Prepare for Preliminary exam (if applicable)', duration: '3-6 Months', tips: ['tip.stateSyllabus', 'tip.solvePreviousPapers', 'tip.takeMockTests'] },
+          { step: 4, title: 'Prepare for Mains', description: 'Prepare for Mains exam', duration: '6-12 Months', tips: ['tip.stateSpecific', 'tip.answerWriting', 'tip.state'] },
+          { step: 5, title: 'Interview', description: 'Appear for Personality Test', duration: 'After Mains', tips: ['tip.knowState', 'tip.beConfident', 'tip.stateIssues'] },
+          { step: 6, title: 'Joining', description: 'Get joining in state department', duration: 'After Result', tips: ['tip.website', 'tip.onTime', 'tip.training'] }
         ],
         exams: [
           { name: 'UPPSC', eligibility: 'Graduate', frequency: 'When notified', difficulty: 'High' },
@@ -691,13 +691,13 @@ const OccupationDetails = () => {
         demandLevel: 'High',
         fullPath: '12th → NDA Exam → SSB Interview → Medical → Joining → Training',
         steps: [
-          { step: 1, title: 'Complete 12th', description: 'Complete 12th in any stream (Science for Air Force/Navy)', duration: '2 Years', tips: ['Maintain fitness', 'Focus on studies', 'Stay updated'] },
-          { step: 2, title: 'Apply for NDA', description: 'Apply for NDA when notification is out', duration: 'When Notified', tips: ['Check eligibility', 'Know exam pattern', 'Choose preferred force'] },
-          { step: 3, title: 'Prepare for Written Exam', description: 'Prepare for Mathematics and General Ability', duration: '6-12 Months', tips: ['Focus on NCERT', 'Practice previous papers', 'Take mock tests'] },
-          { step: 4, title: 'Appear for Written Exam', description: 'Appear for NDA written exam', duration: 'Exam Season', tips: ['Manage time', 'Attempt all questions', 'Stay calm'] },
-          { step: 5, title: 'SSB Interview', description: 'Appear for Services Selection Board (SSB) interview', duration: '5 Days', tips: ['Be confident', 'Know about forces', 'Show leadership'] },
-          { step: 6, title: 'Medical Examination', description: 'Clear medical examination', duration: 'During SSB', tips: ['Know medical standards', 'Stay fit', 'Be honest'] },
-          { step: 7, title: 'Joining & Training', description: 'Join NDA for training', duration: '3 Years', tips: ['Stay disciplined', 'Focus on training', 'Build camaraderie'] }
+          { step: 1, title: 'Complete 12th', description: 'Complete 12th in any stream (Science for Air Force/Navy)', duration: '2 Years', tips: ['tip.fitness', 'tip.focusStudies', 'tip.stayUpdated'] },
+          { step: 2, title: 'Apply for NDA', description: 'Apply for NDA when notification is out', duration: 'When Notified', tips: ['tip.eligibilityCriteria', 'tip.forcePattern', 'tip.force'] },
+          { step: 3, title: 'Prepare for Written Exam', description: 'Prepare for Mathematics and General Ability', duration: '6-12 Months', tips: ['tip.ncert', 'tip.practicePreviousPapers', 'tip.takeMockTests'] },
+          { step: 4, title: 'Appear for Written Exam', description: 'Appear for NDA written exam', duration: 'Exam Season', tips: ['tip.timeManagement', 'tip.allQuestions', 'tip.stayCalm'] },
+          { step: 5, title: 'SSB Interview', description: 'Appear for Services Selection Board (SSB) interview', duration: '5 Days', tips: ['tip.beConfident', 'tip.forces', 'tip.showLeadership'] },
+          { step: 6, title: 'Medical Examination', description: 'Clear medical examination', duration: 'During SSB', tips: ['tip.medicalStandards', 'tip.stayFit', 'tip.beHonest'] },
+          { step: 7, title: 'Joining & Training', description: 'Join NDA for training', duration: '3 Years', tips: ['tip.stayDisciplined', 'tip.training', 'tip.buildCamaraderie'] }
         ],
         exams: [
           { name: 'NDA (Army)', eligibility: '12th Pass', frequency: 'Twice a year', difficulty: 'High' },
@@ -943,9 +943,9 @@ const OccupationDetails = () => {
                                                 </Badge>
                                               </div>
                                               <div className="flex-grow-1">
-                                                <h6 className="mb-1">{step.title}</h6>
-                                                <p className="mb-2 fw-bold" style={{ fontSize: '1.1rem' }}>{step.description}</p>
-                                                <Badge bg="info" className="mb-2">{step.duration}</Badge>
+                                                <h6 className="mb-1">{step.titleKey ? getTranslation(step.titleKey, language) : step.title}</h6>
+                                                <p className="mb-2 fw-bold" style={{ fontSize: '1.1rem' }}>{step.descriptionKey ? getTranslation(step.descriptionKey, language) : step.description}</p>
+                                                <Badge bg="info" className="mb-2">{step.durationKey ? getTranslation(step.durationKey, language) : step.duration}</Badge>
                                                 <div className="mt-2">
                                                   <small className="text-muted d-block mb-1"><TransText k="occupation.tips" as="span" />:</small>
                                                   <ul className="mb-0 ps-3">
