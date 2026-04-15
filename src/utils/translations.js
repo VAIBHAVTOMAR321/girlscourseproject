@@ -932,6 +932,7 @@ export const translations = {
     "notifications.totalSeats": "Total Seats:",
     "notifications.availableCourses": "Available Courses:",
     "notifications.topColleges": "Top Colleges:",
+    "notifications.topUniversities": "Top Universities",
     "notifications.careerOpportunities": "Career Opportunities:",
     "notifications.noRecommendedCourses": "No recommended courses available. Please adjust your percentage or select a different stream.",
     "notifications.noCoursesAvailable": "No courses available for this stream.",
@@ -948,6 +949,7 @@ export const translations = {
     "exam.banking": "Banking Exams",
     "exam.railway": "Railway Exams (RRB)",
     "exam.statePsc": "State PSC Exams",
+    "exam.gate": "GATE (Graduate Aptitude Test in Engineering)",
     
     // Step Titles
     "step.complete12thPcm": "Complete 12th with PCM",
@@ -999,12 +1001,12 @@ export const translations = {
 
     // Step Descriptions
     "stepDesc.complete12thStandard": "Complete your 12th standard with good percentage",
-    "stepDesc.complete12thPcm": "Complete 12th with Physics, Chemistry, Mathematics (PCM) with minimum 75%",
-    "stepDesc.complete12thPcb": "Complete 12th with Physics, Chemistry, Biology (PCB) with minimum 50%",
+    "stepDesc.complete12thPcm": "Complete 12th with Physics, Chemistry, Mathematics (PCM)",
+    "stepDesc.complete12thPcb": "Complete 12th with Physics, Chemistry, Biology (PCB)",
     "stepDesc.pursueDegree": "Complete bachelor's degree in relevant field",
     "stepDesc.gainExperience": "Gain practical experience through internships",
     "stepDesc.startCareer": "Start your professional career",
-    "stepDesc.complete12thStandardTeacher": "Complete your 12th standard with good percentage (preferably 60%+)",
+    "stepDesc.complete12thStandardTeacher": "Complete your 12th standard with good percentage",
     "stepDesc.pursueBachelorsDegree": "Complete BA/B.Sc/B.Com in your preferred subject",
     "stepDesc.completeBED": "Pursue Bachelor of Education (B.Ed) from a recognized university",
     "stepDesc.clearTeachingExams": "Clear CTET/TET/STET exams as per your state requirements",
@@ -2182,6 +2184,7 @@ export const translations = {
     "notifications.totalSeats": "कुल सीटें:",
     "notifications.availableCourses": "उपलब्ध पाठ्यक्रम:",
     "notifications.topColleges": "शीर्ष कॉलेज:",
+    "notifications.topUniversities": "शीर्ष विश्वविद्यालय",
     "notifications.careerOpportunities": "करियर के अवसर:",
     "notifications.noRecommendedCourses": "कोई अनुशंसित पाठ्यक्रम उपलब्ध नहीं है। कृपया अपना प्रतिशत समायोजित करें या एक अलग स्ट्रीम चुनें।",
     "notifications.noCoursesAvailable": "इस स्ट्रीम के लिए कोई पाठ्यक्रम उपलब्ध नहीं है।",
@@ -2198,6 +2201,7 @@ export const translations = {
     "exam.banking": "बैंकिंग परीक्षाएं",
     "exam.railway": "रेलवे परीक्षाएं (RRB)",
     "exam.statePsc": "राज्य PSC परीक्षाएं",
+    "exam.gate": "GATE (ग्रेजुएट एप्टीट्यूड टेस्ट इन इंजीनियरिंग)",
     
     // Step Titles (Hindi)
     "step.complete12thPcm": "PCM के साथ 12वीं पूरी करें",
@@ -2249,12 +2253,12 @@ export const translations = {
 
     // Step Descriptions (Hindi)
     "stepDesc.complete12thStandard": "अपनी 12वीं अच्छे प्रतिशत के साथ पूरी करें",
-    "stepDesc.complete12thPcm": "न्यूनतम 75% के साथ भौतिकी, रसायन विज्ञान, गणित (PCM) के साथ 12वीं पूरी करें",
-    "stepDesc.complete12thPcb": "न्यूनतम 50% के साथ भौतिकी, रसायन विज्ञान, जीवविज्ञान (PCB) के साथ 12वीं पूरी करें",
+    "stepDesc.complete12thPcm": "भौतिकी, रसायन विज्ञान, गणित (PCM) के साथ 12वीं पूरी करें",
+    "stepDesc.complete12thPcb": "भौतिकी, रसायन विज्ञान, जीवविज्ञान (PCB) के साथ 12वीं पूरी करें",
     "stepDesc.pursueDegree": "प्रासंगिक क्षेत्र में स्नातक की डिग्री पूरी करें",
     "stepDesc.gainExperience": "इंटर्नशिप के माध्यम से व्यावहारिक अनुभव प्राप्त करें",
     "stepDesc.startCareer": "अपना पेशेवर करियर शुरू करें",
-    "stepDesc.complete12thStandardTeacher": "अपनी 12वीं अच्छे प्रतिशत (जैसे 60%+) के साथ पूरी करें",
+    "stepDesc.complete12thStandardTeacher": "अपनी 12वीं अच्छे प्रतिशत के साथ पूरी करें",
     "stepDesc.pursueBachelorsDegree": "अपने पसंदीदा विषय में BA/B.Sc/B.Com पूरी करें",
     "stepDesc.completeBED": "मान्यता प्राप्त विश्वविद्यालय से शिक्षा स्नातक (B.Ed) पूरी करें",
     "stepDesc.clearTeachingExams": "अपने राज्य की आवश्यकताओं के अनुसार CTET/TET/STET परीक्षा पास करें",

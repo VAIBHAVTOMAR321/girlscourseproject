@@ -182,7 +182,7 @@ const OccupationDetails = () => {
             titleKey: 'step.complete12thStandard',
             title: 'Complete 12th Standard',
             descriptionKey: 'stepDesc.complete12thStandardTeacher',
-            description: 'Complete your 12th standard with good percentage (preferably 60%+)',
+            description: 'Complete your 12th standard with good percentage',
             durationKey: 'duration.2Years',
             duration: '2 Years',
             tips: ['tip.favoriteSubjects', 'tip.teachingActivities', 'tip.communicationSkills']
@@ -559,7 +559,7 @@ const OccupationDetails = () => {
         demandLevel: 'Very High',
         fullPath: '12th (PCB) → NEET → Admission in Government Medical College → MBBS → Internship → License → Job/PG',
         steps: [
-          { step: 1, title: 'Complete 12th with PCB', description: 'Complete 12th with Physics, Chemistry, Biology (PCB) with minimum 50%', duration: '2 Years', tips: ['tip.biology', 'tip.understandNCERT', 'tip.practiceDiagrams'] },
+          { step: 1, title: 'Complete 12th with PCB', description: 'Complete 12th with Physics, Chemistry, Biology (PCB)', duration: '2 Years', tips: ['tip.biology', 'tip.understandNCERT', 'tip.practiceDiagrams'] },
           { step: 2, title: 'Prepare for NEET', description: 'Cover complete syllabus of PCB for NEET', duration: '1-2 Years', tips: ['tip.ncert', 'tip.solvePreviousPapers', 'tip.takeMockTests'] },
           { step: 3, title: 'Appear for NEET', description: 'Appear for NEET exam (conducted once a year)', duration: 'Exam Season', tips: ['tip.manageTime', 'tip.accuracy', 'tip.stayCalm'] },
           { step: 4, title: 'Participate in Counseling', description: 'Participate in All India Quota counseling for college allocation', duration: 'After Results', tips: ['tip.fillWisely', 'tip.researchColleges', 'tip.considerLocation'] },
@@ -772,22 +772,58 @@ const OccupationDetails = () => {
           { name: 'AFA (Dundigul)', location: 'Hyderabad', ranking: 'Top', seats: 'Various' }
         ],
         skills: ['Mathematics', 'General Knowledge', 'English', 'Physical Fitness', 'Leadership', 'Discipline']
+      },
+      'GATE': {
+        title: 'GATE (Graduate Aptitude Test in Engineering)',
+        icon: <FaFlask className="text-info" />,
+        description: 'Crack GATE to get admission in M.Tech or PSU jobs',
+        salaryRange: '₹8-25 LPA',
+        growthPotential: 'Very High',
+        demandLevel: 'High',
+        fullPath: 'Graduate (Engineering) → GATE → M.Tech/PSU Job',
+        steps: [
+          { step: 1, title: 'Complete B.Tech', description: 'Complete engineering graduation in your stream', duration: '4 Years', tips: ['tip.focusStudies', 'tip.buildFoundation', 'tip.learnBasics'] },
+          { step: 2, title: 'Check Eligibility', description: 'Check GATE eligibility for your stream', duration: 'Before Exam', tips: ['tip.gateEligibility', 'tip.checkPapers', 'tip.knowPattern'] },
+          { step: 3, title: 'Study GATE Syllabus', description: 'Cover complete syllabus according to your stream', duration: '6-12 Months', tips: ['tip.conceptClear', 'tip.standardBooks', 'tip.makeNotes'] },
+          { step: 4, title: 'Prepare for GATE', description: 'Solve previous papers, take mock tests', duration: '6-12 Months', tips: ['tip.solvePapers', 'tip.takeMockTests', 'tip.timeManagement'] },
+          { step: 5, title: 'Appear for GATE', description: 'Appear for GATE exam', duration: 'Exam Season', tips: ['tip.manageTime', 'tip.accuracy', 'tip.stayCalm'] },
+          { step: 6, title: 'GATE Counseling', description: 'Participate in COAP/CCMT counseling', duration: 'After Result', tips: ['tip.fillChoices', 'tip.researchColleges', 'tip.branchPreferences'] },
+          { step: 7, title: 'Complete M.Tech', description: 'Complete M.Tech or join PSU', duration: '2 Years', tips: ['tip.specialize', 'tip.doProjects', 'tip.buildNetwork'] }
+        ],
+        exams: [
+          { name: 'GATE (CS/IT)', eligibility: 'B.Tech (CS/IT)', frequency: 'Once a year', difficulty: 'High' },
+          { name: 'GATE (ECE)', eligibility: 'B.Tech (ECE)', frequency: 'Once a year', difficulty: 'High' },
+          { name: 'GATE (ME)', eligibility: 'B.Tech (ME)', frequency: 'Once a year', difficulty: 'High' },
+          { name: 'GATE (EE)', eligibility: 'B.Tech (EE)', frequency: 'Once a year', difficulty: 'High' },
+          { name: 'GATE (CE)', eligibility: 'B.Tech (CE)', frequency: 'Once a year', difficulty: 'High' }
+        ],
+        colleges: [
+          { name: 'IIT Bombay', location: 'Mumbai', ranking: 'Top 1', seats: 'Various' },
+          { name: 'IIT Delhi', location: 'Delhi', ranking: 'Top 2', seats: 'Various' },
+          { name: 'IIT Madras', location: 'Chennai', ranking: 'Top 3', seats: 'Various' },
+          { name: 'IIT Kanpur', location: 'Kanpur', ranking: 'Top 4', seats: 'Various' },
+          { name: 'IIT Kharagpur', location: 'Kharagpur', ranking: 'Top 5', seats: 'Various' },
+          { name: 'NIT Trichy', location: 'Tiruchirappalli', ranking: 'Top NIT', seats: 'Various' },
+          { name: 'NIT Surathkal', location: 'Surathkal', ranking: 'Top NIT', seats: 'Various' },
+          { name: 'NIT Warangal', location: 'Warangal', ranking: 'Top NIT', seats: 'Various' }
+        ],
+        skills: ['Technical Knowledge', 'Problem Solving', 'Analytical Skills', 'Time Management', 'Core Engineering Concepts', 'Mathematics']
       }
     }
     return govtExams[examType] || null
   }
 
-  const govtExamTypes = ['IIT-JEE', 'NEET', 'UPSC', 'SSC', 'Banking', 'Railway', 'StatePSC', 'NDA']
+  const govtExamTypes = ['IIT-JEE', 'NEET', 'UPSC', 'GATE', 'SSC', 'Banking', 'Railway', 'StatePSC', 'NDA']
 
   const getFilteredExamTypesByStream = () => {
     if (stream === 'science') {
-      return ['IIT-JEE', 'NEET', 'Banking', 'SSC', 'Railway', 'StatePSC', 'NDA']
+      return ['IIT-JEE', 'NEET', 'UPSC', 'GATE', 'Banking', 'SSC', 'Railway', 'StatePSC', 'NDA']
     } else if (stream === 'commerce') {
-      return ['Banking', 'UPSC', 'SSC', 'Railway', 'StatePSC', 'NDA']
+      return ['UPSC', 'Banking', 'SSC', 'Railway', 'StatePSC', 'NDA']
     } else if (stream === 'arts') {
       return ['UPSC', 'SSC', 'Banking', 'Railway', 'StatePSC', 'NDA']
     } else if (stream === 'computer') {
-      return ['IIT-JEE', 'NEET', 'Banking', 'SSC', 'Railway', 'StatePSC', 'NDA']
+      return ['IIT-JEE', 'NEET', 'UPSC', 'GATE', 'Banking', 'SSC', 'Railway', 'StatePSC', 'NDA']
     }
     return govtExamTypes
   }

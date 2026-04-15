@@ -113,17 +113,17 @@ import '../../assets/css/UserNotifications.css'
     { id: 'computer', nameKey: 'notifications.computerScience', icon: <FaCode className="" />, subjectsKey: 'notifications.computerSubjects' }
   ]
 
-  const govtExamTypes = ['IIT-JEE', 'NEET', 'UPSC', 'SSC', 'Banking', 'Railway', 'StatePSC']
+  const govtExamTypes = ['IIT-JEE', 'NEET', 'UPSC', 'GATE', 'SSC', 'Banking', 'Railway', 'StatePSC']
 
   const getFilteredExamTypes = () => {
     if (selectedStream === 'science') {
-      return ['IIT-JEE', 'NEET', 'Banking', 'SSC', 'Railway', 'StatePSC', 'NDA']
+      return ['IIT-JEE', 'NEET', 'UPSC', 'GATE', 'Banking', 'SSC', 'Railway', 'StatePSC', 'NDA']
     } else if (selectedStream === 'commerce') {
-      return ['Banking', 'UPSC', 'SSC', 'Railway', 'StatePSC', 'NDA']
+      return ['UPSC', 'Banking', 'SSC', 'Railway', 'StatePSC', 'NDA']
     } else if (selectedStream === 'arts') {
       return ['UPSC', 'SSC', 'Banking', 'Railway', 'StatePSC', 'NDA']
     } else if (selectedStream === 'computer') {
-      return ['IIT-JEE', 'NEET', 'Banking', 'SSC', 'Railway', 'StatePSC', 'NDA']
+      return ['IIT-JEE', 'NEET', 'UPSC', 'GATE', 'Banking', 'SSC', 'Railway', 'StatePSC', 'NDA']
     }
     return govtExamTypes
   }
@@ -140,7 +140,7 @@ import '../../assets/css/UserNotifications.css'
         icon: <FaCog />,
         fullPath: isHindi ? '12वीं (PCM) → JEE Main → JEE Advanced → IIT/NIT/IIIT → B.Tech' : '12th (PCM) → JEE Main → JEE Advanced → IIT/NIT/IIIT → B.Tech',
         steps: [
-          { step: 1, titleKey: 'step.complete12thPcm', title: isHindi ? getTranslation('step.complete12thPcm', language) : 'Complete 12th with PCM', description: isHindi ? '75%+ के साथ Physics, Chemistry, Mathematics पूरा करें' : 'Complete 12th with Physics, Chemistry, Mathematics with 75%+', duration: isHindi ? '2 साल' : '2 Years' },
+          { step: 1, titleKey: 'step.complete12thPcm', title: isHindi ? getTranslation('step.complete12thPcm', language) : 'Complete 12th with PCM', description: isHindi ? 'Physics, Chemistry, Mathematics पूरा करें' : 'Complete 12th with Physics, Chemistry, Mathematics', duration: isHindi ? '2 साल' : '2 Years' },
           { step: 2, titleKey: 'step.prepareJeeMain', title: isHindi ? getTranslation('step.prepareJeeMain', language) : 'Prepare for JEE Main', description: isHindi ? 'PCM का पूरा पाठ्यक्रम कवर करें' : 'Cover complete syllabus of PCM', duration: isHindi ? '1-2 साल' : '1-2 Years' },
           { step: 3, titleKey: 'step.appearJeeMain', title: isHindi ? getTranslation('step.appearJeeMain', language) : 'Appear for JEE Main', description: isHindi ? 'JEE Main exam क्लियर करें' : 'Clear JEE Main exam', duration: isHindi ? 'परीक्षा' : 'Exam' },
           { step: 4, titleKey: 'step.prepareJeeAdvanced', title: isHindi ? getTranslation('step.prepareJeeAdvanced', language) : 'Prepare for JEE Advanced', description: isHindi ? 'JEE Main क्वालिफाई होने पर' : 'If qualified in JEE Main', duration: isHindi ? '6-12 महीने' : '6-12 Months' },
@@ -271,6 +271,27 @@ import '../../assets/css/UserNotifications.css'
           { name: isHindi ? 'राज्य पुलिस सेवा' : 'State Police Service', location: isHindi ? 'पूरा राज्य' : 'State-wide', seats: isHindi ? 'विभिन्न' : 'Various' },
           { name: isHindi ? 'विभिन्न विभाग नौकरियां' : 'Various Dept Jobs', location: isHindi ? 'पूरा राज्य' : 'State-wide', seats: isHindi ? 'विभिन्न' : 'Various' }
         ]
+      },
+      'GATE': {
+        title: isHindi ? getTranslation('exam.gate', language) : 'GATE (Graduate Aptitude Test in Engineering)',
+        titleKey: 'exam.gate',
+        icon: <FaFlask />,
+        fullPath: isHindi ? 'ग्रेजुएशन (इंजीनियरिंग) → GATE → M.Tech/PSU जॉब' : 'Graduate (Engineering) → GATE → M.Tech/PSU Job',
+        steps: [
+          { step: 1, titleKey: 'step.completeBtech', title: isHindi ? getTranslation('step.completeBtech', language) : 'Complete B.Tech', description: isHindi ? 'इंजीनियरिंग में ग्रेजुएट करें' : 'Complete engineering graduation', duration: isHindi ? '4 साल' : '4 Years' },
+          { step: 2, titleKey: 'step.gateSyllabus', title: isHindi ? 'GATE सिलेबस पढ़ें' : 'Study GATE Syllabus', description: isHindi ? 'अपने स्ट्रीम के अनुसार सिलेबस कवर करें' : 'Cover syllabus according to your stream', duration: isHindi ? '6-12 महीने' : '6-12 Months' },
+          { step: 3, titleKey: 'step.gatePrep', title: isHindi ? 'GATE की तैयारी करें' : 'Prepare for GATE', description: isHindi ? 'पिछले पेपर सॉल्व करें, मॉक टेस्ट दें' : 'Solve previous papers, take mock tests', duration: isHindi ? '6-12 महीने' : '6-12 Months' },
+          { step: 4, titleKey: 'step.appearGate', title: isHindi ? 'GATE में बैठें' : 'Appear for GATE', description: isHindi ? 'GATE exam क्लियर करें' : 'Clear GATE exam', duration: isHindi ? 'परीक्षा' : 'Exam' },
+          { step: 5, titleKey: 'step.gateCounseling', title: isHindi ? 'GATE काउंसलिंग' : 'GATE Counseling', description: isHindi ? 'COAP CCMT में भाग लें' : 'Participate in COAP/CCMT', duration: isHindi ? 'परिणाम के बाद' : 'After Result' },
+          { step: 6, titleKey: 'step.completeMtech', title: isHindi ? 'M.Tech पूरी करें' : 'Complete M.Tech', description: isHindi ? '2 साल का M.Tech कोर्स' : '2-year M.Tech course', duration: isHindi ? '2 साल' : '2 Years' }
+        ],
+        colleges: [
+          { name: isHindi ? 'IIT मुंबई' : 'IIT Bombay', location: isHindi ? 'मुंबई' : 'Mumbai', seats: isHindi ? 'विभिन्न' : 'Various' },
+          { name: isHindi ? 'IIT दिल्ली' : 'IIT Delhi', location: isHindi ? 'दिल्ली' : 'Delhi', seats: isHindi ? 'विभिन्न' : 'Various' },
+          { name: isHindi ? 'IIT मद्रास' : 'IIT Madras', location: isHindi ? 'चेन्नई' : 'Chennai', seats: isHindi ? 'विभिन्न' : 'Various' },
+          { name: isHindi ? 'IIT कानपुर' : 'IIT Kanpur', location: isHindi ? 'कानपुर' : 'Kanpur', seats: isHindi ? 'विभिन्न' : 'Various' },
+          { name: isHindi ? 'NIT त्रिची' : 'NIT Trichy', location: isHindi ? 'तिरुचिरापल्ली' : 'Tiruchirappalli', seats: isHindi ? 'विभिन्न' : 'Various' }
+        ]
       }
     }
   }
@@ -312,11 +333,11 @@ import '../../assets/css/UserNotifications.css'
         titleKey: 'college.iit',
         icon: <FaCog />,
         fullPath: isHindi ? '12वीं (PCM) → JEE Main → JEE Advanced → IIT प्रवेश' : '12th (PCM) → JEE Main → JEE Advanced → IIT Admission',
-        eligibility: isHindi ? 'PCM में 75%+, JEE Main + Advanced क्वालिफाई' : '75%+ in PCM, JEE Main + Advanced qualified',
+        eligibility: isHindi ? 'PCM में JEE Main + Advanced क्वालिफाई' : 'JEE Main + Advanced qualified',
         seats: isHindi ? 'सभी IIT में ~17,000 सीट' : '~17,000 seats across all IITs',
         courses: isHindi ? ['B.Tech', 'M.Tech', 'B.Sc', 'M.Sc', 'MBA', 'PhD'] : ['B.Tech', 'M.Tech', 'B.Sc', 'M.Sc', 'MBA', 'PhD'],
         steps: [
-          { step: 1, title: isHindi ? 'PCM के साथ 12वीं पूरी करें' : 'Complete 12th with PCM', description: isHindi ? '75%+ के साथ Physics, Chemistry, Mathematics' : 'Physics, Chemistry, Mathematics with 75%+', duration: isHindi ? '2 साल' : '2 Years' },
+          { step: 1, title: isHindi ? 'PCM के साथ 12वीं पूरी करें' : 'Complete 12th with PCM', description: isHindi ? 'Physics, Chemistry, Mathematics' : 'Physics, Chemistry, Mathematics', duration: isHindi ? '2 साल' : '2 Years' },
           { step: 2, title: isHindi ? 'JEE Main की तैयारी करें' : 'Prepare for JEE Main', description: isHindi ? 'PCM का पूरा पाठ्यक्रम कवर करें' : 'Cover complete PCM syllabus', duration: isHindi ? '1-2 साल' : '1-2 Years' },
           { step: 3, title: isHindi ? 'JEE Main में बैठें' : 'Appear for JEE Main', description: isHindi ? 'JEE Main exam क्लियर करें' : 'Clear JEE Main exam', duration: isHindi ? 'परीक्षा' : 'Exam' },
           { step: 4, title: isHindi ? 'JEE Advanced की तैयारी करें' : 'Prepare for JEE Advanced', description: isHindi ? 'JEE Main क्वालिफाई होने पर' : 'If qualified in JEE Main', duration: isHindi ? '6-12 महीने' : '6-12 Months' },
@@ -339,11 +360,11 @@ import '../../assets/css/UserNotifications.css'
         titleKey: 'college.nit',
         icon: <FaUniversity />,
         fullPath: isHindi ? '12वीं (PCM) → JEE Main → CSAB काउंसलिंग → NIT प्रवेश' : '12th (PCM) → JEE Main → CSAB Counseling → NIT Admission',
-        eligibility: isHindi ? 'PCM में 75%+, JEE Main क्वालिफाई' : '75%+ in PCM, JEE Main qualified',
+        eligibility: isHindi ? 'PCM में JEE Main क्वालिफाई' : 'JEE Main qualified',
         seats: isHindi ? 'सभी NIT में ~25,000 सीट' : '~25,000 seats across all NITs',
         courses: isHindi ? ['B.Tech', 'M.Tech', 'MBA', 'M.Sc', 'PhD'] : ['B.Tech', 'M.Tech', 'MBA', 'M.Sc', 'PhD'],
         steps: [
-          { step: 1, title: isHindi ? 'PCM के साथ 12वीं पूरी करें' : 'Complete 12th with PCM', description: isHindi ? '75%+ के साथ Physics, Chemistry, Mathematics' : 'Physics, Chemistry, Mathematics with 75%+', duration: isHindi ? '2 साल' : '2 Years' },
+          { step: 1, title: isHindi ? 'PCM के साथ 12वीं पूरी करें' : 'Complete 12th with PCM', description: isHindi ? 'Physics, Chemistry, Mathematics' : 'Physics, Chemistry, Mathematics', duration: isHindi ? '2 साल' : '2 Years' },
           { step: 2, title: isHindi ? 'JEE Main की तैयारी करें' : 'Prepare for JEE Main', description: isHindi ? 'PCM का पूरा पाठ्यक्रम कवर करें' : 'Cover complete PCM syllabus', duration: isHindi ? '1-2 साल' : '1-2 Years' },
           { step: 3, title: isHindi ? 'JEE Main में बैठें' : 'Appear for JEE Main', description: isHindi ? 'JEE Main exam क्लियर करें' : 'Clear JEE Main exam', duration: isHindi ? 'परीक्षा' : 'Exam' },
           { step: 4, title: isHindi ? 'रिजल्ट और रैंक जांचें' : 'Check Result & Rank', description: isHindi ? 'अपना JEE Main रैंक जांचें' : 'Check your JEE Main rank', duration: isHindi ? 'परिणाम के बाद' : 'After Result' },
@@ -366,11 +387,11 @@ import '../../assets/css/UserNotifications.css'
         titleKey: 'college.iiit',
         icon: <FaMicrochip />,
         fullPath: isHindi ? '12वीं (PCM) → JEE Main → CSAB/JoSAA → IIIT प्रवेश' : '12th (PCM) → JEE Main → CSAB/JoSAA → IIIT Admission',
-        eligibility: isHindi ? 'PCM में 75%+, JEE Main क्वालिफाई' : '75%+ in PCM, JEE Main qualified',
+        eligibility: isHindi ? 'PCM में JEE Main क्वालिफाई' : 'JEE Main qualified',
         seats: isHindi ? 'सभी IIIT में ~5,000 सीट' : '~5000 seats across all IIITs',
         courses: isHindi ? ['B.Tech', 'M.Tech', 'PhD'] : ['B.Tech', 'M.Tech', 'PhD'],
         steps: [
-          { step: 1, title: isHindi ? 'PCM के साथ 12वीं पूरी करें' : 'Complete 12th with PCM', description: isHindi ? '75%+ के साथ Physics, Chemistry, Mathematics' : 'Physics, Chemistry, Mathematics with 75%+', duration: isHindi ? '2 साल' : '2 Years' },
+          { step: 1, title: isHindi ? 'PCM के साथ 12वीं पूरी करें' : 'Complete 12th with PCM', description: isHindi ? 'Physics, Chemistry, Mathematics' : 'Physics, Chemistry, Mathematics', duration: isHindi ? '2 साल' : '2 Years' },
           { step: 2, title: isHindi ? 'JEE Main की तैयारी करें' : 'Prepare for JEE Main', description: isHindi ? 'Mathematics और Physics पर फोकस करें' : 'Focus on Mathematics and Physics', duration: isHindi ? '1-2 साल' : '1-2 Years' },
           { step: 3, title: isHindi ? 'JEE Main में बैठें' : 'Appear for JEE Main', description: isHindi ? 'JEE Main exam क्लियर करें' : 'Clear JEE Main exam', duration: isHindi ? 'परीक्षा' : 'Exam' },
           { step: 4, title: isHindi ? 'रिजल्ट और रैंक जांचें' : 'Check Result & Rank', description: isHindi ? 'अपना JEE Main रैंक जांचें' : 'Check your JEE Main rank', duration: isHindi ? 'परिणाम के बाद' : 'After Result' },
@@ -390,7 +411,7 @@ import '../../assets/css/UserNotifications.css'
         titleKey: 'college.medical',
         icon: <FaHeartbeat />,
         fullPath: isHindi ? '12वीं (PCB) → NEET → AIQ/State काउंसलिंग → MBBS' : '12th (PCB) → NEET → AIQ/State Counseling → MBBS',
-        eligibility: isHindi ? 'PCB में 50%+ (GEN), NEET क्वालिफाई' : '50%+ in PCB (GEN), NEET qualified',
+        eligibility: isHindi ? 'PCB में NEET क्वालिफाई' : 'PCB, NEET qualified',
         seats: isHindi ? '~50,000 सीट (सरकारी + प्राइवेट)' : '~50,000 seats (Govt + Pvt)',
         courses: isHindi ? ['MBBS', 'BDS', 'BAMS', 'BHMS', 'BNYS', 'BVSc', 'B.Sc Nursing'] : ['MBBS', 'BDS', 'BAMS', 'BHMS', 'BNYS', 'BVSc', 'B.Sc Nursing'],
         steps: [
@@ -2009,7 +2030,7 @@ setPrepType('govtCollege')
                             )}
                           </div>
                         ) : prepType === 'govtCollege' ? (
-                          /* Govt College Content */
+                            /* Govt College Content */
                           <div className="mb-4">
                             <Tab.Container id="govt-college-tabs" defaultActiveKey="colleges">
                               <Nav variant="tabs" className="mb-4">
@@ -2017,6 +2038,12 @@ setPrepType('govtCollege')
                                   <Nav.Link eventKey="colleges">
                                     <FaUniversity className="me-2" />
                                     <TransText k="notifications.topColleges" as="span" />
+                                  </Nav.Link>
+                                </Nav.Item>
+                                <Nav.Item>
+                                  <Nav.Link eventKey="universities">
+                                    <FaBuilding className="me-2" />
+                                    <TransText k="notifications.topUniversities" as="span" />
                                   </Nav.Link>
                                 </Nav.Item>
                                 <Nav.Item>
@@ -2132,6 +2159,404 @@ setPrepType('govtCollege')
                             )}
                                   </>
                                   )}
+                                </Tab.Pane>
+                                <Tab.Pane eventKey="universities">
+                                  <Row>
+                                    {selectedStream === 'science' && (
+                                      <>
+                                        <Col md={4} className="mb-3">
+                                          <Card className="h-100 border" style={{ cursor: 'pointer' }}>
+                                            <Card.Body className="p-3">
+                                              <div className="d-flex align-items-center gap-2 mb-2">
+                                                <div className="course-icon-large">
+                                                  <FaGraduationCap className="text-primary" />
+                                                </div>
+                                                <h6 className="mb-0">IIT Bombay</h6>
+                                              </div>
+                                              <p className="small text-muted mb-2">Mumbai, Maharashtra</p>
+                                              <Badge bg="info"></Badge>
+                                            </Card.Body>
+                                          </Card>
+                                        </Col>
+                                        <Col md={4} className="mb-3">
+                                          <Card className="h-100 border" style={{ cursor: 'pointer' }}>
+                                            <Card.Body className="p-3">
+                                              <div className="d-flex align-items-center gap-2 mb-2">
+                                                <div className="course-icon-large">
+                                                  <FaGraduationCap className="text-primary" />
+                                                </div>
+                                                <h6 className="mb-0">IIT Delhi</h6>
+                                              </div>
+                                              <p className="small text-muted mb-2">New Delhi</p>
+                                              <Badge bg="info"></Badge>
+                                            </Card.Body>
+                                          </Card>
+                                        </Col>
+                                        <Col md={4} className="mb-3">
+                                          <Card className="h-100 border" style={{ cursor: 'pointer' }}>
+                                            <Card.Body className="p-3">
+                                              <div className="d-flex align-items-center gap-2 mb-2">
+                                                <div className="course-icon-large">
+                                                  <FaGraduationCap className="text-primary" />
+                                                </div>
+                                                <h6 className="mb-0">IIT Madras</h6>
+                                              </div>
+                                              <p className="small text-muted mb-2">Chennai, Tamil Nadu</p>
+                                              <Badge bg="info"></Badge>
+                                            </Card.Body>
+                                          </Card>
+                                        </Col>
+                                        <Col md={4} className="mb-3">
+                                          <Card className="h-100 border" style={{ cursor: 'pointer' }}>
+                                            <Card.Body className="p-3">
+                                              <div className="d-flex align-items-center gap-2 mb-2">
+                                                <div className="course-icon-large">
+                                                  <FaGraduationCap className="text-primary" />
+                                                </div>
+                                                <h6 className="mb-0">IIT Kharagpur</h6>
+                                              </div>
+                                              <p className="small text-muted mb-2">West Bengal</p>
+                                              <Badge bg="info">#4</Badge>
+                                            </Card.Body>
+                                          </Card>
+                                        </Col>
+                                        <Col md={4} className="mb-3">
+                                          <Card className="h-100 border" style={{ cursor: 'pointer' }}>
+                                            <Card.Body className="p-3">
+                                              <div className="d-flex align-items-center gap-2 mb-2">
+                                                <div className="course-icon-large">
+                                                  <FaGraduationCap className="text-primary" />
+                                                </div>
+                                                <h6 className="mb-0">IIT Kanpur</h6>
+                                              </div>
+                                              <p className="small text-muted mb-2">Uttar Pradesh</p>
+                                              <Badge bg="info">#5</Badge>
+                                            </Card.Body>
+                                          </Card>
+                                        </Col>
+                                        <Col md={4} className="mb-3">
+                                          <Card className="h-100 border" style={{ cursor: 'pointer' }}>
+                                            <Card.Body className="p-3">
+                                              <div className="d-flex align-items-center gap-2 mb-2">
+                                                <div className="course-icon-large">
+                                                  <FaGraduationCap className="text-primary" />
+                                                </div>
+                                                <h6 className="mb-0">AIIMS Delhi</h6>
+                                              </div>
+                                              <p className="small text-muted mb-2">New Delhi</p>
+                                              <Badge bg="danger">#1 Medical</Badge>
+                                            </Card.Body>
+                                          </Card>
+                                        </Col>
+                                        <Col md={4} className="mb-3">
+                                          <Card className="h-100 border" style={{ cursor: 'pointer' }}>
+                                            <Card.Body className="p-3">
+                                              <div className="d-flex align-items-center gap-2 mb-2">
+                                                <div className="course-icon-large">
+                                                  <FaHospital className="text-danger" />
+                                                </div>
+                                                <h6 className="mb-0">PGIMER</h6>
+                                              </div>
+                                              <p className="small text-muted mb-2">Chandigarh</p>
+                                              <Badge bg="danger">#2 Medical</Badge>
+                                            </Card.Body>
+                                          </Card>
+                                        </Col>
+                                        <Col md={4} className="mb-3">
+                                          <Card className="h-100 border" style={{ cursor: 'pointer' }}>
+                                            <Card.Body className="p-3">
+                                              <div className="d-flex align-items-center gap-2 mb-2">
+                                                <div className="course-icon-large">
+                                                  <FaHospital className="text-danger" />
+                                                </div>
+                                                <h6 className="mb-0">JIPMER</h6>
+                                              </div>
+                                              <p className="small text-muted mb-2">Puducherry</p>
+                                              <Badge bg="danger">#3 Medical</Badge>
+                                            </Card.Body>
+                                          </Card>
+                                        </Col>
+                                        <Col md={4} className="mb-3">
+                                          <Card className="h-100 border" style={{ cursor: 'pointer' }}>
+                                            <Card.Body className="p-3">
+                                              <div className="d-flex align-items-center gap-2 mb-2">
+                                                <div className="course-icon-large">
+                                                  <FaHospital className="text-danger" />
+                                                </div>
+                                                <h6 className="mb-0">AFMC Pune</h6>
+                                              </div>
+                                              <p className="small text-muted mb-2">Maharashtra</p>
+                                              <Badge bg="danger">#4 Medical</Badge>
+                                            </Card.Body>
+                                          </Card>
+                                        </Col>
+                                      </>
+                                    )}
+                                    {selectedStream === 'commerce' && (
+                                      <>
+                                        <Col md={4} className="mb-3">
+                                          <Card className="h-100 border" style={{ cursor: 'pointer' }}>
+                                            <Card.Body className="p-3">
+                                              <div className="d-flex align-items-center gap-2 mb-2">
+                                                <div className="course-icon-large">
+                                                  <FaGraduationCap className="text-primary" />
+                                                </div>
+                                                <h6 className="mb-0">Delhi University</h6>
+                                              </div>
+                                              <p className="small text-muted mb-2">New Delhi</p>
+                                              <Badge bg="info">#1</Badge>
+                                            </Card.Body>
+                                          </Card>
+                                        </Col>
+                                        <Col md={4} className="mb-3">
+                                          <Card className="h-100 border" style={{ cursor: 'pointer' }}>
+                                            <Card.Body className="p-3">
+                                              <div className="d-flex align-items-center gap-2 mb-2">
+                                                <div className="course-icon-large">
+                                                  <FaBriefcase className="text-success" />
+                                                </div>
+                                                <h6 className="mb-0">SRCC</h6>
+                                              </div>
+                                              <p className="small text-muted mb-2">Delhi</p>
+                                              <Badge bg="success">Top Commerce</Badge>
+                                            </Card.Body>
+                                          </Card>
+                                        </Col>
+                                        <Col md={4} className="mb-3">
+                                          <Card className="h-100 border" style={{ cursor: 'pointer' }}>
+                                            <Card.Body className="p-3">
+                                              <div className="d-flex align-items-center gap-2 mb-2">
+                                                <div className="course-icon-large">
+                                                  <FaGraduationCap className="text-primary" />
+                                                </div>
+                                                <h6 className="mb-0">Lady Shri Ram</h6>
+                                              </div>
+                                              <p className="small text-muted mb-2">Delhi</p>
+                                              <Badge bg="info">#2</Badge>
+                                            </Card.Body>
+                                          </Card>
+                                        </Col>
+                                        <Col md={4} className="mb-3">
+                                          <Card className="h-100 border" style={{ cursor: 'pointer' }}>
+                                            <Card.Body className="p-3">
+                                              <div className="d-flex align-items-center gap-2 mb-2">
+                                                <div className="course-icon-large">
+                                                  <FaGraduationCap className="text-primary" />
+                                                </div>
+                                                <h6 className="mb-0">St. Stephen's</h6>
+                                              </div>
+                                              <p className="small text-muted mb-2">Delhi</p>
+                                              <Badge bg="info"></Badge>
+                                            </Card.Body>
+                                          </Card>
+                                        </Col>
+                                        <Col md={4} className="mb-3">
+                                          <Card className="h-100 border" style={{ cursor: 'pointer' }}>
+                                            <Card.Body className="p-3">
+                                              <div className="d-flex align-items-center gap-2 mb-2">
+                                                <div className="course-icon-large">
+                                                  <FaGraduationCap className="text-primary" />
+                                                </div>
+                                                <h6 className="mb-0">Christ University</h6>
+                                              </div>
+                                              <p className="small text-muted mb-2">Bangalore</p>
+                                              <Badge bg="info">Top Private</Badge>
+                                            </Card.Body>
+                                          </Card>
+                                        </Col>
+                                        <Col md={4} className="mb-3">
+                                          <Card className="h-100 border" style={{ cursor: 'pointer' }}>
+                                            <Card.Body className="p-3">
+                                              <div className="d-flex align-items-center gap-2 mb-2">
+                                                <div className="course-icon-large">
+                                                  <FaGraduationCap className="text-primary" />
+                                                </div>
+                                                <h6 className="mb-0">Symbiosis</h6>
+                                              </div>
+                                              <p className="small text-muted mb-2">Pune</p>
+                                              <Badge bg="info">Top Private</Badge>
+                                            </Card.Body>
+                                          </Card>
+                                        </Col>
+                                      </>
+                                    )}
+                                    {selectedStream === 'arts' && (
+                                      <>
+                                        <Col md={4} className="mb-3">
+                                          <Card className="h-100 border" style={{ cursor: 'pointer' }}>
+                                            <Card.Body className="p-3">
+                                              <div className="d-flex align-items-center gap-2 mb-2">
+                                                <div className="course-icon-large">
+                                                  <FaGraduationCap className="text-primary" />
+                                                </div>
+                                                <h6 className="mb-0">Delhi University</h6>
+                                              </div>
+                                              <p className="small text-muted mb-2">New Delhi</p>
+                                              <Badge bg="info">#1</Badge>
+                                            </Card.Body>
+                                          </Card>
+                                        </Col>
+                                        <Col md={4} className="mb-3">
+                                          <Card className="h-100 border" style={{ cursor: 'pointer' }}>
+                                            <Card.Body className="p-3">
+                                              <div className="d-flex align-items-center gap-2 mb-2">
+                                                <div className="course-icon-large">
+                                                  <FaGraduationCap className="text-primary" />
+                                                </div>
+                                                <h6 className="mb-0">Jamia Millia</h6>
+                                              </div>
+                                              <p className="small text-muted mb-2">New Delhi</p>
+                                              <Badge bg="info">#2</Badge>
+                                            </Card.Body>
+                                          </Card>
+                                        </Col>
+                                        <Col md={4} className="mb-3">
+                                          <Card className="h-100 border" style={{ cursor: 'pointer' }}>
+                                            <Card.Body className="p-3">
+                                              <div className="d-flex align-items-center gap-2 mb-2">
+                                                <div className="course-icon-large">
+                                                  <FaGraduationCap className="text-primary" />
+                                                </div>
+                                                <h6 className="mb-0">BHU</h6>
+                                              </div>
+                                              <p className="small text-muted mb-2">Varanasi</p>
+                                              <Badge bg="info"></Badge>
+                                            </Card.Body>
+                                          </Card>
+                                        </Col>
+                                        <Col md={4} className="mb-3">
+                                          <Card className="h-100 border" style={{ cursor: 'pointer' }}>
+                                            <Card.Body className="p-3">
+                                              <div className="d-flex align-items-center gap-2 mb-2">
+                                                <div className="course-icon-large">
+                                                  <FaGraduationCap className="text-primary" />
+                                                </div>
+                                                <h6 className="mb-0">JNU</h6>
+                                              </div>
+                                              <p className="small text-muted mb-2">Delhi</p>
+                                              <Badge bg="info">#4</Badge>
+                                            </Card.Body>
+                                          </Card>
+                                        </Col>
+                                        <Col md={4} className="mb-3">
+                                          <Card className="h-100 border" style={{ cursor: 'pointer' }}>
+                                            <Card.Body className="p-3">
+                                              <div className="d-flex align-items-center gap-2 mb-2">
+                                                <div className="course-icon-large">
+                                                  <FaGraduationCap className="text-primary" />
+                                                </div>
+                                                <h6 className="mb-0">AMU</h6>
+                                              </div>
+                                              <p className="small text-muted mb-2">Aligarh</p>
+                                              <Badge bg="info">#5</Badge>
+                                            </Card.Body>
+                                          </Card>
+                                        </Col>
+                                        <Col md={4} className="mb-3">
+                                          <Card className="h-100 border" style={{ cursor: 'pointer' }}>
+                                            <Card.Body className="p-3">
+                                              <div className="d-flex align-items-center gap-2 mb-2">
+                                                <div className="course-icon-large">
+                                                  <FaGraduationCap className="text-primary" />
+                                                </div>
+                                                <h6 className="mb-0">UoH</h6>
+                                              </div>
+                                              <p className="small text-muted mb-2">Hyderabad</p>
+                                              <Badge bg="info">Top</Badge>
+                                            </Card.Body>
+                                          </Card>
+                                        </Col>
+                                      </>
+                                    )}
+                                    {selectedStream === 'computer' && (
+                                      <>
+                                        <Col md={4} className="mb-3">
+                                          <Card className="h-100 border" style={{ cursor: 'pointer' }}>
+                                            <Card.Body className="p-3">
+                                              <div className="d-flex align-items-center gap-2 mb-2">
+                                                <div className="course-icon-large">
+                                                  <FaCode className="text-primary" />
+                                                </div>
+                                                <h6 className="mb-0">IIT Bombay</h6>
+                                              </div>
+                                              <p className="small text-muted mb-2">Mumbai</p>
+                                              <Badge bg="info">#1 CS</Badge>
+                                            </Card.Body>
+                                          </Card>
+                                        </Col>
+                                        <Col md={4} className="mb-3">
+                                          <Card className="h-100 border" style={{ cursor: 'pointer' }}>
+                                            <Card.Body className="p-3">
+                                              <div className="d-flex align-items-center gap-2 mb-2">
+                                                <div className="course-icon-large">
+                                                  <FaCode className="text-primary" />
+                                                </div>
+                                                <h6 className="mb-0">IIT Delhi</h6>
+                                              </div>
+                                              <p className="small text-muted mb-2">New Delhi</p>
+                                              <Badge bg="info">#2 CS</Badge>
+                                            </Card.Body>
+                                          </Card>
+                                        </Col>
+                                        <Col md={4} className="mb-3">
+                                          <Card className="h-100 border" style={{ cursor: 'pointer' }}>
+                                            <Card.Body className="p-3">
+                                              <div className="d-flex align-items-center gap-2 mb-2">
+                                                <div className="course-icon-large">
+                                                  <FaCode className="text-primary" />
+                                                </div>
+                                                <h6 className="mb-0">IIT Madras</h6>
+                                              </div>
+                                              <p className="small text-muted mb-2">Chennai</p>
+                                              <Badge bg="info">#3 CS</Badge>
+                                            </Card.Body>
+                                          </Card>
+                                        </Col>
+                                        <Col md={4} className="mb-3">
+                                          <Card className="h-100 border" style={{ cursor: 'pointer' }}>
+                                            <Card.Body className="p-3">
+                                              <div className="d-flex align-items-center gap-2 mb-2">
+                                                <div className="course-icon-large">
+                                                  <FaCode className="text-primary" />
+                                                </div>
+                                                <h6 className="mb-0">IIT Bangalore</h6>
+                                              </div>
+                                              <p className="small text-muted mb-2">Karnataka</p>
+                                              <Badge bg="info"></Badge>
+                                            </Card.Body>
+                                          </Card>
+                                        </Col>
+                                        <Col md={4} className="mb-3">
+                                          <Card className="h-100 border" style={{ cursor: 'pointer' }}>
+                                            <Card.Body className="p-3">
+                                              <div className="d-flex align-items-center gap-2 mb-2">
+                                                <div className="course-icon-large">
+                                                  <FaMicrochip className="text-warning" />
+                                                </div>
+                                                <h6 className="mb-0">IIIT Hyderabad</h6>
+                                              </div>
+                                              <p className="small text-muted mb-2">Telangana</p>
+                                              <Badge bg="warning">#1 IIIT</Badge>
+                                            </Card.Body>
+                                          </Card>
+                                        </Col>
+                                        <Col md={4} className="mb-3">
+                                          <Card className="h-100 border" style={{ cursor: 'pointer' }}>
+                                            <Card.Body className="p-3">
+                                              <div className="d-flex align-items-center gap-2 mb-2">
+                                                <div className="course-icon-large">
+                                                  <FaMicrochip className="text-warning" />
+                                                </div>
+                                                <h6 className="mb-0">IIIT Bangalore</h6>
+                                              </div>
+                                              <p className="small text-muted mb-2">Karnataka</p>
+                                              <Badge bg="warning">#2 IIIT</Badge>
+                                            </Card.Body>
+                                          </Card>
+                                        </Col>
+                                      </>
+                                    )}
+                                  </Row>
                                 </Tab.Pane>
                                 <Tab.Pane eventKey="recommended">
                                   {courses.length > 0 ? (
