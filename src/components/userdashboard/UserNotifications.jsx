@@ -2174,7 +2174,6 @@ setPrepType('govtCollege')
                                                 <h6 className="mb-0">IIT Bombay</h6>
                                               </div>
                                               <p className="small text-muted mb-2">Mumbai, Maharashtra</p>
-                                              <Badge bg="info"></Badge>
                                             </Card.Body>
                                           </Card>
                                         </Col>
@@ -2188,7 +2187,6 @@ setPrepType('govtCollege')
                                                 <h6 className="mb-0">IIT Delhi</h6>
                                               </div>
                                               <p className="small text-muted mb-2">New Delhi</p>
-                                              <Badge bg="info"></Badge>
                                             </Card.Body>
                                           </Card>
                                         </Col>
@@ -2202,7 +2200,6 @@ setPrepType('govtCollege')
                                                 <h6 className="mb-0">IIT Madras</h6>
                                               </div>
                                               <p className="small text-muted mb-2">Chennai, Tamil Nadu</p>
-                                              <Badge bg="info"></Badge>
                                             </Card.Body>
                                           </Card>
                                         </Col>
@@ -2216,7 +2213,6 @@ setPrepType('govtCollege')
                                                 <h6 className="mb-0">IIT Kharagpur</h6>
                                               </div>
                                               <p className="small text-muted mb-2">West Bengal</p>
-                                              <Badge bg="info"></Badge>
                                             </Card.Body>
                                           </Card>
                                         </Col>
@@ -2230,7 +2226,6 @@ setPrepType('govtCollege')
                                                 <h6 className="mb-0">IIT Kanpur</h6>
                                               </div>
                                               <p className="small text-muted mb-2">Uttar Pradesh</p>
-                                              <Badge bg="info"></Badge>
                                             </Card.Body>
                                           </Card>
                                         </Col>
@@ -2244,7 +2239,6 @@ setPrepType('govtCollege')
                                                 <h6 className="mb-0">AIIMS Delhi</h6>
                                               </div>
                                               <p className="small text-muted mb-2">New Delhi</p>
-                                              <Badge bg="danger">#1 Medical</Badge>
                                             </Card.Body>
                                           </Card>
                                         </Col>
@@ -2258,7 +2252,6 @@ setPrepType('govtCollege')
                                                 <h6 className="mb-0">PGIMER</h6>
                                               </div>
                                               <p className="small text-muted mb-2">Chandigarh</p>
-                                              <Badge bg="danger">#2 Medical</Badge>
                                             </Card.Body>
                                           </Card>
                                         </Col>
@@ -2272,7 +2265,6 @@ setPrepType('govtCollege')
                                                 <h6 className="mb-0">JIPMER</h6>
                                               </div>
                                               <p className="small text-muted mb-2">Puducherry</p>
-                                              <Badge bg="danger">#3 Medical</Badge>
                                             </Card.Body>
                                           </Card>
                                         </Col>
@@ -2286,7 +2278,6 @@ setPrepType('govtCollege')
                                                 <h6 className="mb-0">AFMC Pune</h6>
                                               </div>
                                               <p className="small text-muted mb-2">Maharashtra</p>
-                                              <Badge bg="danger">#4 Medical</Badge>
                                             </Card.Body>
                                           </Card>
                                         </Col>
@@ -2304,7 +2295,6 @@ setPrepType('govtCollege')
                                                 <h6 className="mb-0">Delhi University</h6>
                                               </div>
                                               <p className="small text-muted mb-2">New Delhi</p>
-                                              <Badge bg="info">#1</Badge>
                                             </Card.Body>
                                           </Card>
                                         </Col>
@@ -2313,12 +2303,11 @@ setPrepType('govtCollege')
                                             <Card.Body className="p-3">
                                               <div className="d-flex align-items-center gap-2 mb-2">
                                                 <div className="course-icon-large">
-                                                  <FaBriefcase className="text-success" />
+                                                  <FaBriefcase className="" />
                                                 </div>
                                                 <h6 className="mb-0">SRCC</h6>
                                               </div>
                                               <p className="small text-muted mb-2">Delhi</p>
-                                              <Badge bg="success">Top Commerce</Badge>
                                             </Card.Body>
                                           </Card>
                                         </Col>
@@ -2332,7 +2321,6 @@ setPrepType('govtCollege')
                                                 <h6 className="mb-0">Lady Shri Ram</h6>
                                               </div>
                                               <p className="small text-muted mb-2">Delhi</p>
-                                              <Badge bg="info">#2</Badge>
                                             </Card.Body>
                                           </Card>
                                         </Col>
@@ -2346,7 +2334,6 @@ setPrepType('govtCollege')
                                                 <h6 className="mb-0">St. Stephen's</h6>
                                               </div>
                                               <p className="small text-muted mb-2">Delhi</p>
-                                              <Badge bg="info"></Badge>
                                             </Card.Body>
                                           </Card>
                                         </Col>
@@ -2360,7 +2347,6 @@ setPrepType('govtCollege')
                                                 <h6 className="mb-0">Christ University</h6>
                                               </div>
                                               <p className="small text-muted mb-2">Bangalore</p>
-                                              <Badge bg="info">Top Private</Badge>
                                             </Card.Body>
                                           </Card>
                                         </Col>
@@ -2374,7 +2360,6 @@ setPrepType('govtCollege')
                                                 <h6 className="mb-0">Symbiosis</h6>
                                               </div>
                                               <p className="small text-muted mb-2">Pune</p>
-                                              <Badge bg="info">Top Private</Badge>
                                             </Card.Body>
                                           </Card>
                                         </Col>
@@ -2392,7 +2377,6 @@ setPrepType('govtCollege')
                                                 <h6 className="mb-0">Delhi University</h6>
                                               </div>
                                               <p className="small text-muted mb-2">New Delhi</p>
-                                              <Badge bg="info">#1</Badge>
                                             </Card.Body>
                                           </Card>
                                         </Col>
@@ -2406,7 +2390,6 @@ setPrepType('govtCollege')
                                                 <h6 className="mb-0">Jamia Millia</h6>
                                               </div>
                                               <p className="small text-muted mb-2">New Delhi</p>
-                                              <Badge bg="info">#2</Badge>
                                             </Card.Body>
                                           </Card>
                                         </Col>
@@ -2420,7 +2403,6 @@ setPrepType('govtCollege')
                                                 <h6 className="mb-0">BHU</h6>
                                               </div>
                                               <p className="small text-muted mb-2">Varanasi</p>
-                                              <Badge bg="info"></Badge>
                                             </Card.Body>
                                           </Card>
                                         </Col>
@@ -2434,7 +2416,6 @@ setPrepType('govtCollege')
                                                 <h6 className="mb-0">JNU</h6>
                                               </div>
                                               <p className="small text-muted mb-2">Delhi</p>
-                                              <Badge bg="info">#4</Badge>
                                             </Card.Body>
                                           </Card>
                                         </Col>
@@ -2448,7 +2429,6 @@ setPrepType('govtCollege')
                                                 <h6 className="mb-0">AMU</h6>
                                               </div>
                                               <p className="small text-muted mb-2">Aligarh</p>
-                                              <Badge bg="info">#5</Badge>
                                             </Card.Body>
                                           </Card>
                                         </Col>
@@ -2462,7 +2442,6 @@ setPrepType('govtCollege')
                                                 <h6 className="mb-0">UoH</h6>
                                               </div>
                                               <p className="small text-muted mb-2">Hyderabad</p>
-                                              <Badge bg="info">Top</Badge>
                                             </Card.Body>
                                           </Card>
                                         </Col>
@@ -2480,7 +2459,6 @@ setPrepType('govtCollege')
                                                 <h6 className="mb-0">IIT Bombay</h6>
                                               </div>
                                               <p className="small text-muted mb-2">Mumbai</p>
-                                              <Badge bg="info">#1 CS</Badge>
                                             </Card.Body>
                                           </Card>
                                         </Col>
@@ -2494,7 +2472,6 @@ setPrepType('govtCollege')
                                                 <h6 className="mb-0">IIT Delhi</h6>
                                               </div>
                                               <p className="small text-muted mb-2">New Delhi</p>
-                                              <Badge bg="info">#2 CS</Badge>
                                             </Card.Body>
                                           </Card>
                                         </Col>
@@ -2508,7 +2485,6 @@ setPrepType('govtCollege')
                                                 <h6 className="mb-0">IIT Madras</h6>
                                               </div>
                                               <p className="small text-muted mb-2">Chennai</p>
-                                              <Badge bg="info">#3 CS</Badge>
                                             </Card.Body>
                                           </Card>
                                         </Col>
@@ -2522,7 +2498,6 @@ setPrepType('govtCollege')
                                                 <h6 className="mb-0">IIT Bangalore</h6>
                                               </div>
                                               <p className="small text-muted mb-2">Karnataka</p>
-                                              <Badge bg="info"></Badge>
                                             </Card.Body>
                                           </Card>
                                         </Col>
@@ -2536,7 +2511,6 @@ setPrepType('govtCollege')
                                                 <h6 className="mb-0">IIIT Hyderabad</h6>
                                               </div>
                                               <p className="small text-muted mb-2">Telangana</p>
-                                              <Badge bg="warning">#1 IIIT</Badge>
                                             </Card.Body>
                                           </Card>
                                         </Col>
@@ -2550,7 +2524,6 @@ setPrepType('govtCollege')
                                                 <h6 className="mb-0">IIIT Bangalore</h6>
                                               </div>
                                               <p className="small text-muted mb-2">Karnataka</p>
-                                              <Badge bg="warning">#2 IIIT</Badge>
                                             </Card.Body>
                                           </Card>
                                         </Col>
