@@ -1633,8 +1633,17 @@ const UserDashboard = () => {
                           </div>
                         ) : courses.length > 0 ? (
                           <Row>
-                            {courses.map((course, index) => (
-                              <Col md={6} lg={4} key={course.id || index} className="mb-4">
+                            {courses
+                              .slice()
+                              .sort((a, b) => {
+                                const aCompleted = isAllModulesCompleted(a);
+                                const bCompleted = isAllModulesCompleted(b);
+                                if (aCompleted && !bCompleted) return 1;
+                                if (!aCompleted && bCompleted) return -1;
+                                return 0;
+                              })
+                              .map((course, index) => (
+                              <Col md={isAllModulesCompleted(course) ? 12 : 6} lg={4} key={course.id || index} className="mb-4">
                                 <Card className="shadow-sm border-0 h-100 " style={{ borderRadius: '12px', overflow: 'hidden' }}>
                                   <div className="card-header-gradient" style={{ 
                                     height: '100%', 
@@ -1887,17 +1896,31 @@ const UserDashboard = () => {
                       <div>
                         <TransText k="dashboard.allCourses" as="h4" className="mb-3" />
                         
-                        {allCoursesLoading ? (
+{allCoursesLoading ? (
                           <div className="text-center py-5">
                             <Spinner animation="border" variant="primary" style={{ width: '60px', height: '60px' }} />
                             <p className="mt-3"><TransText k="status.loading" /></p>
                           </div>
                         ) : allCourses.filter(c => c.course_status === 'unpaid' && !isCourseExpired(c)).length > 0 ? (
                           <Row>
-                            {allCourses.filter(c => c.course_status === 'unpaid' && !isCourseExpired(c)).map((course, index) => {
+                            {allCourses
+                              .filter(c => c.course_status === 'unpaid' && !isCourseExpired(c))
+                              .slice()
+                              .sort((a, b) => {
+                                const aEnrolled = courses.some(ec => ec.course_id === a.course_id);
+                                const bEnrolled = courses.some(ec => ec.course_id === b.course_id);
+                                const aCompleted = aEnrolled && isAllModulesCompleted(courses.find(ec => ec.course_id === a.course_id));
+                                const bCompleted = bEnrolled && isAllModulesCompleted(courses.find(ec => ec.course_id === b.course_id));
+                                if (aCompleted && !bCompleted) return 1;
+                                if (!aCompleted && bCompleted) return -1;
+                                return 0;
+                              })
+                              .map((course, index) => {
                               const isEnrolled = courses.some(ec => ec.course_id === course.course_id)
+                              const enrolledCourse = courses.find(ec => ec.course_id === course.course_id)
+                              const isCompleted = enrolledCourse && isAllModulesCompleted(enrolledCourse)
                               return (
-                                <Col md={6} lg={4} key={course.id || index} className="mb-4">
+                                <Col md={isCompleted ? 12 : 6} lg={4} key={course.id || index} className="mb-4">
                                   <Card className="shadow-sm border-0 h-100" style={{ borderRadius: '12px', overflow: 'hidden' }}>
                                     <div className="card-header-gradient" style={{ 
                                       height: '150px', 
@@ -1909,13 +1932,15 @@ const UserDashboard = () => {
                                       justifyContent: 'center',
                                       position: 'relative',
                                       background: isEnrolled 
-                                        ? 'linear-gradient(135deg, #10b981, #059669)' // Green for enrolled
-                                        : 'linear-gradient(135deg, #667eea, #667eea)' // Purple for available
+                                        ? isCompleted
+                                          ? 'linear-gradient(135deg, #10b981, #059669)'
+                                          : 'linear-gradient(135deg, #10b981, #059669)'
+                                        : 'linear-gradient(135deg, #667eea, #667eea)'
                                     }}>
                                       {isEnrolled ? (
                                         <div className="text-center">
-                                          <FaCertificate className="text-white" style={{ fontSize: '40px', marginBottom: '8px' }} />
-                                          <p className="text-white fw-bold mb-0"><TransText k="course.alreadyEnrolled" as="span" /></p>
+                                          <FaCheckCircle className="text-white" style={{ fontSize: '40px', marginBottom: '8px' }} />
+                                          <p className="text-white fw-bold mb-0">{isCompleted ? 'Completed' : <TransText k="course.alreadyEnrolled" as="span" />}</p>
                                         </div>
                                       ) : (
                                         <FaBook className="text-white" style={{ fontSize: '48px' }} />
@@ -1968,7 +1993,6 @@ const UserDashboard = () => {
                                                   </Button>
                                                 )
                                               } else {
-                                                // For expired courses without certificate, show Generate Certificate button
                                                 return (
                                                   <Button 
                                                     variant="success" 
@@ -1989,12 +2013,18 @@ const UserDashboard = () => {
                                             })()
                                           ) : (
                                             <Button 
-                                              variant="success" 
-                                              onClick={() => handleViewCourse(courses.find(ec => ec.course_id === course.course_id))}
+                                              variant={isCompleted ? "success" : "primary"} 
+                                              onClick={() => handleViewCourse(enrolledCourse)}
                                               className="w-100 d-flex align-items-center justify-content-center"
+                                              style={{
+                                                background: isCompleted 
+                                                  ? 'linear-gradient(135deg, #10b981, #059669)'
+                                                  : 'linear-gradient(135deg, #667eea, #667eea)',
+                                                border: 'none'
+                                              }}
                                             >
                                               <FaPlay className="me-2" />
-                                              <TransText k="course.continueLearning" as="span" />
+                                              {isCompleted ? 'Continue Learning' : <TransText k="course.continueLearning" as="span" />}
                                             </Button>
                                           )
                                         ) : (
