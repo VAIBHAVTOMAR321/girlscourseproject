@@ -16,7 +16,7 @@ const OccupationDetails = () => {
   const [loading, setLoading] = useState(true)
   const [showOffcanvas, setShowOffcanvas] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
-  const [selectedGovtExam, setSelectedGovtExam] = useState('IIT-JEE')
+  const [selectedGovtExam, setSelectedGovtExam] = useState('UPSC')
   const navigate = useNavigate()
   const location = useLocation()
   const { occupation, stream, percentage, course, prepType: initialPrepType } = location.state || {}
@@ -158,13 +158,23 @@ const OccupationDetails = () => {
     }, 1000)
   }, [])
 
-  // Update selectedGovtExam when stream changes
+  // Update selectedGovtExam when stream changes or occupation
   useEffect(() => {
     const validExamTypes = ['IIT-JEE', 'NEET', 'UPSC', 'SSC', 'Banking', 'Railway', 'StatePSC', 'NDA']
     if (stream && validExamTypes.includes(stream)) {
       setSelectedGovtExam(stream)
+    } else if (occupation) {
+      // Set default govt exam based on occupation
+      const occupationExamMap = {
+        'Teacher': 'UPSC',
+        'Doctor': 'NEET',
+        'Software Engineer': 'IIT-JEE',
+        'Lawyer': 'UPSC'
+      }
+      const defaultExam = occupationExamMap[occupation] || 'UPSC'
+      setSelectedGovtExam(defaultExam)
     }
-  }, [stream])
+  }, [stream, occupation])
 
   // Occupation details data
   const getOccupationDetails = (occupationName) => {
@@ -585,7 +595,7 @@ const OccupationDetails = () => {
       'UPSC': {
         title: 'UPSC (Union Public Service Commission)',
         icon: <FaLandmark className="text-primary" />,
-        description: 'CrackCivil Services Exam to become IAS, IPS, IFS and other Group A services',
+        description: 'Crack Civil Services Exam to become IAS, IPS, IFS and other Group A services',
         salaryRange: '₹7-50 LPA',
         growthPotential: 'Very High',
         demandLevel: 'High',
@@ -593,7 +603,7 @@ const OccupationDetails = () => {
         steps: [
           { step: 1, title: 'Complete Graduation', description: 'Complete graduation in any stream', duration: '3 Years', tips: ['tip.chooseInterestSubjects', 'tip.readNewspapers', 'tip.analyticalSkills'] },
           { step: 2, title: 'Basic Preparation', description: 'Start basic preparation - read NCERTs, basic books', duration: '6-12 Months', tips: ['tip.ncertBasics', 'tip.currentAffairs', 'tip.answerWriting'] },
-          { step: 3, title: '深化 Preparation', description: 'Deep preparation for all subjects', duration: '1-2 Years', tips: ['tip.standardBooks', 'tip.answerWriting', 'tip.testSeries'] },
+          { step: 3, title: 'Deep Preparation', description: 'Deep preparation for all subjects', duration: '1-2 Years', tips: ['tip.standardBooks', 'tip.answerWriting', 'tip.testSeries'] },
           { step: 4, title: 'Appear for UPSC Prelims', description: 'Appear for UPSC Prelims (CSAT + GS)', duration: 'Exam Season', tips: ['tip.clearCutoff', 'tip.timeManagement', 'tip.stayFocused'] },
           { step: 5, title: 'Appear for UPSC Mains', description: 'Appear for UPSC Mains (9 papers)', duration: 'Exam Season', tips: ['tip.answerStructure', 'tip.writeNeatly', 'tip.timeManagement'] },
           { step: 6, title: 'Interview', description: 'Appear for Personality Test/Interview', duration: '30-45 Minutes', tips: ['tip.beConfident', 'tip.currentAffairs', 'tip.beHonest'] },

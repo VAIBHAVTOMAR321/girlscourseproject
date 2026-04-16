@@ -313,6 +313,28 @@ import '../../assets/css/UserNotifications.css'
 
   const filteredCollegeTypes = selectedStream ? getFilteredCollegeTypes() : govtCollegeTypes
 
+  // Get govt college description based on selected stream
+  const getGovtCollegeDescription = () => {
+    const isHindi = language === 'hi'
+
+    if (!selectedStream) {
+      return isHindi ? "सभी स्ट्रीम और करियर विकल्प एक्सप्लोर करें" : "Explore all streams and career options"
+    }
+
+    switch (selectedStream) {
+      case 'science':
+        return isHindi ? "इंजीनियरिंग, मेडिकल और रिसर्च पथ" : "Engineering, medical & research pathways"
+      case 'commerce':
+        return isHindi ? "बिजनेस, फाइनेंस और प्रोफेशनल करियर" : "Business, finance & professional careers"
+      case 'arts':
+        return isHindi ? "मानविकी, रचनात्मकता और सिविल सर्विसेज पथ" : "Humanities, creativity & civil services paths"
+      case 'computer':
+        return isHindi ? "टेक्नोलॉजी, कोडिंग और इनोवेशन करियर" : "Technology, coding & innovation careers"
+      default:
+        return isHindi ? "सभी स्ट्रीम और करियर विकल्प एक्सप्लोर करें" : "Explore all streams and career options"
+    }
+  }
+
   useEffect(() => {
     if (selectedStream && filteredCollegeTypes.length > 0) {
       setSelectedGovtCollege(filteredCollegeTypes[0])
@@ -1882,7 +1904,7 @@ setPrepType('govtCollege')
                               <Card.Body className="p-4 text-center">
                                 <FaUniversity className={`fs-2 mb-2 ${prepType === 'govtCollege' ? 'text-white' : 'text-muted'}`} style={prepType === 'govtCollege' ? { filter: 'drop-shadow(0 0 2px rgba(0,0,0,0.3))' } : {}} />
                                 <h6 className={prepType === 'govtCollege' ? 'text-white fw-bold' : 'text-muted'}><TransText k="notifications.govtCollegePath" as="span" /></h6>
-                                <small className={prepType === 'govtCollege' ? 'text-white' : 'text-muted'}><TransText k="notifications.govtCollegeDesc" as="span" /></small>
+                                <small className={prepType === 'govtCollege' ? 'text-white' : 'text-muted'}>{getGovtCollegeDescription()}</small>
                               </Card.Body>
                             </Card>
                           </Col>
