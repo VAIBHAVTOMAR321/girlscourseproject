@@ -451,9 +451,8 @@ const UserQuiz = () => {
       setCurrentQuestionIndex(0)
       setAnswers({})
 
-      // Calculate duration in seconds
-const duration = (endTime.getTime() - now.getTime()) / 1000
-setTimeRemaining(Math.max(0, Math.min(duration, 300))) // Max 5 min
+      // Set 10 minute timer for each quiz
+      setTimeRemaining(600) // 10 min = 600 seconds
     } catch (error) {
       console.error('Error starting quiz:', error)
       const errorMessage = error.response?.data?.message || error.response?.data?.error || error.message
@@ -1100,7 +1099,7 @@ setTimeRemaining(Math.max(0, Math.min(duration, 300))) // Max 5 min
                   <div className="quiz-header mb-4">
                     <div className="d-flex justify-content-between align-items-center mb-3">
                       <h4 className="mb-0">{currentQuiz.title}</h4>
-                      <div className="timer" style={{ fontSize: '24px', fontWeight: 'bold', color: timeRemaining < 60 ? '#dc3545' : '#007bff' }}>
+                      <div className="timer" style={{ fontSize: '24px', fontWeight: 'bold', color: timeRemaining < 60 ? '#dc3545' : '#dc3545' }}>
                         <FaClock className="me-2" />
                         {formatTime(timeRemaining)}
                       </div>
