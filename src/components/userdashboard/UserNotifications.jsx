@@ -2095,11 +2095,8 @@ setPrepType('govtCollege')
                                           <p className="text-muted mb-2">
                                             <strong><TransText k="notifications.completePath" as="span" /></strong> {govtCollegeData[selectedGovtCollege].fullPath}
                                           </p>
-                                    <p className="text-muted mb-2">
-                                      <strong><TransText k="notifications.eligibility" as="span" /></strong> {govtCollegeData[selectedGovtCollege].eligibility}
-                                    </p>
                                     <p className="text-muted mb-0">
-                                      <strong><TransText k="notifications.totalSeats" as="span" /></strong> {govtCollegeData[selectedGovtCollege].seats}
+                                      <strong><TransText k="notifications.eligibility" as="span" /></strong> {govtCollegeData[selectedGovtCollege].eligibility}
                                     </p>
                                   </div>
                                   
