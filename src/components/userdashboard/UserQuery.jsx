@@ -313,34 +313,74 @@ function UserQuery() {
                         <TransText k="query.noQueries" as="span" />
                       </Alert>
                     ) : (
-                      <Table responsive striped bordered hover className="mb-0">
-                        <thead>
-                          <tr>
-                            <th><TransText k="query.queryId" as="span" /></th>
-                            <th><TransText k="query.title" as="span" /></th>
-                            <th><TransText k="query.issue" as="span" /></th>
-                            <th><TransText k="query.status" as="span" /></th>
-                            <th><TransText k="query.remark" as="span" /></th>
-                            <th><TransText k="query.submittedOn" as="span" /></th>
-                          </tr>
-                        </thead>
-                        <tbody>
+                      <>
+                        {/* Desktop Table View */}
+                        <div className="d-none d-md-block table-responsive">
+                          <Table hover className="mb-0">
+                            <thead className="bg-primary text-white">
+                              <tr>
+                                <th className="py-3 px-2">ID</th>
+                                <th className="py-3 px-2">Title</th>
+                                <th className="py-3 px-2">Issue</th>
+                                <th className="py-3 px-2">Status</th>
+                                <th className="py-3 px-2">Remark</th>
+                                <th className="py-3 px-2">Date</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {queries.map((query) => (
+                                <tr key={query.id}>
+                                  <td className="py-3 px-2">{query.query_id || query.id}</td>
+                                  <td className="py-3 px-2">{query.title}</td>
+                                  <td className="py-3 px-2" style={{ maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                    {query.issue}
+                                  </td>
+                                  <td className="py-3 px-2">
+                                    <span className={`badge ${getStatusBadgeClass(query.status)}`}>
+                                      {getStatus(query.status)}
+                                    </span>
+                                  </td>
+                                  <td className="py-3 px-2 text-muted">{query.extra_remark || '-'}</td>
+                                  <td className="py-3 px-2">{query.created_at ? new Date(query.created_at).toLocaleDateString() : '-'}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </Table>
+                        </div>
+
+                        {/* Mobile Card View */}
+                        <div className="d-md-none">
                           {queries.map((query) => (
-                            <tr key={query.id}>
-                              <td>{query.query_id || query.id}</td>
-                              <td>{query.title}</td>
-                              <td>{query.issue}</td>
-                              <td>
-                                <span className={`badge ${getStatusBadgeClass(query.status)}`}>
-                                  {getStatus(query.status)}
-                                </span>
-                              </td>
-                              <td>{query.extra_remark || '-'}</td>
-                              <td>{query.created_at ? new Date(query.created_at).toLocaleDateString() : '-'}</td>
-                            </tr>
+                            <Card key={query.id} className="mb-3 mx-1">
+                              <Card.Body className="p-3">
+                                <div className="d-flex justify-content-between align-items-start mb-2">
+                                  <div>
+                                    <h6 className="mb-1 fw-semibold">{query.title}</h6>
+                                    <small className="text-muted">ID: {query.query_id || query.id}</small>
+                                  </div>
+                                  <span className={`badge ${getStatusBadgeClass(query.status)}`}>
+                                    {getStatus(query.status)}
+                                  </span>
+                                </div>
+                                <div className="mb-2">
+                                  <small className="text-muted d-block">Issue:</small>
+                                  <p className="small mb-0 mt-1">{query.issue}</p>
+                                </div>
+                                {query.extra_remark && (
+                                  <div className="mb-2">
+                                    <small className="text-muted d-block">Remark:</small>
+                                    <p className="small mb-0 mt-1">{query.extra_remark}</p>
+                                  </div>
+                                )}
+                                <div className="mb-2">
+                                  <small className="text-muted d-block">Date:</small>
+                                  <span className="small">{query.created_at ? new Date(query.created_at).toLocaleDateString() : '-'}</span>
+                                </div>
+                              </Card.Body>
+                            </Card>
                           ))}
-                        </tbody>
-                      </Table>
+                        </div>
+                      </>
                     )}
                   </Card.Body>
                 </Card>
@@ -355,43 +395,16 @@ function UserQuery() {
           background: #f8f9fa;
           border-radius: 12px;
           padding: 16px;
-          transition: all 0.3s ease;
         }
-
-        .info-item:hover {
-          background: #e9ecef;
-          transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        }
-
         .info-label {
           font-size: 0.875rem;
           color: #6c757d;
           font-weight: 600;
-          margin-bottom: 8px;
-          display: flex;
-          align-items: center;
         }
-
         .info-value {
           font-size: 1rem;
           color: #212529;
           font-weight: 500;
-        }
-
-        .animate-fade-in {
-          animation: fadeIn 0.5s ease-in;
-        }
-
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(-10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
         }
       `}</style>
     </div>
