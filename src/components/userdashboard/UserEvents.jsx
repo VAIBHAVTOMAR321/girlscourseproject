@@ -161,20 +161,16 @@ const UserEvents = () => {
 <div style={{ 
                           height: '180px',
                           overflow: 'hidden',
-                          position: 'relative',
-                          backgroundColor: '#f8f9fa',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center'
+                          backgroundColor: '#f8f9fa'
                         }}>
                            {event.event_image ? (
                              <img 
                                src={`https://brjobsedu.com/girls_course/girls_course_backend${event.event_image}`}
                                alt={event.event_name}
-                               className="h-100 w-100"
                                style={{ 
-                                 objectFit: 'contain',
-                                 objectPosition: 'center'
+                                 width: '100%',
+                                
+                                 objectFit: 'cover'
                                }}
                              />
                            ) : (
