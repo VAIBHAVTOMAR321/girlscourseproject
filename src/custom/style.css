@@ -76,6 +76,7 @@ color: #000;
 font-size: 20px;
 }
 
+
 .form-label {
     margin-bottom: .5rem;
     color: #000 !important;
@@ -114,6 +115,23 @@ font-size: 20px;
     color: white;
     font-weight: bold;
     box-shadow: 0 2px 8px rgba(240, 147, 251, 0.4);
+}
+@media (min-width: 768px) and (max-width: 1024px) {
+    .in-prohrace {
+        position: absolute !important;
+        left: 45px !important;
+        bottom: -12px;
+        font-size: 10px !important;
+    }
+}
+
+@media (min-width: 1024px) and (max-width: 1366px) {
+    .in-prohrace {
+        position: absolute !important;
+        left: 63px !important;
+        bottom: -15px;
+        font-size: 12px !important;
+    }
 }
 /* This CSS applies ONLY when the viewport is exactly 500px wide */
 /* For screens up to 568px (mobile-first approach) */
@@ -159,7 +177,7 @@ padding: 0px !important;
   }
   .in-prohrace{
     position: absolute !important;
-    left: 73px !important;
+    left: 43px !important;
     bottom: -12px;
     font-size: 8px !important;
 

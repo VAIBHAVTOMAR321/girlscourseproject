@@ -209,9 +209,9 @@
 
 /* Action Buttons */
 .action-buttons .btn {
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 500;
-  padding: 0.6rem 1.25rem;
+  padding: 8px;
   border-radius: 8px;
 }
 
