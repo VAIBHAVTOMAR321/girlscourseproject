@@ -88,10 +88,13 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas, onNavAttempt }) => {
                   <Nav.Link className="text-white" onClick={() => handleNavClick('/UserQuery')} style={{ cursor: 'pointer' }}>
                     <i className="bi bi-person-circle me-2"></i> <TransText k="menu.query" as="span" />
                   </Nav.Link>
-                  <Nav.Link className="text-white" onClick={() => handleNavClick('/UserQuiz')} style={{ cursor: 'pointer' }}>
+<Nav.Link className="text-white" onClick={() => handleNavClick('/UserQuiz')} style={{ cursor: 'pointer' }}>
                     <i className="bi bi-clipboard-check me-2"></i> <TransText k="quiz.title" as="span" />
                   </Nav.Link>
-                  
+                  <Nav.Link className="text-white" onClick={() => handleNavClick('/UserEvents')} style={{ cursor: 'pointer' }}>
+                    <i className="bi bi-calendar-event me-2"></i> Events
+                  </Nav.Link>
+                   
                    {/* Refund Request only visible to paid users */}
                    {userRoleType !== 'student-unpaid' && (
                      <Nav.Link className="text-white" onClick={() => handleNavClick('/RefundRequest')} style={{ cursor: 'pointer' }}>
@@ -169,6 +172,9 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas, onNavAttempt }) => {
                   <Nav.Link className="text-white" onClick={() => handleNavClick('/UserQuiz')} style={{ cursor: 'pointer' }}>
                     <i className="bi bi-clipboard-check fs-5"></i>
                   </Nav.Link>
+                  <Nav.Link className="text-white" onClick={() => handleNavClick('/UserEvents')} style={{ cursor: 'pointer' }}>
+                    <i className="bi bi-calendar-event fs-5"></i>
+                  </Nav.Link>
                 </Nav>
             </div>
           )}
@@ -199,6 +205,9 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas, onNavAttempt }) => {
                 </Nav.Link>
                 <Nav.Link className="text-white" onClick={() => { setShowOffcanvas(false); handleNavClick('/UserQuiz'); }} style={{ cursor: 'pointer' }}>
                   <i className="bi bi-clipboard-check me-2"></i> <TransText k="quiz.title" as="span" />
+                </Nav.Link>
+                <Nav.Link className="text-white" onClick={() => { setShowOffcanvas(false); handleNavClick('/UserEvents'); }} style={{ cursor: 'pointer' }}>
+                  <i className="bi bi-calendar-event me-2"></i> Events
                 </Nav.Link>
                 {/* Refund Request only visible to paid users */}
                 {userRoleType !== 'student-unpaid' && (

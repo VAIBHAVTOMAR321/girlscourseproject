@@ -98,25 +98,54 @@ const EventsManagement = ({ onBack }) => {
     setSubmitting(true)
 
     try {
-      const dataToSend = {
-        event_name: formData.event_name,
-        description: formData.description,
-        event_date_time: formData.event_date_time,
-        end_date_time: formData.end_date_time,
-        venue: formData.venue,
-        event_type: formData.event_type,
-        event_image: formData.event_image
-      }
-
-      if (formData.event_id) {
-        await axios.put(`https://brjobsedu.com/girls_course/girls_course_backend/api/event-item/`, {
-          event_id: formData.event_id,
-          ...dataToSend
-        }, getAuthConfig())
-        alert('Event updated successfully!')
+      if (formData.event_image) {
+        const formDataToSend = new FormData()
+        formDataToSend.append('event_name', formData.event_name)
+        formDataToSend.append('description', formData.description)
+        formDataToSend.append('event_date_time', formData.event_date_time)
+        formDataToSend.append('end_date_time', formData.end_date_time)
+        formDataToSend.append('venue', formData.venue)
+        formDataToSend.append('event_type', formData.event_type)
+        formDataToSend.append('event_image', formData.event_image)
+        
+        if (formData.event_id) {
+          formDataToSend.append('event_id', formData.event_id)
+          await axios.put(`https://brjobsedu.com/girls_course/girls_course_backend/api/event-item/`, formDataToSend, {
+            headers: {
+              ...getAuthConfig().headers,
+              'Content-Type': 'multipart/form-data'
+            }
+          })
+          alert('Event updated successfully!')
+        } else {
+          await axios.post('https://brjobsedu.com/girls_course/girls_course_backend/api/event-item/', formDataToSend, {
+            headers: {
+              ...getAuthConfig().headers,
+              'Content-Type': 'multipart/form-data'
+            }
+          })
+          alert('Event created successfully!')
+        }
       } else {
-        await axios.post('https://brjobsedu.com/girls_course/girls_course_backend/api/event-item/', dataToSend, getAuthConfig())
-        alert('Event created successfully!')
+        const dataToSend = {
+          event_name: formData.event_name,
+          description: formData.description,
+          event_date_time: formData.event_date_time,
+          end_date_time: formData.end_date_time,
+          venue: formData.venue,
+          event_type: formData.event_type
+        }
+
+        if (formData.event_id) {
+          await axios.put(`https://brjobsedu.com/girls_course/girls_course_backend/api/event-item/`, {
+            event_id: formData.event_id,
+            ...dataToSend
+          }, getAuthConfig())
+          alert('Event updated successfully!')
+        } else {
+          await axios.post('https://brjobsedu.com/girls_course/girls_course_backend/api/event-item/', dataToSend, getAuthConfig())
+          alert('Event created successfully!')
+        }
       }
       
       handleCloseModal()
@@ -425,6 +454,20 @@ const EventsManagement = ({ onBack }) => {
               />
             </Form.Group>
 
+            <Form.Group className="mb-3">
+              <Form.Label>Event Image</Form.Label>
+              <Form.Control
+                type="file"
+                accept="image/*"
+                onChange={(e) => setFormData({ ...formData, event_image: e.target.files[0] })}
+              />
+              {formData.event_image && (
+                <small className="text-muted d-block mt-1">
+                  Selected: {formData.event_image.name}
+                </small>
+              )}
+            </Form.Group>
+
             <div className="d-flex justify-content-end gap-2">
               <Button variant="secondary" onClick={handleCloseModal}>
                 Cancel
@@ -458,15 +501,26 @@ const EventsManagement = ({ onBack }) => {
                 </Col>
               </Row>
               
-              <h4 className="mb-3">{selectedEvent.event_name}</h4>
-              
+<h4 className="mb-3">{selectedEvent.event_name}</h4>
+               
+              {selectedEvent.event_image && (
+                <div className="mb-3">
+                  <img 
+                    src={`https://brjobsedu.com/girls_course/girls_course_backend${selectedEvent.event_image}`} 
+                    alt={selectedEvent.event_name}
+                    className="img-fluid rounded"
+                    style={{ maxHeight: '200px' }}
+                  />
+                </div>
+              )}
+               
               {selectedEvent.description && (
                 <div className="mb-3">
                   <h6 className="text-muted">Description</h6>
                   <p>{selectedEvent.description}</p>
                 </div>
               )}
-              
+               
               <Row>
                 <Col md={6} className="mb-3">
                   <h6 className="text-muted"><FaClock className="me-1" /> Start Date & Time</h6>
