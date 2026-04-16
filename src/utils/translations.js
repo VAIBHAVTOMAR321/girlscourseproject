@@ -290,7 +290,8 @@ export const translations = {
     "settings.alertValidPercentage":
       "Please enter a valid percentage greater than 0",
     "settings.alertMaxPercentage": "Percentage cannot be more than 100",
-    "settings.notEligible": "You are not eligible for career guidance. You need at least 33% to get recommendations.",
+    "settings.notEligible":
+      "You are not eligible for career guidance. You need at least 33% to get recommendations.",
     "settings.instructions":
       'Step 1: Select your 10th stream from the options above\nStep 2: Enter your 10th percentage\nStep 3: Click "Get 11th Stream Guidance" to see personalized 11th stream recommendations and career paths',
     "settings.streamDetailsTitle": "Stream Details",
@@ -386,7 +387,8 @@ export const translations = {
     "occupation.difficulty": "Difficulty",
     "occupation.topCollegesList": "Top Colleges",
     "occupation.govtExamPrep": "Government Exam Preparation",
-    "occupation.govtExamDesc": "Prepare for competitive exams to get government jobs",
+    "occupation.govtExamDesc":
+      "Prepare for competitive exams to get government jobs",
     "occupation.completeRoadmap": "Complete Roadmap",
     "occupation.selectExamType": "Select an Exam Type",
     "occupation.relatedCareers": "Related careers for",
@@ -571,7 +573,8 @@ export const translations = {
     "notifications.alertValidPercentage":
       "Please enter a valid percentage greater than 0",
     "notifications.alertMaxPercentage": "Percentage cannot be more than 100",
-    "notifications.notEligible": "You are not eligible for career guidance. You need at least 33% to get recommendations.",
+    "notifications.notEligible":
+      "You are not eligible for career guidance. You need at least 33% to get recommendations.",
     "notifications.additionalGuidance": "Additional Guidance",
     "notifications.guidanceFor": "For",
     "notifications.guidanceTip1":
@@ -680,7 +683,8 @@ export const translations = {
     "course.bsc_it": "B.Sc IT (Information Technology)",
     "course.bsc_itDesc": "Information Technology diploma",
     "course.diploma_comp": "Diploma in Computer Engineering",
-    "course.diploma_compDesc": "Computer engineering diploma for technical roles",
+    "course.diploma_compDesc":
+      "Computer engineering diploma for technical roles",
     "course.diploma_ca": "Diploma in Computer Applications",
     "course.diploma_caDesc": "Computer applications for IT professionals",
 
@@ -847,9 +851,11 @@ export const translations = {
     "schemes.step1": "Step 1",
     "schemes.step2": "Step 2",
     "schemes.step3": "Step 3",
-    "schemes.instructionStep1": "Select a category above to view relevant schemes",
+    "schemes.instructionStep1":
+      "Select a category above to view relevant schemes",
     "schemes.instructionStep2": "Click on any scheme to see full details",
-    "schemes.instructionStep3": "Check eligibility and apply through official link",
+    "schemes.instructionStep3":
+      "Check eligibility and apply through official link",
     "schemes.requiredDocuments": "Required Documents",
     "schemes.applicationProcess": "Application Process",
     "schemes.amount": "Amount/Salary",
@@ -863,13 +869,15 @@ export const translations = {
     "schemes.skillsDesc": "Skill development programs",
     "schemes.womenWelfare": "Women Welfare",
     "schemes.womenWelfareDesc": "Schemes for women's empowerment",
-    
+
     // Additional Schemes
     "schemes.nandaGora": "Nanda Gora Women Development Scheme",
-    "schemes.nandaGoraDesc": "Scheme for skill development and livelihood support for women in rural areas",
+    "schemes.nandaGoraDesc":
+      "Scheme for skill development and livelihood support for women in rural areas",
     "schemes.nandaGoraBenefit": "₹3,000 per month + training",
     "schemes.nandaGoraHigher": "Nanda Gora Higher Education Scheme",
-    "schemes.nandaGoraHigherDesc": "Educational support and loans for meritorious students pursuing higher education after 12th",
+    "schemes.nandaGoraHigherDesc":
+      "Educational support and loans for meritorious students pursuing higher education after 12th",
     "schemes.scScholarship": "Post Matric Scholarship for SC Students",
     "schemes.stScholarship": "Post Matric Scholarship for ST Students",
     "schemes.centralScholarship": "Central Sector Scheme of Scholarships",
@@ -885,7 +893,7 @@ export const translations = {
     "schemes.womenHelpline": "Women Helpline Scheme",
     "schemes.oneStopCentre": "One Stop Centre Scheme",
     "schemes.mahilaShakti": "Mahila Shakti Kendra",
-    
+
     // Modal Translations (English)
     "schemes.schemeDetails": "Scheme Details",
     "schemes.benefitAmount": "Benefit Amount",
@@ -894,53 +902,66 @@ export const translations = {
     "schemes.documentsNeeded": "Documents Needed",
     "schemes.howToApplySteps": "How to Apply? (Simple Steps)",
     "schemes.gatherDocuments": "Gather All Documents",
-    "schemes.gatherDocumentsDesc": "Collect original or photocopy of all documents listed above.",
+    "schemes.gatherDocumentsDesc":
+      "Collect original or photocopy of all documents listed above.",
     "schemes.visitWebsite": "Visit Official Website",
-    "schemes.visitWebsiteDesc": "Click the link below to open the official government website.",
+    "schemes.visitWebsiteDesc":
+      "Click the link below to open the official government website.",
     "schemes.fillForm": "Fill Application Form",
-    "schemes.fillFormDesc": "Look for \"Apply Now\" or \"New Application\" button and fill in all details.",
+    "schemes.fillFormDesc":
+      'Look for "Apply Now" or "New Application" button and fill in all details.',
     "schemes.uploadDocuments": "Upload Documents",
-    "schemes.uploadDocumentsDesc": "Upload scanned copies of all required documents in the form.",
+    "schemes.uploadDocumentsDesc":
+      "Upload scanned copies of all required documents in the form.",
     "schemes.submitApplication": "Submit Application",
-    "schemes.submitApplicationDesc": "Double-check all details and click \"Submit\" button.",
+    "schemes.submitApplicationDesc":
+      'Double-check all details and click "Submit" button.',
     "schemes.getConfirmation": "Get Confirmation",
-    "schemes.getConfirmationDesc": "You will receive a reference number/receipt. Keep it safe for future updates.",
+    "schemes.getConfirmationDesc":
+      "You will receive a reference number/receipt. Keep it safe for future updates.",
     "schemes.importantTips": "Important Tips:",
     "schemes.tip1": "Incomplete applications may be rejected.",
     "schemes.tip2": "Do not miss the application deadline.",
     "schemes.tip3": "All documents must be clear and valid.",
     "schemes.officialWebsite": "Official Website:",
-    
+
     // UserNotifications - Path Selection & Roadmaps
     "notifications.choosePath": "Choose Your Path:",
     "notifications.selectPreferredPath": "Select your preferred career path",
     "notifications.govtCollegePath": "Govt College",
-    "notifications.govtCollegeDesc": "IIT, NIT, IIIT, Medical & premier govt institutions",
+    "notifications.govtCollegeDesc":
+      "IIT, NIT, IIIT, Medical & premier govt institutions",
     "notifications.govtJobPath": "Government Job",
-    "notifications.govtJobDesc": "Prepare for competitive exams (UPSC, SSC, Banking, etc.)",
+    "notifications.govtJobDesc":
+      "Prepare for competitive exams (UPSC, SSC, Banking, etc.)",
     "notifications.privatePath": "Private College ",
-    "notifications.privateDesc": "Admission in private colleges for degree programs",
+    "notifications.privateDesc":
+      "Admission in private colleges for degree programs",
     "notifications.govtJobRoadmap": "Government Job Preparation Roadmap",
     "notifications.govtCollegeRoadmap": "Government College Admission Roadmap",
-    "notifications.selectExamPath": "Select a government exam to see complete preparation roadmap and colleges",
-    "notifications.selectCollegePath": "Select a college type to see admission roadmap and top institutions",
-    "notifications.noCollegeOptions": "No government college options available for this stream. Please select a different path or stream.",
+    "notifications.selectExamPath":
+      "Select a government exam to see complete preparation roadmap and colleges",
+    "notifications.selectCollegePath":
+      "Select a college type to see admission roadmap and top institutions",
+    "notifications.noCollegeOptions":
+      "No government college options available for this stream. Please select a different path or stream.",
     "notifications.completePath": "Complete Path:",
     "notifications.stepByStepRoadmap": "Step-by-Step Roadmap:",
     "notifications.topCollegesRecruitment": "Top Colleges/Recruitment:",
     "notifications.eligibility": "Eligibility:",
-    "notifications.totalSeats": "Total Sea:",
+    "notifications.totalSeats": "Total Seats:",
     "notifications.availableCourses": "Available Courses:",
     "notifications.topColleges": "Top Colleges:",
     "notifications.topUniversities": "Top Universities",
     "notifications.careerOpportunities": "Career Opportunities:",
-    "notifications.noRecommendedCourses": "No recommended courses available. Please adjust your percentage or select a different stream.",
+    "notifications.noRecommendedCourses":
+      "No recommended courses available. Please adjust your percentage or select a different stream.",
     "notifications.noCoursesAvailable": "No courses available for this stream.",
     "notifications.performance": "Performance",
     "notifications.excellent": "Excellent",
     "notifications.good": "Good",
     "notifications.average": "Average",
-    
+
     // Exam Titles
     "exam.iitJee": "IIT-JEE (Engineering)",
     "exam.neet": "NEET (Medical)",
@@ -950,7 +971,7 @@ export const translations = {
     "exam.railway": "Railway Exams (RRB)",
     "exam.statePsc": "State PSC Exams",
     "exam.gate": "GATE (Graduate Aptitude Test in Engineering)",
-    
+
     // Step Titles
     "step.complete12thPcm": "Complete 12th with PCM",
     "step.prepareJeeMain": "Prepare for JEE Main",
@@ -1000,27 +1021,43 @@ export const translations = {
     "step.specializeOptional": "Specialize (Optional)",
 
     // Step Descriptions
-    "stepDesc.complete12thStandard": "Complete your 12th standard with good percentage",
-    "stepDesc.complete12thPcm": "Complete 12th with Physics, Chemistry, Mathematics (PCM)",
-    "stepDesc.complete12thPcb": "Complete 12th with Physics, Chemistry, Biology (PCB)",
+    "stepDesc.complete12thStandard":
+      "Complete your 12th standard with good percentage",
+    "stepDesc.complete12thPcm":
+      "Complete 12th with Physics, Chemistry, Mathematics (PCM)",
+    "stepDesc.complete12thPcb":
+      "Complete 12th with Physics, Chemistry, Biology (PCB)",
     "stepDesc.pursueDegree": "Complete bachelor's degree in relevant field",
     "stepDesc.gainExperience": "Gain practical experience through internships",
     "stepDesc.startCareer": "Start your professional career",
-    "stepDesc.complete12thStandardTeacher": "Complete your 12th standard with good percentage",
-    "stepDesc.pursueBachelorsDegree": "Complete BA/B.Sc/B.Com in your preferred subject",
-    "stepDesc.completeBED": "Pursue Bachelor of Education (B.Ed) from a recognized university",
-    "stepDesc.clearTeachingExams": "Clear CTET/TET/STET exams as per your state requirements",
-    "stepDesc.applyTeachingPositions": "Apply for government or private school teaching positions",
-    "stepDesc.pursueLLB": "Complete LLB (3 years after graduation) or BA LLB (5 years integrated)",
-    "stepDesc.enrollBarCouncil": "Register with State Bar Council after completing LLB",
-    "stepDesc.completeInternship": "Intern under a senior lawyer to gain practical experience",
+    "stepDesc.complete12thStandardTeacher":
+      "Complete your 12th standard with good percentage",
+    "stepDesc.pursueBachelorsDegree":
+      "Complete BA/B.Sc/B.Com in your preferred subject",
+    "stepDesc.completeBED":
+      "Pursue Bachelor of Education (B.Ed) from a recognized university",
+    "stepDesc.clearTeachingExams":
+      "Clear CTET/TET/STET exams as per your state requirements",
+    "stepDesc.applyTeachingPositions":
+      "Apply for government or private school teaching positions",
+    "stepDesc.pursueLLB":
+      "Complete LLB (3 years after graduation) or BA LLB (5 years integrated)",
+    "stepDesc.enrollBarCouncil":
+      "Register with State Bar Council after completing LLB",
+    "stepDesc.completeInternship":
+      "Intern under a senior lawyer to gain practical experience",
     "stepDesc.startPractice": "Start independent practice or join a law firm",
     "stepDesc.pursueBTechBCA": "Complete B.Tech in Computer Science/IT or BCA",
-    "stepDesc.learnProgrammingLanguages": "Master programming languages like Java, Python, JavaScript, etc.",
-    "stepDesc.buildPortfolio": "Create a portfolio of projects to showcase your skills",
-    "stepDesc.applyForJobs": "Apply for software engineering positions in IT companies",
-    "stepDesc.clearNEET": "Qualify NEET (National Eligibility cum Entrance Test)",
-    "stepDesc.completeMBBSInternship": "Pursue MBBS (Bachelor of Medicine and Bachelor of Surgery)",
+    "stepDesc.learnProgrammingLanguages":
+      "Master programming languages like Java, Python, JavaScript, etc.",
+    "stepDesc.buildPortfolio":
+      "Create a portfolio of projects to showcase your skills",
+    "stepDesc.applyForJobs":
+      "Apply for software engineering positions in IT companies",
+    "stepDesc.clearNEET":
+      "Qualify NEET (National Eligibility cum Entrance Test)",
+    "stepDesc.completeMBBSInternship":
+      "Pursue MBBS (Bachelor of Medicine and Bachelor of Surgery)",
     "stepDesc.specializeOptional": "Pursue MD/MS for specialization",
 
     // Duration Keys
@@ -1253,13 +1290,13 @@ export const translations = {
     "tip.forces": "Know about forces",
     "tip.stayFit": "Stay fit",
     "tip.complete": "Complete formalities",
-    
+
     // College Titles
     "college.iit": "IIT (Indian Institutes of Technology)",
     "college.nit": "NIT (National Institutes of Technology)",
     "college.iiit": "IIIT (Indian Institutes of Information Technology)",
     "college.medical": "Government Medical Colleges",
-    "college.nda": "NDA (National Defence Academy)"
+    "college.nda": "NDA (National Defence Academy)",
   },
   hi: {
     // Navigation & Header
@@ -1583,7 +1620,8 @@ export const translations = {
     "settings.alertSelectStream": "कृपया पहले अपनी 10वीं स्ट्रीम चुनें",
     "settings.alertValidPercentage": "कृपया 0 से अधिक वैध प्रतिशत दर्ज करें",
     "settings.alertMaxPercentage": "प्रतिशत 100 से अधिक नहीं हो सकता",
-    "settings.notEligible": "आप कैरियर मार्गदर्शन के लिए पात्र नहीं हैं। सिफारिशें प्राप्त करने के लिए आपको कम से कम 33% की आवश्यकता है।",
+    "settings.notEligible":
+      "आप कैरियर मार्गदर्शन के लिए पात्र नहीं हैं। सिफारिशें प्राप्त करने के लिए आपको कम से कम 33% की आवश्यकता है।",
     "settings.instructions":
       'चरण 1: ऊपर दिए गए विकल्पों से अपनी 10वीं स्ट्रीम चुनें\nचरण 2: अपना 10वीं प्रतिशत दर्ज करें\nचरण 3: व्यक्तिगत 11वीं स्ट्रीम सिफारिशें और कैरियर पथ देखने के लिए "11वीं स्ट्रीम मार्गदर्शन प्राप्त करें" पर क्लिक करें',
     "settings.streamDetailsTitle": "स्ट्रीम विवरण",
@@ -1680,7 +1718,8 @@ export const translations = {
     "occupation.difficulty": "कठिनाई",
     "occupation.topCollegesList": "शीर्ष कॉलेज",
     "occupation.govtExamPrep": "सरकारी परीक्षा तैयारी",
-    "occupation.govtExamDesc": "सरकारी नौकरी पाने के लिए प्रतिस्पर्धी परीक्षाओं की तैयारी करें",
+    "occupation.govtExamDesc":
+      "सरकारी नौकरी पाने के लिए प्रतिस्पर्धी परीक्षाओं की तैयारी करें",
     "occupation.completeRoadmap": "पूर्ण रोडमैप",
     "occupation.selectExamType": "परीक्षा प्रकार चुनें",
     "occupation.relatedCareers": "संबंधित करियर",
@@ -1841,7 +1880,8 @@ export const translations = {
     "notifications.careerOpportunities": "कैरियर के अवसर",
     "notifications.percentagePlaceholder": "अपना % दर्ज करें",
     "notifications.percentIn": "में प्रतिशत",
-    "notifications.notEligible": "आप कैरियर मार्गदर्शन के लिए पात्र नहीं हैं। सिफारिशें प्राप्त करने के लिए आपको कम से कम 33% की आवश्यकता है।",
+    "notifications.notEligible":
+      "आप कैरियर मार्गदर्शन के लिए पात्र नहीं हैं। सिफारिशें प्राप्त करने के लिए आपको कम से कम 33% की आवश्यकता है।",
     "notifications.stepsToAchieve": "प्राप्त करने के चरण",
     "notifications.tip":
       "टिप: इस कोर्स के लिए प्रवेश प्रक्रिया, प्रवेश परीक्षाओं और शीर्ष कॉलेजों के बारे में शोध करें। एक अच्छी संस्था में सीट सुरक्षित करने के लिए जल्दी तैयारी शुरू करें।",
@@ -2099,9 +2139,12 @@ export const translations = {
     "schemes.step1": "चरण 1",
     "schemes.step2": "चरण 2",
     "schemes.step3": "चरण 3",
-    "schemes.instructionStep1": "संबंधित योजनाएं देखने के लिए ऊपर से एक श्रेणी चुनें",
-    "schemes.instructionStep2": "पूर्ण विवरण देखने के लिए किसी भी योजना पर क्लिक करें",
-    "schemes.instructionStep3": "पात्रता जांचें और आधिकारिक लिंक के माध्यम से आवेदन करें",
+    "schemes.instructionStep1":
+      "संबंधित योजनाएं देखने के लिए ऊपर से एक श्रेणी चुनें",
+    "schemes.instructionStep2":
+      "पूर्ण विवरण देखने के लिए किसी भी योजना पर क्लिक करें",
+    "schemes.instructionStep3":
+      "पात्रता जांचें और आधिकारिक लिंक के माध्यम से आवेदन करें",
     "schemes.requiredDocuments": "आवश्यक दस्तावेज",
     "schemes.applicationProcess": "आवेदन प्रक्रिया",
     "schemes.amount": "राशि/वेतन",
@@ -2118,10 +2161,12 @@ export const translations = {
 
     // Additional Schemes Hindi
     "schemes.nandaGora": "नंदा गोरा महिला विकास योजना",
-    "schemes.nandaGoraDesc": "ग्रामीण क्षेत्रों में महिलाओं के लिए कौशल विकास और आजीविका सहायता योजना",
+    "schemes.nandaGoraDesc":
+      "ग्रामीण क्षेत्रों में महिलाओं के लिए कौशल विकास और आजीविका सहायता योजना",
     "schemes.nandaGoraBenefit": "मासिक ₹3,000 + प्रशिक्षण",
     "schemes.nandaGoraHigher": "नंदा गोरा उच्च शिक्षा योजना",
-    "schemes.nandaGoraHigherDesc": "12वीं के बाद उच्च शिक्षा प्राप्त करने वाले मेधावी छात्रों के लिए शैक्षणिक सहायता और ऋण",
+    "schemes.nandaGoraHigherDesc":
+      "12वीं के बाद उच्च शिक्षा प्राप्त करने वाले मेधावी छात्रों के लिए शैक्षणिक सहायता और ऋण",
     "schemes.scScholarship": "SC छात्रों के लिए पोस्ट मैट्रिक छात्रवृत्ति",
     "schemes.stScholarship": "ST छात्रों के लिए पोस्ट मैट्रिक छात्रवृत्ति",
     "schemes.centralScholarship": "केंद्रीय क्षेत्र छात्रवृत्ति योजना",
@@ -2137,7 +2182,7 @@ export const translations = {
     "schemes.womenHelpline": "महिला हेल्पलाइन योजना",
     "schemes.oneStopCentre": "वन स्टॉप सेंटर योजना",
     "schemes.mahilaShakti": "महिला शक्ति केंद्र",
-    
+
     // Modal Translations (Hindi)
     "schemes.schemeDetails": "योजना विवरण",
     "schemes.benefitAmount": "लाभ की राशि",
@@ -2146,37 +2191,49 @@ export const translations = {
     "schemes.documentsNeeded": "आवश्यक दस्तावेज़",
     "schemes.howToApplySteps": "आवेदन कैसे करें? (सरल चरण)",
     "schemes.gatherDocuments": "सभी दस्तावेज़ तैयार करें",
-    "schemes.gatherDocumentsDesc": "ऊपर दिए गए सभी दस्तावेज़ों की मूल प्रति या फोटोकॉपी तैयार करें।",
+    "schemes.gatherDocumentsDesc":
+      "ऊपर दिए गए सभी दस्तावेज़ों की मूल प्रति या फोटोकॉपी तैयार करें।",
     "schemes.visitWebsite": "आधिकारिक वेबसाइट पर जाएं",
-    "schemes.visitWebsiteDesc": "नीचे दिए गए लिंक पर क्लिक करें और आधिकारिक वेबसाइट खोलें।",
+    "schemes.visitWebsiteDesc":
+      "नीचे दिए गए लिंक पर क्लिक करें और आधिकारिक वेबसाइट खोलें।",
     "schemes.fillForm": "आवेदन फॉर्म भरें",
-    "schemes.fillFormDesc": "वेबसाइट पर \"आवेदन करें\" या \"नया आवेदन\" बटन खोजें और फॉर्म भरें।",
+    "schemes.fillFormDesc":
+      'वेबसाइट पर "आवेदन करें" या "नया आवेदन" बटन खोजें और फॉर्म भरें।',
     "schemes.uploadDocuments": "दस्तावेज़ अपलोड करें",
-    "schemes.uploadDocumentsDesc": "फॉर्म में सभी आवश्यक दस्तावेज़ों की स्कैन प्रति अपलोड करें।",
+    "schemes.uploadDocumentsDesc":
+      "फॉर्म में सभी आवश्यक दस्तावेज़ों की स्कैन प्रति अपलोड करें।",
     "schemes.submitApplication": "आवेदन सबमिट करें",
-    "schemes.submitApplicationDesc": "सभी विवरण जांचें और \"सबमिट\" बटन पर क्लिक करें।",
+    "schemes.submitApplicationDesc":
+      'सभी विवरण जांचें और "सबमिट" बटन पर क्लिक करें।',
     "schemes.getConfirmation": "पुष्टिकरण प्राप्त करें",
-    "schemes.getConfirmationDesc": "आपको एक संदर्भ संख्या/पावती मिलेगी। इसे सुरक्षित रखें।",
+    "schemes.getConfirmationDesc":
+      "आपको एक संदर्भ संख्या/पावती मिलेगी। इसे सुरक्षित रखें।",
     "schemes.importantTips": "महत्वपूर्ण सुझाव:",
     "schemes.tip1": "गलत या अधूरे आवेदन को अस्वीकार किया जा सकता है।",
     "schemes.tip2": "आवेदन की समय सीमा को मिस न करें।",
     "schemes.tip3": "सभी दस्तावेज़ स्पष्ट और वैध होने चाहिए।",
     "schemes.officialWebsite": "आधिकारिक वेबसाइट:",
-    
+
     // UserNotifications - Path Selection & Roadmaps (Hindi)
     "notifications.choosePath": "अपना रास्ता चुनें:",
     "notifications.selectPreferredPath": "अपना पसंदीदा करियर रास्ता चुनें",
     "notifications.govtCollegePath": "सरकारी कॉलेज रास्ता",
-    "notifications.govtCollegeDesc": "IIT, NIT, IIIT, मेडिकल और प्रमुख सरकारी संस्थान",
+    "notifications.govtCollegeDesc":
+      "IIT, NIT, IIIT, मेडिकल और प्रमुख सरकारी संस्थान",
     "notifications.govtJobPath": "सरकारी नौकरी रास्ता",
-    "notifications.govtJobDesc": "प्रतिस्पर्धी परीक्षाओं की तैयारी करें (UPSC, SSC, Banking, आदि)",
+    "notifications.govtJobDesc":
+      "प्रतिस्पर्धी परीक्षाओं की तैयारी करें (UPSC, SSC, Banking, आदि)",
     "notifications.privatePath": "प्राइवेट कॉलेज रास्ता",
-    "notifications.privateDesc": "डिग्री प्रोग्राम के लिए प्राइवेट कॉलेज में प्रवेश",
+    "notifications.privateDesc":
+      "डिग्री प्रोग्राम के लिए प्राइवेट कॉलेज में प्रवेश",
     "notifications.govtJobRoadmap": "सरकारी नौकरी तैयारी रोडमैप",
     "notifications.govtCollegeRoadmap": "सरकारी कॉलेज प्रवेश रोडमैप",
-    "notifications.selectExamPath": "पूर्ण तैयारी रोडमैप और कॉलेज देखने के लिए एक सरकारी परीक्षा चुनें",
-    "notifications.selectCollegePath": "प्रवेश रोडमैप और शीर्ष संस्थान देखने के लिए एक कॉलेज प्रकार चुनें",
-    "notifications.noCollegeOptions": "इस स्ट्रीम के लिए कोई सरकारी कॉलेज विकल्प उपलब्ध नहीं है। कृपया एक अलग रास्ता या स्ट्रीम चुनें।",
+    "notifications.selectExamPath":
+      "पूर्ण तैयारी रोडमैप और कॉलेज देखने के लिए एक सरकारी परीक्षा चुनें",
+    "notifications.selectCollegePath":
+      "प्रवेश रोडमैप और शीर्ष संस्थान देखने के लिए एक कॉलेज प्रकार चुनें",
+    "notifications.noCollegeOptions":
+      "इस स्ट्रीम के लिए कोई सरकारी कॉलेज विकल्प उपलब्ध नहीं है। कृपया एक अलग रास्ता या स्ट्रीम चुनें।",
     "notifications.completePath": "पूर्ण रास्ता:",
     "notifications.stepByStepRoadmap": "चरण-दर-चरण रोडमैप:",
     "notifications.topCollegesRecruitment": "शीर्ष कॉलेज/भर्ती:",
@@ -2186,13 +2243,15 @@ export const translations = {
     "notifications.topColleges": "शीर्ष कॉलेज:",
     "notifications.topUniversities": "शीर्ष विश्वविद्यालय",
     "notifications.careerOpportunities": "करियर के अवसर:",
-    "notifications.noRecommendedCourses": "कोई अनुशंसित पाठ्यक्रम उपलब्ध नहीं है। कृपया अपना प्रतिशत समायोजित करें या एक अलग स्ट्रीम चुनें।",
-    "notifications.noCoursesAvailable": "इस स्ट्रीम के लिए कोई पाठ्यक्रम उपलब्ध नहीं है।",
+    "notifications.noRecommendedCourses":
+      "कोई अनुशंसित पाठ्यक्रम उपलब्ध नहीं है। कृपया अपना प्रतिशत समायोजित करें या एक अलग स्ट्रीम चुनें।",
+    "notifications.noCoursesAvailable":
+      "इस स्ट्रीम के लिए कोई पाठ्यक्रम उपलब्ध नहीं है।",
     "notifications.performance": "प्रदर्शन",
     "notifications.excellent": "उत्कृष्ट",
     "notifications.good": "अच्छा",
     "notifications.average": "औसत",
-    
+
     // Exam Titles (Hindi)
     "exam.iitJee": "IIT-JEE (इंजीनियरिंग)",
     "exam.neet": "NEET (मेडिकल)",
@@ -2202,7 +2261,7 @@ export const translations = {
     "exam.railway": "रेलवे परीक्षाएं (RRB)",
     "exam.statePsc": "राज्य PSC परीक्षाएं",
     "exam.gate": "GATE (ग्रेजुएट एप्टीट्यूड टेस्ट इन इंजीनियरिंग)",
-    
+
     // Step Titles (Hindi)
     "step.complete12thPcm": "PCM के साथ 12वीं पूरी करें",
     "step.prepareJeeMain": "JEE Main की तैयारी करें",
@@ -2252,29 +2311,46 @@ export const translations = {
     "step.specializeOptional": "विशेषज्ञता (वैकल्पिक)",
 
     // Step Descriptions (Hindi)
-    "stepDesc.complete12thStandard": "अपनी 12वीं अच्छे प्रतिशत के साथ पूरी करें",
-    "stepDesc.complete12thPcm": "भौतिकी, रसायन विज्ञान, गणित (PCM) के साथ 12वीं पूरी करें",
-    "stepDesc.complete12thPcb": "भौतिकी, रसायन विज्ञान, जीवविज्ञान (PCB) के साथ 12वीं पूरी करें",
+    "stepDesc.complete12thStandard":
+      "अपनी 12वीं अच्छे प्रतिशत के साथ पूरी करें",
+    "stepDesc.complete12thPcm":
+      "भौतिकी, रसायन विज्ञान, गणित (PCM) के साथ 12वीं पूरी करें",
+    "stepDesc.complete12thPcb":
+      "भौतिकी, रसायन विज्ञान, जीवविज्ञान (PCB) के साथ 12वीं पूरी करें",
     "stepDesc.pursueDegree": "प्रासंगिक क्षेत्र में स्नातक की डिग्री पूरी करें",
-    "stepDesc.gainExperience": "इंटर्नशिप के माध्यम से व्यावहारिक अनुभव प्राप्त करें",
+    "stepDesc.gainExperience":
+      "इंटर्नशिप के माध्यम से व्यावहारिक अनुभव प्राप्त करें",
     "stepDesc.startCareer": "अपना पेशेवर करियर शुरू करें",
-    "stepDesc.complete12thStandardTeacher": "अपनी 12वीं अच्छे प्रतिशत के साथ पूरी करें",
-    "stepDesc.pursueBachelorsDegree": "अपने पसंदीदा विषय में BA/B.Sc/B.Com पूरी करें",
-    "stepDesc.completeBED": "मान्यता प्राप्त विश्वविद्यालय से शिक्षा स्नातक (B.Ed) पूरी करें",
-    "stepDesc.clearTeachingExams": "अपने राज्य की आवश्यकताओं के अनुसार CTET/TET/STET परीक्षा पास करें",
-    "stepDesc.applyTeachingPositions": "सरकारी या निजी स्कूलों में शिक्षक पदों के लिए आवेदन करें",
-    "stepDesc.pursueLLB": "LLB (स्नातक के बाद 3 वर्ष) या BA LLB (5 वर्ष एकीकृत) पूरी करें",
-    "stepDesc.enrollBarCouncil": "LLB पूरा करने के बाद राज्य बार काउंसिल में पंजीकरण करें",
-    "stepDesc.completeInternship": "व्यावहारिक अनुभव प्राप्त करने के लिए वरिष्ठ वकील के अधीन इंटर्नशिप करें",
-    "stepDesc.startPractice": "स्वतंत्र अभ्यास शुरू करें या कानूनी फर्म में शामिल हों",
+    "stepDesc.complete12thStandardTeacher":
+      "अपनी 12वीं अच्छे प्रतिशत के साथ पूरी करें",
+    "stepDesc.pursueBachelorsDegree":
+      "अपने पसंदीदा विषय में BA/B.Sc/B.Com पूरी करें",
+    "stepDesc.completeBED":
+      "मान्यता प्राप्त विश्वविद्यालय से शिक्षा स्नातक (B.Ed) पूरी करें",
+    "stepDesc.clearTeachingExams":
+      "अपने राज्य की आवश्यकताओं के अनुसार CTET/TET/STET परीक्षा पास करें",
+    "stepDesc.applyTeachingPositions":
+      "सरकारी या निजी स्कूलों में शिक्षक पदों के लिए आवेदन करें",
+    "stepDesc.pursueLLB":
+      "LLB (स्नातक के बाद 3 वर्ष) या BA LLB (5 वर्ष एकीकृत) पूरी करें",
+    "stepDesc.enrollBarCouncil":
+      "LLB पूरा करने के बाद राज्य बार काउंसिल में पंजीकरण करें",
+    "stepDesc.completeInternship":
+      "व्यावहारिक अनुभव प्राप्त करने के लिए वरिष्ठ वकील के अधीन इंटर्नशिप करें",
+    "stepDesc.startPractice":
+      "स्वतंत्र अभ्यास शुरू करें या कानूनी फर्म में शामिल हों",
     "stepDesc.pursueBTechBCA": "कंप्यूटर साइंस/IT में B.Tech या BCA पूरी करें",
-    "stepDesc.learnProgrammingLanguages": "Java, Python, JavaScript आदि प्रोग्रामिंग भाषाओं में महारत हासिल करें",
-    "stepDesc.buildPortfolio": "अपने कौशल दिखाने के लिए परियोजनाओं का पोर्टफोलियो बनाएं",
-    "stepDesc.applyForJobs": "IT कंपनियों में सॉफ्टवेयर इंजीनियरिंग पदों के लिए आवेदन करें",
+    "stepDesc.learnProgrammingLanguages":
+      "Java, Python, JavaScript आदि प्रोग्रामिंग भाषाओं में महारत हासिल करें",
+    "stepDesc.buildPortfolio":
+      "अपने कौशल दिखाने के लिए परियोजनाओं का पोर्टफोलियो बनाएं",
+    "stepDesc.applyForJobs":
+      "IT कंपनियों में सॉफ्टवेयर इंजीनियरिंग पदों के लिए आवेदन करें",
     "stepDesc.clearNEET": "NEET (राष्ट्रीय पात्रता प्रवेश परीक्षा) पास करें",
-    "stepDesc.completeMBBSInternship": "MBBS (चिकित्सा और शल्य चिकित्सा स्नातक) पूरी करें",
+    "stepDesc.completeMBBSInternship":
+      "MBBS (चिकित्सा और शल्य चिकित्सा स्नातक) पूरी करें",
     "stepDesc.specializeOptional": "विशेषज्ञता के लिए MD/MS करें",
-    
+
     // Duration Keys (Hindi)
     "duration.2Years": "2 साल",
     "duration.3Years": "3 साल",
@@ -2296,7 +2372,7 @@ export const translations = {
     "duration.afterResult": "परिणाम के बाद",
     "duration.afterMedical": "Medical के बाद",
     "duration.whenNotified": "सूचना मिलने पर",
-    
+
     // Tips Translation Keys (Hindi)
     "tip.focusAcademics": "अकादमिक पर ध्यान दें",
     "tip.developSkills": "प्रासंगिक कौशल विकसित करें",
@@ -2311,7 +2387,7 @@ export const translations = {
     "tip.communicationSkills": "संचार कौशल विकसित करें",
     "tip.chooseSubjects": "वे विषय चुनें जो आप पढ़ाना चाहते हैं",
     "tip.goodRecord": "अच्छा शैक्षणिक रिकॉर्ड बनाए रखें",
-    "tipcollegeEvents": "कॉलेज के कार्यक्रमों में भाग लें",
+    tipcollegeEvents: "कॉलेज के कार्यक्रमों में भाग लें",
     "tip.goodBEDCollege": "अच्छा B.Ed कॉलेज चुनें",
     "tip.learningMethodologies": "शिक्षण पद्धतियां सीखें",
     "tip.practiceTeaching": "स्कूलों में पढ़ाई का अभ्यास करें",
@@ -2510,7 +2586,7 @@ export const translations = {
     "college.nit": "NIT (राष्ट्रीय प्रौद्योगिकी संस्थान)",
     "college.iiit": "IIIT (भारतीय सूचना प्रौद्योगिकी संस्थान)",
     "college.medical": "सरकारी मेडिकल कॉलेज",
-    "college.nda": "NDA (राष्ट्रीय रक्षा अकादमी)"
+    "college.nda": "NDA (राष्ट्रीय रक्षा अकादमी)",
   },
 };
 
