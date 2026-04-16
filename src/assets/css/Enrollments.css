@@ -421,9 +421,21 @@
     padding: 0.2rem 0.5rem;
     font-size: 0.7rem;
   }
+}
 
-  .action-btn {
-    padding: 0.25rem 0.5rem;
+/* Extra responsive for wide tables (Feedback, Enrollments) */
+@media (max-width: 1400px) {
+  .custom-table {
+    font-size: 0.75rem;
+  }
+  
+  .custom-table thead th,
+  .custom-table tbody td {
+    padding: 0.375rem 0.5rem;
+    white-space: nowrap;
+  }
+  
+  .custom-table thead th {
     font-size: 0.7rem;
   }
 }

@@ -87,7 +87,10 @@ const AdminLeftNav = ({ show, setShow }) => {
                 onClick={() => setShowSchemesMenu(!showSchemesMenu)}
                 style={{ cursor: 'pointer' }}
               >
-                <span><i className="bi bi-file-earmark-text nav-icon"></i> <span className="nav-text">Schemes</span></span>
+                <span className="d-flex align-items-center">
+                  <i className="bi bi-file-earmark-text nav-icon"></i>
+                  <span className="nav-text">Schemes</span>
+                </span>
                 <i className={`bi bi-chevron-${showSchemesMenu ? 'up' : 'down'}`}></i>
               </div>
               {showSchemesMenu && (
@@ -111,7 +114,10 @@ const AdminLeftNav = ({ show, setShow }) => {
                 onClick={() => setShowGroomingMenu(!showGroomingMenu)}
                 style={{ cursor: 'pointer' }}
               >
-                <span><i className="bi bi-person-badge nav-icon"></i> <span className="nav-text">Grooming</span></span>
+                <span className="d-flex align-items-center">
+                  <i className="bi bi-person-badge nav-icon"></i>
+                  <span className="nav-text">Grooming</span>
+                </span>
                 <i className={`bi bi-chevron-${showGroomingMenu ? 'up' : 'down'}`}></i>
               </div>
               {showGroomingMenu && (
@@ -135,7 +141,10 @@ const AdminLeftNav = ({ show, setShow }) => {
                 onClick={() => setShowJobsMenu(!showJobsMenu)}
                 style={{ cursor: 'pointer' }}
               >
-                <span><i className="bi bi-briefcase nav-icon"></i> <span className="nav-text">Jobs & More</span></span>
+                <span className="d-flex align-items-center">
+                  <i className="bi bi-briefcase nav-icon"></i>
+                  <span className="nav-text">Jobs & More</span>
+                </span>
                 <i className={`bi bi-chevron-${showJobsMenu ? 'up' : 'down'}`}></i>
               </div>
               {showJobsMenu && (
