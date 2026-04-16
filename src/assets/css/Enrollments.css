@@ -44,8 +44,64 @@
   color: #fff;
   font-weight: 600;
 }
-.paid-btn h5{
+.paid-btn h5 {
   font-size: 14px;
+}
+
+/* iPad (Tablet) Responsive Fixes */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .enrollments-table-card .table-responsive {
+    display: block !important;
+  }
+  
+  .enrollments-table-card .d-lg-none {
+    display: none !important;
+  }
+  
+  .custom-table {
+    font-size: 0.8rem;
+  }
+  
+  .custom-table thead th,
+  .custom-table tbody td {
+    padding: 0.4rem 0.5rem;
+    white-space: nowrap;
+  }
+  
+  .action-buttons {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  
+  .action-btn {
+    padding: 0.2rem 0.5rem;
+    font-size: 0.75rem;
+    min-width: auto;
+  }
+  
+  .page-header {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  .search-section {
+    width: 100% !important;
+    margin-top: 0.5rem;
+  }
+  
+  .enrollments-table-card .card-header {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  .enrollments-table-card .card-header .text-muted {
+    font-size: 0.75rem;
+  }
+  
+  .paid-btn h5 {
+    font-size: 0.9rem;
+  }
 }
 .back-btn{
   font-size: 12px;
@@ -335,6 +391,86 @@
   .page-header .btn {
     width: 100%;
     justify-content: center;
+  }
+}
+
+/* iPad (Tablet) Responsive Fixes */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .enrollments-table-card .table-responsive {
+    display: block !important;
+  }
+  
+  .enrollments-table-card .d-lg-none {
+    display: none !important;
+  }
+  
+  .custom-table {
+    font-size: 0.8rem;
+  }
+  
+  .custom-table thead th,
+  .custom-table tbody td {
+    padding: 0.4rem 0.5rem;
+    white-space: nowrap;
+  }
+  
+  .action-buttons {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  
+  .action-btn {
+    padding: 0.2rem 0.5rem;
+    font-size: 0.75rem;
+    min-width: auto;
+  }
+  
+  .page-header {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  .search-section {
+    width: 100% !important;
+    margin-top: 0.5rem;
+  }
+  
+  .enrollments-table-card .card-header {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  .enrollments-table-card .card-header .text-muted {
+    font-size: 0.75rem;
+  }
+  
+  .paid-btn h5 {
+    font-size: 0.9rem;
+  }
+  
+  .mob-top-view {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+  
+  .enrollments-table-card .nav-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .enrollments-table-card .nav-tabs .nav-link {
+    white-space: nowrap;
+  }
+  
+  /* iPad card view styling */
+  .enrollment-card {
+    margin: 0.5rem;
+  }
+  
+  .enrollment-card .card-body {
+    padding: 0.75rem !important;
   }
 }
 

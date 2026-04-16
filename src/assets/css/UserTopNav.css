@@ -120,7 +120,9 @@
   color: #212529;
   font-size: 0.875rem;
 }
-
+.notification-user{
+  color: #fff !important;
+}
 .user-top-nav .dropdown-item:hover {
   background: #f8f9fa;
   color: #667eea;
@@ -146,6 +148,31 @@
   background: #fff3f3;
   color: #dc3545 !important;
 }
+.dropdown-toggle::after {
+  color: #fff !important;
+}
+/* Navbar nav on toggle click - tablet and mobile only */
+@media (max-width: 991px) {
+  .dropdown-toggle::after {
+  color: #000 !important;
+}
+.grooming-class{
+  margin-top: 12px !important;
+}
+.user-top-nav .user-name {
+  color: #000 !important;
+}
+  .navbar-nav {
+    background-color: #fff !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  .grooming-style{
+    margin-top: 12px !important;
+  }
+  .notification-user{
+    color: #000 !important;
+  }
+}
 
 /* Mobile menu button */
 .user-top-nav .mobile-menu-btn {
@@ -168,8 +195,8 @@
   .user-top-nav .navbar-brand {
     padding: 0.5rem 0.75rem;
   }
-.user-top-nav .user-dropdown .dropdown-toggle{
-background-color: #13539d !important;
+ .user-top-nav .user-dropdown .dropdown-toggle{
+ background-color: #13539d !important;
   }
   .user-top-nav .user-logo-img {
     height: 40px;
@@ -193,6 +220,40 @@ background-color: #13539d !important;
 
   .user-top-nav .user-dropdown .dropdown-toggle {
     padding: 0.5rem;
+  }
+  
+  /* Dropdown menu styles for mobile/tablet */
+  .user-top-nav .dropdown-menu {
+    background-color: #ffffff !important;
+    border: 1px solid #dee2e6;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  .user-top-nav .dropdown-menu .dropdown-item {
+    color: #000000 !important;
+    background-color: transparent !important;
+  }
+  
+  .user-top-nav .dropdown-menu .dropdown-item:hover {
+    background-color: #f8f9fa !important;
+    color: #000000 !important;
+  }
+  
+  .user-top-nav .logout-item {
+    color: #dc3545 !important;
+  }
+  
+  .user-top-nav .logout-item:hover {
+    background-color: #fff3f3 !important;
+    color: #dc3545 !important;
+  }
+  
+  .profile-dropdown-menu {
+    background-color: #ffffff !important;
+  }
+  
+  .profile-dropdown-menu .dropdown-item {
+    color: #000000 !important;
   }
 }
 

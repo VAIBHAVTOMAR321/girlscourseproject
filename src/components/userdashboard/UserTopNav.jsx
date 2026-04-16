@@ -274,7 +274,7 @@ const UserTopNav = ({ onMenuToggle, isMobile }) => {
               className="notification-bell-wrapper"
               style={{ cursor: 'pointer', position: 'relative', padding: '8px' }}
             >
-              <i className="bi bi-bell" style={{ fontSize: '1.25rem', color: '#ffffff' }}></i>
+              <i className="bi bi-bell notification-user" style={{ fontSize: '1.25rem', }}></i>
               {unreadCount > 0 && (
                 <span 
                   className="notification-badge"
@@ -297,14 +297,16 @@ const UserTopNav = ({ onMenuToggle, isMobile }) => {
               )}
             </Dropdown.Toggle>
             
-            <Dropdown.Menu 
+<Dropdown.Menu 
               style={{ 
                 width: '320px', 
                 maxHeight: '400px',
                 overflowY: 'auto',
                 padding: '0',
                 right: 0,
-                left: 'auto'
+                left: 'auto',
+              
+                color: '#000000'
               }}
             >
               <div 
@@ -423,11 +425,11 @@ const UserTopNav = ({ onMenuToggle, isMobile }) => {
                   <span className="user-name">{loading ? 'Loading...' : (userRoleType === 'student-unpaid' ? userData?.full_name : userData?.candidate_name) || uniqueId}</span>
                 </div>
               </div>
-              <i className="bi bi-chevron-down ms-2"></i>
+             
             </Dropdown.Toggle>
             
-            <Dropdown.Menu className="profile-dropdown-menu">
-              <Dropdown.Item className="logout-item" onClick={handleLogout}>
+            <Dropdown.Menu className="profile-dropdown-menu" style={{ backgroundColor: '#ffffff', color: '#000000' }}>
+              <Dropdown.Item className="logout-item" onClick={handleLogout} style={{ color: '#000000' }}>
                 <i className="bi bi-box-arrow-right dropdown-icon"></i> Logout
               </Dropdown.Item>
             </Dropdown.Menu>

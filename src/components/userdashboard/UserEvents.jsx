@@ -158,25 +158,26 @@ const UserEvents = () => {
                         e.currentTarget.style.boxShadow = 'none'
                       }}
                       >
-                        <div style={{ 
+<div style={{ 
                           height: '180px',
                           overflow: 'hidden',
                           position: 'relative',
-                          backgroundColor: '#f8f9fa'
+                          backgroundColor: '#f8f9fa',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
                         }}>
-                          {event.event_image ? (
-                            <img 
-                              src={`https://brjobsedu.com/girls_course/girls_course_backend${event.event_image}`}
-                              alt={event.event_name}
-                              className=" h-100"
-                              style={{ 
-                                objectFit: 'cover',
-                                position: 'absolute',
-                                top: 0,
-                                left: 0
-                              }}
-                            />
-                          ) : (
+                           {event.event_image ? (
+                             <img 
+                               src={`https://brjobsedu.com/girls_course/girls_course_backend${event.event_image}`}
+                               alt={event.event_name}
+                               className="h-100 w-100"
+                               style={{ 
+                                 objectFit: 'contain',
+                                 objectPosition: 'center'
+                               }}
+                             />
+                           ) : (
                             <div style={{ 
                               height: '100%',
                               background: upcoming 

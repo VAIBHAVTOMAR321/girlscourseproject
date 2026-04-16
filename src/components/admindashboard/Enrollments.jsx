@@ -297,8 +297,8 @@ const Enrollments = () => {
                
 
                 <Card className="enrollments-table-card border">
-                  <Card.Header className="bg-light border-bottom py-2 px-3">
-                     <Nav variant="tabs" activeKey={enrollmentType} onSelect={(eventKey) => setEnrollmentType(eventKey)}>
+<Card.Header className="bg-light border-bottom py-2 px-3 overflow-auto">
+                      <Nav variant="tabs" activeKey={enrollmentType} onSelect={(eventKey) => setEnrollmentType(eventKey)} className="flex-nowrap">
                        <Nav.Item>
                          <Nav.Link eventKey="paid">
                            Paid Enrollments
@@ -334,7 +334,7 @@ const Enrollments = () => {
                   </Card.Header>
                   <Card.Body className="">
                     {/* Desktop Table View */}
-                    <div className="table-responsive d-none d-lg-block">
+                    <div className="table-responsive d-none d-md-block">
                       <Table hover className="custom-table align-middle mb-0">
                         <thead className="table-light custom-table">
                           <tr>
@@ -397,7 +397,7 @@ const Enrollments = () => {
                                 </span>
                               </td>
                               <td className="text-end pe-3">
-                                <div className="action-buttons justify-content-end gap-1">
+                                <div className="action-buttons justify-content-end gap-1 d-none d-md-flex">
                                   <Button 
                                     variant="primary" 
                                     size="sm"
@@ -412,7 +412,7 @@ const Enrollments = () => {
                                     className="action-btn"
                                     onClick={() => handleResetPassword(enrollment)}
                                   >
-                                    Reset Password
+                                    Reset
                                   </Button>
                                   {enrollmentType === 'unpaid' && (
                                     <Button 
@@ -433,7 +433,7 @@ const Enrollments = () => {
                     </div>
 
                     {/* Mobile Card View */}
-                    <div className="d-lg-none">
+                    <div className="d-md-none">
                       {currentRecords.map((enrollment) => (
                         <Card key={enrollment.id} className="mb-3 mx-2 enrollment-card">
                           <Card.Body className="p-3 card-box-mob">
