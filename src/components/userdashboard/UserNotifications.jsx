@@ -1876,13 +1876,13 @@ setPrepType('govtCollege')
                           <Col md={4}>
                             <Card 
                               className={`h-100 border ${prepType === 'govtCollege' ? 'border-primary' : ''}`}
-                              style={{ cursor: 'pointer', borderRadius: '10px', backgroundColor: prepType === 'govtCollege' ? '#e7f1ff' : 'white' }}
+                              style={{ cursor: 'pointer', borderRadius: '10px', backgroundColor: prepType === 'govtCollege' ? '#4a90d9' : 'white', transition: 'all 0.3s ease' }}
                               onClick={() => setPrepType('govtCollege')}
                             >
                               <Card.Body className="p-4 text-center">
-                                <FaUniversity className={`fs-2 mb-2 ${prepType === 'govtCollege' ? 'text-primary' : 'text-muted'}`} />
-                                <h6 className={prepType === 'govtCollege' ? 'text-primary fw-bold' : ''}><TransText k="notifications.govtCollegePath" as="span" /></h6>
-                                <small className="text-muted"><TransText k="notifications.govtCollegeDesc" as="span" /></small>
+                                <FaUniversity className={`fs-2 mb-2 ${prepType === 'govtCollege' ? 'text-white' : 'text-muted'}`} style={prepType === 'govtCollege' ? { filter: 'drop-shadow(0 0 2px rgba(0,0,0,0.3))' } : {}} />
+                                <h6 className={prepType === 'govtCollege' ? 'text-white fw-bold' : 'text-muted'}><TransText k="notifications.govtCollegePath" as="span" /></h6>
+                                <small className={prepType === 'govtCollege' ? 'text-white' : 'text-muted'}><TransText k="notifications.govtCollegeDesc" as="span" /></small>
                               </Card.Body>
                             </Card>
                           </Col>
@@ -1927,7 +1927,7 @@ setPrepType('govtCollege')
                             </>
                           ) : prepType === 'govtCollege' ? (
                             <>
-                              <FaUniversity className="me-2 text-primary" />
+                              <FaUniversity className="me-2 text-white" />
                               <TransText k="notifications.govtCollegeRoadmap" as="span" />
                             </>
                           ) : (
@@ -2023,13 +2023,13 @@ setPrepType('govtCollege')
                               <Nav variant="tabs" className="mb-4">
                                 <Nav.Item>
                                   <Nav.Link eventKey="colleges">
-                                    <FaUniversity className="me-2" />
+<FaUniversity className="me-2" style={{ color: '#fff' }} />
                                     <TransText k="notifications.topColleges" as="span" />
                                   </Nav.Link>
                                 </Nav.Item>
                                 <Nav.Item>
                                   <Nav.Link eventKey="universities">
-                                    <FaBuilding className="me-2" />
+                                    <FaBuilding className="me-2" style={{ color: '#fff' }} />
                                     <TransText k="notifications.topUniversities" as="span" />
                                   </Nav.Link>
                                 </Nav.Item>
@@ -2137,7 +2137,7 @@ setPrepType('govtCollege')
                                             <Card.Body className="p-3">
                                               <div className="d-flex align-items-center gap-2 mb-2">
                                                 <div className="course-icon-large">
-                                                  <FaGraduationCap className="text-primary" />
+                                                  <FaGraduationCap style={{ color: '#fff' }} />
                                                 </div>
                                                 <h6 className="mb-0">IIT Bombay</h6>
                                               </div>
@@ -2150,7 +2150,7 @@ setPrepType('govtCollege')
                                             <Card.Body className="p-3">
                                               <div className="d-flex align-items-center gap-2 mb-2">
                                                 <div className="course-icon-large">
-                                                  <FaGraduationCap className="text-primary" />
+                                                  <FaGraduationCap style={{ color: '#fff' }} />
                                                 </div>
                                                 <h6 className="mb-0">IIT Delhi</h6>
                                               </div>
@@ -2163,7 +2163,7 @@ setPrepType('govtCollege')
                                             <Card.Body className="p-3">
                                               <div className="d-flex align-items-center gap-2 mb-2">
                                                 <div className="course-icon-large">
-                                                  <FaGraduationCap className="text-primary" />
+                                                  <FaGraduationCap style={{ color: '#fff' }} />
                                                 </div>
                                                 <h6 className="mb-0">IIT Madras</h6>
                                               </div>
@@ -2176,7 +2176,7 @@ setPrepType('govtCollege')
                                             <Card.Body className="p-3">
                                               <div className="d-flex align-items-center gap-2 mb-2">
                                                 <div className="course-icon-large">
-                                                  <FaGraduationCap className="text-primary" />
+                                                  <FaGraduationCap style={{ color: '#fff' }} />
                                                 </div>
                                                 <h6 className="mb-0">IIT Kharagpur</h6>
                                               </div>
@@ -2189,7 +2189,7 @@ setPrepType('govtCollege')
                                             <Card.Body className="p-3">
                                               <div className="d-flex align-items-center gap-2 mb-2">
                                                 <div className="course-icon-large">
-                                                  <FaGraduationCap className="text-primary" />
+                                                  <FaGraduationCap style={{ color: '#fff' }} />
                                                 </div>
                                                 <h6 className="mb-0">IIT Kanpur</h6>
                                               </div>
@@ -2202,7 +2202,7 @@ setPrepType('govtCollege')
                                             <Card.Body className="p-3">
                                               <div className="d-flex align-items-center gap-2 mb-2">
                                                 <div className="course-icon-large">
-                                                  <FaGraduationCap className="text-primary" />
+                                                  <FaGraduationCap style={{ color: '#fff' }} />
                                                 </div>
                                                 <h6 className="mb-0">AIIMS Delhi</h6>
                                               </div>
@@ -2258,7 +2258,7 @@ setPrepType('govtCollege')
                                             <Card.Body className="p-3">
                                               <div className="d-flex align-items-center gap-2 mb-2">
                                                 <div className="course-icon-large">
-                                                  <FaGraduationCap className="text-primary" />
+                                                  <FaGraduationCap style={{ color: '#fff' }} />
                                                 </div>
                                                 <h6 className="mb-0">Delhi University</h6>
                                               </div>
@@ -2284,7 +2284,7 @@ setPrepType('govtCollege')
                                             <Card.Body className="p-3">
                                               <div className="d-flex align-items-center gap-2 mb-2">
                                                 <div className="course-icon-large">
-                                                  <FaGraduationCap className="text-primary" />
+                                                  <FaGraduationCap style={{ color: '#fff' }} />
                                                 </div>
                                                 <h6 className="mb-0">Lady Shri Ram</h6>
                                               </div>
@@ -2297,7 +2297,7 @@ setPrepType('govtCollege')
                                             <Card.Body className="p-3">
                                               <div className="d-flex align-items-center gap-2 mb-2">
                                                 <div className="course-icon-large">
-                                                  <FaGraduationCap className="text-primary" />
+                                                  <FaGraduationCap style={{ color: '#fff' }} />
                                                 </div>
                                                 <h6 className="mb-0">St. Stephen's</h6>
                                               </div>
@@ -2310,7 +2310,7 @@ setPrepType('govtCollege')
                                             <Card.Body className="p-3">
                                               <div className="d-flex align-items-center gap-2 mb-2">
                                                 <div className="course-icon-large">
-                                                  <FaGraduationCap className="text-primary" />
+                                                  <FaGraduationCap style={{ color: '#fff' }} />
                                                 </div>
                                                 <h6 className="mb-0">Christ University</h6>
                                               </div>
@@ -2323,7 +2323,7 @@ setPrepType('govtCollege')
                                             <Card.Body className="p-3">
                                               <div className="d-flex align-items-center gap-2 mb-2">
                                                 <div className="course-icon-large">
-                                                  <FaGraduationCap className="text-primary" />
+                                                  <FaGraduationCap style={{ color: '#fff' }} />
                                                 </div>
                                                 <h6 className="mb-0">Symbiosis</h6>
                                               </div>
@@ -2340,7 +2340,7 @@ setPrepType('govtCollege')
                                             <Card.Body className="p-3">
                                               <div className="d-flex align-items-center gap-2 mb-2">
                                                 <div className="course-icon-large">
-                                                  <FaGraduationCap className="text-primary" />
+                                                  <FaGraduationCap style={{ color: '#fff' }} />
                                                 </div>
                                                 <h6 className="mb-0">Delhi University</h6>
                                               </div>
@@ -2353,7 +2353,7 @@ setPrepType('govtCollege')
                                             <Card.Body className="p-3">
                                               <div className="d-flex align-items-center gap-2 mb-2">
                                                 <div className="course-icon-large">
-                                                  <FaGraduationCap className="text-primary" />
+                                                  <FaGraduationCap style={{ color: '#fff' }} />
                                                 </div>
                                                 <h6 className="mb-0">Jamia Millia</h6>
                                               </div>
@@ -2366,7 +2366,7 @@ setPrepType('govtCollege')
                                             <Card.Body className="p-3">
                                               <div className="d-flex align-items-center gap-2 mb-2">
                                                 <div className="course-icon-large">
-                                                  <FaGraduationCap className="text-primary" />
+                                                  <FaGraduationCap style={{ color: '#fff' }} />
                                                 </div>
                                                 <h6 className="mb-0">BHU</h6>
                                               </div>
@@ -2379,7 +2379,7 @@ setPrepType('govtCollege')
                                             <Card.Body className="p-3">
                                               <div className="d-flex align-items-center gap-2 mb-2">
                                                 <div className="course-icon-large">
-                                                  <FaGraduationCap className="text-primary" />
+                                                  <FaGraduationCap style={{ color: '#fff' }} />
                                                 </div>
                                                 <h6 className="mb-0">JNU</h6>
                                               </div>
@@ -2392,7 +2392,7 @@ setPrepType('govtCollege')
                                             <Card.Body className="p-3">
                                               <div className="d-flex align-items-center gap-2 mb-2">
                                                 <div className="course-icon-large">
-                                                  <FaGraduationCap className="text-primary" />
+                                                  <FaGraduationCap style={{ color: '#fff' }} />
                                                 </div>
                                                 <h6 className="mb-0">AMU</h6>
                                               </div>
@@ -2405,7 +2405,7 @@ setPrepType('govtCollege')
                                             <Card.Body className="p-3">
                                               <div className="d-flex align-items-center gap-2 mb-2">
                                                 <div className="course-icon-large">
-                                                  <FaGraduationCap className="text-primary" />
+                                                  <FaGraduationCap style={{ color: '#fff' }} />
                                                 </div>
                                                 <h6 className="mb-0">UoH</h6>
                                               </div>

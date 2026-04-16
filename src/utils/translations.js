@@ -929,7 +929,7 @@ export const translations = {
     "notifications.stepByStepRoadmap": "Step-by-Step Roadmap:",
     "notifications.topCollegesRecruitment": "Top Colleges/Recruitment:",
     "notifications.eligibility": "Eligibility:",
-    "notifications.totalSeats": "Total Seats:",
+    "notifications.totalSeats": "Total Sea:",
     "notifications.availableCourses": "Available Courses:",
     "notifications.topColleges": "Top Colleges:",
     "notifications.topUniversities": "Top Universities",
