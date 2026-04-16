@@ -5,13 +5,14 @@ import {
 } from 'react-bootstrap'
 import AdminLeftNav from './AdminLeftNav'
 import AdminTopNav from './AdminTopNav'
+import EventsManagement from './EventsManagement'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import '../../assets/css/AdminDashboard.css'
 import { renderContentWithLineBreaks } from '../../utils/contentRenderer'
 import { 
   FaPlus, FaArrowLeft, FaBook, FaUsers, FaLayerGroup, 
-  FaTrash, FaImage, FaList, FaEye, FaEdit, FaComments, FaQuestionCircle, FaBell 
+  FaTrash, FaImage, FaList, FaEye, FaEdit, FaComments, FaQuestionCircle, FaBell, FaCalendarAlt
 } from 'react-icons/fa'
 import { useAuth } from '../../contexts/AuthContext'
 
@@ -112,6 +113,9 @@ const AdminDashboard = () => {
   const [submittingNotification, setSubmittingNotification] = useState(false)
   const [showNotificationsListModal, setShowNotificationsListModal] = useState(false)
 
+  // State for Events
+  const [eventsCount, setEventsCount] = useState(0)
+
   useEffect(() => {
     if (isMounted.current) {
       fetchData()
@@ -193,6 +197,16 @@ const AdminDashboard = () => {
         setAdminNotificationCount(0)
       }
 
+      // Fetch events count
+      try {
+        const eventsRes = await axios.get('https://brjobsedu.com/girls_course/girls_course_backend/api/event-item/')
+        if (eventsRes.data && eventsRes.data.success) {
+          setEventsCount(eventsRes.data.data.length)
+        }
+      } catch (eventsError) {
+        setEventsCount(0)
+      }
+
     } catch (error) {
       // Fallback data in case of error
       setPaidEnrollmentCount(0)
@@ -209,6 +223,9 @@ const AdminDashboard = () => {
   const handleCounselingClick = () => {
     setCounselingPage(1)
     setCurrentView('counseling')
+  }
+  const handleEventsClick = () => {
+    setCurrentView('events')
   }
 
   const handleViewCounseling = (counseling) => {
@@ -999,6 +1016,19 @@ const AdminDashboard = () => {
               <div>
                 <h6 className="stat-label text-muted mb-1">Notifications</h6>
                 <h2 className="stat-value mb-0">{loading ? <Spinner size="sm" animation="border" /> : adminNotificationCount}</h2>
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col xs={12} sm={6} md={3} lg={3}>
+          <Card className="stat-card h-100 shadow-sm border-0" onClick={handleEventsClick} style={{ cursor: 'pointer' }}>
+            <Card.Body className="d-flex align-items-center">
+              <div className="stat-icon-wrapper courses me-3" style={{ backgroundColor: '#6f42c1' }}>
+                <FaCalendarAlt className="stat-icon" />
+              </div>
+              <div>
+                <h6 className="stat-label text-muted mb-1">Events</h6>
+                <h2 className="stat-value mb-0">{loading ? <Spinner size="sm" animation="border" /> : eventsCount}</h2>
               </div>
             </Card.Body>
           </Card>
@@ -2144,6 +2174,7 @@ const AdminDashboard = () => {
               {currentView === 'questions' && renderQuestionsView()}
               {currentView === 'exercises' && renderExercisesView()}
               {currentView === 'counseling' && renderCounselingView()}
+              {currentView === 'events' && <EventsManagement onBack={handleBackToDashboard} />}
             </Container>
           </div>
         </div>
