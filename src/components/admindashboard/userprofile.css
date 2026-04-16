@@ -310,14 +310,14 @@
 /* Main Content Area */
 .main-content-area {
     margin-left: 220px;
-    padding: 28px;
+    /* padding: 28px; */
     min-height: calc(100vh - 70px);
     background-color: #fafbfc;
 }
 
 .main-content-area.mobile {
     margin-left: 0px;
-    padding: 12px;
+    padding: 0px !important;
 }
 
 /* Loading and No Data Padding */
@@ -353,9 +353,9 @@
         height: 70px;
     }
 
-    .profile-details-card .card-body {
+    /* .profile-details-card .card-body {
         padding: 1.5rem !important;
-    }
+    } */
 
     .info-item {
         margin-bottom: 1rem;
