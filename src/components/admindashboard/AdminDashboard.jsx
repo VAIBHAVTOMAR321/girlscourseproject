@@ -11,7 +11,7 @@ import '../../assets/css/AdminDashboard.css'
 import { renderContentWithLineBreaks } from '../../utils/contentRenderer'
 import { 
   FaPlus, FaArrowLeft, FaBook, FaUsers, FaLayerGroup, 
-  FaTrash, FaImage, FaList, FaEye, FaEdit, FaComments, FaQuestionCircle 
+  FaTrash, FaImage, FaList, FaEye, FaEdit, FaComments, FaQuestionCircle, FaBell 
 } from 'react-icons/fa'
 import { useAuth } from '../../contexts/AuthContext'
 
@@ -104,6 +104,14 @@ const AdminDashboard = () => {
   const [counselingPage, setCounselingPage] = useState(1)
   const counselingItemsPerPage = 10
 
+  // State for Admin Notifications
+  const [adminNotifications, setAdminNotifications] = useState([])
+  const [adminNotificationCount, setAdminNotificationCount] = useState(0)
+  const [showNotificationModal, setShowNotificationModal] = useState(false)
+  const [notificationFormData, setNotificationFormData] = useState({ title: '', message: '' })
+  const [submittingNotification, setSubmittingNotification] = useState(false)
+  const [showNotificationsListModal, setShowNotificationsListModal] = useState(false)
+
   useEffect(() => {
     if (isMounted.current) {
       fetchData()
@@ -175,6 +183,16 @@ const AdminDashboard = () => {
         setCounselingData([])
       }
 
+      // Fetch admin notifications count
+      try {
+        const notifRes = await axios.get('https://brjobsedu.com/girls_course/girls_course_backend/api/admin-notifications/', config)
+        if (notifRes.data && notifRes.data.status) {
+          setAdminNotificationCount(notifRes.data.count || 0)
+        }
+      } catch (notifError) {
+        setAdminNotificationCount(0)
+      }
+
     } catch (error) {
       // Fallback data in case of error
       setPaidEnrollmentCount(0)
@@ -201,6 +219,85 @@ const AdminDashboard = () => {
   const handleCloseCounselingModal = () => {
     setShowCounselingModal(false)
     setSelectedCounseling(null)
+  }
+
+  const handleNotificationsClick = async () => {
+    try {
+      const config = getAuthConfig()
+      const response = await axios.get('https://brjobsedu.com/girls_course/girls_course_backend/api/admin-notifications/', config)
+      if (response.data && response.data.status) {
+        setAdminNotifications(response.data.data || [])
+        setShowNotificationsListModal(true)
+      }
+    } catch (error) {
+      setAdminNotifications([])
+    }
+  }
+
+  const handleDeleteNotification = async (notificationId) => {
+    if (window.confirm('Are you sure you want to delete this notification?')) {
+      try {
+        const config = getAuthConfig()
+        await axios.delete('https://brjobsedu.com/girls_course/girls_course_backend/api/admin-notifications/', {
+          data: { notification_ids: [notificationId] },
+          ...config
+        })
+        handleNotificationsClick()
+        fetchData()
+      } catch (error) {
+        alert('Failed to delete notification.')
+      }
+    }
+  }
+
+  const handleSubmitNotification = async (e) => {
+    e.preventDefault()
+    if (submittingNotification) return
+    setSubmittingNotification(true)
+
+    try {
+      const config = getAuthConfig()
+      await axios.post('https://brjobsedu.com/girls_course/girls_course_backend/api/admin-notifications/', {
+        title: notificationFormData.title,
+        message: notificationFormData.message
+      }, config)
+      
+      alert('Notification sent successfully!')
+      setShowNotificationModal(false)
+      setNotificationFormData({ title: '', message: '' })
+      fetchData()
+    } catch (error) {
+      alert('Failed to send notification.')
+    } finally {
+      setSubmittingNotification(false)
+    }
+  }
+
+  const formatNotificationTime = (timeStr) => {
+    try {
+      const date = new Date(timeStr)
+      const now = new Date()
+      const diffMs = now - date
+      const diffMins = Math.floor(diffMs / 60000)
+      const diffHours = Math.floor(diffMs / 3600000)
+      const diffDays = Math.floor(diffMs / 86400000)
+
+      if (diffMins < 1) return 'Just now'
+      if (diffMins < 60) return `${diffMins} min ago`
+      if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`
+      if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`
+
+      const day = String(date.getDate()).padStart(2, '0')
+      const month = String(date.getMonth() + 1).padStart(2, '0')
+      const year = date.getFullYear()
+      const hours = date.getHours()
+      const minutes = String(date.getMinutes()).padStart(2, '0')
+      const ampm = hours >= 12 ? 'PM' : 'AM'
+      const formattedHours = hours % 12 || 12
+      return `${day}-${month}-${year} ${formattedHours}:${minutes} ${ampm}`
+    } catch {
+      return timeStr
+    }
   }
   const handleCoursesClick = (type = 'paid') => {
     setCourseType(type)
@@ -889,6 +986,19 @@ const AdminDashboard = () => {
               <div>
                 <h6 className="stat-label text-muted mb-1">Counseling Requests</h6>
                 <h2 className="stat-value mb-0">{loading ? <Spinner size="sm" animation="border" /> : counselingData.length}</h2>
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col xs={12} sm={6} md={3} lg={3}>
+          <Card className="stat-card h-100 shadow-sm border-0" onClick={() => { handleNotificationsClick(); setShowNotificationsListModal(true) }} style={{ cursor: 'pointer' }}>
+            <Card.Body className="d-flex align-items-center">
+              <div className="stat-icon-wrapper courses me-3" style={{ backgroundColor: '#17a2b8' }}>
+                <FaBell className="stat-icon" />
+              </div>
+              <div>
+                <h6 className="stat-label text-muted mb-1">Notifications</h6>
+                <h2 className="stat-value mb-0">{loading ? <Spinner size="sm" animation="border" /> : adminNotificationCount}</h2>
               </div>
             </Card.Body>
           </Card>
@@ -2211,6 +2321,83 @@ const AdminDashboard = () => {
           <Button variant="secondary" onClick={handleCloseCounselingModal}>
             Close
           </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Create Notification Modal */}
+      <Modal show={showNotificationModal} onHide={() => setShowNotificationModal(false)} centered>
+        <Modal.Header closeButton className="bg-success text-white">
+          <Modal.Title><FaPlus className="me-2" /> Send Notification</Modal.Title>
+        </Modal.Header>
+        <Form onSubmit={handleSubmitNotification}>
+          <Modal.Body>
+            <Form.Group className="mb-3">
+              <Form.Label>Title</Form.Label>
+              <Form.Control
+                type="text"
+                value={notificationFormData.title}
+                onChange={(e) => setNotificationFormData({ ...notificationFormData, title: e.target.value })}
+                placeholder="Enter notification title"
+                required
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Message</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                value={notificationFormData.message}
+                onChange={(e) => setNotificationFormData({ ...notificationFormData, message: e.target.value })}
+                placeholder="Enter notification message"
+                required
+              />
+            </Form.Group>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => setShowNotificationModal(false)}>
+              Cancel
+            </Button>
+            <Button variant="success" type="submit" disabled={submittingNotification}>
+              {submittingNotification ? <Spinner size="sm" animation="border" /> : 'Send Notification'}
+            </Button>
+          </Modal.Footer>
+        </Form>
+      </Modal>
+
+      {/* Notifications List Modal */}
+      <Modal show={showNotificationsListModal} onHide={() => { setShowNotificationsListModal(false); setAdminNotifications([]) }} size="lg" centered>
+        <Modal.Header closeButton className="bg-info text-white">
+          <div className="d-flex justify-content-between align-items-center w-100">
+            <Modal.Title className="mb-0"><FaBell className="me-2" /> Notifications ({adminNotificationCount})</Modal.Title>
+            <Button variant="light" size="sm" onClick={() => { setShowNotificationsListModal(false); setShowNotificationModal(true) }}>
+              <FaPlus className="me-1" /> Send New
+            </Button>
+          </div>
+        </Modal.Header>
+        <Modal.Body>
+          {adminNotifications.length === 0 ? (
+            <p className="text-center text-muted">No notifications</p>
+          ) : (
+            adminNotifications.map((notif) => (
+              <Card key={notif.id} className="mb-2">
+                <Card.Body className="py-2">
+                  <div className="d-flex justify-content-between align-items-start">
+                    <div>
+                      <h6 className="mb-1">{notif.title}</h6>
+                      <p className="mb-0 text-muted small">{notif.message}</p>
+                      <small className="text-muted">{formatNotificationTime(notif.time)}</small>
+                    </div>
+                    <Button variant="outline-danger" size="sm" onClick={() => handleDeleteNotification(notif.id)}>
+                      <FaTrash />
+                    </Button>
+                  </div>
+                </Card.Body>
+              </Card>
+            ))
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => { setShowNotificationsListModal(false); setAdminNotifications([]) }}>Close</Button>
         </Modal.Footer>
       </Modal>
     </div>
