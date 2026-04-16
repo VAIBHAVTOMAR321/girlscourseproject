@@ -165,14 +165,14 @@ const GroomingClasses = () => {
               </div>
             ) : (
               <>
-                <Card className="shadow-sm mb-4 border-0" style={{ borderRadius: '15px', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
+                <Card className="shadow-sm mb-4 border-0" style={{ borderRadius: '15px', background: '#ffffff' , boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)'}}>
                   <Card.Body className="py-4">
                     <div className="d-flex justify-content-between align-items-center">
-                      <div className="text-white">
+                      <div className="text-black">
                         <h2 className="mb-2 fw-bold"><FaGraduationCap className="me-2" />{t.title}</h2>
                         <p className="mb-0 opacity-75">{t.subtitle}</p>
                       </div>
-                      <div className="text-white text-center">
+                      <div className="text-black text-center">
                         <div className="fs-1 fw-bold">{activeClasses.length}</div>
                         <div className="small opacity-75">{t.upcoming}</div>
                       </div>
