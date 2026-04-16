@@ -134,7 +134,7 @@
 }
 
 .course-icon {
-  font-size: 2.2rem;
+  font-size: 22px;
   margin-right: 15px;
   width: 50px;
   text-align: center;
@@ -150,7 +150,7 @@
 }
 
 .course-name {
-  font-size: 1rem;
+  font-size: 12px;
   font-weight: 600;
   color: #2d3748;
   margin-bottom: 5px;
@@ -183,7 +183,7 @@
 .price-value {
   font-weight: bold;
   color: #28a745;
-  font-size: 0.9rem;
+  font-size: 12px;
 }
 
 .course-duration {
@@ -607,13 +607,13 @@
   }
   
   .course-icon {
-    font-size: 1.8rem;
+    font-size: 22px;
     margin-right: 12px;
     width: 40px;
   }
   
   .course-name {
-    font-size: 0.9rem;
+    font-size: 12px;
   }
   
   .course-tab {
@@ -658,7 +658,7 @@
   }
   
   .course-name {
-    font-size: 0.85rem;
+    font-size: 12px;
   }
   
   .course-meta {
