@@ -15,6 +15,14 @@ const UserDashboard = () => {
   const [showOffcanvas, setShowOffcanvas] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const [activeTab, setActiveTab] = useState('my-courses') // 'my-courses' or 'all-courses'
+
+  // Initialize activeTab from location state on mount
+  const location = useLocation()
+  useEffect(() => {
+    if (location.state?.activeTab) {
+      setActiveTab(location.state.activeTab)
+    }
+  }, [location.state])
   const [courses, setCourses] = useState([])
   const [allCourses, setAllCourses] = useState([])
   const [loading, setLoading] = useState(true)
@@ -54,7 +62,6 @@ const UserDashboard = () => {
   // Course language preference state (default: hindi)
   const [courseLanguage, setCourseLanguage] = useState('hindi')
 
-  const location = useLocation()
   const navigate = useNavigate()
   const { uniqueId, accessToken, isAuthenticated, userRoleType } = useAuth()
 

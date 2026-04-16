@@ -97,31 +97,65 @@ const UserTopNav = ({ onMenuToggle, isMobile }) => {
   }, [uniqueId, accessToken])
 
   const handleNotificationClick = async (notification) => {
-    if (notification.seen) return
-    
-    try {
-      const config = {
-        headers: {
-          'Authorization': `Bearer ${accessToken}`
-        }
+    // Handle navigation based on notification type
+    if (notification.type !== 'admin') {
+      setShowNotificationDropdown(false)
+      switch (notification.type) {
+        case 'course':
+          navigate('/UserDashboard', { state: { activeTab: 'all-courses' } })
+          break
+        case 'scheme':
+          navigate('/GovernmentSchemes')
+          break
+        case 'quiz':
+          navigate('/UserQuiz')
+          break
+        case 'grooming':
+          navigate('/GroomingClasses')
+          break
+        case 'job':
+          navigate('/JobOpenings', { state: { activeTab: 'jobs' } })
+          break
+        case 'seminar':
+          navigate('/JobOpenings', { state: { activeTab: 'seminars' } })
+          break
+        case 'workshop':
+          navigate('/JobOpenings', { state: { activeTab: 'workshops' } })
+          break
+        case 'issue_reply':
+          navigate('/UserQuery')
+          break
+        default:
+          break
       }
-      
-      await axios.put(
-        `https://brjobsedu.com/girls_course/girls_course_backend/api/notifications/multi-seen/`,
-        { student_id: uniqueId, notification_ids: [notification.id] },
-        config
-      )
-      
-      setNotifications(prev => 
-        prev.map(n => 
-          n.id === notification.id 
-            ? { ...n, seen: true } 
-            : n
+    }
+    
+    // Mark as seen if not already
+    if (!notification.seen) {
+      try {
+        const config = {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`
+          }
+        }
+        
+        await axios.put(
+          `https://brjobsedu.com/girls_course/girls_course_backend/api/notifications/multi-seen/`,
+          { student_id: uniqueId, notification_ids: [notification.id] },
+          config
         )
-      )
-      setUnreadCount(prev => Math.max(0, prev - 1))
-    } catch (error) {
-      // Handle error silently
+        
+        setNotifications(prev => 
+          prev.map(n => 
+            n.id === notification.id 
+              ? { ...n, seen: true } 
+              : n
+          )
+        )
+        setUnreadCount(prev => Math.max(0, prev - 1))
+      } catch (error) {
+        // Handle error silently
+      }
     }
   }
 
@@ -300,10 +334,13 @@ const UserTopNav = ({ onMenuToggle, isMobile }) => {
                     key={notification.id}
                     onClick={() => handleNotificationClick(notification)}
                     style={{ 
-                      backgroundColor: notification.seen ? 'white' : '#f8f9fa',
+                      backgroundColor: notification.type === 'admin' 
+                        ? (notification.seen ? '#fff3cd' : '#fff8e1') 
+                        : (notification.seen ? 'white' : '#f8f9fa'),
                       borderBottom: '1px solid #eee',
                       padding: '10px 12px',
-                      whiteSpace: 'normal'
+                      whiteSpace: 'normal',
+                      borderLeft: notification.type === 'admin' ? '3px solid #dc3545' : 'none'
                     }}
                   >
                     <div className="d-flex align-items-start">
@@ -313,7 +350,9 @@ const UserTopNav = ({ onMenuToggle, isMobile }) => {
                           width: '32px', 
                           height: '32px', 
                           borderRadius: '50%',
-                          backgroundColor: notification.seen ? '#e9ecef' : '#667eea',
+                          backgroundColor: notification.type === 'admin' 
+                            ? (notification.seen ? '#ffc107' : '#dc3545') 
+                            : (notification.seen ? '#e9ecef' : '#667eea'),
                           color: notification.seen ? '#6c757d' : 'white',
                           flexShrink: 0
                         }}
