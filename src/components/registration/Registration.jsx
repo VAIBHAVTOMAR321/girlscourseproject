@@ -464,7 +464,7 @@ const Registration = () => {
         <Container className="mt-5 main-content-wrapper">
          <Row className="align-items-center p-4 shadow rounded bg-white official-card">
             {/* <h1>National Education</h1> */}
-          <Col lg={6} md={12} sm={12} className="course-marquee-container-box order-2 mb-4 mb-md-0">
+          <Col lg={6} md={12} sm={12} className="course-marquee-container-box order-2 order-lg-1 mb-4 mb-md-0">
           
             <div className="course-marquee-header">
               <h3 className="text-center mb-3">Available Courses</h3>
@@ -529,7 +529,7 @@ const Registration = () => {
                         <img src={BannerImg} alt="banner" />
                         <div className="banner-overlay">
                           <div className="banner-content">
-                            <div className="banner-stats">
+                            {/* <div className="banner-stats">
                               <div className="stat-item">
                                 <i className="fas fa-book"></i>
                                 <span>{filteredCourses.length} Courses</span>
@@ -538,7 +538,7 @@ const Registration = () => {
                                 <i className="fas fa-users"></i>
                                 <span>{filteredCourses.reduce((sum, course) => sum + (course.enrolled || 0), 0)} Students</span>
                               </div>
-                            </div>
+                            </div> */}
                           </div>
                         </div>
                       </div>
@@ -654,7 +654,7 @@ const Registration = () => {
             </div>
           </Col>
 
-          <Col lg={6} md={12} sm={12} className="mb-3 order-1">
+          <Col lg={6} md={12} sm={12} className="mb-3 order-1 order-lg-2">
             <div className="p-4">
               <div className="section-header">
                 <h2 className="text-center mb-4">Course Registration</h2>
