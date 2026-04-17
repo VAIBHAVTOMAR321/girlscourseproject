@@ -55,11 +55,7 @@ const UserEvents = () => {
       const response = await axios.get('https://brjobsedu.com/girls_course/girls_course_backend/api/event-item/')
       
       if (response.data.success) {
-        const allEvents = response.data.data || []
-        const activeEvents = allEvents.filter(event => 
-          event.is_active && !event.is_past
-        )
-        setEvents(activeEvents)
+        setEvents(response.data.data || [])
       }
     } catch (error) {
       console.error('Error fetching events:', error)
