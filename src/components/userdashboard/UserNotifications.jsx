@@ -32,6 +32,10 @@ import '../../assets/css/UserNotifications.css'
   const [selectedCollegeTab, setSelectedCollegeTab] = useState('recommended')
   const navigate = useNavigate()
   const resultsRef = useRef(null)
+  const tabsRef = useRef(null)
+  const examRoadmapRef = useRef(null)
+  const collegeRoadmapRef = useRef(null)
+  const courseDetailsRef = useRef(null)
 
   // Check mobile view
   useEffect(() => {
@@ -1731,8 +1735,8 @@ setPrepType('govtCollege')
           setShowOffcanvas={setShowOffcanvas} 
         />
         
-        <div className="flex-grow-1" style={{ marginLeft: isMobile ? '0px' : '220px', padding: isMobile ? '10px' : '20px', minHeight: 'calc(100vh - 70px)' }}>
-          <Container fluid className='fixed-notifications'>
+        <div className="flex-grow-1" style={{ marginLeft: isMobile ? '0px' : '220px', padding: isMobile ? '10px' : '20px 0px 0px 0px', minHeight: 'calc(100vh - 70px)' }}>
+          <Container className='fixed-notifications'>
             {/* Back Button */}
             <div className="mb-4">
               <Button 
@@ -1873,7 +1877,7 @@ setPrepType('govtCollege')
                               <TransText k="notifications.basedOn" as="span" /> {percentage}<TransText k="notifications.percentIn" as="span" /> {getStreamName(selectedStream)}
                             </p>
                           </div>
-                          <div className="text-end">
+                          <div className="text-end govt-job-performance">
                             <Badge bg={performance.color} className="fs-5 p-3">
                               {performance.icon} <TransText k={performance.levelKey} as="span" />
                             </Badge>
@@ -1895,11 +1899,11 @@ setPrepType('govtCollege')
                         <h5 className="mb-3"><TransText k="notifications.choosePath" as="span" /></h5>
                         <p className="text-muted mb-3"><TransText k="notifications.selectPreferredPath" as="span" /></p>
                         <Row className="g-3">
-                          <Col md={4}>
+                          <Col lg={4} md={4} sm={12}>
                             <Card 
                               className={`h-100 border ${prepType === 'govtCollege' ? 'border-primary' : ''}`}
                               style={{ cursor: 'pointer', borderRadius: '10px', backgroundColor: prepType === 'govtCollege' ? '#4a90d9' : 'white', transition: 'all 0.3s ease' }}
-                              onClick={() => setPrepType('govtCollege')}
+                              onClick={() => { setPrepType('govtCollege'); setTimeout(() => { if (tabsRef.current) tabsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' }) }, 100) }}
                             >
                               <Card.Body className="p-4 text-center">
                                 <FaUniversity className={`fs-2 mb-2 ${prepType === 'govtCollege' ? 'text-white' : 'text-muted'}`} style={prepType === 'govtCollege' ? { filter: 'drop-shadow(0 0 2px rgba(0,0,0,0.3))' } : {}} />
@@ -1908,11 +1912,11 @@ setPrepType('govtCollege')
                               </Card.Body>
                             </Card>
                           </Col>
-                          <Col md={4}>
+                          <Col lg={4} md={4} sm={12}>
                             <Card 
                               className={`h-100 border ${prepType === 'govtJob' ? 'border-primary' : ''}`}
                               style={{ cursor: 'pointer', borderRadius: '10px', backgroundColor: prepType === 'govtJob' ? '#e7f1ff' : 'white' }}
-                              onClick={() => setPrepType('govtJob')}
+                              onClick={() => { setPrepType('govtJob'); setTimeout(() => { if (tabsRef.current) tabsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' }) }, 100) }}
                             >
                               <Card.Body className="p-4 text-center">
                                 <FaShieldAlt className={`fs-2 mb-2 ${prepType === 'govtJob' ? 'text-primary' : 'text-muted'}`} />
@@ -1921,11 +1925,11 @@ setPrepType('govtCollege')
                               </Card.Body>
                             </Card>
                           </Col>
-                          <Col md={4}>
+                          <Col lg={4} md={4} sm={12}>
                             <Card 
                               className={`h-100 border ${prepType === 'private' ? 'border-primary' : ''}`}
                               style={{ cursor: 'pointer', borderRadius: '10px', backgroundColor: prepType === 'private' ? '#e7f1ff' : 'white' }}
-                              onClick={() => setPrepType('private')}
+                              onClick={() => { setPrepType('private'); setTimeout(() => { if (tabsRef.current) tabsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' }) }, 100) }}
                             >
                               <Card.Body className="p-4 text-center">
                                 <FaBriefcase className={`fs-2 mb-2 ${prepType === 'private' ? 'text-primary' : 'text-muted'}`} />
@@ -1939,8 +1943,8 @@ setPrepType('govtCollege')
                     </Card>
 
                     {/* Courses Tabs */}
-                    <Card className="shadow-sm mb-4 border-0" style={{ borderRadius: '10px' }}>
-<Card.Header className="bg-white border-0 pt-4 pb-0">
+                    <Card ref={tabsRef} className="shadow-sm mb-4 border-0" style={{ borderRadius: '10px' }}>
+                      <Card.Header className="bg-white border-0 pt-4 pb-0">
                         <h5 className="mb-0">
                           {prepType === 'govtJob' ? (
                             <>
@@ -1978,13 +1982,13 @@ setPrepType('govtCollege')
                                 const examInfo = govtExamData[examType]
                                 if (!examInfo) return null
                                 return (
-                                  <Col md={4} key={index} className="mb-3">
+                                  <Col lg={4} md={6} sm={12} key={index} className="mb-4">
                                     <Card 
                                       className={`h-100 border ${selectedGovtExam === examType ? 'border-primary' : ''}`}
                                       style={{ cursor: 'pointer' }}
-                                      onClick={() => setSelectedGovtExam(examType)}
+                                      onClick={() => { setSelectedGovtExam(examType); setTimeout(() => { if (examRoadmapRef.current) examRoadmapRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' }) }, 100) }}
                                     >
-                                      <Card.Body className="p-3">
+                                      <Card.Body className="">
                                         <div className="d-flex align-items-center gap-2 mb-2">
                                           <div className="course-icon-large">
                                             {examInfo.icon}
@@ -2003,8 +2007,8 @@ setPrepType('govtCollege')
                             
                             {/* Detailed Exam Roadmap */}
                             {selectedGovtExam && govtExamData[selectedGovtExam] && (
-                              <Card className="border bg-light">
-                                <Card.Body className="p-4">
+                              <Card ref={examRoadmapRef} className="border bg-light">
+                                <Card.Body className="">
                                   <div className="mb-4">
                                     <h5 className="mb-3">
                                       {govtExamData[selectedGovtExam].icon}
@@ -2082,11 +2086,11 @@ setPrepType('govtCollege')
                                       const collegeInfo = govtCollegeData[collegeType]
                                       if (!collegeInfo) return null
                                       return (
-                                        <Col md={4} key={index} className="mb-3">
+                                        <Col lg={4} md={6} sm={12} key={index} className="mb-4">
                                           <Card 
                                             className={`h-100 border ${selectedGovtCollege === collegeType ? 'border-primary' : ''}`}
                                             style={{ cursor: 'pointer' }}
-                                            onClick={() => setSelectedGovtCollege(collegeType)}
+                                            onClick={() => { setSelectedGovtCollege(collegeType); setTimeout(() => { if (collegeRoadmapRef.current) collegeRoadmapRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' }) }, 100) }}
                                           >
                                             <Card.Body className="p-3">
                                               <div className="d-flex align-items-center gap-2 mb-2">
@@ -2107,7 +2111,7 @@ setPrepType('govtCollege')
                                   
                                   {/* Detailed College Roadmap */}
                                   {selectedGovtCollege && govtCollegeData[selectedGovtCollege] && (
-                                    <Card className="border bg-light">
+                                    <Card ref={collegeRoadmapRef} className="border bg-light">
                                       <Card.Body className="p-4">
                                         <div className="mb-4">
                                           <h5 className="mb-3">
@@ -2151,7 +2155,7 @@ setPrepType('govtCollege')
                                   <Row>
                                     {selectedStream === 'science' && (
                                       <>
-                                        <Col md={4} className="mb-3">
+                                        <Col lg={4} md={6} sm={12} className="mb-4">
                                           <Card className="h-100 border" style={{ cursor: 'pointer' }}>
                                             <Card.Body className="p-3">
                                               <div className="d-flex align-items-center gap-2 mb-2">
@@ -2164,7 +2168,7 @@ setPrepType('govtCollege')
                                             </Card.Body>
                                           </Card>
                                         </Col>
-                                        <Col md={4} className="mb-3">
+                                        <Col lg={4} md={6} sm={12} className="mb-4">
                                           <Card className="h-100 border" style={{ cursor: 'pointer' }}>
                                             <Card.Body className="p-3">
                                               <div className="d-flex align-items-center gap-2 mb-2">
@@ -2177,7 +2181,7 @@ setPrepType('govtCollege')
                                             </Card.Body>
                                           </Card>
                                         </Col>
-                                        <Col md={4} className="mb-3">
+                                        <Col lg={4} md={6} sm={12} className="mb-4">
                                           <Card className="h-100 border" style={{ cursor: 'pointer' }}>
                                             <Card.Body className="p-3">
                                               <div className="d-flex align-items-center gap-2 mb-2">
@@ -2190,7 +2194,7 @@ setPrepType('govtCollege')
                                             </Card.Body>
                                           </Card>
                                         </Col>
-                                        <Col md={4} className="mb-3">
+                                        <Col lg={4} md={6} sm={12} className="mb-4">
                                           <Card className="h-100 border" style={{ cursor: 'pointer' }}>
                                             <Card.Body className="p-3">
                                               <div className="d-flex align-items-center gap-2 mb-2">
@@ -2203,7 +2207,7 @@ setPrepType('govtCollege')
                                             </Card.Body>
                                           </Card>
                                         </Col>
-                                        <Col md={4} className="mb-3">
+                                        <Col lg={4} md={6} sm={12} className="mb-4">
                                           <Card className="h-100 border" style={{ cursor: 'pointer' }}>
                                             <Card.Body className="p-3">
                                               <div className="d-flex align-items-center gap-2 mb-2">
@@ -2216,7 +2220,7 @@ setPrepType('govtCollege')
                                             </Card.Body>
                                           </Card>
                                         </Col>
-                                        <Col md={4} className="mb-3">
+                                        <Col lg={4} md={6} sm={12} className="mb-4">
                                           <Card className="h-100 border" style={{ cursor: 'pointer' }}>
                                             <Card.Body className="p-3">
                                               <div className="d-flex align-items-center gap-2 mb-2">
@@ -2229,7 +2233,7 @@ setPrepType('govtCollege')
                                             </Card.Body>
                                           </Card>
                                         </Col>
-                                        <Col md={4} className="mb-3">
+                                        <Col lg={4} md={6} sm={12} className="mb-4">
                                           <Card className="h-100 border" style={{ cursor: 'pointer' }}>
                                             <Card.Body className="p-3">
                                               <div className="d-flex align-items-center gap-2 mb-2">
@@ -2242,7 +2246,7 @@ setPrepType('govtCollege')
                                             </Card.Body>
                                           </Card>
                                         </Col>
-                                        <Col md={4} className="mb-3">
+                                        <Col lg={4} md={6} sm={12} className="mb-4">
                                           <Card className="h-100 border" style={{ cursor: 'pointer' }}>
                                             <Card.Body className="p-3">
                                               <div className="d-flex align-items-center gap-2 mb-2">
@@ -2255,7 +2259,7 @@ setPrepType('govtCollege')
                                             </Card.Body>
                                           </Card>
                                         </Col>
-                                        <Col md={4} className="mb-3">
+                                        <Col lg={4} md={6} sm={12} className="mb-4">
                                           <Card className="h-100 border" style={{ cursor: 'pointer' }}>
                                             <Card.Body className="p-3">
                                               <div className="d-flex align-items-center gap-2 mb-2">
@@ -2272,7 +2276,7 @@ setPrepType('govtCollege')
                                     )}
                                     {selectedStream === 'commerce' && (
                                       <>
-                                        <Col md={4} className="mb-3">
+                                        <Col lg={4} md={6} sm={12} className="mb-4">
                                           <Card className="h-100 border" style={{ cursor: 'pointer' }}>
                                             <Card.Body className="p-3">
                                               <div className="d-flex align-items-center gap-2 mb-2">
@@ -2285,7 +2289,7 @@ setPrepType('govtCollege')
                                             </Card.Body>
                                           </Card>
                                         </Col>
-                                        <Col md={4} className="mb-3">
+                                        <Col lg={4} md={6} sm={12} className="mb-4">
                                           <Card className="h-100 border" style={{ cursor: 'pointer' }}>
                                             <Card.Body className="p-3">
                                               <div className="d-flex align-items-center gap-2 mb-2">
@@ -2298,7 +2302,7 @@ setPrepType('govtCollege')
                                             </Card.Body>
                                           </Card>
                                         </Col>
-                                        <Col md={4} className="mb-3">
+                                        <Col lg={4} md={6} sm={12} className="mb-4">
                                           <Card className="h-100 border" style={{ cursor: 'pointer' }}>
                                             <Card.Body className="p-3">
                                               <div className="d-flex align-items-center gap-2 mb-2">
@@ -2311,7 +2315,7 @@ setPrepType('govtCollege')
                                             </Card.Body>
                                           </Card>
                                         </Col>
-                                        <Col md={4} className="mb-3">
+                                        <Col lg={4} md={6} sm={12} className="mb-4">
                                           <Card className="h-100 border" style={{ cursor: 'pointer' }}>
                                             <Card.Body className="p-3">
                                               <div className="d-flex align-items-center gap-2 mb-2">
@@ -2324,7 +2328,7 @@ setPrepType('govtCollege')
                                             </Card.Body>
                                           </Card>
                                         </Col>
-                                        <Col md={4} className="mb-3">
+                                        <Col lg={4} md={6} sm={12} className="mb-4">
                                           <Card className="h-100 border" style={{ cursor: 'pointer' }}>
                                             <Card.Body className="p-3">
                                               <div className="d-flex align-items-center gap-2 mb-2">
@@ -2337,7 +2341,7 @@ setPrepType('govtCollege')
                                             </Card.Body>
                                           </Card>
                                         </Col>
-                                        <Col md={4} className="mb-3">
+                                        <Col lg={4} md={6} sm={12} className="mb-4">
                                           <Card className="h-100 border" style={{ cursor: 'pointer' }}>
                                             <Card.Body className="p-3">
                                               <div className="d-flex align-items-center gap-2 mb-2">
@@ -2354,7 +2358,7 @@ setPrepType('govtCollege')
                                     )}
                                     {selectedStream === 'arts' && (
                                       <>
-                                        <Col md={4} className="mb-3">
+                                        <Col lg={4} md={6} sm={12} className="mb-4">
                                           <Card className="h-100 border" style={{ cursor: 'pointer' }}>
                                             <Card.Body className="p-3">
                                               <div className="d-flex align-items-center gap-2 mb-2">
@@ -2367,7 +2371,7 @@ setPrepType('govtCollege')
                                             </Card.Body>
                                           </Card>
                                         </Col>
-                                        <Col md={4} className="mb-3">
+                                        <Col lg={4} md={6} sm={12} className="mb-4">
                                           <Card className="h-100 border" style={{ cursor: 'pointer' }}>
                                             <Card.Body className="p-3">
                                               <div className="d-flex align-items-center gap-2 mb-2">
@@ -2380,7 +2384,7 @@ setPrepType('govtCollege')
                                             </Card.Body>
                                           </Card>
                                         </Col>
-                                        <Col md={4} className="mb-3">
+                                        <Col lg={4} md={6} sm={12} className="mb-4">
                                           <Card className="h-100 border" style={{ cursor: 'pointer' }}>
                                             <Card.Body className="p-3">
                                               <div className="d-flex align-items-center gap-2 mb-2">
@@ -2393,7 +2397,7 @@ setPrepType('govtCollege')
                                             </Card.Body>
                                           </Card>
                                         </Col>
-                                        <Col md={4} className="mb-3">
+                                        <Col lg={4} md={6} sm={12} className="mb-4">
                                           <Card className="h-100 border" style={{ cursor: 'pointer' }}>
                                             <Card.Body className="p-3">
                                               <div className="d-flex align-items-center gap-2 mb-2">
@@ -2406,7 +2410,7 @@ setPrepType('govtCollege')
                                             </Card.Body>
                                           </Card>
                                         </Col>
-                                        <Col md={4} className="mb-3">
+                                        <Col lg={4} md={6} sm={12} className="mb-4">
                                           <Card className="h-100 border" style={{ cursor: 'pointer' }}>
                                             <Card.Body className="p-3">
                                               <div className="d-flex align-items-center gap-2 mb-2">
@@ -2419,7 +2423,7 @@ setPrepType('govtCollege')
                                             </Card.Body>
                                           </Card>
                                         </Col>
-                                        <Col md={4} className="mb-3">
+                                        <Col lg={4} md={6} sm={12} className="mb-4">
                                           <Card className="h-100 border" style={{ cursor: 'pointer' }}>
                                             <Card.Body className="p-3">
                                               <div className="d-flex align-items-center gap-2 mb-2">
@@ -2436,7 +2440,7 @@ setPrepType('govtCollege')
                                     )}
                                     {selectedStream === 'computer' && (
                                       <>
-                                        <Col md={4} className="mb-3">
+                                        <Col lg={4} md={6} sm={12} className="mb-4">
                                           <Card className="h-100 border" style={{ cursor: 'pointer' }}>
                                             <Card.Body className="p-3">
                                               <div className="d-flex align-items-center gap-2 mb-2">
@@ -2449,7 +2453,7 @@ setPrepType('govtCollege')
                                             </Card.Body>
                                           </Card>
                                         </Col>
-                                        <Col md={4} className="mb-3">
+                                        <Col lg={4} md={6} sm={12} className="mb-4">
                                           <Card className="h-100 border" style={{ cursor: 'pointer' }}>
                                             <Card.Body className="p-3">
                                               <div className="d-flex align-items-center gap-2 mb-2">
@@ -2462,7 +2466,7 @@ setPrepType('govtCollege')
                                             </Card.Body>
                                           </Card>
                                         </Col>
-                                        <Col md={4} className="mb-3">
+                                        <Col lg={4} md={6} sm={12} className="mb-4">
                                           <Card className="h-100 border" style={{ cursor: 'pointer' }}>
                                             <Card.Body className="p-3">
                                               <div className="d-flex align-items-center gap-2 mb-2">
@@ -2475,7 +2479,7 @@ setPrepType('govtCollege')
                                             </Card.Body>
                                           </Card>
                                         </Col>
-                                        <Col md={4} className="mb-3">
+                                        <Col lg={4} md={6} sm={12} className="mb-4">
                                           <Card className="h-100 border" style={{ cursor: 'pointer' }}>
                                             <Card.Body className="p-3">
                                               <div className="d-flex align-items-center gap-2 mb-2">
@@ -2488,7 +2492,7 @@ setPrepType('govtCollege')
                                             </Card.Body>
                                           </Card>
                                         </Col>
-                                        <Col md={4} className="mb-3">
+                                        <Col lg={4} md={6} sm={12} className="mb-4">
                                           <Card className="h-100 border" style={{ cursor: 'pointer' }}>
                                             <Card.Body className="p-3">
                                               <div className="d-flex align-items-center gap-2 mb-2">
@@ -2501,7 +2505,7 @@ setPrepType('govtCollege')
                                             </Card.Body>
                                           </Card>
                                         </Col>
-                                        <Col md={4} className="mb-3">
+                                        <Col lg={4} md={6} sm={12} className="mb-4">
                                           <Card className="h-100 border" style={{ cursor: 'pointer' }}>
                                             <Card.Body className="p-3">
                                               <div className="d-flex align-items-center gap-2 mb-2">

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Container, Row, Col, Card, Button, Badge, ProgressBar, Alert, Accordion, Tab, Nav } from 'react-bootstrap'
 import { useAuth } from '../../contexts/AuthContext'
 import { useLanguage } from '../../contexts/LanguageContext'
@@ -19,6 +19,7 @@ const OccupationDetails = () => {
   const [selectedGovtExam, setSelectedGovtExam] = useState('UPSC')
   const navigate = useNavigate()
   const location = useLocation()
+  const examRoadmapRef = useRef(null)
   const { occupation, stream, percentage, course, prepType: initialPrepType } = location.state || {}
   
   console.log('OccupationDetails - Course:', course)
@@ -981,7 +982,11 @@ const OccupationDetails = () => {
                                           style={{ cursor: 'pointer', transition: 'all 0.3s ease' }}
                                           onClick={() => {
                                             setSelectedGovtExam(examType)
-                                            document.getElementById('occupation-tabs')?.scrollIntoView({ behavior: 'smooth' })
+                                            setTimeout(() => {
+                                              if (examRoadmapRef.current) {
+                                                examRoadmapRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                                              }
+                                            }, 100)
                                           }}
                                         >
                                           <Card.Body className="p-3">
@@ -1009,7 +1014,7 @@ const OccupationDetails = () => {
                           </div>
 
                           {selectedGovtExam && getGovtExamDetails(selectedGovtExam) && (
-                            <div className="mb-4">
+                            <div ref={examRoadmapRef} className="mb-4">
                               <h5 className="mb-3">
                                 <FaRocket className="me-2 text-success" />
                                 {selectedGovtExam} - <TransText k="occupation.completeRoadmap" as="span" />
