@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Container, Row, Col, Card, Button, Badge, Spinner, Alert, Modal } from 'react-bootstrap'
+import { Container, Row, Col, Card, Button, Badge, Spinner, Alert, Modal, Nav } from 'react-bootstrap'
 import axios from 'axios'
 import { useAuth } from '../../contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
@@ -20,6 +20,7 @@ const UserEvents = () => {
   const [showViewModal, setShowViewModal] = useState(false)
   const [selectedEvent, setSelectedEvent] = useState(null)
   const [currentPage, setCurrentPage] = useState(1)
+  const [activeTab, setActiveTab] = useState('all')
   const eventsPerPage = 9
 
   useEffect(() => {
@@ -90,6 +91,30 @@ const UserEvents = () => {
     return eventDate > now
   }
 
+  const getFilteredEvents = () => {
+    switch (activeTab) {
+      case 'active':
+        return events.filter(e => e.is_active)
+      case 'upcoming':
+        return events.filter(e => e.is_upcoming)
+      case 'past':
+        return events.filter(e => e.is_past)
+      default:
+        return events
+    }
+  }
+
+  const filteredEvents = getFilteredEvents()
+
+  const getEventCounts = () => ({
+    all: events.length,
+    active: events.filter(e => e.is_active).length,
+    upcoming: events.filter(e => e.is_upcoming).length,
+    past: events.filter(e => e.is_past).length
+  })
+
+  const counts = getEventCounts()
+
   const handleViewEvent = (event) => {
     setSelectedEvent(event)
     setShowViewModal(true)
@@ -117,28 +142,47 @@ const UserEvents = () => {
               </Button>
             </div>
 
-            <div className="text-center mb-4">
-              <h3 className="mb-2">
-                <FaCalendarAlt className="me-2 text-primary" />
-                Upcoming Events
-              </h3>
-              <p className="text-muted">Join and participate in exciting events</p>
-            </div>
+            <Card className="shadow-sm border-0 mb-4">
+              <Card.Header className="bg-light border-bottom py-3">
+                <Nav variant="tabs" activeKey={activeTab} onSelect={(key) => { setActiveTab(key); setCurrentPage(1) }}>
+                  <Nav.Item>
+                    <Nav.Link eventKey="all">
+                      All ({counts.all})
+                    </Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item>
+                    <Nav.Link eventKey="active">
+                      Active ({counts.active})
+                    </Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item>
+                    <Nav.Link eventKey="upcoming">
+                      Upcoming ({counts.upcoming})
+                    </Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item>
+                    <Nav.Link eventKey="past">
+                      Past ({counts.past})
+                    </Nav.Link>
+                  </Nav.Item>
+                </Nav>
+              </Card.Header>
+            </Card>
 
             {loading ? (
               <div className="text-center py-5">
                 <Spinner animation="border" variant="primary" style={{ width: '60px', height: '60px' }} />
                 <p className="mt-3">Loading events...</p>
               </div>
-            ) : events.length === 0 ? (
+            ) : filteredEvents.length === 0 ? (
               <Alert variant="info" className="text-center">
                 <FaCalendarAlt className="me-2" />
-                No upcoming events available
+                No {activeTab === 'all' ? '' : activeTab} events found
               </Alert>
             ) : (
               <div>
               <Row>
-                {events
+                {filteredEvents
                   .slice((currentPage - 1) * eventsPerPage, currentPage * eventsPerPage)
                   .map((event) => {
                   const upcoming = isEventUpcoming(event)
@@ -255,10 +299,10 @@ const UserEvents = () => {
                 })}
               </Row>
               
-              {events.length > eventsPerPage && (
+              {filteredEvents.length > eventsPerPage && (
                 <div className="d-flex justify-content-between align-items-center mt-4">
                   <div className="text-muted">
-                    Showing {((currentPage - 1) * eventsPerPage) + 1}-{Math.min(currentPage * eventsPerPage, events.length)} of {events.length} events
+                    Showing {((currentPage - 1) * eventsPerPage) + 1}-{Math.min(currentPage * eventsPerPage, filteredEvents.length)} of {filteredEvents.length} events
                   </div>
                   <div className="d-flex align-items-center gap-2">
                     <Button
@@ -269,7 +313,7 @@ const UserEvents = () => {
                     >
                       Previous
                     </Button>
-                    {Array.from({ length: Math.ceil(events.length / eventsPerPage) }, function(_, i) { return i + 1 }).map(function(page) { return (
+                    {Array.from({ length: Math.ceil(filteredEvents.length / eventsPerPage) }, function(_, i) { return i + 1 }).map(function(page) { return (
                       <Button
                         key={page}
                         variant={currentPage === page ? 'primary' : 'outline-primary'}
@@ -282,7 +326,7 @@ const UserEvents = () => {
                     <Button
                       variant="outline-primary"
                       size="sm"
-                      disabled={currentPage === Math.ceil(events.length / eventsPerPage)}
+                      disabled={currentPage === Math.ceil(filteredEvents.length / eventsPerPage)}
                       onClick={() => setCurrentPage(currentPage + 1)}
                     >
                       Next
