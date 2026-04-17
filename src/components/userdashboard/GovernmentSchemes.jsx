@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Container, Card, Button, Row, Col, Badge, Form, Modal, Alert, Tab, Nav, Spinner } from 'react-bootstrap'
 import { FaGraduationCap, FaArrowLeft, FaCheckCircle, FaInfoCircle, FaBook, FaMoneyBillWave, FaBriefcase, FaLaptop, FaUniversity, FaBus, FaUtensils, FaHeart, FaShieldAlt, FaLaptopCode, FaUserGraduate, FaAward, FaPiggyBank, FaHandHoldingUsd, FaTools, FaMedal, FaBaby, FaFemale } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
@@ -25,6 +25,7 @@ const GovernmentSchemes = () => {
   const [apiSchemesData, setApiSchemesData] = useState({})
   const [error, setError] = useState(null)
   const [retryCount, setRetryCount] = useState(0)
+  const schemesSectionRef = useRef(null)
 
   
 
@@ -167,6 +168,11 @@ const GovernmentSchemes = () => {
     if (!categoryId) {
       setActiveTab('all')
     }
+    setTimeout(() => {
+      if (schemesSectionRef.current) {
+        schemesSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }
+    }, 100)
   }
 
   // Helper to parse comma or newline-separated values into array
@@ -423,7 +429,7 @@ const GovernmentSchemes = () => {
 
                 {(selectedCategory || activeTab === 'all') && (
                   <>
-                    <Card className="shadow-sm mb-4 border-0" style={{ borderRadius: '10px' }}>
+                    <Card ref={schemesSectionRef} className="shadow-sm mb-4 border-0" style={{ borderRadius: '10px' }}>
                       <Card.Header className="bg-white border-0 pt-4 pb-0">
                         <h5 className="mb-0">
                           <FaUniversity className="me-2 text-primary" />
