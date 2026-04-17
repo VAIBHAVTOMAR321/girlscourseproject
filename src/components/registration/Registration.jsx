@@ -464,7 +464,7 @@ const Registration = () => {
         <Container className="mt-5 main-content-wrapper">
          <Row className="align-items-center p-4 shadow rounded bg-white official-card">
             {/* <h1>National Education</h1> */}
-          <Col lg={6} md={6} sm={12} className="course-marquee-container-box">
+          <Col lg={6} md={12} sm={12} className="course-marquee-container-box order-2 mb-4 mb-md-0">
           
             <div className="course-marquee-header">
               <h3 className="text-center mb-3">Available Courses</h3>
@@ -654,7 +654,7 @@ const Registration = () => {
             </div>
           </Col>
 
-          <Col lg={6} md={6} sm={12} className="mb-3">
+          <Col lg={6} md={12} sm={12} className="mb-3 order-1">
             <div className="p-4">
               <div className="section-header">
                 <h2 className="text-center mb-4">Course Registration</h2>

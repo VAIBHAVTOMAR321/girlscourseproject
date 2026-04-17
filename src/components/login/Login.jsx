@@ -314,7 +314,7 @@ const Login = () => {
           {/* <h1 className="text-center">National Education Portal</h1> */}
           
           {/* Courses Section */}
-        <Col lg={6} md={6} sm={12} className="course-marquee-container">
+        <Col lg={5} md={12} sm={12} className="course-marquee-container mb-4 mb-lg-0 order-last order-md-first">
   <div className="course-marquee-header">
     <h3 className="text-center mb-3">Available Courses</h3>
     <div className="header-underline mx-auto"></div>
@@ -440,7 +440,7 @@ const Login = () => {
 </Col>
 
           {/* Login Section */}
-          <Col lg={6} md={6} sm={12}>
+          <Col lg={7} md={12} sm={12} className="order-first order-md-last">
             <div className="p-4">
               <div className="section-header">
                 <h2 className="text-center mb-4">
