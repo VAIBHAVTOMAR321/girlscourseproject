@@ -75,7 +75,9 @@ font-size: 18px;
 color: #000;
 font-size: 20px;
 }
-
+.dashbord-btn .btn{
+  font-size: 12px !important;
+}
 
 .form-label {
     margin-bottom: .5rem;

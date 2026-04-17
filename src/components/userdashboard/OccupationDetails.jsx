@@ -846,8 +846,8 @@ const OccupationDetails = () => {
         <UserTopNav onMenuToggle={handleMenuToggle} isMobile={isMobile} />
         <div className="d-flex flex-1">
           <UseLeftNav showOffcanvas={showOffcanvas} setShowOffcanvas={setShowOffcanvas} />
-          <div className="flex-grow-1" style={{ marginLeft: isMobile ? '0px' : '220px', padding: isMobile ? '10px' : '20px', minHeight: 'calc(100vh - 70px)' }}>
-            <Container fluid>
+          <div className="flex-grow-1" style={{ marginLeft: isMobile ? '0px' : '220px', padding: isMobile ? '10px' : '20px 0px 0px 0px', minHeight: 'calc(100vh - 70px)' }}>
+            <Container>
               <Alert variant="warning">
                 <FaInfoCircle className="me-2" />
                 No occupation selected. Please go back and select an occupation.
@@ -869,7 +869,7 @@ const OccupationDetails = () => {
       <div className="d-flex flex-1">
         <UseLeftNav showOffcanvas={showOffcanvas} setShowOffcanvas={setShowOffcanvas} />
         
-        <div className="flex-grow-1" style={{ marginLeft: isMobile ? '0px' : '220px', padding: isMobile ? '10px' : '20px', minHeight: 'calc(100vh - 70px)' }}>
+        <div className="flex-grow-1" style={{ marginLeft: isMobile ? '0px' : '220px', padding: isMobile ? '10px' : '20px 0px 0px 0px', minHeight: 'calc(100vh - 70px)' }}>
           <Container fluid>
             
             {/* Back Button */}
@@ -975,7 +975,7 @@ const OccupationDetails = () => {
                                     const examDetails = getGovtExamDetails(examType)
                                     if (!examDetails) return null
                                     return (
-                                      <Col md={4} key={index} className="mb-3">
+<Col lg={4} md={6} sm={12} key={index} className="mb-4">
                                         <Card 
                                           className="h-100 border career-opportunity-card" 
                                           style={{ cursor: 'pointer', transition: 'all 0.3s ease' }}
@@ -1074,7 +1074,7 @@ const OccupationDetails = () => {
                                   <Card.Body className="p-4">
                                     <Row>
                                       {getGovtExamDetails(selectedGovtExam).colleges.map((college, idx) => (
-                                        <Col md={6} key={idx} className="mb-3">
+                                        <Col lg={6} md={6} sm={12} key={idx} className="mb-4">
                                           <Card className="h-100 border college-card">
                                             <Card.Body className="p-3">
                                               <div className="d-flex justify-content-between align-items-start">
@@ -1164,7 +1164,7 @@ const OccupationDetails = () => {
                               {getRelatedOccupations().map((occ, index) => {
                                 const details = getOccupationDetails(occ)
                                 return (
-                                  <Col md={4} key={index} className="mb-3">
+                                  <Col lg={4} md={6} sm={12} key={index} className="mb-4">
                                     <Card 
                                       className="h-100 border career-opportunity-card" 
                                       style={{ cursor: 'pointer', transition: 'all 0.3s ease' }}
@@ -1201,7 +1201,7 @@ const OccupationDetails = () => {
                             </h5>
                             <Row>
                               {occupationDetails.careerPath.map((level, index) => (
-                                <Col md={4} key={index} className="mb-3">
+                                <Col lg={4} md={6} sm={12} key={index} className="mb-4">
                                   <Card 
                                     className="h-100 border career-level-card"
                                   >
@@ -1230,7 +1230,7 @@ const OccupationDetails = () => {
                           </p>
                           <Row>
                             {occupationDetails.steps.map((step, index) => (
-                              <Col md={6} key={index}>
+                              <Col lg={6} md={6} sm={12} key={index}>
                                 <Card 
                                   className="mb-3 border step-card"
                                 >
@@ -1348,7 +1348,7 @@ const OccupationDetails = () => {
                               <Card.Body className="p-4">
                                 <Row>
                                   {occupationDetails.topColleges.map((college, index) => (
-                                    <Col md={6} key={index} className="mb-3">
+                                    <Col lg={6} md={6} sm={12} key={index} className="mb-4">
                                       <Card 
                                         className="h-100 border college-card"
                                       >
@@ -1379,12 +1379,12 @@ const OccupationDetails = () => {
 
                 {/* Action Buttons */}
                 <Card className="shadow-sm border-0" style={{ borderRadius: '10px' }}>
-                  <Card.Body className="p-4 text-center">
+                  <Card.Body className=" text-center">
                     <h5 className="mb-3"><TransText k="occupation.readyToStart" as="span" /></h5>
                     <p className="text-muted mb-4">
                       <TransText k="occupation.selectedCareer" as="span" /> {occupationDetails.title} <TransText k="occupation.asCareerPath" as="span" />
                     </p>
-                    <div className="d-flex justify-content-center gap-3">
+                    <div className="d-flex justify-content-center gap-3 dashbord-btn">
                       <Button variant="primary" size="lg" onClick={() => navigate('/UserDashboard')}>
                         <FaRocket className="me-2" />
                         <TransText k="occupation.goToDashboard" as="span" />

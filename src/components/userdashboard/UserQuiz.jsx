@@ -1065,7 +1065,7 @@ const UserQuiz = () => {
                     </Card.Body>
                   </Card>
 
-                   <div className="d-flex gap-2 justify-content-center mt-3 flex-wrap">
+                   <div className="d-flex gap-2 justify-content-center mt-3 flex-wrap quiz-span-btn">
                       {wrongAnswers.length > 0 && (
                         <Button
                           variant="warning"

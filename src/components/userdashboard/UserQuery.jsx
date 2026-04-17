@@ -194,8 +194,8 @@ function UserQuery() {
         />
         
         <div className="flex-grow-1" style={{ marginLeft: isMobile ? '0px' : '220px', padding: isMobile ? '10px' : '20px', minHeight: 'calc(100vh - 70px)' }}>
-          <Container fluid>
-            <div className="mb-4">
+          <Container>
+            <div className="mb-4 ">
               <Button 
                 variant="outline-secondary" 
                 onClick={() => window.location.href = '/UserDashboard'} 
@@ -278,7 +278,7 @@ function UserQuery() {
                       </Row>
                       
                      
-
+<div className='dashbord-btn'>
 
 
                       <Button 
@@ -290,6 +290,7 @@ function UserQuery() {
                         <FaPaperPlane className="me-2" />
                         <TransText k={submitting ? "query.submitting" : "query.submitQuery"} as="span" />
                       </Button>
+                      </div>
                     </Form>
                   </div>
                 </div>
