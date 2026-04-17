@@ -4,6 +4,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import '../../assets/css/UserLeftNav.css'
 import { useAuth } from '../../contexts/AuthContext'
 import TransText from '../TransText'
+import { IoIosSend } from "react-icons/io"
+
 
 const UseLeftNav = ({ showOffcanvas, setShowOffcanvas, onNavAttempt }) => {
   const { userRoleType } = useAuth()
@@ -86,7 +88,7 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas, onNavAttempt }) => {
                     <i className="bi bi-person-circle me-2"></i> <TransText k="menu.profile" as="span" />
                   </Nav.Link>
                   <Nav.Link className="text-white" onClick={() => handleNavClick('/UserQuery')} style={{ cursor: 'pointer' }}>
-                    <i className="bi bi-person-circle me-2"></i> <TransText k="menu.query" as="span" />
+                    <IoIosSend className="me-2"></IoIosSend> <TransText k="menu.query" as="span" />
                   </Nav.Link>
 <Nav.Link className="text-white" onClick={() => handleNavClick('/UserQuiz')} style={{ cursor: 'pointer' }}>
                     <i className="bi bi-clipboard-check me-2"></i> <TransText k="quiz.title" as="span" />
@@ -151,6 +153,9 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas, onNavAttempt }) => {
                   <Nav.Link className="text-white" onClick={() => handleNavClick('/UserProfile')} style={{ cursor: 'pointer' }}>
                     <i className="bi bi-person-circle fs-5"></i>
                   </Nav.Link>
+                  <Nav.Link className="text-white" onClick={() => handleNavClick('/UserQuery')} title="Query" style={{ cursor: 'pointer' }}>
+                    <IoIosSend className="fs-5"></IoIosSend>
+                  </Nav.Link>
                   {/* Refund Request only visible to paid users */}
                   {userRoleType !== 'student-unpaid' && (
                     <Nav.Link className="text-white" onClick={() => handleNavClick('/RefundRequest')} style={{ cursor: 'pointer' }}>
@@ -201,7 +206,7 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas, onNavAttempt }) => {
                   <i className="bi bi-person-circle me-2"></i> User Profile
                 </Nav.Link>
                 <Nav.Link className="text-white" onClick={() => { setShowOffcanvas(false); handleNavClick('/UserQuery'); }} style={{ cursor: 'pointer' }}>
-                  <i className="bi bi-person-circle me-2"></i> Query
+                  <IoIosSend className="me-2"></IoIosSend> Query
                 </Nav.Link>
                 <Nav.Link className="text-white" onClick={() => { setShowOffcanvas(false); handleNavClick('/UserQuiz'); }} style={{ cursor: 'pointer' }}>
                   <i className="bi bi-clipboard-check me-2"></i> <TransText k="quiz.title" as="span" />
