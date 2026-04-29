@@ -77,6 +77,7 @@ export const translations = {
     "menu.logout": "Logout",
     "menu.occupation": "Occupation Details",
     "menu.jobOpenings": "Job Openings",
+    "menu.events": "Events",
 
     // Status Messages
     "status.loading": "Loading...",
@@ -1407,6 +1408,7 @@ export const translations = {
     "menu.logout": "लॉग आउट",
     "menu.occupation": "व्यावसायिक विवरण",
     "menu.jobOpenings": "नौकरी के अवसर",
+    "menu.events": "कार्यक्रम",
     "menu.guideline": "गाइडलाइन",
     "menu.careerGuidance": "करियर मार्गदर्शन",
     "menu.guidance": "मार्गदर्शन",

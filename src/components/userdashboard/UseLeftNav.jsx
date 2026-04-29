@@ -93,9 +93,9 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas, onNavAttempt }) => {
 <Nav.Link className="text-white" onClick={() => handleNavClick('/UserQuiz')} style={{ cursor: 'pointer' }}>
                     <i className="bi bi-clipboard-check me-2"></i> <TransText k="quiz.title" as="span" />
                   </Nav.Link>
-                  <Nav.Link className="text-white" onClick={() => handleNavClick('/UserEvents')} style={{ cursor: 'pointer' }}>
-                    <i className="bi bi-calendar-event me-2"></i> Events
-                  </Nav.Link>
+                   <Nav.Link className="text-white" onClick={() => handleNavClick('/UserEvents')} style={{ cursor: 'pointer' }}>
+                     <i className="bi bi-calendar-event me-2"></i> <TransText k="menu.events" as="span" />
+                   </Nav.Link>
                    
                    {/* Refund Request only visible to paid users */}
                    {userRoleType !== 'student-unpaid' && (
@@ -211,9 +211,9 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas, onNavAttempt }) => {
                 <Nav.Link className="text-white" onClick={() => { setShowOffcanvas(false); handleNavClick('/UserQuiz'); }} style={{ cursor: 'pointer' }}>
                   <i className="bi bi-clipboard-check me-2"></i> <TransText k="quiz.title" as="span" />
                 </Nav.Link>
-                <Nav.Link className="text-white" onClick={() => { setShowOffcanvas(false); handleNavClick('/UserEvents'); }} style={{ cursor: 'pointer' }}>
-                  <i className="bi bi-calendar-event me-2"></i> Events
-                </Nav.Link>
+                 <Nav.Link className="text-white" onClick={() => { setShowOffcanvas(false); handleNavClick('/UserEvents'); }} style={{ cursor: 'pointer' }}>
+                   <i className="bi bi-calendar-event me-2"></i> <TransText k="menu.events" as="span" />
+                 </Nav.Link>
                 {/* Refund Request only visible to paid users */}
                 {userRoleType !== 'student-unpaid' && (
                   <Nav.Link className="text-white" onClick={() => { setShowOffcanvas(false); handleNavClick('/RefundRequest'); }} style={{ cursor: 'pointer' }}>
