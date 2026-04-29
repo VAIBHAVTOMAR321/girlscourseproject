@@ -426,7 +426,9 @@ const UserQuiz = () => {
         id: quiz.quiz_id,
         quiz_id: quiz.quiz_id,
         title: quiz.title,
+        title_hindi: quiz.title_hindi,
         description: quiz.description,
+        description_hindi: quiz.description_hindi,
         start_date_time: quiz.start_date_time,
         end_date_time: quiz.end_date_time,
         questions: responseData.questions || [],
@@ -596,7 +598,7 @@ const UserQuiz = () => {
       }
 
       setQuizResults({
-        quizTitle: currentQuiz.title,
+        quizTitle: language === 'hi' && currentQuiz.title_hindi ? currentQuiz.title_hindi : currentQuiz.title,
         correctAnswers: correctCount,
         wrongAnswers: totalQuestions - correctCount,
         totalQuestions,
@@ -914,8 +916,8 @@ const UserQuiz = () => {
                           <Card className="h-100 quiz-card shadow-sm" style={{ borderRadius: '12px', cursor: 'pointer' }}>
                             <Card.Body className="d-flex flex-column">
                               <div className="mb-3">
-                                <h5 className="mb-2">{quiz.title}</h5>
-                                <p className="text-muted small mb-2">{quiz.description}</p>
+                                <h5 className="mb-2">{language === 'hi' && quiz.title_hindi ? quiz.title_hindi : quiz.title}</h5>
+                                <p className="text-muted small mb-2">{language === 'hi' && quiz.description_hindi ? quiz.description_hindi : quiz.description}</p>
                               </div>
 
                               <div className="mb-3">
@@ -1098,7 +1100,7 @@ const UserQuiz = () => {
                 <div className="quiz-taking-container">
                   <div className="quiz-header mb-4">
                     <div className="d-flex justify-content-between align-items-center mb-3">
-                      <h4 className="mb-0">{currentQuiz.title}</h4>
+                      <h4 className="mb-0">{language === 'hi' && currentQuiz.title_hindi ? currentQuiz.title_hindi : currentQuiz.title}</h4>
                       <div className="timer" style={{ fontSize: '24px', fontWeight: 'bold', color: timeRemaining < 60 ? '#dc3545' : '#dc3545' }}>
                         <FaClock className="me-2" />
                         {formatTime(timeRemaining)}
