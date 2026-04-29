@@ -21,6 +21,9 @@ const EventsManagement = ({ onBack }) => {
   const [formData, setFormData] = useState({
     event_name: '',
     description: '',
+    event_name_hindi: '',
+    description_hindi: '',
+    venue_hindi: '',
     event_date_time: '',
     end_date_time: '',
     venue: '',
@@ -59,6 +62,9 @@ const EventsManagement = ({ onBack }) => {
         event_id: event.event_id,
         event_name: event.event_name,
         description: event.description || '',
+        event_name_hindi: event.event_name_hindi || '',
+        description_hindi: event.description_hindi || '',
+        venue_hindi: event.venue_hindi || '',
         event_date_time: event.event_date_time ? event.event_date_time.slice(0, 16) : '',
         end_date_time: event.end_date_time ? event.end_date_time.slice(0, 16) : '',
         venue: event.venue || '',
@@ -69,6 +75,9 @@ const EventsManagement = ({ onBack }) => {
       setFormData({
         event_name: '',
         description: '',
+        event_name_hindi: '',
+        description_hindi: '',
+        venue_hindi: '',
         event_date_time: '',
         end_date_time: '',
         venue: '',
@@ -84,6 +93,9 @@ const EventsManagement = ({ onBack }) => {
     setFormData({
       event_name: '',
       description: '',
+      event_name_hindi: '',
+      description_hindi: '',
+      venue_hindi: '',
       event_date_time: '',
       end_date_time: '',
       venue: '',
@@ -102,6 +114,9 @@ const EventsManagement = ({ onBack }) => {
         const formDataToSend = new FormData()
         formDataToSend.append('event_name', formData.event_name)
         formDataToSend.append('description', formData.description)
+        formDataToSend.append('event_name_hindi', formData.event_name_hindi)
+        formDataToSend.append('description_hindi', formData.description_hindi)
+        formDataToSend.append('venue_hindi', formData.venue_hindi)
         formDataToSend.append('event_date_time', formData.event_date_time)
         formDataToSend.append('end_date_time', formData.end_date_time)
         formDataToSend.append('venue', formData.venue)
@@ -130,6 +145,9 @@ const EventsManagement = ({ onBack }) => {
         const dataToSend = {
           event_name: formData.event_name,
           description: formData.description,
+          event_name_hindi: formData.event_name_hindi,
+          description_hindi: formData.description_hindi,
+          venue_hindi: formData.venue_hindi,
           event_date_time: formData.event_date_time,
           end_date_time: formData.end_date_time,
           venue: formData.venue,
@@ -384,7 +402,7 @@ const EventsManagement = ({ onBack }) => {
         <Modal.Body>
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3">
-              <Form.Label>Event Name *</Form.Label>
+              <Form.Label>Event Name (English) *</Form.Label>
               <Form.Control
                 type="text"
                 value={formData.event_name}
@@ -395,13 +413,34 @@ const EventsManagement = ({ onBack }) => {
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label>Description</Form.Label>
+              <Form.Label>Event Name (Hindi)</Form.Label>
+              <Form.Control
+                type="text"
+                value={formData.event_name_hindi}
+                onChange={(e) => setFormData({ ...formData, event_name_hindi: e.target.value })}
+                placeholder="e.g. वार्षिक टेक सम्मेलन 2026"
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Description (English)</Form.Label>
               <Form.Control
                 as="textarea"
                 rows={3}
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 placeholder="Event description..."
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Description (Hindi)</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                value={formData.description_hindi}
+                onChange={(e) => setFormData({ ...formData, description_hindi: e.target.value })}
+                placeholder="एआई, वेब डेवलपमेंट और क्लाउड टेक्नोलॉजी पर आधारित सम्मेलन।"
               />
             </Form.Group>
 
@@ -444,13 +483,23 @@ const EventsManagement = ({ onBack }) => {
             </Row>
 
             <Form.Group className="mb-3">
-              <Form.Label>Venue *</Form.Label>
+              <Form.Label>Venue (English) *</Form.Label>
               <Form.Control
                 type="text"
                 value={formData.venue}
                 onChange={(e) => setFormData({ ...formData, venue: e.target.value })}
                 placeholder="e.g. India Expo Centre, Greater Noida"
                 required
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Venue (Hindi)</Form.Label>
+              <Form.Control
+                type="text"
+                value={formData.venue_hindi}
+                onChange={(e) => setFormData({ ...formData, venue_hindi: e.target.value })}
+                placeholder="e.g. दिल्ली कन्वेंशन सेंटर"
               />
             </Form.Group>
 
@@ -501,7 +550,10 @@ const EventsManagement = ({ onBack }) => {
                 </Col>
               </Row>
               
-<h4 className="mb-3">{selectedEvent.event_name}</h4>
+              <h4 className="mb-1">{selectedEvent.event_name}</h4>
+              {selectedEvent.event_name_hindi && (
+                <h5 className="mb-3 text-muted fst-italic">{selectedEvent.event_name_hindi}</h5>
+              )}
                
               {selectedEvent.event_image && (
                 <div className="mb-3">
@@ -516,8 +568,15 @@ const EventsManagement = ({ onBack }) => {
                
               {selectedEvent.description && (
                 <div className="mb-3">
-                  <h6 className="text-muted">Description</h6>
+                  <h6 className="text-muted">Description (English)</h6>
                   <p>{selectedEvent.description}</p>
+                </div>
+              )}
+
+              {selectedEvent.description_hindi && (
+                <div className="mb-3">
+                  <h6 className="text-muted">Description (Hindi)</h6>
+                  <p>{selectedEvent.description_hindi}</p>
                 </div>
               )}
                
@@ -534,9 +593,15 @@ const EventsManagement = ({ onBack }) => {
 
               <Row>
                 <Col md={6} className="mb-3">
-                  <h6 className="text-muted"><FaMapMarkerAlt className="me-1" /> Venue</h6>
+                  <h6 className="text-muted"><FaMapMarkerAlt className="me-1" /> Venue (English)</h6>
                   <p>{selectedEvent.venue || 'N/A'}</p>
                 </Col>
+                {selectedEvent.venue_hindi && (
+                  <Col md={6} className="mb-3">
+                    <h6 className="text-muted"><FaMapMarkerAlt className="me-1" /> Venue (Hindi)</h6>
+                    <p>{selectedEvent.venue_hindi}</p>
+                  </Col>
+                )}
               </Row>
               
               {selectedEvent.event_type && (

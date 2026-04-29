@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Container, Row, Col, Card, Button, Badge, Spinner, Alert, Modal, Nav } from 'react-bootstrap'
 import axios from 'axios'
 import { useAuth } from '../../contexts/AuthContext'
+import { useLanguage } from '../../contexts/LanguageContext'
 import { useNavigate } from 'react-router-dom'
 import UserTopNav from './UserTopNav'
 import UseLeftNav from './UseLeftNav'
@@ -11,6 +12,7 @@ import { FaCalendarAlt, FaClock, FaMapMarkerAlt, FaArrowRight, FaEye, FaInfoCirc
 
 const UserEvents = () => {
   const { accessToken } = useAuth()
+  const { language } = useLanguage()
   const navigate = useNavigate()
   
   const [events, setEvents] = useState([])
@@ -236,12 +238,17 @@ const UserEvents = () => {
                         
                         <Card.Body className="d-flex flex-column">
                           <div className="mb-3">
-                            <h5 className="mb-2 fw-bold" style={{ color: '#333' }}>{event.event_name}</h5>
-                            {event.description && (
+                            <h5 className="mb-2 fw-bold" style={{ color: '#333' }}>
+                              {language === 'hi' && event.event_name_hindi ? event.event_name_hindi : event.event_name}
+                            </h5>
+                            {(language === 'hi' ? event.description_hindi : event.description) && (
                               <p className="text-muted small mb-0" style={{ lineHeight: '1.5' }}>
-                                {event.description.length > 100 
-                                  ? event.description.substring(0, 100) + '...' 
-                                  : event.description}
+                                {(() => {
+                                  const desc = (language === 'hi' && event.description_hindi) ? event.description_hindi : event.description;
+                                  return desc && desc.length > 100 
+                                    ? desc.substring(0, 100) + '...' 
+                                    : desc;
+                                })()}
                               </p>
                             )}
                           </div>
@@ -267,7 +274,9 @@ const UserEvents = () => {
                               <div className="d-flex align-items-center">
                                 <div className="d-flex align-items-center text-muted">
                                   <FaMapMarkerAlt className="me-2 text-success" style={{ fontSize: '14px' }} />
-                                  <small>{event.venue}</small>
+                                  <small>
+                                    {language === 'hi' && event.venue_hindi ? event.venue_hindi : event.venue}
+                                  </small>
                                 </div>
                               </div>
                             )}
@@ -365,12 +374,16 @@ const UserEvents = () => {
                 )}
               </div>
                
-              <h4 className="mb-3">{selectedEvent.event_name}</h4>
+              <h4 className="mb-3">
+                {language === 'hi' && selectedEvent.event_name_hindi ? selectedEvent.event_name_hindi : selectedEvent.event_name}
+              </h4>
                
-              {selectedEvent.description && (
+              {(language === 'hi' ? selectedEvent.description_hindi : selectedEvent.description) && (
                 <div className="mb-4">
-                  <h6 className="text-muted mb-2">Description</h6>
-                  <p className="">{selectedEvent.description}</p>
+                  <h6 className="text-muted mb-2">
+                    {language === 'hi' ? 'विवरण' : 'Description'}
+                  </h6>
+                  <p className="">{language === 'hi' && selectedEvent.description_hindi ? selectedEvent.description_hindi : selectedEvent.description}</p>
                 </div>
               )}
               
@@ -378,7 +391,8 @@ const UserEvents = () => {
                 <Col md={6}>
                   <div className="p-3 bg-light rounded">
                     <h6 className="text-muted mb-2">
-                      <FaClock className="me-2" /> Start Date & Time
+                      <FaClock className="me-2" /> 
+                      {language === 'hi' ? 'शुरुआत का समय' : 'Start Date & Time'}
                     </h6>
                     <p className="mb-0 fw-semibold">{formatDateTime(selectedEvent.event_date_time)}</p>
                   </div>
@@ -386,7 +400,8 @@ const UserEvents = () => {
                 <Col md={6}>
                   <div className="p-3 bg-light rounded">
                     <h6 className="text-muted mb-2">
-                      <FaClock className="me-2" /> End Date & Time
+                      <FaClock className="me-2" /> 
+                      {language === 'hi' ? 'समाप्ति का समय' : 'End Date & Time'}
                     </h6>
                     <p className="mb-0 fw-semibold">
                       {selectedEvent.end_date_time ? formatDateTime(selectedEvent.end_date_time) : 'N/A'}
@@ -397,9 +412,12 @@ const UserEvents = () => {
               
               <div className="p-3 bg-light rounded">
                 <h6 className="text-muted mb-2">
-                  <FaMapMarkerAlt className="me-2" /> Venue
+                  <FaMapMarkerAlt className="me-2" /> 
+                  {language === 'hi' ? 'स्थान' : 'Venue'}
                 </h6>
-                <p className="mb-0 fw-semibold">{selectedEvent.venue || 'N/A'}</p>
+                <p className="mb-0 fw-semibold">
+                  {(language === 'hi' && selectedEvent.venue_hindi) ? selectedEvent.venue_hindi : (selectedEvent.venue || 'N/A')}
+                </p>
               </div>
             </div>
           )}
