@@ -87,9 +87,7 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas, onNavAttempt }) => {
                    <Nav.Link className="text-white" onClick={() => handleNavClick('/UserProfile')} style={{ cursor: 'pointer' }}>
                     <i className="bi bi-person-circle me-2"></i> <TransText k="menu.profile" as="span" />
                   </Nav.Link>
-                  <Nav.Link className="text-white" onClick={() => handleNavClick('/UserQuery')} style={{ cursor: 'pointer' }}>
-                    <IoIosSend className="me-2"></IoIosSend> <TransText k="menu.query" as="span" />
-                  </Nav.Link>
+                 
 <Nav.Link className="text-white" onClick={() => handleNavClick('/UserQuiz')} style={{ cursor: 'pointer' }}>
                     <i className="bi bi-clipboard-check me-2"></i> <TransText k="quiz.title" as="span" />
                   </Nav.Link>
@@ -107,9 +105,7 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas, onNavAttempt }) => {
 <Nav.Link className="text-white" onClick={() => handleNavClick('/GovernmentSchemes')} style={{ cursor: 'pointer' }}>
                        <i className="bi bi-file-earmark-text me-2"></i> <TransText k="settings.govtSchemes" as="span" />
                      </Nav.Link>
-                    <Nav.Link className="text-white" onClick={() => handleNavClick('/JobOpenings')} style={{ cursor: 'pointer' }}>
-                      <i className="bi bi-briefcase me-2"></i> <TransText k="menu.jobOpenings" as="span" />
-                    </Nav.Link>
+                   
                    
                    <div className="guidelines-menu">
                      <div 
@@ -131,7 +127,12 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas, onNavAttempt }) => {
                        </div>
                      )}
                    </div>
-                  
+                    <Nav.Link className="text-white" onClick={() => handleNavClick('/JobOpenings')} style={{ cursor: 'pointer' }}>
+                      <i className="bi bi-briefcase me-2"></i> <TransText k="menu.jobOpenings" as="span" />
+                    </Nav.Link>
+                   <Nav.Link className="text-white" onClick={() => handleNavClick('/UserQuery')} style={{ cursor: 'pointer' }}>
+                    <IoIosSend className="me-2"></IoIosSend> <TransText k="menu.query" as="span" />
+                  </Nav.Link>
                 </Nav>
               
             </div>
