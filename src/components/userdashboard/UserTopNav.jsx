@@ -254,148 +254,152 @@ const UserTopNav = ({ onMenuToggle, isMobile }) => {
             {language === 'en' ? 'EN' : 'HI'}
           </Button>
 
-          <Button
-            onClick={() => navigate('/GroomingClasses')}
-            className="me-3 d-flex align-items-center grooming-style"
-           
-            title={language === 'en' ? 'Grooming Classes' : 'ग्रूमिंग क्लासेस'}
-          >
-            <i className="bi bi-mortarboard-fill me-2"></i>
-            {language === 'en' ? 'Grooming' : 'ग्रूमिंग'}
-          </Button>
+          {userRoleType !== 'student' && (
+            <>
+              <Button
+                onClick={() => navigate('/GroomingClasses')}
+                className="me-3 d-flex align-items-center grooming-style"
+              
+                title={language === 'en' ? 'Grooming Classes' : 'ग्रूमिंग क्लासेस'}
+              >
+                <i className="bi bi-mortarboard-fill me-2"></i>
+                {language === 'en' ? 'Grooming' : 'ग्रूमिंग'}
+              </Button>
 
-          <Dropdown 
-            show={showNotificationDropdown}
-            onToggle={(isOpen) => setShowNotificationDropdown(isOpen)}
-            className="me-3"
-          >
-            <Dropdown.Toggle 
-              as="div"
-              className="notification-bell-wrapper"
-              style={{ cursor: 'pointer', position: 'relative', padding: '8px' }}
-            >
-              <i className="bi bi-bell notification-user" style={{ fontSize: '1.25rem', }}></i>
-              {unreadCount > 0 && (
-                <span 
-                  className="notification-badge"
-                  style={{
-                    position: 'absolute',
-                    top: '-5px',
-                    right: '-5px',
-                    backgroundColor: '#dc3545',
-                    color: 'white',
-                    borderRadius: '50%',
-                    padding: '2px 6px',
-                    fontSize: '0.7rem',
-                    fontWeight: 'bold',
-                    minWidth: '18px',
-                    textAlign: 'center'
+              <Dropdown 
+                show={showNotificationDropdown}
+                onToggle={(isOpen) => setShowNotificationDropdown(isOpen)}
+                className="me-3"
+              >
+                <Dropdown.Toggle 
+                  as="div"
+                  className="notification-bell-wrapper"
+                  style={{ cursor: 'pointer', position: 'relative', padding: '8px' }}
+                >
+                  <i className="bi bi-bell notification-user" style={{ fontSize: '1.25rem', }}></i>
+                  {unreadCount > 0 && (
+                    <span 
+                      className="notification-badge"
+                      style={{
+                        position: 'absolute',
+                        top: '-5px',
+                        right: '-5px',
+                        backgroundColor: '#dc3545',
+                        color: 'white',
+                        borderRadius: '50%',
+                        padding: '2px 6px',
+                        fontSize: '0.7rem',
+                        fontWeight: 'bold',
+                        minWidth: '18px',
+                        textAlign: 'center'
+                      }}
+                    >
+                      {unreadCount > 9 ? '9+' : unreadCount}
+                    </span>
+                  )}
+                </Dropdown.Toggle>
+                
+                <Dropdown.Menu 
+                  style={{ 
+                    width: '320px', 
+                    maxHeight: '400px',
+                    overflowY: 'auto',
+                    padding: '0',
+                    right: 0,
+                    left: 'auto',
+                  
+                    color: '#000000'
                   }}
                 >
-                  {unreadCount > 9 ? '9+' : unreadCount}
-                </span>
-              )}
-            </Dropdown.Toggle>
-            
-<Dropdown.Menu 
-              style={{ 
-                width: '320px', 
-                maxHeight: '400px',
-                overflowY: 'auto',
-                padding: '0',
-                right: 0,
-                left: 'auto',
-              
-                color: '#000000'
-              }}
-            >
-              <div 
-                className="d-flex justify-content-between align-items-center p-2 border-bottom"
-                style={{ position: 'sticky', top: 0, backgroundColor: 'white', zIndex: 1 }}
-              >
-                <span style={{ fontWeight: '600' }}>{language === 'en' ? 'Notifications' : 'सूचनाएं'}</span>
-                {unreadCount > 0 && (
-                  <Button 
-                    variant="link" 
-                    size="sm" 
-                    onClick={handleMarkAllSeen}
-                    style={{ padding: '0', fontSize: '0.8rem' }}
+                  <div 
+                    className="d-flex justify-content-between align-items-center p-2 border-bottom"
+                    style={{ position: 'sticky', top: 0, backgroundColor: 'white', zIndex: 1 }}
                   >
-                    {language === 'en' ? 'Mark all read' : 'सभी पढ़ें'}
-                  </Button>
-                )}
-              </div>
-              
-              {notifications.length === 0 ? (
-                <div className="p-3 text-center text-muted">
-                  {language === 'en' ? 'No notifications' : 'कोई सूचना नहीं'}
-                </div>
-              ) : (
-                notifications.slice(0, 10).map((notification) => (
-                  <Dropdown.Item 
-                    key={notification.id}
-                    onClick={() => handleNotificationClick(notification)}
-                    style={{ 
-                      backgroundColor: notification.type === 'admin' 
-                        ? (notification.seen ? '#fff3cd' : '#fff8e1') 
-                        : (notification.seen ? 'white' : '#f8f9fa'),
-                      borderBottom: '1px solid #eee',
-                      padding: '10px 12px',
-                      whiteSpace: 'normal',
-                      borderLeft: notification.type === 'admin' ? '3px solid #dc3545' : 'none'
-                    }}
-                  >
-                    <div className="d-flex align-items-start">
-                      <div 
-                        className="me-2 d-flex align-items-center justify-content-center"
+                    <span style={{ fontWeight: '600' }}>{language === 'en' ? 'Notifications' : 'सूचनाएं'}</span>
+                    {unreadCount > 0 && (
+                      <Button 
+                        variant="link" 
+                        size="sm" 
+                        onClick={handleMarkAllSeen}
+                        style={{ padding: '0', fontSize: '0.8rem' }}
+                      >
+                        {language === 'en' ? 'Mark all read' : 'सभी पढ़ें'}
+                      </Button>
+                    )}
+                  </div>
+                  
+                  {notifications.length === 0 ? (
+                    <div className="p-3 text-center text-muted">
+                      {language === 'en' ? 'No notifications' : 'कोई सूचना नहीं'}
+                    </div>
+                  ) : (
+                    notifications.slice(0, 10).map((notification) => (
+                      <Dropdown.Item 
+                        key={notification.id}
+                        onClick={() => handleNotificationClick(notification)}
                         style={{ 
-                          width: '32px', 
-                          height: '32px', 
-                          borderRadius: '50%',
                           backgroundColor: notification.type === 'admin' 
-                            ? (notification.seen ? '#ffc107' : '#dc3545') 
-                            : (notification.seen ? '#e9ecef' : '#667eea'),
-                          color: notification.seen ? '#6c757d' : 'white',
-                          flexShrink: 0
+                            ? (notification.seen ? '#fff3cd' : '#fff8e1') 
+                            : (notification.seen ? 'white' : '#f8f9fa'),
+                          borderBottom: '1px solid #eee',
+                          padding: '10px 12px',
+                          whiteSpace: 'normal',
+                          borderLeft: notification.type === 'admin' ? '3px solid #dc3545' : 'none'
                         }}
                       >
-                        <i className={`bi ${getNotificationIcon(notification.type)}`}></i>
-                      </div>
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div 
-                          className="fw-semibold" 
-                          style={{ fontSize: '0.9rem', color: notification.seen ? '#6c757d' : '#212529' }}
-                        >
-                          {notification.title}
+                        <div className="d-flex align-items-start">
+                          <div 
+                            className="me-2 d-flex align-items-center justify-content-center"
+                            style={{ 
+                              width: '32px', 
+                              height: '32px', 
+                              borderRadius: '50%',
+                              backgroundColor: notification.type === 'admin' 
+                                ? (notification.seen ? '#ffc107' : '#dc3545') 
+                                : (notification.seen ? '#e9ecef' : '#667eea'),
+                              color: notification.seen ? '#6c757d' : 'white',
+                              flexShrink: 0
+                            }}
+                          >
+                            <i className={`bi ${getNotificationIcon(notification.type)}`}></i>
+                          </div>
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <div 
+                              className="fw-semibold" 
+                              style={{ fontSize: '0.9rem', color: notification.seen ? '#6c757d' : '#212529' }}
+                            >
+                              {notification.title}
+                            </div>
+                            <div 
+                              className="text-muted" 
+                              style={{ fontSize: '0.8rem', overflow: 'hidden', textOverflow: 'ellipsis' }}
+                            >
+                              {notification.message}
+                            </div>
+                            <div className="text-muted" style={{ fontSize: '0.7rem', marginTop: '2px' }}>
+                              {formatTime(notification.time)}
+                            </div>
+                          </div>
+                          {!notification.seen && (
+                            <div 
+                              style={{ 
+                                width: '8px', 
+                                height: '8px', 
+                                borderRadius: '50%', 
+                                backgroundColor: '#dc3545',
+                                flexShrink: 0,
+                                marginLeft: '8px'
+                              }}
+                            />
+                          )}
                         </div>
-                        <div 
-                          className="text-muted" 
-                          style={{ fontSize: '0.8rem', overflow: 'hidden', textOverflow: 'ellipsis' }}
-                        >
-                          {notification.message}
-                        </div>
-                        <div className="text-muted" style={{ fontSize: '0.7rem', marginTop: '2px' }}>
-                          {formatTime(notification.time)}
-                        </div>
-                      </div>
-                      {!notification.seen && (
-                        <div 
-                          style={{ 
-                            width: '8px', 
-                            height: '8px', 
-                            borderRadius: '50%', 
-                            backgroundColor: '#dc3545',
-                            flexShrink: 0,
-                            marginLeft: '8px'
-                          }}
-                        />
-                      )}
-                    </div>
-                  </Dropdown.Item>
-                ))
-              )}
-            </Dropdown.Menu>
-          </Dropdown>
+                      </Dropdown.Item>
+                    ))
+                  )}
+                </Dropdown.Menu>
+              </Dropdown>
+            </>
+          )}
 
           <Dropdown 
             show={showDropdown}
