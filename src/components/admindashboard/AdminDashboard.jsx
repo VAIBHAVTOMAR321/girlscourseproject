@@ -2164,7 +2164,7 @@ const AdminDashboard = () => {
         <div className={`admin-main-content flex-grow-1 ${!showSidebar ? 'sidebar-compact' : ''}`}>
           <AdminTopNav />
           <div className="content-area">
-            <Container className='mob-top-view'>
+            <Container fluid className='mob-top-view'>
               {currentView === 'dashboard' && renderDashboardView()}
               {currentView === 'list' && renderCoursesListView()}
               {currentView === 'form' && renderCourseForm()}
