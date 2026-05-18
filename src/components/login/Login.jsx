@@ -174,7 +174,7 @@ const Login = () => {
       successMessage.className = 'alert alert-success position-fixed top-0 start-50 translate-middle-x mt-3';
       successMessage.style.zIndex = '9999';
       successMessage.innerHTML = `
-        <i class="fas fa-check-circle me-2"></i>
+        <i class="bi bi-check-circle me-2"></i>
         Login Successful! Redirecting...
       `;
       document.body.appendChild(successMessage);
@@ -248,7 +248,7 @@ const Login = () => {
             {course.type === "paid" ? "Paid" : ""}
           </Badge>
           {/* <span className="enrolled-count">
-            <i className="fas fa-users"></i> {course.enrolled} enrolled
+            <i class="bi bi-people"></i> {course.enrolled} enrolled
           </span> */}
         </div>
         {course.type === "paid" && (
@@ -260,14 +260,14 @@ const Login = () => {
         {course.duration && (
           <div className="course-duration mt-1">
             <small className="text-muted">
-              <i className="fas fa-clock me-1"></i>
+              <i className="bi bi-clock me-1"></i>
               {course.duration}
             </small>
           </div>
         )}
       </div>
       <div className="course-action" style={{ color: course.color }}>
-        <i className="fas fa-arrow-right"></i>
+        <i className="bi bi-arrow-right"></i>
       </div>
     </div>
   );
@@ -299,7 +299,7 @@ const Login = () => {
           </div>
         </div>
         <div className="course-action" style={{ color: "#a0aec0" }}>
-          <i className="fas fa-spinner fa-spin"></i>
+          <Spinner animation="border" size="sm" />
         </div>
       </div>
     ));
@@ -392,11 +392,11 @@ const Login = () => {
                       <h6 className="course-title">{course.name}</h6>
                       <div className="course-meta-info">
                         {/* <span className="enrolled-info">
-                          <i className="fas fa-users"></i> {course.enrolled}
+                              <i class="bi bi-people"></i> {course.enrolled}
                         </span> */}
                         {course.duration && (
                           <span className="duration-info">
-                            <i className="fas fa-clock"></i> {course.duration}
+                                <i className="bi bi-clock"></i> {course.duration}
                           </span>
                         )}
                         <Badge bg="primary" className="free-badge">
@@ -405,7 +405,7 @@ const Login = () => {
                       </div>
                     </div>
                     <div className="course-action-arrow">
-                      <i className="fas fa-chevron-right"></i>
+                          <i className="bi bi-chevron-right"></i>
                     </div>
                   </div>
                 </div>
@@ -433,7 +433,7 @@ const Login = () => {
 
   <div className="marquee-footer text-center mt-3">
     <p className="small text-muted">
-      <i className="fas fa-info-circle me-1"></i>
+          <i className="bi bi-info-circle me-1"></i>
       Click on any course to register and get started
     </p>
   </div>
@@ -549,7 +549,7 @@ const Login = () => {
                       className="password-toggle"
                       onClick={() => setShowPassword(!showPassword)}
                     >
-                      <i className={`fas fa-${showPassword ? "eye-slash" : "eye"}`}></i>
+                      <i className={`bi bi-${showPassword ? "eye-slash" : "eye"}`}></i>
                     </Button>
                     <Form.Control.Feedback type="invalid">
                       {fieldErrors.password}
@@ -571,7 +571,7 @@ const Login = () => {
                 {/* Error Message */}
                 {errorMessage && (
                   <Alert variant="danger" className="error-box-gov">
-                    <i className="fas fa-exclamation-circle me-2"></i>
+                    <i className="bi bi-exclamation-circle me-2"></i>
                     {errorMessage}
                   </Alert>
                 )}
@@ -609,7 +609,7 @@ const Login = () => {
 
               <div className="security-notice mt-3">
                 <p className="text-center small text-muted">
-                  <i className="fas fa-lock me-1"></i>
+                  <i className="bi bi-lock me-1"></i>
                   This is a secure system. Unauthorized access is prohibited.
                 </p>
               </div>
