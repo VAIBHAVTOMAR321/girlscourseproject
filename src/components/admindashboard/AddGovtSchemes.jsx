@@ -8,10 +8,12 @@ import axios from 'axios'
 import '../../assets/css/AdminDashboard.css'
 import { useAuth } from '../../contexts/AuthContext'
 import { FaPlus, FaArrowLeft, FaEdit, FaTrash } from 'react-icons/fa'
+import { useNavigate } from 'react-router-dom'
 
 const AddGovtSchemes = () => {
   const isMounted = useRef(true)
   const [showSidebar, setShowSidebar] = useState(true)
+  const navigate = useNavigate()
   
   const authData = useAuth()
   const authToken = authData?.accessToken
@@ -432,16 +434,25 @@ const AddGovtSchemes = () => {
   }
 
   return (
-    <div className="d-flex">
-      <AdminLeftNav show={showSidebar} setShow={setShowSidebar} />
-      <div className="flex-grow-1" style={{ marginLeft: showSidebar ? '238px' : '', transition: 'margin-left 0.3s' }}>
-        <AdminTopNav />
-        <Container fluid className="py-4">
-          <div className="fade-in">
-            <h4 className="mb-4">Add Government Schemes</h4>
+    <div className="admin-layout">
+      <div className="admin-wrapper d-flex">
+        <AdminLeftNav show={showSidebar} setShow={setShowSidebar} />
+        <div className={`admin-main-content flex-grow-1 ${!showSidebar ? 'sidebar-compact' : ''}`}>
+          <AdminTopNav />
+          <div className="content-area">
+            <Container fluid className="py-4">
+              <div className="fade-in">
+                <div className="d-flex justify-content-between align-items-center mb-4 page-header">
+                  <div className="d-flex align-items-center all-en-box gap-3">
+                    <Button variant="outline-secondary" size="sm" onClick={() => navigate('/AdminDashboard')} className="me-2">
+                      <FaArrowLeft /> Dashboard
+                    </Button>
+                    <h4 className="mb-0">Add Government Schemes</h4>
+                  </div>
+                </div>
 
-            <Row className="g-4">
-              <Col lg={8}>
+                <Row className="g-4">
+                  <Col lg={8}>
                 <Card className="shadow-sm border-0">
                   <Card.Header className="bg-primary text-white">
                     <FaPlus className="me-2" />
@@ -749,8 +760,10 @@ const AddGovtSchemes = () => {
                 </Card>
               </Col>
             </Row>
+              </div>
+            </Container>
           </div>
-        </Container>
+        </div>
       </div>
     </div>
   )
