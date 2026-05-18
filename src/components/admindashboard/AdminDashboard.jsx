@@ -906,7 +906,6 @@ const AdminDashboard = () => {
         await axios.put('https://brjobsedu.com/girls_course/girls_course_backend/api/course-items/', {
           course_id: courseFormData.course_id,
           course_name: courseFormData.course_name,
-          course_status: courseFormData.course_status || 'unpaid',
           start_date: courseFormData.start_date,
           end_date: courseFormData.end_date
         }, config)
@@ -1201,15 +1200,17 @@ const AdminDashboard = () => {
               />
             </Form.Group>
 
-            <Form.Group className="mb-3">
-              <Form.Label>Video Link</Form.Label>
-              <Form.Control
-                type="url"
-                value={moduleFormData.video_link}
-                onChange={(e) => setModuleFormData({ ...moduleFormData, video_link: e.target.value })}
-                placeholder="e.g. https://youtube.com/watch?v=..."
-              />
-            </Form.Group>
+            {moduleViewData?.course?.course_status === 'unpaid' && (
+              <Form.Group className="mb-3">
+                <Form.Label>Video Link</Form.Label>
+                <Form.Control
+                  type="url"
+                  value={moduleFormData.video_link}
+                  onChange={(e) => setModuleFormData({ ...moduleFormData, video_link: e.target.value })}
+                  placeholder="e.g. https://youtube.com/watch?v=..."
+                />
+              </Form.Group>
+            )}
 
             <Button variant="primary" type="submit">
               <FaPlus className="me-2" /> {moduleFormData.module_id ? 'Update Module' : 'Add Module'}
