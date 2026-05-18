@@ -3,13 +3,15 @@ import { Container, Row, Col, Card, Button, Modal, Form, Badge, Table, Spinner }
 import AdminLeftNav from './AdminLeftNav'
 import AdminTopNav from './AdminTopNav'
 import axios from 'axios'
-import { FaPlus, FaEdit, FaTrash, FaEye, FaTimes } from 'react-icons/fa'
+import { FaPlus, FaEdit, FaTrash, FaEye, FaTimes, FaArrowLeft } from 'react-icons/fa'
 import { useAuth } from '../../contexts/AuthContext'
+import { useNavigate } from 'react-router-dom'
 
 import '../../assets/css/AdminDashboard.css'
 
 const QuizManagement = () => {
   const { accessToken } = useAuth()
+  const navigate = useNavigate()
   const [showSidebar, setShowSidebar] = useState(true)
   const [loading, setLoading] = useState(true)
   const [quizzes, setQuizzes] = useState([])
@@ -18,7 +20,6 @@ const QuizManagement = () => {
   const [editingQuiz, setEditingQuiz] = useState(null)
   const [viewingQuiz, setViewingQuiz] = useState(null)
   const [submitting, setSubmitting] = useState(false)
-  const [isMobile, setIsMobile] = useState(false)
 
   const [quizFormData, setQuizFormData] = useState({
     title: '',
@@ -37,13 +38,6 @@ const QuizManagement = () => {
       marks: 1 
     }]
   })
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768)
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
-  }, [])
 
   useEffect(() => {
     fetchQuizzes()
@@ -251,77 +245,79 @@ const QuizManagement = () => {
   }
 
   return (
-    <div className="d-flex flex-column">
-      <AdminTopNav onMenuToggle={() => setShowSidebar(!showSidebar)} isMobile={isMobile} />
-      <div className="d-flex flex-1">
+    <div className="admin-layout">
+      <div className="admin-wrapper d-flex">
         <AdminLeftNav show={showSidebar} setShow={setShowSidebar} />
-        
-        <div className="flex-grow-1" style={{ marginLeft: isMobile ? '0px' : showSidebar ? '220px' : '60px', padding: '20px', minHeight: 'calc(100vh - 70px)' }}>
-          <Container fluid>
-            <Card className="shadow-sm mb-4">
-              <Card.Body>
-                <div className="d-flex justify-content-between align-items-center mb-4">
-                  <h4 className="mb-0">Quiz Management</h4>
-                  <Button variant="primary" onClick={openCreateModal}>
-                    <FaPlus className="me-2" /> Create Quiz
+        <div className={`admin-main-content flex-grow-1 ${!showSidebar ? 'sidebar-compact' : ''}`}>
+          <AdminTopNav />
+          <div className="content-area">
+            <Container fluid className='mob-top-view'>
+              <div className="d-flex justify-content-between align-items-center mb-4 page-header">
+                <div className="d-flex align-items-center all-en-box gap-3">
+                  <Button variant="outline-secondary" size="sm" onClick={() => navigate('/AdminDashboard')} className="me-2">
+                    <FaArrowLeft /> Dashboard
                   </Button>
+                  <h4 className="mb-0">Quiz Management</h4>
                 </div>
+                <Button variant="primary" onClick={openCreateModal}>
+                  <FaPlus className="me-2" /> Create Quiz
+                </Button>
+              </div>
 
-                {loading ? (
-                  <div className="text-center py-5">
-                    <Spinner animation="border" variant="primary" />
-                  </div>
-                ) : (
-                  <Table responsive hover>
-                    <thead>
+              {loading ? (
+                <div className="text-center py-5">
+                  <Spinner animation="border" variant="primary" />
+                </div>
+              ) : (
+                <Table responsive hover>
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Title</th>
+                      <th>Category</th>
+                      <th>Questions</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {quizzes.length === 0 ? (
                       <tr>
-                        <th>ID</th>
-                        <th>Title</th>
-                        <th>Category</th>
-                        <th>Questions</th>
-                        <th>Status</th>
-                        <th>Actions</th>
+                        <td colSpan="5" className="text-center text-muted py-4">
+                          No quizzes available
+                        </td>
                       </tr>
-                    </thead>
-                    <tbody>
-                      {quizzes.length === 0 ? (
-                        <tr>
-                          <td colSpan="5" className="text-center text-muted py-4">
-                            No quizzes available
+                    ) : (
+                      quizzes.map((quiz) => (
+                        <tr key={quiz.id}>
+                          <td>{quiz.quiz_id}</td>
+                          <td>{quiz.title}</td>
+                          <td><Badge bg="info">{quiz.quiz_category}</Badge></td>
+                          <td>{quiz.number_of_questions || 0}</td>
+                          <td>
+                            <Badge bg={quiz.is_active ? 'success' : 'secondary'}>
+                              {quiz.is_active ? 'Active' : 'Inactive'}
+                            </Badge>
+                          </td>
+                          <td>
+                            <Button variant="outline-primary" size="sm" className="me-2" onClick={() => handleView(quiz)}>
+                              <FaEye />
+                            </Button>
+                            <Button variant="outline-secondary" size="sm" className="me-2" onClick={() => handleEdit(quiz)}>
+                              <FaEdit />
+                            </Button>
+                            <Button variant="outline-danger" size="sm" onClick={() => handleDelete(quiz)}>
+                              <FaTrash />
+                            </Button>
                           </td>
                         </tr>
-                      ) : (
-                        quizzes.map((quiz) => (
-                          <tr key={quiz.id}>
-                            <td>{quiz.quiz_id}</td>
-                            <td>{quiz.title}</td>
-                            <td><Badge bg="info">{quiz.quiz_category}</Badge></td>
-                            <td>{quiz.number_of_questions || 0}</td>
-                            <td>
-                              <Badge bg={quiz.is_active ? 'success' : 'secondary'}>
-                                {quiz.is_active ? 'Active' : 'Inactive'}
-                              </Badge>
-                            </td>
-                            <td>
-                              <Button variant="outline-primary" size="sm" className="me-2" onClick={() => handleView(quiz)}>
-                                <FaEye />
-                              </Button>
-                              <Button variant="outline-secondary" size="sm" className="me-2" onClick={() => handleEdit(quiz)}>
-                                <FaEdit />
-                              </Button>
-                              <Button variant="outline-danger" size="sm" onClick={() => handleDelete(quiz)}>
-                                <FaTrash />
-                              </Button>
-                            </td>
-                          </tr>
-                        ))
-                      )}
-                    </tbody>
-                  </Table>
-                )}
-              </Card.Body>
-            </Card>
-          </Container>
+                      ))
+                    )}
+                  </tbody>
+                </Table>
+              )}
+            </Container>
+          </div>
         </div>
       </div>
 
