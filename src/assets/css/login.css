@@ -250,6 +250,10 @@
 
 .password-toggle:hover {
   color: #2c5282;
+  right: 12px !important;
+  top: 20%;
+   transform: translateY(0%) !important;
+  padding: 0px !important;
 }
 
 /* Role Selection */
