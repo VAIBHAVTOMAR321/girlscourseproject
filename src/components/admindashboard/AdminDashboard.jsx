@@ -1200,7 +1200,6 @@ const AdminDashboard = () => {
               />
             </Form.Group>
 
-            {moduleViewData?.course?.course_status === 'unpaid' && (
               <Form.Group className="mb-3">
                 <Form.Label>Video Link</Form.Label>
                 <Form.Control
@@ -1210,7 +1209,6 @@ const AdminDashboard = () => {
                   placeholder="e.g. https://youtube.com/watch?v=..."
                 />
               </Form.Group>
-            )}
 
             <Button variant="primary" type="submit">
               <FaPlus className="me-2" /> {moduleFormData.module_id ? 'Update Module' : 'Add Module'}
