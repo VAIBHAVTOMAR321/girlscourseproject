@@ -232,7 +232,7 @@ const UserProfile = () => {
         />
         
         <div className={`flex-grow-1 main-content-area ${isMobile ? 'mobile' : ''}`}>
-          <Container fluid className='fixed-profile p-4'>
+          <Container fluid className={`fixed-profile ${isMobile ? 'p-0' : 'p-4'}`}>
             {/* Back Button */}
             <div className="">
               <Button

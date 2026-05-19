@@ -880,7 +880,7 @@ const UserQuiz = () => {
           onNavAttempt={handleNavFromLeftNav}
         />
         
-        <div className="flex-grow-1" style={{ marginLeft: isMobile ? '0px' : '220px', padding: isMobile ? '10px' : '20px', minHeight: 'calc(100vh - 70px)' }}>
+        <div className="flex-grow-1" style={{ marginLeft: isMobile ? '0px' : '220px', padding: isMobile ? '10px' : '0px', minHeight: 'calc(100vh - 70px)' }}>
           <Container fluid>
             {!takingQuiz && !showResults ? (
               <>
