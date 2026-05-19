@@ -958,7 +958,7 @@ const UserDashboard = () => {
         />
     
         <div className="flex-grow-1" style={{ marginLeft: isMobile ? '0px' : '220px', padding: isMobile ? '10px' : '20px', minHeight: 'calc(100vh - 70px)' }}>
-          <Container className='container-top-fixed'>
+          <Container fluid className='container-top-fixed'>
             <Row>
               <Col xs={12}>
                 <div className="mt-4">

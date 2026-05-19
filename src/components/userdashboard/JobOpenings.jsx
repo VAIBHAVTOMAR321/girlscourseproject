@@ -348,7 +348,7 @@ const JobOpenings = () => {
            
           }}
         >
-          <Container className="container-top-fixed" key={forceUpdate}>
+          <Container fluid className="container-top-fixed" key={forceUpdate}>
             <Row className="mb-4">
               <Col xs={12} className="mt-4">
                 <div className="d-flex align-items-center mb-3">
