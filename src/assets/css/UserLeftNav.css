@@ -28,7 +28,7 @@ padding: 6px;
 
 /* Compact sidebar */
 .user-left-nav.compact {
-  width: 100px;
+  width: 80px;
 }
 
 .user-left-nav .nav-header {
@@ -213,6 +213,6 @@ padding: 0px !important;
   }
 
   .user-left-nav.compact {
-    width: 100px;
+    width: 80px;
   }
 }

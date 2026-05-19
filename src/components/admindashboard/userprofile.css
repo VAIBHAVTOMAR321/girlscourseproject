@@ -313,6 +313,7 @@
     /* padding: 28px; */
     min-height: calc(100vh - 70px);
     background-color: #fafbfc;
+    transition: margin-left 0.3s ease;
 }
 
 .main-content-area.mobile {

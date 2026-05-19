@@ -61,9 +61,11 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas, onNavAttempt }) => {
         if (newShow) {
           // Show sidebar - set full margin (220px to match CSS)
           contentArea.style.marginLeft = '220px'
+          document.body.classList.remove('sidebar-compact')
         } else {
           // Hide sidebar - set compact margin (80px to match CSS)
           contentArea.style.marginLeft = '80px'
+          document.body.classList.add('sidebar-compact')
         }
       }
     }
