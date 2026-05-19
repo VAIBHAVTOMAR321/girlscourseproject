@@ -31,10 +31,16 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas, onNavAttempt }) => {
         setShow(false) // Hide sidebar on mobile by default
         setShowOffcanvas(false) // Close offcanvas on mobile resize
         document.body.classList.remove('sidebar-compact')
+        // Reset margin for mobile
+        const contentArea = document.querySelector('.flex-grow-1')
+        if (contentArea) contentArea.style.marginLeft = '0px'
       } else {
         setShow(true) // Show sidebar on desktop by default
         setShowOffcanvas(false) // Close offcanvas on desktop resize
         document.body.classList.remove('sidebar-compact')
+        // Set margin for desktop
+        const contentArea = document.querySelector('.flex-grow-1')
+        if (contentArea) contentArea.style.marginLeft = '220px'
       }
     }
 
@@ -53,11 +59,11 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas, onNavAttempt }) => {
       const contentArea = document.querySelector('.flex-grow-1')
       if (contentArea) {
         if (newShow) {
-          // Show sidebar - set full margin
-          contentArea.style.marginLeft = '280px'
+          // Show sidebar - set full margin (220px to match CSS)
+          contentArea.style.marginLeft = '220px'
         } else {
-          // Hide sidebar - set compact margin
-          contentArea.style.marginLeft = '100px'
+          // Hide sidebar - set compact margin (80px to match CSS)
+          contentArea.style.marginLeft = '80px'
         }
       }
     }
