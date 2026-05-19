@@ -62,6 +62,11 @@ const UserDashboard = () => {
   // Course language preference state (default: hindi)
   const [courseLanguage, setCourseLanguage] = useState('hindi')
 
+  // Image modal state for hover display
+  const [showImageModal, setShowImageModal] = useState(false)
+  const [selectedImageUrl, setSelectedImageUrl] = useState(null)
+  const [selectedImageTitle, setSelectedImageTitle] = useState(null)
+
   const navigate = useNavigate()
   const { uniqueId, accessToken, isAuthenticated, userRoleType } = useAuth()
 
@@ -932,6 +937,21 @@ const UserDashboard = () => {
     }
   }
 
+  // Image modal handlers
+  const handleImageClick = (imageUrl, imageTitle) => {
+    setSelectedImageUrl(imageUrl)
+    setSelectedImageTitle(imageTitle)
+    setShowImageModal(true)
+  }
+
+  const handleImageLeave = () => {
+    setShowImageModal(false)
+    setTimeout(() => {
+      setSelectedImageUrl(null)
+      setSelectedImageTitle(null)
+    }, 300)
+  }
+
   const handleMenuToggle = () => {
     setShowOffcanvas(!showOffcanvas)
   }
@@ -1355,7 +1375,14 @@ const UserDashboard = () => {
                                                const imageElement = hasImage ? (
                                                  <Col lg={imageCol} md={12}>
                                                    <div className="image-wrapper">
-                                                     <div className="book-image-container rounded-3 overflow-hidden shadow-lg">
+                                                     <div 
+                                                       className="book-image-container rounded-3 overflow-hidden shadow-lg"
+                                                        onClick={() => handleImageClick(
+                                                          `https://brjobsedu.com/girls_course/girls_course_backend/${subModule.image}`,
+                                                          subModule.sub_modu_title
+                                                        )}
+                                                        style={{ cursor: 'pointer', transition: 'transform 0.3s ease' }}
+                                                     >
                                                        <img
                                                          src={`https://brjobsedu.com/girls_course/girls_course_backend/${subModule.image}`}
                                                          alt={subModule.sub_modu_title}
@@ -2272,6 +2299,99 @@ const UserDashboard = () => {
         </div>
       </div>
     )}
+    
+    {/* Image Modal for Hover Display */}
+    {showImageModal && selectedImageUrl && (
+      <div 
+        className="modal fade show d-block" 
+        tabIndex="-1" 
+        style={{ 
+          backgroundColor: 'rgba(0,0,0,0.7)',
+          animation: 'fadeIn 0.3s ease-in'
+        }}
+      >
+        <div 
+          className="modal-dialog modal-lg modal-dialog-centered"
+          style={{ animation: 'slideIn 0.3s ease-in' }}
+        >
+          <div 
+            className="modal-content" 
+            style={{ 
+              borderRadius: '12px', 
+              overflow: 'hidden',
+              border: 'none',
+              boxShadow: '0 10px 40px rgba(0,0,0,0.3)'
+            }}
+          >
+            <div 
+              className="modal-header" 
+              style={{ 
+                background: 'linear-gradient(135deg, #667eea, #764ba2)', 
+                border: 'none',
+                padding: '15px 20px'
+              }}
+            >
+              <h5 className="modal-title text-white">
+                <FaImage className="me-2" />
+                {selectedImageTitle || 'Image Preview'}
+              </h5>
+              <button 
+                type="button" 
+                className="btn-close btn-close-white" 
+                onClick={handleImageLeave}
+              ></button>
+            </div>
+            <div 
+              className="modal-body p-0" 
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minHeight: '400px',
+                background: '#f8f9fa'
+              }}
+            >
+              <img
+                src={selectedImageUrl}
+                alt={selectedImageTitle}
+                style={{
+                  maxWidth: '100%',
+                  maxHeight: '600px',
+                  objectFit: 'contain',
+                  padding: '20px'
+                }}
+                onError={(e) => {
+                  e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"%3E%3Crect fill="%23f8f9fa" width="400" height="300"/%3E%3Ctext fill="%236c757d" font-family="Arial" font-size="18" x="50%25" y="50%25" text-anchor="middle" dy=".3em"%3EImage Not Available%3C/text%3E%3C/svg%3E';
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    )}
+
+    {/* Custom styles for image modal animations */}
+    <style>{`
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      
+      @keyframes slideIn {
+        from {
+          transform: scale(0.8);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+    `}</style>
     
     </div>
   )
