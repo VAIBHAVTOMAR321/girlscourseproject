@@ -47,6 +47,7 @@ import AddJob from "./components/admindashboard/AddJob.jsx";
 import ManageJobs from "./components/admindashboard/ManageJobs.jsx";
 import AddSeminar from "./components/admindashboard/AddSeminar.jsx";
 import AddWorkshop from "./components/admindashboard/AddWorkshop.jsx";
+import GovtEmployee from "./components/home/GovtEmployee.jsx";
 
 function AppContent() {
   const location = useLocation();
@@ -89,6 +90,7 @@ function AppContent() {
           <Route path="/Login" element={<Login />} />
           {/* <Route path="/UserDashboard" element={<UserDashboard />} /> */}
           <Route path="/Registration" element={<Registration />} />
+          <Route path="/GovtEmployee" element={<GovtEmployee />} />
           
           {/* User Dashboard Routes - Accessible to all authenticated users */}
           <Route

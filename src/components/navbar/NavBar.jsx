@@ -7,6 +7,7 @@ const NavBar = () => {
   const location = useLocation();
   const isLoginPage = location.pathname === '/login';
   const isRegisterPage = location.pathname === '/Registration';
+  const isGovtEmployeePage = location.pathname === '/GovtEmployee';
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -37,9 +38,13 @@ const NavBar = () => {
         
         {/* Desktop menu */}
         <div className="navbar-menu">
-          <Link to="/" className="navbar-link">Home</Link>
-        
-          {!isLoginPage && (
+          {/* Hide Home on GovtEmployee page */}
+          {!isGovtEmployeePage && (
+            <Link to="/" className="navbar-link">Home</Link>
+          )}
+          
+          {/* Hide Login on GovtEmployee page */}
+          {!isLoginPage && !isGovtEmployeePage && (
             <Link to="/login" className="navbar-link navbar-button">Login</Link>
           )}
           {/* {!isRegisterPage && (
@@ -49,15 +54,19 @@ const NavBar = () => {
         
         {/* Mobile menu */}
         <div className={`navbar-mobile-menu ${menuOpen ? 'active' : ''}`}>
-          <Link 
-            to="/" 
-            className="navbar-link" 
-            onClick={() => setMenuOpen(false)}
-          >
-            Home
-          </Link>
-        
-          {!isLoginPage && (
+          {/* Hide Home on GovtEmployee page */}
+          {!isGovtEmployeePage && (
+            <Link 
+              to="/" 
+              className="navbar-link" 
+              onClick={() => setMenuOpen(false)}
+            >
+              Home
+            </Link>
+          )}
+          
+          {/* Hide Login on GovtEmployee page */}
+          {!isLoginPage && !isGovtEmployeePage && (
             <Link 
               to="/login" 
               className="navbar-link navbar-button" 
