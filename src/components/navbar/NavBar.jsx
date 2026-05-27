@@ -13,13 +13,23 @@ const NavBar = () => {
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        <Link to="/" className="navbar-logo">
-          <img src={Logo} alt="BrainRock Logo" className="navbar-logo-img" />
-          <div className="navbar-logo-text">
-            <div className="navbar-logo-main">Brainrock Consulting Services</div>
-            <div className="navbar-logo-sub">I.S.O certified 9001:2015</div>
+        {isGovtEmployeePage ? (
+          <div className="navbar-logo">
+            <img src={Logo} alt="BrainRock Logo" className="navbar-logo-img" />
+            <div className="navbar-logo-text">
+              <div className="navbar-logo-main">Brainrock Consulting Services</div>
+              <div className="navbar-logo-sub">I.S.O certified 9001:2015</div>
+            </div>
           </div>
-        </Link>
+        ) : (
+          <Link to="/" className="navbar-logo">
+            <img src={Logo} alt="BrainRock Logo" className="navbar-logo-img" />
+            <div className="navbar-logo-text">
+              <div className="navbar-logo-main">Brainrock Consulting Services</div>
+              <div className="navbar-logo-sub">I.S.O certified 9001:2015</div>
+            </div>
+          </Link>
+        )}
         
         <div className="navbar-center">
           <h1 className="navbar-center-heading">National Education & Training Portal</h1>
