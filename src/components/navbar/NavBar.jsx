@@ -42,9 +42,9 @@ const NavBar = () => {
           {!isLoginPage && (
             <Link to="/login" className="navbar-link navbar-button">Login</Link>
           )}
-          {!isRegisterPage && (
+          {/* {!isRegisterPage && (
             <Link to="/Registration" className="navbar-link navbar-button">Register</Link>
-          )}
+          )} */}
         </div>
         
         {/* Mobile menu */}

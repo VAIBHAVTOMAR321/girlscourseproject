@@ -21,7 +21,6 @@ const Login = () => {
   
   // State management
   const [role, setRole] = useState(location.state?.role || "admin");
-  const [courseType, setCourseType] = useState("paid");
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -35,7 +34,6 @@ const Login = () => {
   const [formData, setFormData] = useState({
     email_or_phone: "",
     phone: "",
-    aadhaar_no: "",
     password: "",
   });
 
@@ -75,10 +73,10 @@ const Login = () => {
     fetchCourses();
   }, [fetchCourses]);
 
-  // Memoize filtered courses for performance
-  const filteredCourses = useMemo(() => {
-    return courses.filter(course => course.type === courseType);
-  }, [courses, courseType]);
+  // Memoize paid courses
+  const paidCourses = useMemo(() => {
+    return courses.filter(course => course.type === "paid");
+  }, [courses]);
 
   // Handle form input changes
   const handleChange = useCallback((e) => {
@@ -117,14 +115,6 @@ const Login = () => {
       }
     }
 
-    if (role === "student-unpaid") {
-      if (!formData.aadhaar_no.trim()) {
-        errors.aadhaar_no = "Aadhaar number is required";
-      } else if (!/^\d{12}$/.test(formData.aadhaar_no.trim())) {
-        errors.aadhaar_no = "Aadhaar number must be exactly 12 digits";
-      }
-    }
-
     if (!formData.password.trim()) {
       errors.password = "Password is required";
     } else if (formData.password.length < 6) {
@@ -150,7 +140,6 @@ const Login = () => {
       role,
       ...(role === "admin" && { email_or_phone: formData.email_or_phone }),
       ...(role === "student" && { phone: formData.phone }),
-      ...(role === "student-unpaid" && { aadhaar_no: formData.aadhaar_no }),
       password: formData.password,
     };
 
@@ -195,19 +184,8 @@ const Login = () => {
 
   // Handle course click
   const handleCourseClick = useCallback((course) => {
-    if (course.type === "paid") {
-      window.open("https://brainrock.in/Courses", "_blank");
-    } else {
-      navigate("/Registration", { 
-        state: { 
-          courseName: course.name,
-          courseId: course.course_id || course.id,
-          courseType: course.type,
-          fromCourse: true 
-        } 
-      });
-    }
-  }, [navigate]);
+    window.open("https://brainrock.in/Courses", "_blank");
+  }, []);
 
   // Format price
   const formatPrice = (price) => {
@@ -272,10 +250,9 @@ const Login = () => {
     </div>
   );
 
-  // Render loading skeleton
+  {/* Render loading skeleton */}
   const renderLoadingSkeleton = () => {
-    const count = courseType === "unpaid" ? 3 : 6;
-    return Array.from({ length: count }).map((_, index) => (
+    return Array.from({ length: 6 }).map((_, index) => (
       <div
         key={`loading-${index}`}
         className="course-card disabled"
@@ -293,9 +270,6 @@ const Login = () => {
             <Badge bg="secondary" className="me-2">
               Loading
             </Badge>
-            <span className="enrolled-count">
-              <i className="fas fa-users"></i> --
-            </span>
           </div>
         </div>
         <div className="course-action" style={{ color: "#a0aec0" }}>
@@ -319,109 +293,20 @@ const Login = () => {
     <h3 className="text-center mb-3">Available Courses</h3>
     <div className="header-underline mx-auto"></div>
     
-    {/* Course Type Tabs */}
-    <div className="course-tabs mb-4">
-      <div 
-        className={`course-tab ${courseType === "paid" ? "active" : ""}`}
-        onClick={() => setCourseType("paid")}
-      >
-        Paid Courses
-      </div>
-      <div 
-        className={`course-tab ${courseType === "unpaid" ? "active" : ""}`}
-        onClick={() => setCourseType("unpaid")}
-      >
-        UnPaid Courses
-      </div>
-    </div>
+
   </div>
   
   {/* Courses Grid */}
-  <div className={`course-grid ${courseType === "unpaid" ? "banner-layout" : "two-column"}`}>
+  <div className="course-grid two-column">
     {loading ? (
       renderLoadingSkeleton()
-    ) : filteredCourses.length > 0 ? (
-      courseType === "unpaid" ? (
-        // Unpaid courses with banner image on left and courses on right
-        <div className="unpaid-banner-layout">
-          {/* Left side - Banner Image */}
-          <div className="banner-image-section">
-            <div className="banner-container">
-              <img  src={BannerImg} alt="banner"
-                
-              />
-              <div className="banner-overlay">
-                <div className="banner-content">
-                 
-                  <div className="banner-stats">
-                    <div className="stat-item">
-                      <i className="fas fa-book"></i>
-                    </div>
-                    <div className="stat-item">
-                      <i className="fas fa-users"></i>
-                     
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          {/* Right side - Courses List */}
-          <div className="courses-list-section">
-           
-            
-            <div className="courses-list-container">
-              {filteredCourses.map((course, index) => (
-                <div
-                  key={`unpaid-${course.id}-${index}`}
-                  className={`unpaid-list-item ${course.status === "disabled" ? "disabled" : ""}`}
-                  onClick={() => handleCourseClick(course)}
-                  style={{
-                    background: course.status === "active" 
-                      ? `linear-gradient(135deg, ${course.color}08 0%, transparent 100%)` 
-                      : "#f5f5f5",
-                    borderLeft: `3px solid ${course.status === "active" ? course.color : "#ddd"}`
-                  }}
-                >
-                  <div className="list-item-content">
-                    {/* <div className="course-icon-small" style={{ color: course.color }}>
-                      {course.icon}
-                    </div> */}
-                    <div className="course-details">
-                      <h6 className="course-title">{course.name}</h6>
-                      <div className="course-meta-info">
-                        {/* <span className="enrolled-info">
-                              <i class="bi bi-people"></i> {course.enrolled}
-                        </span> */}
-                        {course.duration && (
-                          <span className="duration-info">
-                                <i className="bi bi-clock"></i> {course.duration}
-                          </span>
-                        )}
-                        <Badge bg="primary" className="free-badge">
-                          
-                        </Badge>
-                      </div>
-                    </div>
-                    <div className="course-action-arrow">
-                          <i className="bi bi-chevron-right"></i>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      ) : (
-        // Paid courses - original card layout
-        filteredCourses.map(renderCourseCard)
-      )
+    ) : paidCourses.length > 0 ? (
+      paidCourses.map(renderCourseCard)
     ) : (
       <div className="course-card disabled" style={{ width: "100%" }}>
         <div className="course-info">
           <h5 className="course-name text-center">
-            No {courseType === "paid" ? "paid" : ""} courses available
+            No paid courses available
           </h5>
           <p className="text-center small text-muted">
             Please check back later for available courses
@@ -444,8 +329,7 @@ const Login = () => {
             <div className="p-4">
               <div className="section-header">
                 <h2 className="text-center mb-4">
-                  {role === "admin" ? "Admin Login" : 
-                   role === "student" ? "Student Login" : "Free Student Login"}
+                  {role === "admin" ? "Admin Login" : "Student Login"}
                 </h2>
                 <div className="header-underline"></div>
               </div>
@@ -456,8 +340,7 @@ const Login = () => {
                 <div className="d-flex justify-content-around flex-wrap gap-2">
                   {[
                     { value: "admin", label: "Administrator" },
-                    { value: "student", label: "Student (Paid)" },
-                    { value: "student-unpaid", label: "Student (Free)" }
+                    { value: "student", label: "Student (Paid)" }
                   ].map(({ value, label }) => (
                     <div 
                       key={value}
@@ -508,25 +391,6 @@ const Login = () => {
                     />
                     <Form.Control.Feedback type="invalid">
                       {fieldErrors.phone}
-                    </Form.Control.Feedback>
-                  </Form.Group>
-                )}
-
-                {role === "student-unpaid" && (
-                  <Form.Group className="mb-3">
-                    <Form.Label className="form-label-gov">Aadhaar Number</Form.Label>
-                    <Form.Control
-                      type="text"
-                      name="aadhaar_no"
-                      value={formData.aadhaar_no}
-                      onChange={handleChange}
-                      maxLength={12}
-                      placeholder="Enter 12-digit Aadhaar number"
-                      className="form-control-gov"
-                      isInvalid={!!fieldErrors.aadhaar_no}
-                    />
-                    <Form.Control.Feedback type="invalid">
-                      {fieldErrors.aadhaar_no}
                     </Form.Control.Feedback>
                   </Form.Group>
                 )}
@@ -594,17 +458,7 @@ const Login = () => {
                   </Button>
                 </div>
 
-                {/* Register Link */}
-                {(courseType === "unpaid" || role === "student-unpaid") && (
-                  <div className="text-center mt-3">
-                    <p className="small">
-                      Don't have an account?{" "}
-                      <Link to="/Registration" className="register-link">
-                        Register here
-                      </Link>
-                    </p>
-                  </div>
-                )}
+
               </Form>
 
               <div className="security-notice mt-3">
