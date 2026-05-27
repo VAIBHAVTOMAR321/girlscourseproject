@@ -1319,7 +1319,9 @@
   .login-card {
     padding: 15px;
   }
-
+ .login-container{
+    min-height: 68vh !important;
+  }
   .login-header h1 {
     font-size: 18px;
     margin-bottom: 5px;
