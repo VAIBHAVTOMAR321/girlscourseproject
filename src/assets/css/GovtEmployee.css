@@ -7,7 +7,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+ 
   padding: 20px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
@@ -188,8 +188,9 @@
 
 .test-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  margin-top: 80px;
   padding: 20px;
+  padding: 0px 0px 0px 10px !important;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
@@ -499,7 +500,7 @@
 
 .result-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
   padding: 20px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
@@ -914,7 +915,9 @@
   border-left: 3px solid #e74c3c;
   padding-left: 7px;
 }
-
+.time-left-rem{
+  font-size: 28px;
+}
 .option-row.correct-choice {
   background-color: #f0fdf4;
   border-left: 3px solid #28a745;

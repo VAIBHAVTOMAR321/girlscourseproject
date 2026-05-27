@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../../assets/css/GovtEmployee.css';
+import { Container } from 'react-bootstrap';
 
 function GovtEmployee() {
   const [phone, setPhone] = useState('');
@@ -194,7 +195,7 @@ function GovtEmployee() {
     const selectedAnswer = answers[currentQuestion.id];
 
     return (
-      <div className="test-container">
+      <Container className="test-container">
         <div className="test-header">
           <div className="test-info">
             <h2 className="test-title">Workshop Test</h2>
@@ -203,7 +204,7 @@ function GovtEmployee() {
           </div>
           <div className={`timer ${timeRemaining <= 60 ? 'timer-warning' : ''}`}>
             <div className="timer-icon">⏱️</div>
-            <div className="timer-display">{formatTime(timeRemaining)}</div>
+            <div className="time-left-rem">{formatTime(timeRemaining)}</div>
             <div className="timer-label">Time Left</div>
           </div>
           <button className="language-toggle" onClick={() => setLanguage(language === 'en' ? 'hi' : 'en')}>
@@ -296,7 +297,7 @@ function GovtEmployee() {
             </div>
           </div>
         </div>
-      </div>
+      </Container>
     );
   }
 
