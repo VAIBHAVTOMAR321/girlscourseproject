@@ -79,6 +79,10 @@ const AdminLeftNav = ({ show, setShow }) => {
               <i className="bi bi-question-circle nav-icon"></i>
               <span className="nav-text">Quiz Management</span>
             </Nav.Link>
+            <Nav.Link as={Link} to="/EmployeeQuiz" className="nav-link-custom ">
+              <i className="bi bi-person-workspace nav-icon"></i> {/* Using a suitable icon */}
+              <span className="nav-text">Employee Quiz</span>
+            </Nav.Link>
 
             {/* Schemes Dropdown */}
             <div className="dropdown-menu-wrapper">
@@ -198,6 +202,9 @@ const AdminLeftNav = ({ show, setShow }) => {
             </Nav.Link>
             <Nav.Link as={Link} to="/QuizManagement" className="nav-link-custom" onClick={() => setShowOffcanvas(false)}>
               <i className="bi bi-question-circle nav-icon me-2"></i> Quiz Management
+            </Nav.Link>
+            <Nav.Link as={Link} to="/EmployeeQuiz" className="nav-link-custom" onClick={() => setShowOffcanvas(false)}>
+              <i className="bi bi-person-workspace nav-icon me-2"></i> Employee Quiz
             </Nav.Link>
             <Nav.Link as={Link} to="/ManageGovtSchemes" className="nav-link-custom" onClick={() => setShowOffcanvas(false)}>
               <i className="bi bi-file-earmark-text nav-icon me-2"></i> Manage Schemes
