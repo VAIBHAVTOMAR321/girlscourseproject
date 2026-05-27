@@ -301,7 +301,7 @@ const EmployeeQuiz = () => {
 
   return (
     <div className="admin-layout">
-      <div className="admin-wrapper d-flex">
+      <div className="admin-wrapper">
         <AdminLeftNav show={showSidebar} setShow={setShowSidebar} />
         <div className={`admin-main-content flex-grow-1 ${!showSidebar ? 'sidebar-compact' : ''}`}>
           <AdminTopNav />
@@ -567,8 +567,8 @@ const EmployeeQuiz = () => {
         </div>
       </div>
 
-      {/* Single Employee Analysis Modal */}
-      <Modal show={showSingleAnalysisModal} onHide={() => setShowSingleAnalysisModal(false)} centered size="lg">
+       {/* Single Employee Analysis Modal */}
+       <Modal show={showSingleAnalysisModal} onHide={() => setShowSingleAnalysisModal(false)} centered size="md">
         <Modal.Header closeButton className="bg-light">
           <Modal.Title className="fs-5">Candidate Performance Analysis</Modal.Title>
         </Modal.Header>
