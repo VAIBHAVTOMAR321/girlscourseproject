@@ -123,6 +123,17 @@ font-size: 20px;
     font-weight: bold;
     box-shadow: 0 2px 8px rgba(240, 147, 251, 0.4);
 }
+.admin-wrapper{
+  display: flex;
+  width: 100%;
+}
+
+/* Mobile View */
+@media (max-width: 768px) {
+  .admin-wrapper{
+    flex-direction: column;
+  }
+}
 @media (min-width: 768px) and (max-width: 1024px) {
     .in-prohrace {
         position: absolute !important;

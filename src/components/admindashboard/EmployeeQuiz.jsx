@@ -567,8 +567,8 @@ const EmployeeQuiz = () => {
         </div>
       </div>
 
-       {/* Single Employee Analysis Modal */}
-       <Modal show={showSingleAnalysisModal} onHide={() => setShowSingleAnalysisModal(false)} centered size="md">
+      {/* Single Employee Analysis Modal */}
+      <Modal show={showSingleAnalysisModal} onHide={() => setShowSingleAnalysisModal(false)} centered size="lg">
         <Modal.Header closeButton className="bg-light">
           <Modal.Title className="fs-5">Candidate Performance Analysis</Modal.Title>
         </Modal.Header>
