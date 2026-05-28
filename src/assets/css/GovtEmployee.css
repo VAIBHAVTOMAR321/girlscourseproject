@@ -198,7 +198,7 @@
   background: white;
   border-radius: 12px;
   padding: 20px;
-  margin-bottom: 20px;
+  margin-bottom: 12px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -210,14 +210,14 @@
 .test-info h2 {
   margin: 0 0 10px 0;
   color: #333;
-  font-size: 24px;
+  font-size: 20px;
 }
 
 .candidate-info,
 .candidate-name {
   margin: 5px 0;
   color: #666;
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .timer {
@@ -294,7 +294,7 @@
 .question-panel {
   background: white;
   border-radius: 12px;
-  padding: 30px;
+  padding: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
@@ -302,7 +302,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+
   border-bottom: 2px solid #f0f0f0;
   padding-bottom: 15px;
 }
@@ -328,7 +328,7 @@
 
 .question-text p {
   color: #333;
-  font-size: 18px;
+  font-size: 14px;
   line-height: 1.6;
   margin: 0;
   font-weight: 500;
@@ -377,7 +377,7 @@
 
 .option-text {
   color: #333;
-  font-size: 15px;
+  font-size: 12px;
   line-height: 1.4;
 }
 
@@ -390,7 +390,7 @@
   gap: 12px;
   justify-content: space-between;
   margin-top: 30px;
-  padding-top: 20px;
+
   border-top: 1px solid #f0f0f0;
 }
 
@@ -1131,7 +1131,7 @@
   }
 
   .question-text p {
-    font-size: 16px;
+    font-size: 14px;
   }
 
   .option-label {
