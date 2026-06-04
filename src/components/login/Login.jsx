@@ -18,10 +18,12 @@ const Login = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { login } = useAuth();
+
+  const isUnpaidPath = location.pathname === "/unpaid";
   
   // State management
-  const [role, setRole] = useState(location.state?.role || "admin");
-  const [courseType, setCourseType] = useState("paid");
+  const [role, setRole] = useState(location.state?.role || (isUnpaidPath ? "student-unpaid" : "admin"));
+  const [courseType, setCourseType] = useState(isUnpaidPath ? "unpaid" : "paid");
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -38,6 +40,17 @@ const Login = () => {
     aadhaar_no: "",
     password: "",
   });
+
+  // Update role and course type when the URL path changes
+  useEffect(() => {
+    if (isUnpaidPath) {
+      setCourseType("unpaid");
+      if (role === "student") setRole("student-unpaid");
+    } else {
+      setCourseType("paid");
+      if (role === "student-unpaid") setRole("student");
+    }
+  }, [isUnpaidPath]);
 
   // Fetch courses with useCallback for optimization
   const fetchCourses = useCallback(async () => {
@@ -319,20 +332,12 @@ const Login = () => {
     <h3 className="text-center mb-3">Available Courses</h3>
     <div className="header-underline mx-auto"></div>
     
-    {/* Course Type Tabs */}
-    <div className="course-tabs mb-4">
-      <div 
-        className={`course-tab ${courseType === "paid" ? "active" : ""}`}
-        onClick={() => setCourseType("paid")}
-      >
-        Paid Courses
-      </div>
-      <div 
-        className={`course-tab ${courseType === "unpaid" ? "active" : ""}`}
-        onClick={() => setCourseType("unpaid")}
-      >
-        UnPaid Courses
-      </div>
+    {/* Course Type Label - Locked based on URL path */}
+    <div className="mb-4 text-center">
+      <h5 className={isUnpaidPath ? "text-primary fw-bold" : "text-success fw-bold"}>
+        <i className={`bi bi-${isUnpaidPath ? "gift-fill" : "award-fill"} me-2`}></i>
+        {isUnpaidPath ? "Our Free Learning Programs" : "Professional Certificate Courses"}
+      </h5>
     </div>
   </div>
   
@@ -456,8 +461,10 @@ const Login = () => {
                 <div className="d-flex justify-content-around flex-wrap gap-2">
                   {[
                     { value: "admin", label: "Administrator" },
-                    { value: "student", label: "Student (Paid)" },
-                    { value: "student-unpaid", label: "Student (Free)" }
+                    ...(isUnpaidPath 
+                      ? [{ value: "student-unpaid", label: "Student (Free)" }]
+                      : [{ value: "student", label: "Student (Paid)" }]
+                    )
                   ].map(({ value, label }) => (
                     <div 
                       key={value}
