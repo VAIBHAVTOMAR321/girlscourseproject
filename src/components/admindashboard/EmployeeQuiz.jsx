@@ -243,10 +243,10 @@ const EmployeeQuiz = () => {
 
   const renderRankIcon = (rank) => {
     switch(rank) {
-      case 1: return <FaTrophy className="text-warning me-1" />;
-      case 2: return <FaMedal className="text-secondary me-1" />;
-      case 3: return <FaMedal className="text-danger me-1" />;
-      default: return null;
+      case 1: return <FaTrophy className="text-success me-1" />;
+      case 2: return <FaMedal className="text-primary me-1" />;
+      case 3: return <FaMedal className="text-warning me-1" />;
+      default: return <FaMedal className="text-danger me-1" />;
     }
   }
 
@@ -280,10 +280,10 @@ const EmployeeQuiz = () => {
   ];
 
   const getRankColor = (rank) => {
-    if (rank === 1) return '#FFD700'; // Gold
-    if (rank === 2) return '#C0C0C0'; // Silver
-    if (rank === 3) return '#CD7F32'; // Bronze
-    return '#0d6efd';
+    if (rank === 1) return '#28a745'; // Green
+    if (rank === 2) return '#0d6efd'; // Blue
+    if (rank === 3) return '#ffc107'; // Yellow
+    return '#dc3545'; // Red
   }
 
   const formatTime = (isoString) => {
@@ -443,7 +443,7 @@ const EmployeeQuiz = () => {
                           <Col lg={4}>
                             <h5 className="mb-3 text-secondary"><FaTrophy className="text-warning me-2"/>Top Performers</h5>
                             {rankings.slice(0, 3).map((candidate, idx) => (
-                              <Card key={candidate.candidate_id} className={`mb-3 border-0 shadow-sm border-start border-4 ${idx === 0 ? 'border-warning' : idx === 1 ? 'border-secondary' : 'border-danger'}`}>
+                              <Card key={candidate.candidate_id} className={`mb-3 border-0 shadow-sm border-start border-4 ${idx === 0 ? 'border-success' : idx === 1 ? 'border-primary' : 'border-warning'}`}>
                                 <Card.Body className="d-flex align-items-center py-3">
                                   <div className="rank-badge me-3" style={{ fontSize: '1.5rem', fontWeight: 'bold', color: getRankColor(idx + 1) }}>
                                     #{idx + 1}
