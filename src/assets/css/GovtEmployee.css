@@ -350,7 +350,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 15px;
+  padding: 8px;
   border: 2px solid #e0e0e0;
   border-radius: 8px;
   cursor: pointer;
@@ -370,8 +370,8 @@
 }
 
 .option-input {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   cursor: pointer;
   accent-color: #667eea;
 }
@@ -565,7 +565,7 @@
   width: 140px;
   height: 140px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #0d38f6 0%, #0d38f6 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -576,7 +576,7 @@
 }
 
 .percentage {
-  font-size: 48px;
+  font-size: 40px;
   font-weight: 700;
   line-height: 1;
 }
@@ -602,7 +602,7 @@
 }
 
 .score-label {
-  color: #999;
+  /* color: #999; */
   font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
@@ -611,7 +611,7 @@
 }
 
 .score-value {
-  color: #333;
+  color: #f38b04;
   font-size: 32px;
   font-weight: 700;
   line-height: 1;
@@ -659,7 +659,7 @@
 }
 
 .stat-label {
-  color: #999;
+  /* color: #999; */
   font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
@@ -668,7 +668,7 @@
 }
 
 .stat-number {
-  color: #333;
+  color: #ff9901;
   font-size: 24px;
   font-weight: 700;
   line-height: 1;
@@ -704,12 +704,12 @@
 }
 
 .info-label {
-  color: #666;
+  /* color: #666; */
   font-weight: 600;
 }
 
 .info-value {
-  color: #333;
+  color: #0245ff;
   font-weight: 500;
 }
 
@@ -861,7 +861,7 @@
 
 .answer-index {
   margin: 0;
-  color: #999;
+  /* color: #999; */
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
@@ -1187,6 +1187,7 @@
   /* Results responsive */
   .result-container {
     padding: 12px;
+    margin-top:54px;
   }
 
   .result-header {
@@ -1319,6 +1320,9 @@
 @media (max-width: 480px) {
   .login-card {
     padding: 15px;
+  }
+ .result-header{
+display:none;
   }
  .login-container{
     min-height: 68vh !important;

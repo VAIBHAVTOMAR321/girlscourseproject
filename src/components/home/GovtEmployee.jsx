@@ -255,20 +255,23 @@ function GovtEmployee() {
               >
                 ← Previous
               </button>
-              <button
-                className="btn btn-submit"
-                onClick={handleSubmitTest}
-                disabled={submittingTest}
-              >
-                {submittingTest ? 'Submitting...' : 'Submit Test'}
-              </button>
-              <button
-                className="btn btn-primary"
-                onClick={handleNextQuestion}
-                disabled={currentQuestionIndex === questions.length - 1}
-              >
-                Next →
-              </button>
+              {currentQuestionIndex === questions.length - 1 ? (
+                <button
+                  className="btn btn-submit"
+                  onClick={handleSubmitTest}
+                  disabled={submittingTest}
+                >
+                  {submittingTest ? 'Submitting...' : 'Submit Test'}
+                </button>
+              ) : (
+                <button
+                  className="btn btn-primary"
+                  onClick={handleNextQuestion}
+                  disabled={currentQuestionIndex === questions.length - 1}
+                >
+                  Next →
+                </button>
+              )}
             </div>
           </div>
 
