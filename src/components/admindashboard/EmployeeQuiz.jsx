@@ -255,8 +255,14 @@ const EmployeeQuiz = () => {
     setShowSingleAnalysisModal(true)
   }
 
-  const totalPages = Math.ceil(rankings.length / recordsPerPage)
-  const currentRecords = rankings.slice((currentPage - 1) * recordsPerPage, currentPage * recordsPerPage)
+  // Combined list for display: Ranked candidates followed by Pending candidates
+  const allDisplayRecords = [
+    ...rankings.map(r => ({ ...r, isPending: false })),
+    ...pendingCandidates.map(p => ({ ...p, isPending: true, rank: '-', score: 'In Progress', total_questions: '-', submitted_at: null }))
+  ];
+
+  const totalPages = Math.ceil(allDisplayRecords.length / recordsPerPage)
+  const currentRecords = allDisplayRecords.slice((currentPage - 1) * recordsPerPage, currentPage * recordsPerPage)
 
   // Data for Overall Batch Analysis Graphs
   const completionChartData = [
@@ -503,20 +509,22 @@ const EmployeeQuiz = () => {
                                 </tr>
                               </thead>
                               <tbody>
-                                {rankings.length > 0 ? rankings.map(r => (
-                                  <tr key={r.candidate_id}>
+                                {currentRecords.length > 0 ? currentRecords.map((r, index) => (
+                                  <tr key={r.candidate_id || index} className={r.isPending ? 'table-danger' : ''}>
                                     <td className="ps-4 fw-bold">
                                       {renderRankIcon(r.rank)} {r.rank}
                                     </td>
                                     <td>{r.full_name}</td>
                                     <td><Badge bg="light" text="dark" className="border">{r.candidate_id}</Badge></td>
-                                    <td className="text-primary fw-semibold">{r.score}</td>
+                                    <td className={r.isPending ? "text-danger fst-italic small" : "text-primary fw-semibold"}>{r.score}</td>
                                     <td>{r.total_questions}</td>
                                     <td><small className="text-muted">{formatTime(r.submitted_at)}</small></td>
                                     <td className="text-center">
-                                      <Button variant="link" size="sm" onClick={() => handleAnalyzeCandidate(r)} className="text-decoration-none p-0">
-                                        <FaEye className="me-1" /> Analyze
-                                      </Button>
+                                      {!r.isPending && (
+                                        <Button variant="link" size="sm" onClick={() => handleAnalyzeCandidate(r)} className="text-decoration-none p-0">
+                                          <FaEye className="me-1" /> Analyze
+                                        </Button>
+                                      )}
                                     </td>
                                   </tr>
                                 )) : (

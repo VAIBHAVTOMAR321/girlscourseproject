@@ -91,12 +91,20 @@ function GovtEmployee() {
       const data = await response.json();
 
       if (data.success) {
+        let shuffledQuestions = data.questions || [];
+        // Shuffle the questions to ensure different order for each user
+        for (let i = shuffledQuestions.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffledQuestions[i], shuffledQuestions[j]] = [shuffledQuestions[j], shuffledQuestions[i]]; // Swap elements
+        }
+
         setCandidateId(data.candidate_id);
-        setQuestions(data.questions || []);
+        // Use the shuffled questions
+        setQuestions(shuffledQuestions);
         setTestStarted(true);
         setCurrentQuestionIndex(0);
         setAnswers({});
-        setTimeRemaining(600);
+        setTimeRemaining(300);
         setTestSubmitted(false);
         setError('');
       } else {
