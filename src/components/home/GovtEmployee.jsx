@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../../assets/css/GovtEmployee.css';
-import { Container } from 'react-bootstrap';
+import { Container, Row, Col, Card } from 'react-bootstrap';
 
 function GovtEmployee() {
   const [phone, setPhone] = useState('');
@@ -314,6 +314,10 @@ function GovtEmployee() {
 
   if (testSubmitted && testResults) {
     const isHindi = language === 'hi';
+    const certificateUrl = testResults.certificate 
+      ? `https://brjobsedu.com/girls_course/girls_course_backend${testResults.certificate}` 
+      : null;
+    const shareText = `I completed the Workshop Test - Government Employee Program with a score of ${testResults.percentage.toFixed(1)}%!`;
 
     if (showWrongAnswers) {
       return (
@@ -442,61 +446,123 @@ function GovtEmployee() {
             </button>
           </div>
 
-          <div className="score-card">
-            <div className="score-circle">
-              <div className="percentage">{testResults.percentage.toFixed(1)}%</div>
-              <div className="percentage-label">Score</div>
-            </div>
+          <Row>
+            {certificateUrl && (
+              <Col lg={5} md={12} className="mb-4">
+                <Card className="certificate-card shadow-sm border-0 h-100 text-center p-3" style={{ borderRadius: '15px', background: '#fdfdfd' }}>
+                  <Card.Body>
+                    <h5 className="mb-3 fw-bold text-primary">Your Certificate</h5>
+                    <div className="certificate-preview mb-3" style={{ border: '8px solid #f8f9fa', borderRadius: '10px', overflow: 'hidden', backgroundColor: '#fff' }}>
+                      <img 
+                        src={certificateUrl} 
+                        alt="Test Certificate" 
+                        className="img-fluid"
+                        style={{ maxHeight: '350px', cursor: 'pointer' }}
+                        onClick={() => window.open(certificateUrl, '_blank')}
+                      />
+                    </div>
+                    
+                    <div className="share-section mt-4">
+                      <p className="small text-muted mb-3 text-uppercase fw-bold" style={{ letterSpacing: '1px' }}>Share Achievement</p>
+                      <div className="d-flex justify-content-center gap-4">
+                        <a 
+                          href={`https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + ' Check it out: ' + certificateUrl)}`} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="text-success"
+                          title="Share on WhatsApp"
+                        >
+                          <i className="bi bi-whatsapp fs-2"></i>
+                        </a>
+                        <a 
+                          href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(certificateUrl)}`} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="text-primary"
+                          title="Share on Facebook"
+                        >
+                          <i className="bi bi-facebook fs-2"></i>
+                        </a>
+                        <a 
+                          href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(certificateUrl)}`} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="text-dark"
+                          title="Share on X"
+                        >
+                          <i className="bi bi-twitter-x fs-2"></i>
+                        </a>
+                        <a 
+                          href="https://www.instagram.com/" 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          style={{ color: '#E1306C' }}
+                          title="Share on Instagram"
+                        >
+                          <i className="bi bi-instagram fs-2"></i>
+                        </a>
+                      </div>
+                    </div>
+                  </Card.Body>
+                </Card>
+              </Col>
+            )}
 
-            <div className="score-details">
-              <div className="score-item">
-                <div className="score-label">Total Marks</div>
-                <div className="score-value">{testResults.total_marks}</div>
+            <Col lg={certificateUrl ? 7 : 12} md={12}>
+              <div className="score-card">
+                <div className="score-circle">
+                  <div className="percentage">{testResults.percentage.toFixed(1)}%</div>
+                  <div className="percentage-label">Score</div>
+                </div>
+                <div className="score-details">
+                  <div className="score-item">
+                    <div className="score-label">Total Marks</div>
+                    <div className="score-value">{testResults.total_marks}</div>
+                  </div>
+                  <div className="score-divider"></div>
+                  <div className="score-item">
+                    <div className="score-label">Your Score</div>
+                    <div className="score-value highlight">{testResults.score}</div>
+                  </div>
+                </div>
               </div>
-              <div className="score-divider"></div>
-              <div className="score-item">
-                <div className="score-label">Your Score</div>
-                <div className="score-value highlight">{testResults.score}</div>
-              </div>
-            </div>
-          </div>
 
-          <div className="stats-grid">
-            <div className="stat-card">
-              <div className="stat-icon">📝</div>
-              <div className="stat-content">
-                <div className="stat-label">Attempted</div>
-                <div className="stat-number">{testResults.attempted_questions}</div>
+              <div className="stats-grid">
+                <div className="stat-card">
+                  <div className="stat-icon">📝</div>
+                  <div className="stat-content">
+                    <div className="stat-label">Attempted</div>
+                    <div className="stat-number">{testResults.attempted_questions}</div>
+                  </div>
+                </div>
+                <div className="stat-card">
+                  <div className="stat-icon">✓</div>
+                  <div className="stat-content">
+                    <div className="stat-label">Correct</div>
+                    <div className="stat-number correct">{testResults.correct_answers}</div>
+                  </div>
+                </div>
+                <div className="stat-card">
+                  <div className="stat-icon">✗</div>
+                  <div className="stat-content">
+                    <div className="stat-label">Incorrect</div>
+                    <div className="stat-number incorrect">{testResults.wrong_answers}</div>
+                  </div>
+                </div>
               </div>
-            </div>
 
-            <div className="stat-card">
-              <div className="stat-icon">✓</div>
-              <div className="stat-content">
-                <div className="stat-label">Correct</div>
-                <div className="stat-number correct">{testResults.correct_answers}</div>
+              <div className="candidate-info-card">
+                <div className="info-row">
+                  <span className="info-label">Candidate ID:</span>
+                  <span className="info-value">{testResults.candidate_id}</span>
+                </div>
+                <div className="info-row">
+                  <span className="info-label">Name:</span>
+                  <span className="info-value">{name}</span>
+                </div>
               </div>
-            </div>
-
-            <div className="stat-card">
-              <div className="stat-icon">✗</div>
-              <div className="stat-content">
-                <div className="stat-label">Incorrect</div>
-                <div className="stat-number incorrect">{testResults.wrong_answers}</div>
-              </div>
-            </div>
-          </div>
-
-          <div className="candidate-info-card">
-            <div className="info-row">
-              <span className="info-label">Candidate ID:</span>
-              <span className="info-value">{testResults.candidate_id}</span>
-            </div>
-            <div className="info-row">
-              <span className="info-label">Name:</span>
-              <span className="info-value">{name}</span>
-            </div>
-          </div>
+            </Col>
+          </Row>
 
           {resultError && <div className="error-message">{resultError}</div>}
 

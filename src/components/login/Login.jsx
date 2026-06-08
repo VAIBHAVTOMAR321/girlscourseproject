@@ -19,10 +19,16 @@ const Login = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const isUnpaidPath = location.pathname === "/unpaid";
+  // More robust path detection
+  const isUnpaidPath = useMemo(() => 
+    location.pathname.toLowerCase().includes("/unpaid"), 
+  [location.pathname]);
+  const isEmployeePath = useMemo(() => 
+    location.pathname.toLowerCase().includes("/employee"), 
+  [location.pathname]);
   
   // State management
-  const [role, setRole] = useState(location.state?.role || (isUnpaidPath ? "student-unpaid" : "admin"));
+  const [role, setRole] = useState(location.state?.role || (isUnpaidPath ? "student-unpaid" : isEmployeePath ? "employee" : "admin"));
   const [courseType, setCourseType] = useState(isUnpaidPath ? "unpaid" : "paid");
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -32,6 +38,7 @@ const Login = () => {
   const [hoveredCourse, setHoveredCourse] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
 
   // Form data state
   const [formData, setFormData] = useState({
@@ -39,18 +46,33 @@ const Login = () => {
     phone: "",
     aadhaar_no: "",
     password: "",
+    otp: "",
   });
 
   // Update role and course type when the URL path changes
   useEffect(() => {
-    if (isUnpaidPath) {
+    setFieldErrors({});
+    setErrorMessage("");
+    setOtpSent(false);
+    setFormData({ // Reset form data when path changes
+      email_or_phone: "",
+      phone: "",
+      aadhaar_no: "",
+      password: "",
+      otp: "",
+    });
+
+    if (isEmployeePath) {
+      setCourseType("paid");
+      setRole("employee");
+    } else if (isUnpaidPath) {
       setCourseType("unpaid");
-      if (role === "student") setRole("student-unpaid");
+      if (role === "student" || role === "employee") setRole("student-unpaid");
     } else {
       setCourseType("paid");
-      if (role === "student-unpaid") setRole("student");
+      if (role === "student-unpaid" || role === "employee") setRole("student");
     }
-  }, [isUnpaidPath]);
+  }, [isUnpaidPath, isEmployeePath]);
 
   // Fetch courses with useCallback for optimization
   const fetchCourses = useCallback(async () => {
@@ -138,10 +160,26 @@ const Login = () => {
       }
     }
 
-    if (!formData.password.trim()) {
-      errors.password = "Password is required";
-    } else if (formData.password.length < 6) {
-      errors.password = "Password must be at least 6 characters";
+    if (role === "employee") {
+      if (!formData.phone.trim()) {
+        errors.phone = "Phone number is required";
+      } else if (!/^\d{10}$/.test(formData.phone.trim())) {
+        errors.phone = "Phone number must be exactly 10 digits";
+      }
+      
+      if (otpSent) {
+        if (!formData.otp.trim()) {
+          errors.otp = "OTP is required";
+        }
+      }
+    }
+
+    if (role !== "employee") {
+      if (!formData.password.trim()) {
+        errors.password = "Password is required";
+      } else if (formData.password.length < 6) {
+        errors.password = "Password must be at least 6 characters";
+      }
     }
 
     setFieldErrors(errors);
@@ -152,6 +190,28 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    if (role === "employee" && !otpSent) {
+      if (!validateForm()) {
+        return;
+      }
+      
+      setIsSubmitting(true);
+      try {
+        const response = await axios.post(`${API_BASE_URL}/send-otp/`, { phone: formData.phone });
+        if (response.data?.success) {
+          setOtpSent(true);
+          setErrorMessage("");
+        } else {
+          setErrorMessage(response.data?.error || "Failed to send OTP");
+        }
+      } catch (error) {
+        setErrorMessage(error.response?.data?.error || "Error sending OTP. Please try again.");
+      } finally {
+        setIsSubmitting(false);
+      }
+      return;
+    }
+
     if (isSubmitting || !validateForm()) {
       return;
     }
@@ -159,15 +219,21 @@ const Login = () => {
     setIsSubmitting(true);
     setErrorMessage("");
 
-    const payload = {
-      role,
-      ...(role === "admin" && { email_or_phone: formData.email_or_phone }),
-      ...(role === "student" && { phone: formData.phone }),
-      ...(role === "student-unpaid" && { aadhaar_no: formData.aadhaar_no }),
-      password: formData.password,
-    };
-
     try {
+      const payload = role === "employee"
+        ? {
+            role: "employee",
+            phone: formData.phone,
+            otp: formData.otp,
+          }
+        : {
+            role,
+            ...(role === "admin" && { email_or_phone: formData.email_or_phone }),
+            ...(role === "student" && { phone: formData.phone }),
+            ...(role === "student-unpaid" && { aadhaar_no: formData.aadhaar_no }),
+            password: formData.password,
+          };
+
       const response = await axios.post(`${API_BASE_URL}/login/`, payload);
 
       if (response.data?.error || response.data?.detail) {
@@ -188,7 +254,7 @@ const Login = () => {
       successMessage.style.zIndex = '9999';
       successMessage.innerHTML = `
         <i class="bi bi-check-circle me-2"></i>
-        Login Successful! Redirecting...
+        ${response.data.message || 'Login Successful! Redirecting...'}
       `;
       document.body.appendChild(successMessage);
       
@@ -320,13 +386,12 @@ const Login = () => {
 
   return (
     <div className="gov-portal-bg">
-      <NavBar />
-      
       <Container className="mt-5 main-content-wrapper">
         <Row className="align-items-center shadow rounded bg-white official-card">
           {/* <h1 className="text-center">National Education Portal</h1> */}
           
           {/* Courses Section */}
+        {!isEmployeePath && (
         <Col lg={5} md={12} sm={12} className="course-marquee-container mb-4 mb-lg-0 order-last order-md-first">
   <div className="course-marquee-header">
     <h3 className="text-center mb-3">Available Courses</h3>
@@ -443,19 +508,22 @@ const Login = () => {
     </p>
   </div>
 </Col>
+        )}
 
           {/* Login Section */}
-          <Col lg={7} md={12} sm={12} className="order-first order-md-last">
+          <Col lg={isEmployeePath ? 8 : 7} md={12} sm={12} className={`order-first order-md-last ${isEmployeePath ? "mx-auto" : ""}`}>
             <div className="p-4">
               <div className="section-header">
                 <h2 className="text-center mb-4">
-                  {role === "admin" ? "Admin Login" : 
+                  {isEmployeePath ? "Employee Login" : 
+                   role === "admin" ? "Admin Login" : 
                    role === "student" ? "Student Login" : "Free Student Login"}
                 </h2>
                 <div className="header-underline"></div>
               </div>
 
               {/* Role Selection */}
+              {!isEmployeePath && (
               <Form.Group className="mb-4">
                 <Form.Label className="mb-3 form-label-gov">Select User Type</Form.Label>
                 <div className="d-flex justify-content-around flex-wrap gap-2">
@@ -479,6 +547,7 @@ const Login = () => {
                   ))}
                 </div>
               </Form.Group>
+              )}
 
               <Form onSubmit={handleSubmit}>
                 {/* Dynamic form fields based on role */}
@@ -538,7 +607,54 @@ const Login = () => {
                   </Form.Group>
                 )}
 
+                {role === "employee" && (
+                  <>
+                    <Form.Group className="mb-3">
+                      <Form.Label className="form-label-gov">Phone Number</Form.Label>
+                      <Form.Control
+                        type="tel"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        maxLength={10}
+                        placeholder="Enter 10-digit phone number"
+                        className="form-control-gov"
+                        isInvalid={!!fieldErrors.phone}
+                        disabled={otpSent}
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {fieldErrors.phone}
+                      </Form.Control.Feedback>
+                    </Form.Group>
+
+                    {otpSent && (
+                      <Form.Group className="mb-3">
+                        <Form.Label className="form-label-gov">OTP</Form.Label>
+                        <Form.Control
+                          type="text"
+                          name="otp"
+                          value={formData.otp}
+                          onChange={handleChange}
+                          maxLength={6}
+                          placeholder="Enter OTP"
+                          className="form-control-gov"
+                          isInvalid={!!fieldErrors.otp}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                          {fieldErrors.otp}
+                        </Form.Control.Feedback>
+                        <div className="text-end mt-1">
+                          <Button variant="link" size="sm" className="p-0 text-decoration-none" onClick={() => setOtpSent(false)}>
+                            Change Number?
+                          </Button>
+                        </div>
+                      </Form.Group>
+                    )}
+                  </>
+                )}
+
                 {/* Password Field */}
+                {role !== "employee" && (
                 <Form.Group className="mb-3">
                   <Form.Label className="form-label-gov">Password</Form.Label>
                   <div className="password-input-wrapper">
@@ -563,8 +679,10 @@ const Login = () => {
                     </Form.Control.Feedback>
                   </div>
                 </Form.Group>
+                )}
 
                 {/* Remember Me */}
+                {role !== "employee" && (
                 <Form.Group className="mb-3">
                   <Form.Check
                     type="checkbox"
@@ -574,6 +692,7 @@ const Login = () => {
                     className="form-check-gov"
                   />
                 </Form.Group>
+                )}
                 
                 {/* Error Message */}
                 {errorMessage && (
@@ -593,10 +712,10 @@ const Login = () => {
                     {isSubmitting ? (
                       <>
                         <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
-                        <span className="ms-2">Logging in...</span>
+                        <span className="ms-2">{role === "employee" && !otpSent ? "Sending OTP..." : "Logging in..."}</span>
                       </>
                     ) : (
-                      <span>Login</span>
+                      <span>{role === "employee" && !otpSent ? "Send OTP" : "Login"}</span>
                     )}
                   </Button>
                 </div>

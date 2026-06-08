@@ -35,6 +35,9 @@ const UserTopNav = ({ onMenuToggle, isMobile }) => {
         if (userRoleType === 'student-unpaid') {
           // For unpaid students, fetch from student-unpaid endpoint with student_id
           response = await axios.get(`https://brjobsedu.com/girls_course/girls_course_backend/api/student-unpaid/?student_id=${uniqueId}`, config)
+        } else if (userRoleType === 'employee') {
+          // For employees, fetch from employee-profile endpoint with unique_id
+          response = await axios.get(`https://brjobsedu.com/girls_course/girls_course_backend/api/employee-profile/?unique_id=${uniqueId}`, config)
         } else {
           // For regular students, use the existing endpoint
           response = await axios.get(`https://brjobsedu.com/girls_course/girls_course_backend/api/all-registration/?student_id=${uniqueId}`, config)
@@ -206,8 +209,15 @@ const UserTopNav = ({ onMenuToggle, isMobile }) => {
   }
 
   const handleLogout = () => {
-    logout()
-    navigate('/login')
+    // Capture the role status before clearing the session
+    const isEmployee = userRoleType === 'employee';
+    logout(); 
+    
+    if (isEmployee) {
+      window.location.href = '/employee';
+    } else {
+      window.location.href = '/login';
+    }
   }
 
   return (
@@ -254,7 +264,7 @@ const UserTopNav = ({ onMenuToggle, isMobile }) => {
             {language === 'en' ? 'EN' : 'HI'}
           </Button>
 
-          {userRoleType !== 'student' && (
+          {userRoleType !== 'student' && userRoleType !== 'employee' && (
             <>
               <Button
                 onClick={() => navigate('/GroomingClasses')}
@@ -426,7 +436,7 @@ const UserTopNav = ({ onMenuToggle, isMobile }) => {
                   )}
                 </div>
                 <div className="user-details">
-                  <span className="user-name">{loading ? 'Loading...' : (userRoleType === 'student-unpaid' ? userData?.full_name : userData?.candidate_name) || uniqueId}</span>
+                  <span className="user-name">{loading ? 'Loading...' : (userRoleType === 'employee' || userRoleType === 'student-unpaid' ? userData?.full_name : userData?.candidate_name) || uniqueId}</span>
                 </div>
               </div>
              

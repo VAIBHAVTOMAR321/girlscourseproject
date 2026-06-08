@@ -4,10 +4,10 @@ import axios from 'axios'
 import { useAuth } from '../../contexts/AuthContext'
 import { useLanguage } from '../../contexts/LanguageContext'
 import { useNavigate, useLocation } from 'react-router-dom'
-import UserTopNav from './UserTopNav'
+import UserTopNav from './UserTopNav' // Keep this line as is
 import UseLeftNav from './UseLeftNav'
 import TransText from '../TransText'
-import { FaCopy, FaArrowLeft, FaCheck, FaEnvelope, FaPhone, FaMapMarkerAlt, FaIdCard, FaCalendarAlt, FaBuilding, FaUserShield, FaUser, FaChartLine } from 'react-icons/fa'
+import { FaCopy, FaArrowLeft, FaCheck, FaEnvelope, FaPhone, FaMapMarkerAlt, FaIdCard, FaCalendarAlt, FaBuilding, FaUserShield, FaUser, FaChartLine, FaCertificate } from 'react-icons/fa'
 import '../../components/admindashboard/userprofile.css'
 
 const UserProfile = () => {
@@ -29,6 +29,7 @@ const UserProfile = () => {
   // Refresh quiz progress when returning from quiz
   useEffect(() => {
     if (location.state?.fromQuiz) {
+      console.log('Refreshing quiz progress due to navigation from quiz.');
       setRefreshKey(prev => prev + 1)
       navigate(location.pathname, { replace: true, state: {} })
     }
@@ -65,11 +66,13 @@ const UserProfile = () => {
   // Fetch user data when component mounts or uniqueId changes
   useEffect(() => {
     const fetchUserData = async () => {
+      console.log('Fetching user data for uniqueId:', uniqueId, 'userRoleType:', userRoleType);
       try {
         setLoading(true)
         
         // Admin users don't need profiles
         if (userRoleType === 'admin') {
+          console.log('User is admin, redirecting to AdminDashboard.');
           navigate('/AdminDashboard')
           return
         }
@@ -81,19 +84,30 @@ const UserProfile = () => {
             'Authorization': `Bearer ${accessToken}`
           }
         }
+        console.log('Auth config:', config);
         
         // Fetch data based on user role
         if (userRoleType === 'student-unpaid') {
           // For unpaid students, fetch from student-unpaid endpoint with student_id
+          console.log('Fetching student-unpaid profile for student_id:', uniqueId);
           response = await axios.get(`https://brjobsedu.com/girls_course/girls_course_backend/api/student-unpaid/?student_id=${uniqueId}`, config)
+        } else if (userRoleType === 'employee') {
+          // For employees, fetch from employee-profile endpoint with unique_id
+          console.log('Fetching employee profile for unique_id:', uniqueId);
+          response = await axios.get(`https://brjobsedu.com/girls_course/girls_course_backend/api/employee-profile/?unique_id=${uniqueId}`, config)
         } else {
-          // For regular students, use the existing endpoint
-          response = await axios.get(`https://brjobsedu.com/girls_course/girls_course_backend/api/all-registration/?student_id=${uniqueId}`)
+          // For regular students, use the existing endpoint (all-registration)
+          response = await axios.get(`https://brjobsedu.com/girls_course/girls_course_backend/api/all-registration/?student_id=${uniqueId}`, {
+            headers: {
+              'Authorization': `Bearer ${accessToken}`
+            }
+          })
         }
         
         const { data } = response
         
         if (data.success) {
+          console.log('User data fetched successfully:', data.data);
           setUserData(data.data)
         }
       } catch (error) {
@@ -104,6 +118,7 @@ const UserProfile = () => {
     }
 
     if (uniqueId) {
+      console.log('uniqueId is present, initiating fetchUserData.');
       fetchUserData()
     }
   }, [uniqueId, userRoleType, navigate])
@@ -111,6 +126,7 @@ const UserProfile = () => {
   // Fetch quiz progress
   useEffect(() => {
     const fetchQuizProgress = async () => {
+      console.log('Fetching quiz progress for uniqueId:', uniqueId);
       if (!uniqueId || !accessToken) return
 
       try {
@@ -119,8 +135,11 @@ const UserProfile = () => {
             'Authorization': `Bearer ${accessToken}`
           }
         }
+        console.log('Auth config for quiz progress:', config);
 
         const allQuizzesResponse = await axios.get('https://brjobsedu.com/girls_course/girls_course_backend/api/quiz-items/', config)
+        console.log('All quizzes response:', allQuizzesResponse.data);
+
         const quizParticipantsResponse = await axios.get('https://brjobsedu.com/girls_course/girls_course_backend/api/quiz-participants/', config)
 
         const totalQuizzes = allQuizzesResponse.data.success ? allQuizzesResponse.data.data?.length || 0 : 0
@@ -131,6 +150,7 @@ const UserProfile = () => {
 
         if (quizParticipantsResponse.data.status && quizParticipantsResponse.data.data) {
           const userParticipations = quizParticipantsResponse.data.data.filter(
+            // Ensure p.student and p.student.student_id exist before accessing
             p => p.student?.student_id === uniqueId
           )
 
@@ -153,6 +173,7 @@ const UserProfile = () => {
           averagePercentage
         })
       } catch (error) {
+        // Log error but don't prevent rendering of other parts
         console.error('Error fetching quiz progress:', error)
       }
     }
@@ -286,10 +307,14 @@ const UserProfile = () => {
                               )}
                            </div>
                             <div>
-                              <h3 className="mb-1 profile-name">{userRoleType === 'student-unpaid' ? userData.full_name : userData.candidate_name}</h3>
-                              <p className="mb-0 profile-role">
-                                {userRoleType === 'student-unpaid' ? 'Student Candidate' : 'Registered Student'}
-                              </p>
+                              <h3 className="mb-1 profile-name">{(userRoleType === 'employee' || userRoleType === 'student-unpaid') ? userData.full_name : userData.candidate_name}</h3>
+                              {userRoleType === 'employee' ? (
+                                <p className="mb-0 profile-role">Employee</p>
+                              ) : (
+                                <p className="mb-0 profile-role">
+                                  {userRoleType === 'student-unpaid' ? 'Student Candidate' : 'Registered Student'}
+                                </p>
+                              )}
                            </div>
                          </div>
                           <div className="d-flex gap-2 flex-wrap">
@@ -301,6 +326,15 @@ const UserProfile = () => {
                               >
                                 <FaIdCard className="me-2 button-icon" />
                                 <TransText k="profile.viewAadhaar" as="span" />
+                              </Button>
+                            )}
+                            {userRoleType === 'employee' && userData.certificate && (
+                              <Button
+                                variant="outline-success"
+                                className="d-flex align-items-center view-certificate-btn"
+                                onClick={() => window.open(`https://brjobsedu.com/girls_course/girls_course_backend${userData.certificate}`, '_blank')}
+                              >
+                                <FaCertificate className="me-2 button-icon" /> View Certificate
                               </Button>
                             )}
                             {userRoleType !== 'student-unpaid' && (
@@ -338,7 +372,7 @@ const UserProfile = () => {
                    </Card>
                     
                     {/* Quiz Progress Card */}
-                    <Card className="shadow-sm mb-4 border-0 quiz-progress-card mt-3">
+                    {/* <Card className="shadow-sm mb-4 border-0 quiz-progress-card mt-3">
                       <Card.Body className="p-3">
                          <div className="d-flex align-items-center justify-content-between  mb-3">
                            <div className="d-flex align-items-center">
@@ -396,7 +430,7 @@ const UserProfile = () => {
                           </div>
                         )}
                       </Card.Body>
-                    </Card>
+                    </Card> */}
 
                     <Card className="shadow-sm border-0 profile-details-card mt-4">
                       <Card.Header className="bg-white border-bottom pt-4 pb-3 px-4 card-header-custom">
@@ -482,6 +516,59 @@ const UserProfile = () => {
                                </div>
                              </Col>
                           </>
+                        ) : userRoleType === 'employee' ? (
+                          <>
+                            {/* Employee Profile Fields */}
+                            <Col md={6} className="mb-2">
+                              <div className="info-item">
+                                <div className="info-label small">
+                                  <FaIdCard className="me-2 icon-student-id" />
+                                  Employee ID
+                                </div>
+                                <div className="info-value">{userData.unique_id}</div>
+                              </div>
+                            </Col>
+                            <Col md={6} className="mb-2">
+                              <div className="info-item">
+                                <div className="info-label small">
+                                  <FaUser className="me-2" />
+                                  Full Name
+                                </div>
+                                <div className="info-value">{userData.full_name}</div>
+                              </div>
+                            </Col>
+                            <Col md={6} className="mb-2">
+                              <div className="info-item">
+                                <div className="info-label small">
+                                  <FaPhone className="me-2 icon-phone" />
+                                  Phone Number
+                                </div>
+                                <div className="info-value">{userData.phone}</div>
+                              </div>
+                            </Col>
+                            <Col md={6} className="mb-2">
+                              <div className="info-item">
+                                <div className="info-label small">
+                                  <FaChartLine className="me-2" />
+                                  Score
+                                </div>
+                                <div className="info-value">{userData.score}</div>
+                              </div>
+                            </Col>
+                            <Col md={6} className="mb-2">
+                              <div className="info-item">
+                                <div className="info-label small">
+                                  <FaCheck className="me-2" />
+                                  Status
+                                </div>
+                                <div className="info-value">
+                                  <Badge bg={userData.status === 'submitted' ? 'success' : 'warning'}>
+                                    {userData.status}
+                                  </Badge>
+                                </div>
+                              </div>
+                            </Col>
+                          </>
                         ) : (
                           <>
                             {/* Regular Student Profile Fields */}
@@ -545,7 +632,7 @@ const UserProfile = () => {
                                    <FaCalendarAlt className="me-2 icon-calendar" />
                                    <TransText k="profile.joinedDate" as="span" />
                                  </div>
-                                 <div className="info-value">{new Date(userData.created_at).toLocaleDateString()}</div>
+                                 <div className="info-value">{userData.created_at ? new Date(userData.created_at).toLocaleDateString() : 'N/A'}</div>
                                </div>
                              </Col>
                           </>

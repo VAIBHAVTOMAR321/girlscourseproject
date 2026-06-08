@@ -5,9 +5,13 @@ import Logo from '../../assets/brainrock_logo.png';
 
 const NavBar = () => {
   const location = useLocation();
+  // isLoginPage should only be true for the /login path to allow the Login button to show on /employee
   const isLoginPage = location.pathname === '/login';
   const isRegisterPage = location.pathname === '/Registration';
-  const isGovtEmployeePage = location.pathname === '/GovtEmployee';
+  // Handle the trailing slash for GovtEmployee page
+  const isGovtEmployeePage = location.pathname === '/GovtEmployee' || location.pathname === '/GovtEmployee/';
+  // Check specifically for the employee login path
+  const isEmployeePage = location.pathname === '/employee' || location.pathname === '/employee/';
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -48,14 +52,19 @@ const NavBar = () => {
         
         {/* Desktop menu */}
         <div className="navbar-menu">
-          {/* Hide Home on GovtEmployee page */}
-          {!isGovtEmployeePage && (
+          {/* Hide Home on GovtEmployee and Employee login pages */}
+          {!isGovtEmployeePage && !isEmployeePage && (
             <Link to="/" className="navbar-link">Home</Link>
           )}
           
-          {/* Hide Login on GovtEmployee page */}
-          {!isLoginPage && !isGovtEmployeePage && (
-            <Link to="/login" className="navbar-link navbar-button">Login</Link>
+          {/* Show Login button if not on a login page; redirect to /employee if on GovtEmployee page */}
+          {!isLoginPage && (
+            <Link 
+              to={isEmployeePage ? "/GovtEmployee" : (isGovtEmployeePage ? "/employee" : "/login")} 
+              className="navbar-link navbar-button"
+            >
+              {isEmployeePage ? "Test" : "Login"}
+            </Link>
           )}
           {/* {!isRegisterPage && (
             <Link to="/Registration" className="navbar-link navbar-button">Register</Link>
@@ -64,8 +73,8 @@ const NavBar = () => {
         
         {/* Mobile menu */}
         <div className={`navbar-mobile-menu ${menuOpen ? 'active' : ''}`}>
-          {/* Hide Home on GovtEmployee page */}
-          {!isGovtEmployeePage && (
+          {/* Hide Home on GovtEmployee and Employee login pages */}
+          {!isGovtEmployeePage && !isEmployeePage && (
             <Link 
               to="/" 
               className="navbar-link" 
@@ -75,14 +84,13 @@ const NavBar = () => {
             </Link>
           )}
           
-          {/* Hide Login on GovtEmployee page */}
-          {!isLoginPage && !isGovtEmployeePage && (
+          {!isLoginPage && (
             <Link 
-              to="/login" 
+              to={isEmployeePage ? "/GovtEmployee" : (isGovtEmployeePage ? "/employee" : "/login")} 
               className="navbar-link navbar-button" 
               onClick={() => setMenuOpen(false)}
             >
-              Login
+              {isEmployeePage ? "Test" : "Login"}
             </Link>
           )}
           {!isRegisterPage && (

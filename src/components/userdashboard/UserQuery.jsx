@@ -10,6 +10,7 @@ import { getTranslation } from '../../utils/translations'
 import { FaArrowLeft, FaPaperPlane, FaHistory, FaClock } from 'react-icons/fa'
 
 const API_URL = 'https://brjobsedu.com/girls_course/girls_course_backend/api/student-issue/'
+const EMPLOYEE_ISSUE_URL = 'https://brjobsedu.com/girls_course/girls_course_backend/api/employee-issues/'
 
 function UserQuery() {
   const { uniqueId, accessToken, userRoleType } = useAuth()
@@ -77,8 +78,11 @@ function UserQuery() {
   const fetchQueries = async () => {
     setLoading(true)
     try {
-      console.log('Fetching queries with student_id:', uniqueId)
-      const response = await fetch(`${API_URL}?student_id=${uniqueId}`, {
+      const url = userRoleType === 'employee' 
+        ? `${EMPLOYEE_ISSUE_URL}?unique_id=${encodeURIComponent(uniqueId)}`
+        : `${API_URL}?student_id=${encodeURIComponent(uniqueId)}`
+      
+      const response = await fetch(url, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${accessToken}`
@@ -120,13 +124,18 @@ function UserQuery() {
     setSubmitting(true)
 
     try {
-      const response = await fetch(API_URL, {
+      const url = userRoleType === 'employee' ? EMPLOYEE_ISSUE_URL : API_URL
+      const payload = userRoleType === 'employee' 
+        ? { unique_id: uniqueId, title: formData.title, issue: formData.issue }
+        : formData
+
+      const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${accessToken}`
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(payload)
       })
 
       if (response.ok) {

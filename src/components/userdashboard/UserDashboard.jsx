@@ -77,6 +77,15 @@ const UserDashboard = () => {
     }
   }, [isAuthenticated, navigate, location])
 
+  // Update page title based on user role
+  useEffect(() => {
+    if (userRoleType === 'employee') {
+      document.title = 'Employee Login'
+    } else {
+      document.title = 'User Dashboard'
+    }
+  }, [userRoleType])
+
   // Handle test completion from UserTest
   useEffect(() => {
     if (location.state && location.state.testCompleted) {
