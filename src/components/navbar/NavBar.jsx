@@ -17,8 +17,8 @@ const NavBar = () => {
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        {isGovtEmployeePage ? (
-          <div className="navbar-logo">
+        {isGovtEmployeePage || isEmployeePage ? (
+          <div className="navbar-logo" style={isEmployeePage ? { cursor: 'default' } : {}}>
             <img src={Logo} alt="BrainRock Logo" className="navbar-logo-img" />
             <div className="navbar-logo-text">
               <div className="navbar-logo-main">Brainrock Consulting Services</div>
