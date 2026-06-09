@@ -211,10 +211,13 @@ const UserTopNav = ({ onMenuToggle, isMobile }) => {
   const handleLogout = () => {
     // Capture the role status before clearing the session
     const isEmployee = userRoleType === 'employee';
+    const isUnpaid = userRoleType === 'student-unpaid';
     logout(); 
     
     if (isEmployee) {
       window.location.href = '/employee';
+    } else if (isUnpaid) {
+      window.location.href = '/unpaid';
     } else {
       window.location.href = '/login';
     }
