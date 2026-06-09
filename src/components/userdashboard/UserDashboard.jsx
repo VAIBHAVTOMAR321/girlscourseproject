@@ -122,7 +122,9 @@ const UserDashboard = () => {
       // Use appropriate endpoint based on user role
       const endpoint = userRoleType === 'student-unpaid' 
         ? `https://brjobsedu.com/girls_course/girls_course_backend/api/enrollment-unpaid/?student_id=${uniqueId}`
-        : `https://brjobsedu.com/girls_course/girls_course_backend/api/student-entrollment/?student_id=${uniqueId}`
+        : userRoleType === 'employee'
+          ? `https://brjobsedu.com/girls_course/girls_course_backend/api/employee/enrollment/?unique_id=${uniqueId}`
+          : `https://brjobsedu.com/girls_course/girls_course_backend/api/student-entrollment/?student_id=${uniqueId}`
       
       const response = await axios.get(
         endpoint,
@@ -151,6 +153,7 @@ const UserDashboard = () => {
               )
               return {
                 ...enrolledCourse,
+                ...(courseDetails || {}),
                 start_date: courseDetails?.start_date || null,
                 end_date: courseDetails?.end_date || null
               }
@@ -364,7 +367,7 @@ const UserDashboard = () => {
     const previousModuleProgress = moduleProgress.find(
       progress => 
         progress.course_id === selectedCourse.course_id && 
-        progress.module === previousModule.module_id
+        progress.module_id === previousModule.module_id
     )
     
     // Check if previous module test is passed - this is the only requirement
@@ -373,7 +376,7 @@ const UserDashboard = () => {
     const isPreviousModuleTestPassed = previousModuleProgress?.test_status === 'passed'
     
     // Module is accessible only if previous module test is passed
-    return isPreviousModuleTestPassed
+    return isPreviousModuleTestPassed 
   }
 
   // Navigate to module test
@@ -408,13 +411,13 @@ const UserDashboard = () => {
 
   // Check if all modules are completed for current course
   const areAllModulesCompleted = () => {
-    if (!courseModules || !courseModules.modules) return false
+    if (!courseModules || !courseModules.modules || !selectedCourse) return false
     
     return courseModules.modules.every((module, moduleIndex) => {
       const moduleProgressData = moduleProgress.find(
         progress => 
-          progress.course_id === selectedCourse.course_id && 
-          progress.module === module.module_id
+          progress.course_id === selectedCourse.course_id &&
+          (progress.module === module.module_id || progress.module_id === module.module_id)
       )
       
       // Only check if test is passed - that's the only criteria for module completion
@@ -433,17 +436,17 @@ const UserDashboard = () => {
   // Generate certificate
   const generateCertificate = async (course) => {
     try {
-      const endpoint = userRoleType === 'student-unpaid' 
-        ? 'https://brjobsedu.com/girls_course/girls_course_backend/api/enrollment-unpaid/'
-        : 'https://brjobsedu.com/girls_course/girls_course_backend/api/student-entrollment/'
+      const endpoint = userRoleType === 'employee' 
+        ? 'https://brjobsedu.com/girls_course/girls_course_backend/api/employee/certificate/generate/'
+        : userRoleType === 'student-unpaid'
+          ? 'https://brjobsedu.com/girls_course/girls_course_backend/api/enrollment-unpaid/'
+          : 'https://brjobsedu.com/girls_course/girls_course_backend/api/student-entrollment/'
         
       const response = await axios.post(
         endpoint,
-        {
-          student_id: uniqueId,
-          course_id: course.course_id
-        },
-        {
+        userRoleType === 'employee'
+        ? { unique_id: uniqueId, course_id: course.course_id }
+        : { student_id: uniqueId, course_id: course.course_id }, {
           headers: {
             'Authorization': `Bearer ${accessToken}`,
             'Content-Type': 'application/json'
@@ -500,7 +503,7 @@ const UserDashboard = () => {
         const moduleProgressData = moduleProgress.find(
           progress => 
             progress.course_id === course.course_id && 
-            progress.module === module.module_id
+            (progress.module === module.module_id || progress.module_id === module.module_id)
         )
         const isTestPassed = moduleProgressData?.test_status === 'passed'
         return isTestPassed
@@ -549,8 +552,10 @@ const UserDashboard = () => {
       
       // Use appropriate endpoint based on user role
       const endpoint = userRoleType === 'student-unpaid' 
-        ? `https://brjobsedu.com/girls_course/girls_course_backend/api/module-progress-unpaid/?student_id=${uniqueId}`
-        : `https://brjobsedu.com/girls_course/girls_course_backend/api/module-progress/?student_id=${uniqueId}`
+        ? `https://brjobsedu.com/girls_course/girls_course_backend/api/module-progress-unpaid/?student_id=${uniqueId}` // Assuming this endpoint for unpaid students
+        : userRoleType === 'employee'
+          ? `https://brjobsedu.com/girls_course/girls_course_backend/api/employee/module-progress/?unique_id=${uniqueId}`
+          : `https://brjobsedu.com/girls_course/girls_course_backend/api/module-progress/?student_id=${uniqueId}` // Default for other student roles
       
       const response = await axios.get(
         endpoint,
@@ -730,7 +735,7 @@ const UserDashboard = () => {
       const moduleProgressData = moduleProgress.find(
         progress => 
           progress.course_id === selectedCourse?.course_id && 
-          progress.module === module.module_id
+          (progress.module === module.module_id || progress.module_id === module.module_id)
       )
       const isTestPassed = moduleProgressData?.test_status === 'passed'
       
@@ -857,18 +862,32 @@ const UserDashboard = () => {
     try {
       const currentModule = courseModules.modules[moduleIndex]
       
-      const endpoint = userRoleType === 'student-unpaid' 
-        ? `https://brjobsedu.com/girls_course/girls_course_backend/api/module-progress-unpaid/`
-        : `https://brjobsedu.com/girls_course/girls_course_backend/api/module-progress/`
-        
-      const response = await axios.put(
-        endpoint,
-        {
+      let endpoint;
+      let payload;
+
+      if (userRoleType === 'employee') {
+        endpoint = `https://brjobsedu.com/girls_course/girls_course_backend/api/employee/module-progress/`
+        payload = {
+          unique_id: uniqueId,
+          course_id: selectedCourse.course_id,
+          module_id: currentModule.module_id,
+          module_status: "completed"
+        }
+      } else {
+        endpoint = userRoleType === 'student-unpaid' 
+          ? `https://brjobsedu.com/girls_course/girls_course_backend/api/module-progress-unpaid/`
+          : `https://brjobsedu.com/girls_course/girls_course_backend/api/module-progress/`
+        payload = {
           module_status: "ongoing",
           student_id: uniqueId,
           course_id: selectedCourse.course_id,
-          module: currentModule.module_id
-        },
+          module_id: currentModule.module_id // Use module_id consistently
+        }
+      }
+
+      const response = await axios.put(
+        endpoint,
+        payload,
         {
           headers: {
             'Authorization': `Bearer ${accessToken}`,
@@ -1086,27 +1105,27 @@ const UserDashboard = () => {
                             const currentModule = courseModules.modules[moduleIndex]
                             const isAccessible = isModuleAccessible(moduleIndex)
                             // Module is completed only if test is passed
-                            const moduleProgressDataForDisplay = moduleProgress.find(
-                              progress => 
-                                progress.course_id === selectedCourse.course_id && 
-                                progress.module === currentModule.module_id
-                            )
+      const moduleProgressDataForDisplay = moduleProgress.find(
+        progress => 
+          progress.course_id === selectedCourse.course_id && 
+          (progress.module === currentModule.module_id || progress.module_id === currentModule.module_id)
+      )
                             const isTestPassed = moduleProgressDataForDisplay?.test_status === 'passed'
                             const isCompleted = isTestPassed
                             
                              // Check if module is in ongoing status
-                             const isOngoing = moduleProgress.some(
-                               progress => 
-                                 progress.course_id === selectedCourse.course_id && 
-                                 progress.module === currentModule.module_id && 
-                                 progress.module_status === 'ongoing'
-                             )
+      const isOngoing = moduleProgress.some(
+        progress => 
+          progress.course_id === selectedCourse.course_id && 
+          (progress.module === currentModule.module_id || progress.module_id === currentModule.module_id) && 
+          (progress.module_status === 'ongoing' || (userRoleType === 'employee' && progress.module_status === 'completed'))
+      )
 
                             // Get module progress data for current module
                              const moduleProgressData = moduleProgress.find(
                                progress => 
                                  progress.course_id === selectedCourse.course_id && 
-                                 progress.module === currentModule.module_id
+         progress.module_id === currentModule.module_id
                              )
 
                               let isTestDisabled = false
@@ -1644,7 +1663,7 @@ const UserDashboard = () => {
                         <TransText k="dashboard.myCourses" as="span" />
                         ({courses.length})
                       </Button>
-                      {userRoleType === 'student-unpaid' && (
+                      {(userRoleType === 'student-unpaid' || userRoleType === 'employee' || userRoleType === 'student') && (
                         <Button 
                           variant={activeTab === 'all-courses' ? 'primary' : 'outline-primary'}
                           onClick={() => setActiveTab('all-courses')}
@@ -1652,10 +1671,24 @@ const UserDashboard = () => {
                         >
                           <FaGraduationCap className="me-2" />
                           <TransText k="dashboard.allCourses" as="span" />
-                          ({allCourses.filter(c => c.course_status === 'unpaid' && !isCourseExpired(c)).length})
+                          ({
+                            userRoleType === 'employee'
+                              ? allCourses.filter(c => c.course_id === 'COUR-001').length
+                              : allCourses.filter(c => c.course_status === 'unpaid' && !isCourseExpired(c)).length
+                          })
                         </Button>
                       )}
                     </div>
+                    {/* Define coursesToDisplayInAllCoursesTab here */}
+                    {(() => {
+                      let coursesToDisplayInAllCoursesTab = [];
+                      if (userRoleType === 'employee') {
+                        coursesToDisplayInAllCoursesTab = allCourses.filter(c => c.course_id === 'COUR-001');
+                      } else {
+                        coursesToDisplayInAllCoursesTab = allCourses.filter(c => c.course_status === 'unpaid' && !isCourseExpired(c));
+                      }
+
+                      return (<>
 
                     {/* My Courses Tab */}
                     {activeTab === 'my-courses' && (
@@ -1684,7 +1717,6 @@ const UserDashboard = () => {
                                   <div className="card-header-gradient" style={{ 
                                     height: '100%', 
                                     width:'100%',
-                                    padding: '0',
                                     border: 'none',
                                     padding:'8px',
                                     display: 'flex',
@@ -1860,8 +1892,8 @@ const UserDashboard = () => {
                                             )}
                                           </Button>
                                         )}
-                                        {/* Refund Request Button - Only for paid users with pending status and no existing pending refund */}
-                                        {userRoleType !== 'student-unpaid' && !isAllModulesCompleted(course) && !refundRequests.some(req => req.status === 'pending') && (
+                                        {/* Refund Request Button - Only for paid users, excluding employee */}
+                                        {userRoleType !== 'student-unpaid' && userRoleType !== 'employee' && !isAllModulesCompleted(course) && !refundRequests.some(req => req.status === 'pending') && (
                                           <Button 
                                             variant="outline-danger" 
                                             onClick={() => {
@@ -1883,8 +1915,8 @@ const UserDashboard = () => {
                                             <TransText k="course.refund" as="span" />
                                           </Button>
                                         )}
-                                        {/* Show pending status if refund request is pending */}
-                                        {refundRequests.some(req => req.status === 'pending') && (
+                                        {/* Show pending status if refund request is pending - only for non-employees */}
+                                        {userRoleType !== 'employee' && refundRequests.some(req => req.status === 'pending') && (
                                           <Badge bg="warning" className="d-flex align-items-center p-2">
                                             <i className="bi bi-clock me-2"></i>
                                             <TransText k="course.refundPending" as="span" />
@@ -1927,20 +1959,19 @@ const UserDashboard = () => {
                       </div>
                     )}
 
-                    {/* All Courses Tab - Only visible to unpaid users */}
-                    {activeTab === 'all-courses' && userRoleType === 'student-unpaid' && (
+                    {/* All Courses Tab */}
+                    {activeTab === 'all-courses' && (userRoleType === 'student-unpaid' || userRoleType === 'employee' || userRoleType === 'student') && (
                       <div>
                         <TransText k="dashboard.allCourses" as="h4" className="mb-3" />
                         
-{allCoursesLoading ? (
+                        {allCoursesLoading ? (
                           <div className="text-center py-5">
                             <Spinner animation="border" variant="primary" style={{ width: '60px', height: '60px' }} />
                             <p className="mt-3"><TransText k="status.loading" /></p>
                           </div>
-                        ) : allCourses.filter(c => c.course_status === 'unpaid' && !isCourseExpired(c)).length > 0 ? (
+                        ) : coursesToDisplayInAllCoursesTab.length > 0 ? (
                           <Row>
-                            {allCourses
-                              .filter(c => c.course_status === 'unpaid' && !isCourseExpired(c))
+                            {coursesToDisplayInAllCoursesTab
                               .slice()
                               .sort((a, b) => {
                                 const aEnrolled = courses.some(ec => ec.course_id === a.course_id);
@@ -2088,6 +2119,8 @@ const UserDashboard = () => {
                         )}
                       </div>
                     )}
+                    </>);
+                    })()}
                   </div>
                 )}
               </div>

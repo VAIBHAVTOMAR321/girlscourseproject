@@ -241,19 +241,34 @@ const UserTest = () => {
   const handleTestComplete = async () => {
     try {
       // Prepare submission data
-      const submissionData = {
-        module_id: location.state.moduleId,
-        answers: questions.map((question, index) => ({
-          question_id: question.id,
-          selected: userAnswers[index]
-        }))
+      let submissionData;
+      let endpoint;
+
+      if (userRoleType === 'employee') {
+        endpoint = 'https://brjobsedu.com/girls_course/girls_course_backend/api/employee/module/submit-test/'
+        submissionData = {
+          unique_id: uniqueId,
+          course_id: course.course_id,
+          module_id: location.state.moduleId,
+          answers: questions.map((question, index) => ({
+            question_id: question.id,
+            selected: userAnswers[index]
+          }))
+        }
+      } else {
+        submissionData = {
+          module_id: location.state.moduleId,
+          answers: questions.map((question, index) => ({
+            question_id: question.id,
+            selected: userAnswers[index]
+          }))
+        }
+        endpoint = userRoleType === 'student-unpaid' 
+          ? 'https://brjobsedu.com/girls_course/girls_course_backend/api/submit-test-unpaid/'
+          : 'https://brjobsedu.com/girls_course/girls_course_backend/api/module-test/submit/'
       }
 
       // Submit test
-      const endpoint = userRoleType === 'student-unpaid' 
-        ? 'https://brjobsedu.com/girls_course/girls_course_backend/api/submit-test-unpaid/'
-        : 'https://brjobsedu.com/girls_course/girls_course_backend/api/module-test/submit/'
-        
       const response = await axios.post(
         endpoint,
         submissionData,
@@ -291,16 +306,20 @@ const UserTest = () => {
   // Generate certificate
   const generateCertificate = async () => {
     try {
-      const endpoint = userRoleType === 'student-unpaid' 
-        ? 'https://brjobsedu.com/girls_course/girls_course_backend/api/enrollment-unpaid/'
-        : 'https://brjobsedu.com/girls_course/girls_course_backend/api/student-entrollment/'
+      const endpoint = userRoleType === 'employee'
+        ? 'https://brjobsedu.com/girls_course/girls_course_backend/api/employee/certificate/generate/'
+        : userRoleType === 'student-unpaid' 
+          ? 'https://brjobsedu.com/girls_course/girls_course_backend/api/enrollment-unpaid/'
+          : 'https://brjobsedu.com/girls_course/girls_course_backend/api/student-entrollment/'
         
       const response = await axios.post(
         endpoint,
-        {
-          student_id: uniqueId,
-          course_id: course.course_id
-        },
+        userRoleType === 'employee'
+          ? { unique_id: uniqueId, course_id: course.course_id }
+          : {
+              student_id: uniqueId,
+              course_id: course.course_id
+            },
         {
           headers: {
             'Authorization': `Bearer ${accessToken}`,
