@@ -375,6 +375,8 @@ const UserTest = () => {
           // If not, try to fetch updated course data
           const coursesEndpoint = userRoleType === 'student-unpaid' 
             ? `https://brjobsedu.com/girls_course/girls_course_backend/api/enrollment-unpaid/?student_id=${uniqueId}`
+            : userRoleType === 'employee'
+              ? `https://brjobsedu.com/girls_course/girls_course_backend/api/employee/enrollment/?unique_id=${uniqueId}`
             : `https://brjobsedu.com/girls_course/girls_course_backend/api/student-entrollment/?student_id=${uniqueId}`
             
           const coursesResponse = await axios.get(
