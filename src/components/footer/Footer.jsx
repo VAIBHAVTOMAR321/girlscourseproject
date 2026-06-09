@@ -1,21 +1,33 @@
 import React from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
 import { MdArrowForwardIos } from "react-icons/md";
+import { useLocation } from 'react-router-dom';
 import "../../assets/css/Footer.css";
 import Logo from "../../assets/brainrock_logo.png";
 
 function Footer() {
+  const location = useLocation();
+  const isGovtEmployeePage = location.pathname === '/GovtEmployee';
+
   return (
     <footer className='footer-bg'>
       <Container fluid>
         <Row className='g-4 py-5'>
           <Col lg={6} md={6} sm={12} className='d-flex flex-column justify-content-center'>
             <div className='footer-widget about-us'>
-              <a href="/Home">
-                <div className='footer-logo mb-4'>
-                  <img src={Logo} alt="logo" className="logo-wecd" />
+              {isGovtEmployeePage ? (
+                <div>
+                  <div className='footer-logo mb-4'>
+                    <img src={Logo} alt="logo" className="logo-wecd" />
+                  </div>
                 </div>
-              </a>
+              ) : (
+                <a href="/Home">
+                  <div className='footer-logo mb-4'>
+                    <img src={Logo} alt="logo" className="logo-wecd" />
+                  </div>
+                </a>
+              )}
               <p>BrainRock Consulting Services is one of the most reliable website development and industrial internship providers in the entire Dehradun, Uttarakhand. </p>
             </div>
           </Col>
@@ -25,13 +37,12 @@ function Footer() {
                 Important Links
                 <span className='footer-title-line'></span>
               </h4>
-              <ul className='footer-list'>
-                <a href="/Login"><li> <i><MdArrowForwardIos className='i-space' /></i>Home</li></a>
-                <a href="/Login"><li> <i><MdArrowForwardIos className='i-space' /></i>Login</li></a>
-                <a href="/Registration"><li> <i><MdArrowForwardIos className='i-space' /></i>Register</li></a>
-
-               
-              </ul>
+               <ul className='footer-list'>
+                  <>
+                    <li> <i><MdArrowForwardIos className='i-space' /></i>Home</li>
+                    <li> <i><MdArrowForwardIos className='i-space' /></i>Login</li>
+                  </>
+                </ul>
             </div>
           </Col>
           <Col lg={3} md={6} sm={12} className='d-flex flex-column justify-content-center'>
@@ -62,7 +73,7 @@ function Footer() {
         </Row>
       </Container>
     </footer>
-  )
+  );
 }
 
 export default Footer
