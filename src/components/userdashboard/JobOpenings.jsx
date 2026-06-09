@@ -1008,7 +1008,7 @@ const JobOpenings = () => {
         }
       `}</style>
 
-      <Modal show={showJobModal} onHide={closeModal} size="lg" centered key={language}>
+      <Modal show={showJobModal} onHide={closeModal} size="lg" centered key={`job-${language}`}>
         <Modal.Header closeButton style={{ backgroundColor: '#0d6efd', color: 'white' }}>
           <Modal.Title>
             {selectedJob && (language === 'hi' && selectedJob.title_hindi 
@@ -1138,7 +1138,7 @@ const JobOpenings = () => {
         </Modal.Footer>
       </Modal>
 
-      <Modal show={showSeminarModal} onHide={closeSeminarModal} size="lg" centered key={language}>
+      <Modal show={showSeminarModal} onHide={closeSeminarModal} size="lg" centered key={`seminar-${language}`}>
         <Modal.Header closeButton style={{ backgroundColor: '#198754', color: 'white' }}>
           <Modal.Title>
             {selectedSeminar && (language === 'hi' && selectedSeminar.title_hindi 
@@ -1267,7 +1267,7 @@ const JobOpenings = () => {
         </Modal.Footer>
       </Modal>
 
-      <Modal show={showWorkshopModal} onHide={closeWorkshopModal} size="lg" centered key={language}>
+      <Modal show={showWorkshopModal} onHide={closeWorkshopModal} size="lg" centered key={`workshop-${language}`}>
         <Modal.Header closeButton style={{ backgroundColor: '#ffc107', color: 'black' }}>
           <Modal.Title>
             {selectedWorkshop && (language === 'hi' && selectedWorkshop.title_hindi 

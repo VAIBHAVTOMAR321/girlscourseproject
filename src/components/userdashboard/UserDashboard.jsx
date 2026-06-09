@@ -178,6 +178,7 @@ const UserDashboard = () => {
 
   // Fetch refund requests for the user
   const fetchRefundRequests = async () => {
+    if (userRoleType !== 'student-unpaid') return
     try {
       const response = await axios.get(
         `https://brjobsedu.com/girls_course/girls_course_backend/api/student-unpaid/?student_id=${uniqueId}`,
@@ -259,6 +260,7 @@ const UserDashboard = () => {
   // Fetch user data for navigation state
   const [userData, setUserData] = useState(null)
   const fetchUserData = async () => {
+    if (userRoleType === 'employee') return
     try {
       const config = {
         headers: {

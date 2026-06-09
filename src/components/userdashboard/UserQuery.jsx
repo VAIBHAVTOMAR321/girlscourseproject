@@ -88,26 +88,20 @@ function UserQuery() {
           'Authorization': `Bearer ${accessToken}`
         }
       })
-      console.log('Response status:', response.status)
       
       if (response.ok) {
         const result = await response.json()
-        console.log('API Response:', result)
         
-        // Handle both response formats - with status/data or direct array
         let userQueries = []
         if (result.status && result.data) {
           userQueries = result.data
         } else if (Array.isArray(result)) {
           userQueries = result
         }
-        console.log('Filtered queries:', userQueries)
         setQueries(userQueries)
       } else {
-        console.error('Failed to fetch queries, status:', response.status)
       }
     } catch (error) {
-      console.error('Error fetching queries:', error)
       alert('Failed to load queries. Please try again.')
     } finally {
       setLoading(false)
@@ -153,7 +147,6 @@ function UserQuery() {
         alert(errorData.message || getTranslation('query.failedSubmit', language))
       }
     } catch (error) {
-      console.error('Error submitting query:', error)
       alert(getTranslation('query.errorOccurred', language))
     } finally {
       setSubmitting(false)

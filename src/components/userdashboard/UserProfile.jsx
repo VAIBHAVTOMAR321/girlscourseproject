@@ -29,7 +29,6 @@ const UserProfile = () => {
   // Refresh quiz progress when returning from quiz
   useEffect(() => {
     if (location.state?.fromQuiz) {
-      console.log('Refreshing quiz progress due to navigation from quiz.');
       setRefreshKey(prev => prev + 1)
       navigate(location.pathname, { replace: true, state: {} })
     }
@@ -66,13 +65,10 @@ const UserProfile = () => {
   // Fetch user data when component mounts or uniqueId changes
   useEffect(() => {
     const fetchUserData = async () => {
-      console.log('Fetching user data for uniqueId:', uniqueId, 'userRoleType:', userRoleType);
       try {
         setLoading(true)
         
-        // Admin users don't need profiles
         if (userRoleType === 'admin') {
-          console.log('User is admin, redirecting to AdminDashboard.');
           navigate('/AdminDashboard')
           return
         }
@@ -84,19 +80,12 @@ const UserProfile = () => {
             'Authorization': `Bearer ${accessToken}`
           }
         }
-        console.log('Auth config:', config);
         
-        // Fetch data based on user role
         if (userRoleType === 'student-unpaid') {
-          // For unpaid students, fetch from student-unpaid endpoint with student_id
-          console.log('Fetching student-unpaid profile for student_id:', uniqueId);
           response = await axios.get(`https://brjobsedu.com/girls_course/girls_course_backend/api/student-unpaid/?student_id=${uniqueId}`, config)
         } else if (userRoleType === 'employee') {
-          // For employees, fetch from employee-profile endpoint with unique_id
-          console.log('Fetching employee profile for unique_id:', uniqueId);
           response = await axios.get(`https://brjobsedu.com/girls_course/girls_course_backend/api/employee-profile/?unique_id=${uniqueId}`, config)
         } else {
-          // For regular students, use the existing endpoint (all-registration)
           response = await axios.get(`https://brjobsedu.com/girls_course/girls_course_backend/api/all-registration/?student_id=${uniqueId}`, {
             headers: {
               'Authorization': `Bearer ${accessToken}`
@@ -107,18 +96,15 @@ const UserProfile = () => {
         const { data } = response
         
         if (data.success) {
-          console.log('User data fetched successfully:', data.data);
           setUserData(data.data)
         }
       } catch (error) {
-        console.error('Error fetching user data:', error)
       } finally {
         setLoading(false)
       }
     }
 
     if (uniqueId) {
-      console.log('uniqueId is present, initiating fetchUserData.');
       fetchUserData()
     }
   }, [uniqueId, userRoleType, navigate])
@@ -126,7 +112,6 @@ const UserProfile = () => {
   // Fetch quiz progress
   useEffect(() => {
     const fetchQuizProgress = async () => {
-      console.log('Fetching quiz progress for uniqueId:', uniqueId);
       if (!uniqueId || !accessToken) return
 
       try {
@@ -135,11 +120,8 @@ const UserProfile = () => {
             'Authorization': `Bearer ${accessToken}`
           }
         }
-        console.log('Auth config for quiz progress:', config);
 
         const allQuizzesResponse = await axios.get('https://brjobsedu.com/girls_course/girls_course_backend/api/quiz-items/', config)
-        console.log('All quizzes response:', allQuizzesResponse.data);
-
         const quizParticipantsResponse = await axios.get('https://brjobsedu.com/girls_course/girls_course_backend/api/quiz-participants/', config)
 
         const totalQuizzes = allQuizzesResponse.data.success ? allQuizzesResponse.data.data?.length || 0 : 0
@@ -173,8 +155,6 @@ const UserProfile = () => {
           averagePercentage
         })
       } catch (error) {
-        // Log error but don't prevent rendering of other parts
-        console.error('Error fetching quiz progress:', error)
       }
     }
 
@@ -236,7 +216,6 @@ const UserProfile = () => {
         alert('Failed to update profile photo')
       }
     } catch (error) {
-      console.error('Error uploading profile photo:', error)
       alert('Failed to update profile photo')
     } finally {
       setUploading(false)
