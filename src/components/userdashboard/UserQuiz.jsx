@@ -189,7 +189,6 @@ const UserQuiz = () => {
       // When user switches to another window/tab
       if (!navigationWarningShown && takingQuiz) {
         // Only show warning once per quiz session
-        console.log('User left the tab/window')
       }
     }
 
@@ -236,7 +235,6 @@ const UserQuiz = () => {
           setQuizzes(response.data.data || [])
         }
       } catch (error) {
-        console.error('Error fetching quizzes:', error)
         alert('Failed to load quizzes. Please try again.')
       } finally {
         setLoading(false)
@@ -311,7 +309,6 @@ const UserQuiz = () => {
           await Promise.all(rankPromises)
         }
       } catch (error) {
-        console.error('Error fetching participated quizzes:', error)
       }
     }
 
@@ -392,8 +389,6 @@ const UserQuiz = () => {
         student_id: uniqueId
       }
 
-      console.log('Registering quiz participant:', participantData)
-
       const participantResponse = await axios.post(
         'https://brjobsedu.com/girls_course/girls_course_backend/api/quiz-participants/',
         participantData,
@@ -405,7 +400,6 @@ const UserQuiz = () => {
         }
       )
 
-      console.log('Quiz participant response:', participantResponse.data)
       const responseData = participantResponse.data
 
       // Validate response
@@ -436,14 +430,6 @@ const UserQuiz = () => {
         attempt_id: responseData.attempt_id
       }
 
-      console.log('Quiz data loaded:', {
-        quiz_id: quizData.quiz_id,
-        student_id: uniqueId,
-        attempt_id: quizData.attempt_id,
-        total_questions: quizData.total_questions,
-        questions_received: quizData.questions.length
-      })
-
       // Store attempt ID for submission
       setAttemptId(responseData.attempt_id)
 
@@ -456,7 +442,6 @@ const UserQuiz = () => {
       // Set 10 minute timer for each quiz
       setTimeRemaining(600) // 10 min = 600 seconds
     } catch (error) {
-      console.error('Error starting quiz:', error)
       const errorMessage = error.response?.data?.message || error.response?.data?.error || error.message
       
       if (error.response?.status === 404) {
@@ -489,25 +474,20 @@ const UserQuiz = () => {
   }
 
   const handleNextQuestion = () => {
-    console.log('Next clicked, current index:', currentQuestionIndex)
     if (currentQuestionIndex < currentQuiz.questions.length - 1) {
       const newIndex = currentQuestionIndex + 1
-      console.log('Moving to index:', newIndex)
       setCurrentQuestionIndex(newIndex)
     }
   }
 
   const handlePreviousQuestion = () => {
-    console.log('Previous clicked, current index:', currentQuestionIndex)
     if (currentQuestionIndex > 0) {
       const newIndex = currentQuestionIndex - 1
-      console.log('Moving to index:', newIndex)
       setCurrentQuestionIndex(newIndex)
     }
   }
 
   const handleSubmitQuiz = () => {
-    console.log('Submit quiz clicked, answers:', answers)
     // Check if all questions are answered
     if (Object.keys(answers).length !== currentQuiz.questions.length) {
       alert(getTranslation('quiz.answerAll', language))
@@ -537,8 +517,6 @@ const UserQuiz = () => {
         answers: allAnswers
       }
 
-      console.log('Submitting quiz:', submissionData)
-
       // Submit quiz to backend
       const submitResponse = await axios.post(
         'https://brjobsedu.com/girls_course/girls_course_backend/api/submit-quiz/',
@@ -552,7 +530,6 @@ const UserQuiz = () => {
       )
 
       const responseData = submitResponse.data
-      console.log('Submit quiz response:', responseData)
 
       // Handle server response for scoring
       let correctCount = responseData.correct_answers || responseData.score || 0
@@ -621,7 +598,6 @@ const UserQuiz = () => {
       setNavigationWarningShown(false)
       setPendingNavigation(null)
     } catch (error) {
-      console.error('Error submitting quiz:', error)
       const errorMessage = error.response?.data?.message || error.response?.data?.error || error.message
       
       if (error.response?.status === 401) {
@@ -1167,7 +1143,6 @@ const UserQuiz = () => {
                     <Button 
                       variant="outline-secondary" 
                       onClick={() => {
-                        console.log('Button clicked')
                         handlePreviousQuestion()
                       }}
                       disabled={currentQuestionIndex === 0}
@@ -1188,7 +1163,6 @@ const UserQuiz = () => {
                       <Button 
                         variant="primary" 
                         onClick={() => {
-                          console.log('Next clicked')
                           handleNextQuestion()
                         }}
                         style={{ 
@@ -1204,7 +1178,6 @@ const UserQuiz = () => {
                       <Button 
                         variant="success" 
                         onClick={() => {
-                          console.log('Submit clicked')
                           handleSubmitQuiz()
                         }}
                         style={{ 

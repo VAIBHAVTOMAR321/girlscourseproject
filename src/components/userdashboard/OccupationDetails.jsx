@@ -22,25 +22,17 @@ const OccupationDetails = () => {
   const examRoadmapRef = useRef(null)
   const { occupation, stream, percentage, course, prepType: initialPrepType } = location.state || {}
   
-  console.log('OccupationDetails - Course:', course)
-  console.log('OccupationDetails - Occupation:', occupation)
-  
   const [prepType, setPrepType] = useState(initialPrepType || 'private')
 
   // Helper function to get related occupations based on course
   const getRelatedOccupations = () => {
     const allOccupations = ['Teacher', 'Lawyer', 'Software Engineer', 'Doctor']
     
-    console.log('getRelatedOccupations - Course:', course)
-    console.log('getRelatedOccupations - Occupation:', occupation)
-    
     if (!course) {
-      console.log('No course, returning all occupations except current')
       return allOccupations.filter(occ => occ !== occupation)
     }
     
     const courseLower = course.toLowerCase()
-    console.log('Course lowercase:', courseLower)
     
 // Map courses to related occupations - using more flexible matching
     const courseOccupationMap = {
@@ -94,22 +86,17 @@ const OccupationDetails = () => {
     let related = []
     for (const [key, occs] of Object.entries(courseOccupationMap)) {
       if (courseLower.includes(key)) {
-        console.log('Match found:', key, '->', occs)
         related = [...related, ...occs]
       }
     }
     
-    console.log('Related occupations:', related)
-    
     // If no match, return all occupations except current
     if (related.length === 0) {
-      console.log('No match found, returning all except current')
       return allOccupations.filter(occ => occ !== occupation)
     }
     
     // Remove duplicates and current occupation
     const result = [...new Set(related)].filter(occ => occ !== occupation)
-    console.log('Final result:', result)
     return result
   }
 

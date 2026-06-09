@@ -58,11 +58,24 @@ const UserTest = () => {
           return
         }
 
+        let startPayload;
+        if (userRoleType === 'employee') {
+          startPayload = {
+            unique_id: uniqueId, // Employee uses unique_id
+            course_id: course.course_id,
+            module_id: moduleId // Employee expects module_id
+          }
+        } else { // student, student-unpaid, and any other student roles
+          startPayload = {
+            student_id: uniqueId,
+            course_id: course.course_id,
+            module_id: moduleId // Assuming backend expects module_id for unpaid students too
+          }
+        }
+
         const response = await axios.post(
           'https://brjobsedu.com/girls_course/girls_course_backend/api/module-test/start/',
-          {
-            module_id: moduleId
-          },
+          startPayload,
           {
             headers: {
               'Authorization': `Bearer ${accessToken}`,
@@ -90,6 +103,8 @@ const UserTest = () => {
         }
       } catch (error) {
         // Handle error silently
+        console.error('Error fetching test questions:', error.response?.data || error.message);
+        alert('Failed to load test questions. Please try again.');
       } finally {
         setTestLoading(false)
         setLoading(false)
@@ -244,7 +259,29 @@ const UserTest = () => {
       let submissionData;
       let endpoint;
 
-      if (userRoleType === 'employee') {
+      if (userRoleType === 'student') {
+        endpoint = 'https://brjobsedu.com/girls_course/girls_course_backend/api/module-test/submit/'
+        submissionData = {
+          student_id: uniqueId,
+          course_id: course.course_id,
+          module_id: location.state.moduleId, // Changed to module_id for consistency
+          answers: questions.map((question, index) => ({
+            question_id: question.id,
+            selected: userAnswers[index]
+          }))
+        }
+      } else if (userRoleType === 'student-unpaid') {
+        endpoint = 'https://brjobsedu.com/girls_course/girls_course_backend/api/submit-test-unpaid/'
+        submissionData = {
+          student_id: uniqueId,
+          course_id: course.course_id,
+          module_id: location.state.moduleId, // Changed to module_id for consistency
+          answers: questions.map((question, index) => ({
+            question_id: question.id,
+            selected: userAnswers[index]
+          }))
+        }
+      } else if (userRoleType === 'employee') {
         endpoint = 'https://brjobsedu.com/girls_course/girls_course_backend/api/employee/module/submit-test/'
         submissionData = {
           unique_id: uniqueId,
@@ -256,16 +293,14 @@ const UserTest = () => {
           }))
         }
       } else {
+        // Default case for other student roles (assuming similar to 'student')
+        endpoint = 'https://brjobsedu.com/girls_course/girls_course_backend/api/module-test/submit/'
         submissionData = {
-          module_id: location.state.moduleId,
-          answers: questions.map((question, index) => ({
-            question_id: question.id,
-            selected: userAnswers[index]
-          }))
+          student_id: uniqueId,
+          course_id: course.course_id,
+          module_id: location.state.moduleId, // Changed to module_id for consistency
+          answers: questions.map((question, index) => ({ question_id: question.id, selected: userAnswers[index] }))
         }
-        endpoint = userRoleType === 'student-unpaid' 
-          ? 'https://brjobsedu.com/girls_course/girls_course_backend/api/submit-test-unpaid/'
-          : 'https://brjobsedu.com/girls_course/girls_course_backend/api/module-test/submit/'
       }
 
       // Submit test

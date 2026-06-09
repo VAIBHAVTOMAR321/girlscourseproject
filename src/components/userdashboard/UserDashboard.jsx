@@ -161,7 +161,6 @@ const UserDashboard = () => {
           }
         } catch (courseError) {
           // Use original data if course-items fetch fails
-          console.warn('Could not fetch course details for dates')
         }
         
         setCourses(coursesWithDates)
@@ -194,7 +193,6 @@ const UserDashboard = () => {
         setRefundRequests(response.data.data)
       }
     } catch (error) {
-      console.error('Error fetching refund requests:', error)
       setRefundRequests([])
     }
   }
@@ -213,7 +211,6 @@ const UserDashboard = () => {
         setAllCourses([])
       }
     } catch (error) {
-      console.error('Error fetching all courses:', error)
       setAllCourses([])
     } finally {
       setAllCoursesLoading(false)
@@ -243,7 +240,6 @@ const UserDashboard = () => {
         setSubmittedFeedbackCourses(submittedCourseIds)
       }
     } catch (error) {
-      console.error('Error fetching feedback data:', error)
     }
   }
 
@@ -285,7 +281,6 @@ const UserDashboard = () => {
         setUserData(data.data)
       }
     } catch (error) {
-      console.error('Error fetching user data:', error)
     }
   }
 
@@ -367,7 +362,7 @@ const UserDashboard = () => {
     const previousModuleProgress = moduleProgress.find(
       progress => 
         progress.course_id === selectedCourse.course_id && 
-        progress.module_id === previousModule.module_id
+        (progress.module_id === previousModule.module_id || progress.module === previousModule.module_id)
     )
     
     // Check if previous module test is passed - this is the only requirement
@@ -477,7 +472,6 @@ const UserDashboard = () => {
         alert(response.data.message || 'Failed to generate certificate')
       }
     } catch (error) {
-      console.error('Certificate generation error:', error)
       alert('Failed to generate certificate. Please try again.')
     }
   }
@@ -715,7 +709,6 @@ const UserDashboard = () => {
         setFeedbackError(response.data.message || 'Failed to submit feedback')
       }
     } catch (error) {
-      setFeedbackError('Failed to submit feedback. Please try again.')
     } finally {
       setFeedbackSubmitting(false)
     }
@@ -873,10 +866,27 @@ const UserDashboard = () => {
           module_id: currentModule.module_id,
           module_status: "completed"
         }
+      } else if (userRoleType === 'student') {
+        endpoint = `https://brjobsedu.com/girls_course/girls_course_backend/api/module-progress/`
+        payload = {
+          module_status: "ongoing", // As per user's request for 'student'
+          student_id: uniqueId,
+          course_id: selectedCourse.course_id,
+          module: currentModule.module_id
+        }
+      } else if (userRoleType === 'student-unpaid') {
+        endpoint = `https://brjobsedu.com/girls_course/girls_course_backend/api/module-progress-unpaid/`
+        payload = {
+          module_status: "ongoing", // Module is ongoing until test is passed
+          student_id: uniqueId,
+          course_id: selectedCourse.course_id,
+          module: currentModule.module_id
+        }
       } else {
-        endpoint = userRoleType === 'student-unpaid' 
-          ? `https://brjobsedu.com/girls_course/girls_course_backend/api/module-progress-unpaid/`
-          : `https://brjobsedu.com/girls_course/girls_course_backend/api/module-progress/`
+        // Default case for any other student roles not explicitly defined,
+        // preserving previous behavior for generic student progress.
+        // This uses module_id as per original structure.
+        endpoint = `https://brjobsedu.com/girls_course/girls_course_backend/api/module-progress/`
         payload = {
           module_status: "ongoing",
           student_id: uniqueId,
@@ -935,24 +945,18 @@ const UserDashboard = () => {
         alert(response.data.message)
         
         // Refresh both enrolled courses and all courses
-        console.log('Fetching updated course data...')
         try {
           await fetchCourses()
-          console.log('Courses fetched successfully')
         } catch (e) {
-          console.error('Error fetching courses:', e)
         }
         
         try {
           await fetchAllCourses()
-          console.log('All courses fetched successfully')
         } catch (e) {
-          console.error('Error fetching all courses:', e)
         }
         
         // Switch to My Courses tab after data is refreshed
         setTimeout(() => {
-          console.log('Switching to My Courses tab')
           setActiveTab('my-courses')
         }, 800)
         
@@ -960,7 +964,6 @@ const UserDashboard = () => {
         alert('Failed to enroll in course. Please try again.')
       }
     } catch (error) {
-      console.error('Error enrolling in course:', error)
       alert('Failed to enroll in course. Please try again.')
     }
   }
@@ -1125,7 +1128,7 @@ const UserDashboard = () => {
                              const moduleProgressData = moduleProgress.find(
                                progress => 
                                  progress.course_id === selectedCourse.course_id && 
-         progress.module_id === currentModule.module_id
+         (progress.module_id === currentModule.module_id || progress.module === currentModule.module_id)
                              )
 
                               let isTestDisabled = false
@@ -1220,6 +1223,22 @@ const UserDashboard = () => {
                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                                allowFullScreen
                                              ></iframe>
+                                             {module.video_link && !module.video_link.includes('dQw4w9WgXcQ') ? (
+                                               <iframe
+                                                 width="100%"
+                                                 height="315"
+                                                 src={module.video_link.replace('watch?v=', 'embed/')}
+                                                 title="Module Video"
+                                                 frameBorder="0"
+                                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                 allowFullScreen
+                                               ></iframe>
+                                             ) : (
+                                               <div className="p-5 text-center bg-white rounded border d-flex flex-column align-items-center justify-content-center" style={{ height: '315px' }}>
+                                                 <FaPlay className="text-muted mb-3" style={{ fontSize: '48px' }} />
+                                                 <p className="text-muted mb-0">No video available for this module.</p>
+                                               </div>
+                                             )}
                                            </div>
                                          </div>
                                        </Col>
@@ -1674,7 +1693,9 @@ const UserDashboard = () => {
                           ({
                             userRoleType === 'employee'
                               ? allCourses.filter(c => c.course_id === 'COUR-001').length
-                              : allCourses.filter(c => c.course_status === 'unpaid' && !isCourseExpired(c)).length
+                              : userRoleType === 'student' // For paid students, show only enrolled courses in "All Courses" tab
+                                ? allCourses.filter(c => courses.some(enrolledCourse => enrolledCourse.course_id === c.course_id)).length
+                                : allCourses.filter(c => c.course_status === 'unpaid' && !isCourseExpired(c)).length
                           })
                         </Button>
                       )}
@@ -1684,6 +1705,9 @@ const UserDashboard = () => {
                       let coursesToDisplayInAllCoursesTab = [];
                       if (userRoleType === 'employee') {
                         coursesToDisplayInAllCoursesTab = allCourses.filter(c => c.course_id === 'COUR-001');
+                      } else if (userRoleType === 'student') { // For paid students, show only enrolled courses
+                        const enrolledCourseIds = new Set(courses.map(c => c.course_id));
+                        coursesToDisplayInAllCoursesTab = allCourses.filter(c => enrolledCourseIds.has(c.course_id));
                       } else {
                         coursesToDisplayInAllCoursesTab = allCourses.filter(c => c.course_status === 'unpaid' && !isCourseExpired(c));
                       }
