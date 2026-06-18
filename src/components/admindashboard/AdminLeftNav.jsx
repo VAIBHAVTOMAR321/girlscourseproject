@@ -79,6 +79,10 @@ const AdminLeftNav = ({ show, setShow }) => {
               <i className="bi bi-person-badge nav-icon"></i>
               <span className="nav-text">Employee Issues</span>
             </Nav.Link>
+            <Nav.Link as={Link} to="/StudentAnalysis" className="nav-link-custom ">
+              <i className="bi bi-bar-chart-line nav-icon"></i>
+              <span className="nav-text">Student Analysis</span>
+            </Nav.Link>
             <Nav.Link as={Link} to="/QuizManagement" className="nav-link-custom ">
               <i className="bi bi-question-circle nav-icon"></i>
               <span className="nav-text">Quiz Management</span>
@@ -206,6 +210,9 @@ const AdminLeftNav = ({ show, setShow }) => {
             </Nav.Link>
             <Nav.Link as={Link} to="/EmployeeIssues" className="nav-link-custom" onClick={() => setShowOffcanvas(false)}>
               <i className="bi bi-person-badge nav-icon me-2"></i> Employee Issues
+            </Nav.Link>
+            <Nav.Link as={Link} to="/StudentAnalysis" className="nav-link-custom" onClick={() => setShowOffcanvas(false)}>
+              <i className="bi bi-bar-chart-line nav-icon me-2"></i> Student Analysis
             </Nav.Link>
             <Nav.Link as={Link} to="/QuizManagement" className="nav-link-custom" onClick={() => setShowOffcanvas(false)}>
               <i className="bi bi-question-circle nav-icon me-2"></i> Quiz Management
