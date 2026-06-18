@@ -91,6 +91,7 @@ const Registration = () => {
     state: "",
     password: "",
     confirm_password: "",
+    student_batch: "batch-1",
   });
 
   const [fieldErrors, setFieldErrors] = useState({});
@@ -452,6 +453,7 @@ const Registration = () => {
       state: "",
       password: "",
       confirm_password: "",
+      student_batch: "batch-1",
     });
     setAvailableBlocks([]);
     setFieldErrors({});
@@ -711,6 +713,20 @@ const Registration = () => {
                       <Form.Control.Feedback type="invalid">
                         {fieldErrors.aadhaar_no || errors.aadhaar_no}
                       </Form.Control.Feedback>
+                    </Form.Group>
+                  </Col>
+                </Row>
+
+                <Row className="mb-3">
+                  <Col md={12}>
+                    <Form.Group>
+                      <Form.Label className="form-label-gov">Assigned Batch</Form.Label>
+                      <Form.Control
+                        type="text"
+                        value="Batch-1"
+                        className="form-control-gov"
+                        readOnly
+                      />
                     </Form.Group>
                   </Col>
                 </Row>

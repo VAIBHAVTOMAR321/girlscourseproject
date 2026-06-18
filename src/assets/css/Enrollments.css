@@ -844,6 +844,86 @@
   cursor: pointer;
 }
 
+/* StudentAnalysis.jsx specific styles */
+
+/* General table improvements */
+.custom-table th,
+.custom-table td {
+  padding: 0.45rem 0.6rem; /* More compact padding */
+  font-size: 0.8rem; /* Professional small font size (approx 13px) */
+  vertical-align: middle;
+}
+
+.custom-table thead th {
+  font-size: 0.72rem; /* Distinctly smaller headers */
+  background-color: #f1f3f5 !important; /* Lighter, cleaner background */
+  color: #495057 !important;
+  border-bottom: 1px solid #dee2e6 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+/* Specific for leaderboard table */
+.leaderboard-table .progress {
+  height: 10px; /* Make progress bar slightly taller */
+  border-radius: 5px;
+  background-color: #e9ecef; /* Lighter background for empty part */
+}
+
+.leaderboard-table .progress-bar {
+  border-radius: 5px;
+  transition: width 0.6s ease; /* Smooth transition for progress */
+}
+
+.leaderboard-table .badge {
+  font-size: 0.75rem; /* Adjust badge font size in table */
+}
+
+/* Adjustments for buttons in StudentAnalysis */
+.student-analysis-buttons .btn,
+.student-list-table .btn,
+.leaderboard-table .btn {
+  padding: 0.2rem 0.5rem; /* Very compact buttons */
+  font-size: 0.75rem; /* Small font size for buttons */
+  font-weight: 500;
+  border-radius: 4px;
+}
+
+/* Ensure card titles are well-spaced */
+.card-title {
+  margin-bottom: 0.75rem;
+}
+
+/* Adjustments for the student list table */
+.student-list-table th,
+.student-list-table td {
+  white-space: nowrap; /* Prevent wrapping in student list table */
+}
+
+/* Overall Analysis View - Card headers */
+.overall-analysis-card-header {
+  background-color: #f8f9fa; /* Light background for card headers */
+  border-bottom: 1px solid #e0e0e0;
+  padding: 0.75rem 1.25rem;
+  font-weight: 600;
+  color: #343a40;
+}
+
+/* Pie chart legend styling */
+.recharts-legend-wrapper {
+  font-size: 0.85rem;
+}
+
+/* Tooltip for charts */
+.recharts-tooltip-wrapper {
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 1px solid #ddd;
+  padding: 0.5rem;
+  border-radius: 5px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
 .checkbox-grid .form-check-input {
   cursor: pointer;
 }
