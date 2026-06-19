@@ -41,6 +41,8 @@ const StudentAnalysis = () => {
   const [loadingCourses, setLoadingCourses] = useState(true);
   const [error, setError] = useState(null);
   const { accessToken } = useAuth();
+  const [courseStudentCounts, setCourseStudentCounts] = useState({});
+  const [loadingCounts, setLoadingCounts] = useState(false);
 
   // New states for student list and analysis
   const [selectedCourseForStudents, setSelectedCourseForStudents] =
@@ -101,7 +103,11 @@ const StudentAnalysis = () => {
   }, [accessToken]);
 
   useEffect(() => {
-    const fetchAllEnrollments = async () => {
+    const fetchStudentCounts = async () => {
+      if (!courses.length || !accessToken) return;
+
+      setLoadingCounts(true);
+
       try {
         const config = {
           headers: {
@@ -109,74 +115,38 @@ const StudentAnalysis = () => {
           },
         };
 
-        // Fetch paid enrollments (hitting both potential endpoints for completeness)
-        let paidEnrollments = [];
-        try {
-          const paidResponse = await axios.get(
-            "https://brainrock.in/brainrock/backend/api/course-registration/",
-            config,
-          );
-          if (paidResponse.data && paidResponse.data.success) {
-            paidEnrollments = paidResponse.data.data.map((e) => ({
-              ...e,
-              roleType: "student",
-            }));
-          }
-        } catch (err) {
-          const fallbackRes = await axios.get(
-            "https://brjobsedu.com/girls_course/girls_course_backend/api/all-registration/",
-            config,
-          );
-          if (fallbackRes.data && fallbackRes.data.success) {
-            paidEnrollments = fallbackRes.data.data.map((e) => ({
-              ...e,
-              roleType: "student",
-            }));
-          }
-        }
-
-        // Fetch unpaid enrollments
-        const unpaidResponse = await axios.get(
-          "https://brjobsedu.com/girls_course/girls_course_backend/api/student-unpaid/",
-          config,
-        );
-        const unpaidEnrollments =
-          unpaidResponse.data && unpaidResponse.data.success
-            ? unpaidResponse.data.data.map((e) => ({
-                ...e,
-                roleType: "student-unpaid",
-              }))
-            : [];
-
-        const combinedEnrollments = [...paidEnrollments, ...unpaidEnrollments];
-        setAllEnrollments(combinedEnrollments);
-
         const counts = {};
-        combinedEnrollments.forEach((enrollment) => {
-          // Try multiple paths for course ID: direct course_id, first item in application array, or course field
-          const rawId =
-            enrollment.course_id ||
-            (Array.isArray(enrollment.application_for_course)
-              ? enrollment.application_for_course[0]
-              : enrollment.application_for_course) ||
-            enrollment.course;
 
-          const courseId = rawId ? String(rawId) : null;
-          if (courseId) {
-            counts[courseId] = (counts[courseId] || 0) + 1;
-          }
-        });
-        setEnrollmentCounts(counts);
-      } catch (err) {
-        console.error("Error fetching all enrollments:", err);
-        // Handle error, maybe set an error state
+        await Promise.all(
+          courses.map(async (course) => {
+            try {
+              const response = await axios.get(
+                `https://brjobsedu.com/girls_course/girls_course_backend/api/course-enrollment-progress/?course_id=${course.course_id}`,
+                config,
+              );
+
+              counts[course.course_id] =
+                response.data?.enrollments?.length || 0;
+            } catch (error) {
+              console.error(
+                `Error fetching count for ${course.course_id}`,
+                error,
+              );
+              counts[course.course_id] = 0;
+            }
+          }),
+        );
+
+        setCourseStudentCounts(counts);
+      } catch (error) {
+        console.error("Error fetching student counts:", error);
+      } finally {
+        setLoadingCounts(false);
       }
     };
 
-    if (accessToken) {
-      fetchAllEnrollments();
-    }
-  }, [accessToken]);
+    fetchStudentCounts();
+  }, [courses, accessToken]);
 
   const fetchCourseEnrollmentDetails = async (courseId) => {
     setLoadingCourseEnrollmentDetails(true);
@@ -313,16 +283,11 @@ const StudentAnalysis = () => {
                     >
                       {course.course_status}
                     </Badge>
-                    {enrollmentCounts[course.course_id] !== undefined ? (
-                      <p className="card-text mt-2 mb-0">
-                        <FaUsers className="me-1" /> Enrolled Students:{" "}
-                        {enrollmentCounts[course.course_id]}
-                      </p>
-                    ) : (
-                      <p className="card-text mt-2 mb-0 text-muted">
-                        <FaUsers className="me-1" /> Enrolled Students: 0
-                      </p>
-                    )}
+                    <p className="card-text mt-2 mb-0">
+                      <FaUsers className="me-1" />
+                      Enrolled Students:{" "}
+                      {courseStudentCounts[course.course_id] || 0}
+                    </p>
                   </Card.Body>
                 </Card>
               </Col>
@@ -382,28 +347,69 @@ const StudentAnalysis = () => {
                 <th>S.No.</th>
                 <th>Student Code</th>
                 <th>Student Name</th>
+                <th>Modules Completed</th>
+                <th>Average Score</th>
                 <th className="text-center">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {studentsInCourse.map((student) => (
-                <tr key={student.student_code}>
-                  {" "}
-                  {/* Use student.student_code as key */}
-                  <td>{studentsInCourse.indexOf(student) + 1}</td>
-                  <td>{student.student_code}</td>
-                  <td>{student.student_name}</td>
-                  <td className="text-center">
-                    <Button
-                      variant="info"
-                      size="sm"
-                      onClick={() => handleViewStudentAnalysis(student)}
-                    >
-                      View Analysis
-                    </Button>
-                  </td>
-                </tr>
-              ))}
+              {studentsInCourse.map((student, index) => {
+                const totalModules = student.module_progress?.length || 0;
+
+                const completedModules =
+                  student.module_progress?.filter(
+                    (module) => module.is_completed,
+                  ).length || 0;
+
+                const totalScore =
+                  student.module_progress?.reduce(
+                    (sum, module) => sum + (module.test_score || 0),
+                    0,
+                  ) || 0;
+
+                const averageScore =
+                  totalModules > 0 ? (totalScore / totalModules).toFixed(1) : 0;
+
+                return (
+                  <tr key={student.student_code}>
+                    <td>{index + 1}</td>
+
+                    <td>{student.student_code}</td>
+
+                    <td>{student.student_name}</td>
+
+                    <td>
+                      <Badge bg="success">
+                        {completedModules} / {totalModules}
+                      </Badge>
+                    </td>
+
+                    <td>
+                      <Badge
+                        bg={
+                          averageScore >= 80
+                            ? "success"
+                            : averageScore >= 60
+                              ? "warning"
+                              : "danger"
+                        }
+                      >
+                        {averageScore}%
+                      </Badge>
+                    </td>
+
+                    <td className="text-center">
+                      <Button
+                        variant="info"
+                        size="sm"
+                        onClick={() => handleViewStudentAnalysis(student)}
+                      >
+                        View Analysis
+                      </Button>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </Table>
         )}

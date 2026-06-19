@@ -1210,7 +1210,7 @@ const UserDashboard = () => {
                                    <Accordion.Body>
                                      {/* Video Section */}
                                      <Row className="mb-4">
-                                       <Col md={6}>
+                                       {/* <Col md={6}>
                                          <div className="p-3 bg-light rounded h-100">
                                            <h6 className="mb-3 fw-semibold">
                                              <FaPlay className="me-2 text-primary" /> Module Video
@@ -1243,10 +1243,10 @@ const UserDashboard = () => {
                                              )}
                                            </div>
                                          </div>
-                                       </Col>
+                                       </Col> */}
 
                                        {/* Submodules List */}
-                                       <Col md={6}>
+                                       <Col md={12}>
                                          <div className="p-3 bg-light rounded h-100">
                                            <h6 className="mb-3 fw-semibold">
                                              <FaLayerGroup className="me-2 text-primary" /> Submodules
