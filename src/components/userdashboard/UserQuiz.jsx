@@ -26,6 +26,7 @@ const UserQuiz = () => {
   const [showRankModal, setShowRankModal] = useState(false)
   const [selectedQuizRank, setSelectedQuizRank] = useState(null)
   const [refreshKey, setRefreshKey] = useState(0)
+  const [quizCertificates, setQuizCertificates] = useState({})
   
   // Quiz taking state
   const [takingQuiz, setTakingQuiz] = useState(false)
@@ -254,6 +255,7 @@ const UserQuiz = () => {
           const participated = {}
           const ranks = {}
           
+          const certificates = {}
           response.data.data.forEach(participant => {
             if (participant.student?.student_id === uniqueId) {
               participated[participant.quiz_id] = true
@@ -268,10 +270,15 @@ const UserQuiz = () => {
                   }
                 }
               }
+
+              if (participant.certificate_file) {
+                certificates[participant.quiz_id] = `https://brjobsedu.com/girls_course/girls_course_backend${participant.certificate_file}`
+              }
             }
           })
           setParticipatedQuizzes(participated)
           setQuizRanks(ranks)
+          setQuizCertificates(certificates)
           
           const quizIds = [...new Set(response.data.data.map(p => p.quiz_id))]
           const rankPromises = quizIds.map(async (quizId) => {
@@ -949,6 +956,15 @@ const UserQuiz = () => {
                                     >
                                       <TransText k="quiz.alreadyAttempted" as="span" />
                                     </Button>
+                                    {quizCertificates[quiz.quiz_id] && (
+                                      <Button
+                                        variant="success"
+                                        className="w-100"
+                                        onClick={() => window.open(quizCertificates[quiz.quiz_id], '_blank')}
+                                      >
+                                        🏅 <TransText k="quiz.viewCertificate" as="span" />
+                                      </Button>
+                                    )}
                                   </div>
                                 ) : (
                                   <div className="d-flex flex-column gap-2">
