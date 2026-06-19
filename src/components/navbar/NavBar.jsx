@@ -54,14 +54,14 @@ const NavBar = () => {
         {/* Desktop menu */}
         <div className="navbar-menu">
           {/* Hide Home on GovtEmployee, Employee login, and Unpaid pages */}
-          {!isGovtEmployeePage && !isEmployeePage && !isUnpaidPage && (
+          {!isGovtEmployeePage && !isEmployeePage && !isUnpaidPage && !isRegisterPage && (
             <Link to="/" className="navbar-link">Home</Link>
           )}
           
           {/* Show Login button if not on a login page; redirect logic */}
           {!isLoginPage && !isUnpaidPage && (
             <Link 
-              to={isEmployeePage ? "/GovtEmployee" : (isGovtEmployeePage ? "/employee" : "/login")} 
+              to={isRegisterPage ? "/unpaid" : isEmployeePage ? "/GovtEmployee" : (isGovtEmployeePage ? "/employee" : "/login")} 
               className="navbar-link navbar-button"
             >
               {isEmployeePage ? "Test" : "Login"}
@@ -75,7 +75,7 @@ const NavBar = () => {
         {/* Mobile menu */}
         <div className={`navbar-mobile-menu ${menuOpen ? 'active' : ''}`}>
           {/* Hide Home on GovtEmployee, Employee login, and Unpaid pages */}
-          {!isGovtEmployeePage && !isEmployeePage && !isUnpaidPage && (
+          {!isGovtEmployeePage && !isEmployeePage && !isUnpaidPage && !isRegisterPage && (
             <Link 
               to="/" 
               className="navbar-link" 
@@ -87,7 +87,7 @@ const NavBar = () => {
           
           {!isLoginPage && !isUnpaidPage && (
             <Link 
-              to={isEmployeePage ? "/GovtEmployee" : (isGovtEmployeePage ? "/employee" : "/login")} 
+              to={isRegisterPage ? "/unpaid" : isEmployeePage ? "/GovtEmployee" : (isGovtEmployeePage ? "/employee" : "/login")} 
               className="navbar-link navbar-button" 
               onClick={() => setMenuOpen(false)}
             >

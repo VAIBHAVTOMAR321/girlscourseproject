@@ -91,6 +91,11 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas, onNavAttempt }) => {
                 </Button>
               </div>
                  <Nav className="flex-column p-3">
+                   {!isEmployee && !isPaidStudent && (
+                   <Nav.Link className="text-white" onClick={() => handleNavClick('/UserQuiz')} style={{ cursor: 'pointer' }}>
+                     <i className="bi bi-clipboard-check me-2"></i> <TransText k="quiz.title" as="span" />
+                   </Nav.Link>
+                  )}
                    <Nav.Link className="text-white" onClick={() => handleNavClick('/UserDashboard')} style={{ cursor: 'pointer' }}>
                      <i className="bi bi-grid-3x3-gap me-2"></i> <TransText k="dashboard.title" as="span" />
                    </Nav.Link>
@@ -98,12 +103,6 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas, onNavAttempt }) => {
                     <Nav.Link className="text-white" onClick={() => handleNavClick('/UserProfile')} style={{ cursor: 'pointer' }}>
                      <i className="bi bi-person-circle me-2"></i> <TransText k="menu.profile" as="span" />
                    </Nav.Link>
-                  
-                  {!isEmployee && !isPaidStudent && (
-                   <Nav.Link className="text-white" onClick={() => handleNavClick('/UserQuiz')} style={{ cursor: 'pointer' }}>
-                     <i className="bi bi-clipboard-check me-2"></i> <TransText k="quiz.title" as="span" />
-                   </Nav.Link>
-                  )}
                   {!isEmployee && !isPaidStudent && (
                    <Nav.Link className="text-white" onClick={() => handleNavClick('/UserEvents')} style={{ cursor: 'pointer' }}>
                      <i className="bi bi-calendar-event me-2"></i> <TransText k="menu.events" as="span" />
@@ -168,6 +167,11 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas, onNavAttempt }) => {
                 </Button>
                 </div>
                  <Nav className="flex-column p-3 align-items-center">
+                   {!isEmployee && !isPaidStudent && (
+                     <Nav.Link className="text-white" onClick={() => handleNavClick('/UserQuiz')} style={{ cursor: 'pointer' }}>
+                       <i className="bi bi-clipboard-check fs-5"></i>
+                     </Nav.Link>
+                   )}
                    <Nav.Link className="text-white" onClick={() => handleNavClick('/UserDashboard')} style={{ cursor: 'pointer' }}>
                      <i className="bi bi-grid-3x3-gap fs-5"></i>
                    </Nav.Link>
@@ -200,11 +204,6 @@ const UseLeftNav = ({ showOffcanvas, setShowOffcanvas, onNavAttempt }) => {
                    {!isEmployee && !isPaidStudent && (
                      <Nav.Link className="text-white" onClick={() => handleNavClick('/UserSettings')} style={{ cursor: 'pointer' }}>
                        <i className="bi bi-gear fs-5"></i>
-                     </Nav.Link>
-                   )}
-                   {!isEmployee && !isPaidStudent && (
-                     <Nav.Link className="text-white" onClick={() => handleNavClick('/UserQuiz')} style={{ cursor: 'pointer' }}>
-                       <i className="bi bi-clipboard-check fs-5"></i>
                      </Nav.Link>
                    )}
                    {!isEmployee && !isPaidStudent && (

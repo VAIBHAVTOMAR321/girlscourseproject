@@ -260,8 +260,11 @@ const Login = () => {
       
       setTimeout(() => {
         successMessage.remove();
-        const dashboardRoute = response.data.role === "admin" ? "/AdminDashboard" : "/UserDashboard";
-        navigate(dashboardRoute);
+        const dashboardRoute =
+          response.data.role === "admin"
+            ? "/AdminDashboard"
+            : response.data.role === "student-unpaid" ? "/UserQuiz" : "/UserDashboard";
+        navigate(dashboardRoute, { replace: true });
       }, 1500);
 
     } catch (error) {

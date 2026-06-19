@@ -70,7 +70,7 @@ const Registration = () => {
     fetchCourses();
   }, []);
 
-  const [courseType, setCourseType] = useState(fromCourse && initialCourseType ? initialCourseType : "paid"); // Changed to lowercase to match API
+  const [courseType, setCourseType] = useState("unpaid");
   const [hoveredCourse, setHoveredCourse] = useState(null);
 
   // Filter courses based on selected tab
@@ -91,7 +91,6 @@ const Registration = () => {
     state: "",
     password: "",
     confirm_password: "",
-    student_batch: "batch-1",
   });
 
   const [fieldErrors, setFieldErrors] = useState({});
@@ -453,7 +452,6 @@ const Registration = () => {
       state: "",
       password: "",
       confirm_password: "",
-      student_batch: "batch-1",
     });
     setAvailableBlocks([]);
     setFieldErrors({});
@@ -473,16 +471,9 @@ const Registration = () => {
               <div className="header-underline mx-auto"></div>
               
               {/* Course Type Tabs */}
-              <div className="course-tabs mb-4">
+              <div className="course-tabs mb-4 justify-content-center">
                 <div 
-                  className={`course-tab ${courseType === "paid" ? "active" : ""}`}
-                  onClick={() => setCourseType("paid")}
-                >
-                  Paid Courses
-                </div>
-                <div 
-                  className={`course-tab ${courseType === "unpaid" ? "active" : ""}`}
-                  onClick={() => setCourseType("unpaid")}
+                  className={`course-tab active`}
                 >
                   Unpaid Courses
                 </div>
@@ -718,20 +709,6 @@ const Registration = () => {
                 </Row>
 
                 <Row className="mb-3">
-                  <Col md={12}>
-                    <Form.Group>
-                      <Form.Label className="form-label-gov">Assigned Batch</Form.Label>
-                      <Form.Control
-                        type="text"
-                        value="Batch-1"
-                        className="form-control-gov"
-                        readOnly
-                      />
-                    </Form.Group>
-                  </Col>
-                </Row>
-
-                <Row className="mb-3">
                   <Col md={6}>
                     <Form.Group>
                       <Form.Label className="form-label-gov">Phone</Form.Label>
@@ -936,7 +913,7 @@ const Registration = () => {
 
               <div className="text-center account-style mt-4">
                 <small className="register-text">
-                  Already have an account? <Link to="/login" className="register-link">Login Here</Link>
+                  Already have an account? <Link to="/unpaid" className="register-link">Login Here</Link>
                 </small>
               </div>
               
