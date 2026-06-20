@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { Container, Row, Col, Card, Button, Modal, Form, Badge, Table, Spinner } from 'react-bootstrap'
+import { Container, Row, Col, Card, Button, Modal, Form, Badge, Table, Spinner, Alert } from 'react-bootstrap'
 import AdminLeftNav from './AdminLeftNav'
 import AdminTopNav from './AdminTopNav'
 import axios from 'axios'
-import { FaPlus, FaEdit, FaTrash, FaEye, FaTimes, FaArrowLeft } from 'react-icons/fa'
+import { FaPlus, FaEdit, FaTrash, FaEye, FaTimes, FaArrowLeft, FaChartBar, FaTrophy, FaMedal, FaUsers, FaCheckCircle, FaClock, FaChevronLeft, FaChevronRight, FaInfoCircle, FaList } from 'react-icons/fa'
 import { useAuth } from '../../contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, PieChart, Pie, Legend } from 'recharts'
 
 import '../../assets/css/AdminDashboard.css'
 
@@ -15,11 +16,24 @@ const QuizManagement = () => {
   const [showSidebar, setShowSidebar] = useState(true)
   const [loading, setLoading] = useState(true)
   const [quizzes, setQuizzes] = useState([])
+  
+  // Modal States
   const [showModal, setShowModal] = useState(false)
   const [showViewModal, setShowViewModal] = useState(false)
+  const [showOverallAnalysisModal, setShowOverallAnalysisModal] = useState(false)
+  
+  // Data States
   const [editingQuiz, setEditingQuiz] = useState(null)
   const [viewingQuiz, setViewingQuiz] = useState(null)
   const [submitting, setSubmitting] = useState(false)
+  const [analysisData, setAnalysisData] = useState(null)
+  const [analysisLoading, setAnalysisLoading] = useState(false)
+  const [showAnalysisView, setShowAnalysisView] = useState(false)
+  const [selectedQuizForAnalysis, setSelectedQuizForAnalysis] = useState(null)
+  
+  // Pagination State
+  const [currentPage, setCurrentPage] = useState(1)
+  const recordsPerPage = 20
 
   const [quizFormData, setQuizFormData] = useState({
     title: '',
@@ -63,9 +77,7 @@ const QuizManagement = () => {
 
   const handleQuestionChange = (index, field, value) => {
     const updatedQuestions = [...quizFormData.questions]
-    if (field === 'options') {
-      updatedQuestions[index][field] = value.split('|')
-    } else if (field === 'options_hindi') {
+    if (field === 'options' || field === 'options_hindi') {
       updatedQuestions[index][field] = value.split('|')
     } else {
       updatedQuestions[index][field] = value
@@ -239,10 +251,66 @@ const QuizManagement = () => {
     })
   }
 
+  const handleViewAnalysis = async (quiz) => {
+    setSelectedQuizForAnalysis(quiz)
+    setShowAnalysisView(true)
+    setAnalysisData(null)
+    setAnalysisLoading(true)
+    setCurrentPage(1)
+    try {
+      const response = await axios.get(
+        `https://brjobsedu.com/girls_course/girls_course_backend/api/quiz-batch-rank-admin/?quiz_id=${quiz.quiz_id}`
+      )
+      if (response.data.status) setAnalysisData(response.data)
+    } catch (error) {
+      console.error('Error fetching analysis:', error)
+    } finally {
+      setAnalysisLoading(false)
+    }
+  }
+
+  const renderRankIcon = (rank) => {
+    if (rank === 1) return <FaTrophy className="text-warning me-1" />
+    if (rank === 2) return <FaMedal className="text-primary me-1" />
+    if (rank === 3) return <FaMedal className="text-warning me-1" />
+    return null
+  }
+
+  const getRankColor = (rank) => {
+    if (rank === 1) return '#28a745'
+    if (rank === 2) return '#0d6efd'
+    if (rank === 3) return '#ffc107'
+    return '#dc3545'
+  }
+
   const openCreateModal = () => {
     resetForm()
     setShowModal(true)
   }
+
+  // Data processing for Analysis View
+  const allStudents = analysisData ? analysisData.batches.flatMap(b => b.students.map(s => ({...s, batch_name: b.student_batch}))) : []
+  const sortedStudents = [...allStudents].sort((a, b) => a.rank - b.rank)
+  const totalQuestions = selectedQuizForAnalysis?.number_of_questions || 1
+
+  const totalStudents = allStudents.length
+  const passedStudents = allStudents.filter(s => s.status === 'passed').length
+  const avgScore = totalStudents > 0 ? (allStudents.reduce((acc, curr) => acc + curr.score, 0) / totalStudents).toFixed(1) : 0
+  const passRate = totalStudents > 0 ? ((passedStudents / totalStudents) * 100).toFixed(1) : 0
+
+  const totalPages = Math.ceil(sortedStudents.length / recordsPerPage)
+  const currentRecords = sortedStudents.slice((currentPage - 1) * recordsPerPage, currentPage * recordsPerPage)
+
+  const completionChartData = [
+    { name: 'Passed', value: passedStudents, color: '#28a745' },
+    { name: 'Failed', value: totalStudents - passedStudents, color: '#dc3545' }
+  ]
+
+  const performanceLevelsData = [
+    { name: 'High (>=75%)', value: sortedStudents.filter(r => (r.score / totalQuestions) >= 0.75).length, color: '#28a745' },
+    { name: 'Average (40-74%)', value: sortedStudents.filter(r => { const pct = (r.score / totalQuestions); return pct >= 0.4 && pct < 0.75; }).length, color: '#0dcaf0' },
+    { name: 'Low (<40%)', value: sortedStudents.filter(r => (r.score / totalQuestions) < 0.4).length, color: '#dc3545' }
+  ]
 
   return (
     <div className="admin-layout">
@@ -252,74 +320,398 @@ const QuizManagement = () => {
           <AdminTopNav />
           <div className="content-area">
             <Container fluid className='mob-top-view'>
-              <div className="d-flex justify-content-between align-items-center mb-4 page-header">
-                <div className="d-flex align-items-center all-en-box gap-3">
-                  <Button variant="outline-secondary" size="sm" onClick={() => navigate('/AdminDashboard')} className="me-2">
-                    <FaArrowLeft /> Dashboard
-                  </Button>
-                  <h4 className="mb-0">Quiz Management</h4>
-                </div>
-                <Button variant="primary" onClick={openCreateModal}>
-                  <FaPlus className="me-2" /> Create Quiz
-                </Button>
-              </div>
+              
+              {!showAnalysisView ? (
+                <>
+                  <div className="d-flex justify-content-between align-items-center mb-4 page-header">
+                    <div className="d-flex align-items-center all-en-box gap-3">
+                      <Button variant="outline-secondary" size="sm" onClick={() => navigate('/AdminDashboard')} className="me-2">
+                        <FaArrowLeft /> Dashboard
+                      </Button>
+                      <h4 className="mb-0">Quiz Management</h4>
+                    </div>
+                    <Button variant="primary" onClick={openCreateModal}>
+                      <FaPlus className="me-2" /> Create Quiz
+                    </Button>
+                  </div>
 
-              {loading ? (
-                <div className="text-center py-5">
-                  <Spinner animation="border" variant="primary" />
-                </div>
+                  {loading ? (
+                    <div className="text-center py-5">
+                      <Spinner animation="border" variant="primary" />
+                    </div>
+                  ) : (
+                    <Card className="shadow-sm border-0">
+                      <Card.Body className="p-0">
+                        <Table responsive hover className="mb-0">
+                          <thead>
+                            <tr>
+                              <th>ID</th>
+                              <th>Title</th>
+                              <th>Category</th>
+                              <th>Questions</th>
+                              <th>Status</th>
+                              <th>Analysis</th>
+                              <th>Actions</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {quizzes.length === 0 ? (
+                              <tr>
+                                <td colSpan="7" className="text-center text-muted py-4">
+                                  No quizzes available
+                                </td>
+                              </tr>
+                            ) : (
+                              quizzes.map((quiz) => (
+                                <tr key={quiz.id}>
+                                  <td>{quiz.quiz_id}</td>
+                                  <td>{quiz.title}</td>
+                                  <td><Badge bg="info">{quiz.quiz_category}</Badge></td>
+                                  <td>{quiz.number_of_questions || 0}</td>
+                                  <td>
+                                    <Badge bg={quiz.is_active ? 'success' : 'secondary'}>
+                                      {quiz.is_active ? 'Active' : 'Inactive'}
+                                    </Badge>
+                                  </td>
+                                  <td>
+                                    <Button variant="outline-info" size="sm" onClick={() => handleViewAnalysis(quiz)}>
+                                      <FaChartBar />
+                                    </Button>
+                                  </td>
+                                  <td>
+                                    <Button variant="outline-primary" size="sm" className="me-2" onClick={() => handleView(quiz)}>
+                                      <FaEye />
+                                    </Button>
+                                    <Button variant="outline-secondary" size="sm" className="me-2" onClick={() => handleEdit(quiz)}>
+                                      <FaEdit />
+                                    </Button>
+                                    <Button variant="outline-danger" size="sm" onClick={() => handleDelete(quiz)}>
+                                      <FaTrash />
+                                    </Button>
+                                  </td>
+                                </tr>
+                              ))
+                            )}
+                          </tbody>
+                        </Table>
+                      </Card.Body>
+                    </Card>
+                  )}
+                </>
               ) : (
-                <Table responsive hover>
-                  <thead>
-                    <tr>
-                      <th>ID</th>
-                      <th>Title</th>
-                      <th>Category</th>
-                      <th>Questions</th>
-                      <th>Status</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {quizzes.length === 0 ? (
-                      <tr>
-                        <td colSpan="5" className="text-center text-muted py-4">
-                          No quizzes available
-                        </td>
-                      </tr>
-                    ) : (
-                      quizzes.map((quiz) => (
-                        <tr key={quiz.id}>
-                          <td>{quiz.quiz_id}</td>
-                          <td>{quiz.title}</td>
-                          <td><Badge bg="info">{quiz.quiz_category}</Badge></td>
-                          <td>{quiz.number_of_questions || 0}</td>
-                          <td>
-                            <Badge bg={quiz.is_active ? 'success' : 'secondary'}>
-                              {quiz.is_active ? 'Active' : 'Inactive'}
-                            </Badge>
-                          </td>
-                          <td>
-                            <Button variant="outline-primary" size="sm" className="me-2" onClick={() => handleView(quiz)}>
-                              <FaEye />
+                <div className="ranking-dashboard">
+                  <div className="d-flex justify-content-between align-items-center mb-4">
+                    <h5 className="mb-0 text-dark fw-bold">Performance Analytics: {selectedQuizForAnalysis?.title}</h5>
+                    <div>
+                      <Button variant="outline-secondary" className="me-2" onClick={() => setShowAnalysisView(false)}>
+                        <FaArrowLeft className="me-1" /> Back to Quizzes
+                      </Button>
+                      <Button variant="outline-primary" onClick={() => setShowOverallAnalysisModal(true)}>
+                        <FaChartBar className="me-2" /> View Overall Analysis
+                      </Button>
+                    </div>
+                  </div>
+
+                  {analysisLoading ? (
+                    <div className="text-center py-5">
+                      <Spinner animation="border" variant="primary" />
+                      <p className="mt-2">Loading ranking data...</p>
+                    </div>
+                  ) : (
+                    <>
+                      {/* Stats Summary Cards */}
+                      <Row className="mb-4 g-3">
+                        <Col md={3}>
+                          <Card className="border-0 shadow-sm text-center py-3 bg-primary text-white">
+                            <FaUsers className="mb-2 fs-3" />
+                            <h6 className="small text-uppercase">Total Students</h6>
+                            <h4>{totalStudents}</h4>
+                          </Card>
+                        </Col>
+                        <Col md={3}>
+                          <Card className="border-0 shadow-sm text-center py-3 bg-success text-white">
+                            <FaCheckCircle className="mb-2 fs-3" />
+                            <h6 className="small text-uppercase">Avg. Score</h6>
+                            <h4>{avgScore}</h4>
+                          </Card>
+                        </Col>
+                        <Col md={3}>
+                          <Card className="border-0 shadow-sm text-center py-3 bg-info text-white">
+                            <FaClock className="mb-2 fs-3" />
+                            <h6 className="small text-uppercase">Pass Rate</h6>
+                            <h4>{passRate}%</h4>
+                          </Card>
+                        </Col>
+                        <Col md={3}>
+                          <Card className="border-0 shadow-sm text-center py-3 bg-warning text-dark">
+                            <FaList className="mb-2 fs-3" />
+                            <h6 className="small text-uppercase">Total Batches</h6>
+                            <h4>{analysisData?.batch_count || 0}</h4>
+                          </Card>
+                        </Col>
+                      </Row>
+
+                      {/* Top 3 Podium and Chart */}
+                      <Row className="mb-4 g-4">
+                        <Col lg={4}>
+                          <h5 className="mb-3 text-secondary"><FaTrophy className="text-warning me-2"/>Top Performers</h5>
+                          {sortedStudents.slice(0, 3).map((student, idx) => (
+                            <Card key={student.student_id} className={`mb-3 border-0 shadow-sm border-start border-4 ${idx === 0 ? 'border-success' : idx === 1 ? 'border-primary' : 'border-warning'}`}>
+                              <Card.Body className="d-flex align-items-center py-3">
+                                <div className="rank-badge me-3" style={{ fontSize: '1.5rem', fontWeight: 'bold', color: getRankColor(idx + 1) }}>
+                                  #{idx + 1}
+                                </div>
+                                <div className="flex-grow-1">
+                                  <h6 className="mb-0 fw-bold">{student.full_name}</h6>
+                                  <small className="text-muted">{student.student_id}</small>
+                                </div>
+                                <div className="text-end">
+                                  <h5 className="mb-0 text-primary">{student.score}</h5>
+                                  <small className="text-muted">Pts</small>
+                                </div>
+                              </Card.Body>
+                            </Card>
+                          ))}
+                          {sortedStudents.length === 0 && <div className="text-center py-4 bg-light rounded text-muted">No data available yet</div>}
+                        </Col>
+                        <Col lg={8}>
+                          <Card className="h-100 border-0 shadow-sm">
+                            <Card.Header className="bg-white py-3 border-0">
+                              <h6 className="mb-0 text-secondary">Score Distribution (Top 10)</h6>
+                            </Card.Header>
+                            <Card.Body>
+                              <div style={{ width: '100%', height: 300 }}>
+                                <ResponsiveContainer>
+                                  <BarChart data={sortedStudents.slice(0, 10)} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
+                                    <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                                    <XAxis dataKey="full_name" hide />
+                                    <YAxis />
+                                    <Tooltip 
+                                      cursor={{fill: 'transparent'}}
+                                      contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
+                                    />
+                                    <Bar dataKey="score" radius={[4, 4, 0, 0]}>
+                                      {sortedStudents.slice(0, 10).map((entry, index) => (
+                                        <Cell key={`cell-${index}`} fill={getRankColor(index + 1)} />
+                                      ))}
+                                    </Bar>
+                                  </BarChart>
+                                </ResponsiveContainer>
+                              </div>
+                            </Card.Body>
+                          </Card>
+                        </Col>
+                      </Row>
+
+                      {/* Full Rankings Table */}
+                      <Card className="border-0 shadow-sm overflow-hidden mb-4">
+                        <Card.Header className="bg-light py-3">
+                          <h6 className="mb-0 fw-semibold text-secondary">Full Leaderboard</h6>
+                        </Card.Header>
+                        <Card.Body className="p-0">
+                          <Table hover responsive className="mb-0">
+                            <thead className="bg-light">
+                              <tr>
+                                <th className="ps-4">Rank</th>
+                                <th>Student Name</th>
+                                <th>Student ID</th>
+                                <th>Batch</th>
+                                <th>Score</th>
+                                <th>Status</th>
+                                <th className="text-center">Certificate</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {currentRecords.length > 0 ? currentRecords.map((r, index) => (
+                                <tr key={r.student_id || index}>
+                                  <td className="ps-4 fw-bold">
+                                    {renderRankIcon(r.rank)} {r.rank}
+                                  </td>
+                                  <td>{r.full_name}</td>
+                                  <td><Badge bg="light" text="dark" className="border">{r.student_id}</Badge></td>
+                                  <td><Badge bg="secondary">{r.batch_name}</Badge></td>
+                                  <td className="text-primary fw-semibold">{r.score}</td>
+                                  <td>
+                                    <Badge bg={r.status === 'passed' ? 'success' : 'danger'}>
+                                      {r.status}
+                                    </Badge>
+                                  </td>
+                                  <td className="text-center">
+                                    {r.certificate_file ? (
+                                      <Button 
+                                        variant="link" 
+                                        size="sm" 
+                                        onClick={() => window.open(`https://brjobsedu.com/girls_course/girls_course_backend${r.certificate_file}`, '_blank')}
+                                        className="text-decoration-none p-0"
+                                      >
+                                        <FaEye className="me-1" /> View
+                                      </Button>
+                                    ) : '—'}
+                                  </td>
+                                </tr>
+                              )) : (
+                                <tr>
+                                  <td colSpan="7" className="text-center py-4 text-muted">No student records found.</td>
+                                </tr>
+                              )}
+                            </tbody>
+                          </Table>
+                        </Card.Body>
+                        {totalPages > 1 && (
+                          <Card.Footer className="bg-white border-top py-3 d-flex justify-content-center">
+                            <Button 
+                              variant="light" 
+                              className="me-2" 
+                              disabled={currentPage === 1}
+                              onClick={() => setCurrentPage(prev => prev - 1)}
+                            >
+                              <FaChevronLeft />
                             </Button>
-                            <Button variant="outline-secondary" size="sm" className="me-2" onClick={() => handleEdit(quiz)}>
-                              <FaEdit />
+                            <div className="d-flex align-items-center px-3 fw-medium">
+                              {currentPage} / {totalPages}
+                            </div>
+                            <Button 
+                              variant="light" 
+                              disabled={currentPage === totalPages}
+                              onClick={() => setCurrentPage(prev => prev + 1)}
+                            >
+                              <FaChevronRight />
                             </Button>
-                            <Button variant="outline-danger" size="sm" onClick={() => handleDelete(quiz)}>
-                              <FaTrash />
-                            </Button>
-                          </td>
-                        </tr>
-                      ))
-                    )}
-                  </tbody>
-                </Table>
+                          </Card.Footer>
+                        )}
+                      </Card>
+                    </>
+                  )}
+                </div>
               )}
             </Container>
           </div>
         </div>
       </div>
+
+      {/* Overall Analysis Modal */}
+      <Modal 
+        show={showOverallAnalysisModal} 
+        onHide={() => setShowOverallAnalysisModal(false)} 
+        centered 
+        size="lg"
+        className="analysis-modal"
+      >
+        <style>
+          {`
+            @media print {
+              body * { visibility: hidden; }
+              .analysis-modal, .analysis-modal * { visibility: visible; }
+              .analysis-modal { position: absolute; left: 0; top: 0; width: 100%; }
+              .modal-header .btn-close, .modal-footer { display: none !important; }
+              .modal-content { border: none !important; }
+              .modal-body { padding: 0 !important; }
+              .card { border: 1px solid #eee !important; box-shadow: none !important; }
+              .recharts-responsive-container { min-height: 250px !important; }
+            }
+          `}
+        </style>
+        <Modal.Header closeButton className="bg-primary text-white border-0">
+          <Modal.Title className="fs-5">Workshop Batch Analysis</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="p-4 print-analysis-area">
+          <Row className="g-4 text-center">
+            <Col md={4}>
+              <div className="p-3 bg-light rounded shadow-sm h-100">
+                <h3 className="text-primary fw-bold mb-1">{totalStudents}</h3>
+                <small className="text-uppercase text-muted">Total Participated</small>
+              </div>
+            </Col>
+            <Col md={4}>
+              <div className="p-3 bg-light rounded shadow-sm h-100">
+                <h3 className="text-success fw-bold mb-1">{avgScore}</h3>
+                <small className="text-uppercase text-muted">Average Marks Scored</small>
+              </div>
+            </Col>
+            <Col md={4}>
+              <div className="p-3 bg-light rounded shadow-sm h-100">
+                <h3 className="text-info fw-bold mb-1">{passRate}%</h3>
+                <small className="text-uppercase text-muted">Total Pass Rate</small>
+              </div>
+            </Col>
+          </Row>
+
+          {/* Batch Visual Analysis */}
+          <Row className="g-3 border-top pt-4 mt-3">
+            <Col md={6} sm={6} className="print-col-6">
+              <div className="text-center mb-3">
+                <h6 className="fw-bold text-secondary">Pass/Fail Status</h6>
+                <small className="text-muted">Proportion of passed vs failed students</small>
+              </div>
+              <div style={{ width: '100%', height: 250 }}>
+                <ResponsiveContainer>
+                  <PieChart>
+                    <Pie
+                      data={completionChartData}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={60}
+                      outerRadius={80}
+                      paddingAngle={5}
+                      dataKey="value"
+                    >
+                      {completionChartData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                    <Legend verticalAlign="bottom" height={36}/>
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </Col>
+            <Col md={6} sm={6} className="print-col-6">
+              <div className="text-center mb-3">
+                <h6 className="fw-bold text-secondary">Score Performance Levels</h6>
+                <small className="text-muted">Student performance based on accuracy</small>
+              </div>
+              <div style={{ width: '100%', height: 250 }}>
+                <ResponsiveContainer>
+                  <PieChart>
+                    <Pie
+                      data={performanceLevelsData}
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={80}
+                      dataKey="value"
+                    >
+                      {performanceLevelsData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                    <Legend verticalAlign="bottom" height={36}/>
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </Col>
+          </Row>
+
+          <div className="mt-4">
+            <h6 className="fw-bold mb-3 border-bottom pb-2">Insights & Observations</h6>
+            <ul className="text-secondary">
+              <li className="mb-2">The highest score in this quiz is <strong>{sortedStudents[0]?.score || 0}</strong>.</li>
+              <li className="mb-2">There are currently <strong>{analysisData?.batch_count || 0}</strong> batches that participated.</li>
+              <li className="mb-2">Based on current trends, the average student is scoring approximately <strong>{((avgScore / totalQuestions) * 100).toFixed(1)}%</strong>.</li>
+            </ul>
+          </div>
+          <div className="mt-3 bg-light p-3 rounded small text-muted">
+            <FaInfoCircle className="me-2" />
+            Note: Rankings are based on the scores fetched from the backend.
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="outline-secondary" onClick={() => setShowOverallAnalysisModal(false)}>Close</Button>
+          <Button variant="primary" onClick={() => { setTimeout(() => window.print(), 100); }}>
+            <FaEdit className="me-1" /> Export Report
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
       {/* Create/Edit Modal */}
       <Modal show={showModal} onHide={() => { setShowModal(false); resetForm() }} size="lg" centered>
