@@ -903,70 +903,82 @@ const UserQuiz = () => {
                                 <p className="text-muted small mb-2">{language === 'hi' && quiz.description_hindi ? quiz.description_hindi : quiz.description}</p>
                               </div>
 
-                              <div className="mb-3">
-                                <div className="d-flex justify-content-between mb-2">
-                                  <small className="text-muted">
-                                    <FaQuestion className="me-1" />
-                                    <TransText k="quiz.questions" as="span" />: 10
-                                  </small>
-                                  <Badge bg="info">{quiz.quiz_category}</Badge>
-                                </div>
-                                <small className="text-muted d-block mb-1">
-                                  <TransText k="quiz.startTime" as="span" />: {formatDateDDMMYY(startTime)}{' '}
-                                  {startTime.toLocaleTimeString(language === 'hi' ? 'hi-IN' : 'en-US', { hour: '2-digit', minute: '2-digit' })}
-                                </small>
-                                <small className="text-muted d-block mb-1">
-                                  <TransText k="quiz.endTime" as="span" />: {formatDateDDMMYY(endTime)}{' '}
-                                  {endTime.toLocaleTimeString(language === 'hi' ? 'hi-IN' : 'en-US', { hour: '2-digit', minute: '2-digit' })}
-                                </small>
-                              </div>
+<div className="mb-3">
+                                 <div className="d-flex justify-content-between mb-2">
+                                   <small className="text-muted">
+                                     <FaQuestion className="me-1" />
+                                     <TransText k="quiz.questions" as="span" />: 10
+                                   </small>
+                                   <Badge bg="info">{quiz.quiz_category}</Badge>
+                                 </div>
+                                 <small className="text-muted d-block mb-1">
+                                   <TransText k="quiz.startTime" as="span" />: {formatDateDDMMYY(startTime)}{' '}
+                                   {startTime.toLocaleTimeString(language === 'hi' ? 'hi-IN' : 'en-US', { hour: '2-digit', minute: '2-digit' })}
+                                 </small>
+                                 <small className="text-muted d-block mb-1">
+                                   <TransText k="quiz.endTime" as="span" />: {formatDateDDMMYY(endTime)}{' '}
+                                   {endTime.toLocaleTimeString(language === 'hi' ? 'hi-IN' : 'en-US', { hour: '2-digit', minute: '2-digit' })}
+                                 </small>
+                               </div>
 
-                              <div className="mt-auto">
-                                {participatedQuizzes[quiz.quiz_id] ? (
-                                  <div className="d-flex flex-column gap-2">
-                                    <div className="d-flex justify-content-between gap-2">
-                                      <Badge bg="primary" className="flex-fill py-2" style={{ fontSize: '0.85rem' }}>
-                                        <TransText k="quiz.participants" as="span" />: {quizRanks[quiz.quiz_id]?.totalParticipants || 0}
-                                      </Badge>
-                                      {quizRanks[quiz.quiz_id]?.userRank && (
-                                        <Badge bg="warning" className="flex-fill py-2">
-                                          <TransText k="quiz.rank" as="span" />: #{quizRanks[quiz.quiz_id].userRank}
-                                        </Badge>
-                                      )}
-                                      {quizRanks[quiz.quiz_id]?.userScore !== undefined && (
-                                        <Badge bg="success" className="flex-fill py-2">
-                                          <TransText k="quiz.score" as="span" />: {quizRanks[quiz.quiz_id].userScore}
-                                        </Badge>
-                                      )}
-                                    </div>
-                                    <Button
-                                      variant="info"
-                                      className="w-100"
-                                      onClick={() => {
-                                        setSelectedQuizRank({ quizId: quiz.quiz_id, ...quizRanks[quiz.quiz_id] })
-                                        setShowRankModal(true)
-                                      }}
-                                    >
-                                      <TransText k="quiz.viewRank" as="span" />
-                                    </Button>
-                                    <Button
-                                      variant="secondary"
-                                      className="w-100"
-                                      disabled
-                                    >
-                                      <TransText k="quiz.alreadyAttempted" as="span" />
-                                    </Button>
-                                    {quizCertificates[quiz.quiz_id] && (
-                                      <Button
-                                        variant="success"
-                                        className="w-100"
-                                        onClick={() => window.open(quizCertificates[quiz.quiz_id], '_blank')}
-                                      >
-                                        🏅 <TransText k="quiz.viewCertificate" as="span" />
-                                      </Button>
-                                    )}
-                                  </div>
-                                ) : (
+                               <div className="mt-auto">
+                                 {participatedQuizzes[quiz.quiz_id] ? (
+                                   <>
+                                     <div className="d-flex flex-column gap-2">
+                                       <div className="d-flex justify-content-between gap-2">
+                                         <Badge bg="primary" className="flex-fill py-2" style={{ fontSize: '0.85rem' }}>
+                                           <TransText k="quiz.participants" as="span" />: {quizRanks[quiz.quiz_id]?.totalParticipants || 0}
+                                         </Badge>
+                                         {quizRanks[quiz.quiz_id]?.userRank && (
+                                           <Badge bg="warning" className="flex-fill py-2">
+                                             <TransText k="quiz.rank" as="span" />: #{quizRanks[quiz.quiz_id].userRank}
+                                           </Badge>
+                                         )}
+                                         {quizRanks[quiz.quiz_id]?.userScore !== undefined && (
+                                           <Badge bg="success" className="flex-fill py-2">
+                                             <TransText k="quiz.score" as="span" />: {quizRanks[quiz.quiz_id].userScore}
+                                           </Badge>
+                                         )}
+                                       </div>
+<div className="d-flex justify-content-between gap-2">
+                                          <Button
+                                            variant="info"
+                                            className="flex-fill btn-size"
+                                            onClick={() => {
+                                              setSelectedQuizRank({ quizId: quiz.quiz_id, ...quizRanks[quiz.quiz_id] })
+                                              setShowRankModal(true)
+                                            }}
+                                          >
+                                            <TransText k="quiz.viewRank" as="span" />
+                                          </Button>
+                                          <Button
+                                            variant="secondary"
+                                            className="flex-fill btn-size"
+                                            disabled
+                                          >
+                                            <TransText k="quiz.alreadyAttempted" as="span" />
+                                          </Button>
+                                          {quizCertificates[quiz.quiz_id] ? (
+                                            <Button
+                                              variant="success"
+                                              className="flex-fill btn-size"
+                                              onClick={() => window.open(quizCertificates[quiz.quiz_id], '_blank')}
+                                            >
+                                               <TransText k="quiz.viewCertificate" as="span" />
+                                            </Button>
+                                          ) : (
+                                            <Button
+                                              variant="secondary"
+                                              className="flex-fill btn-size"
+                                              disabled
+                                            >
+                                              <TransText k="quiz.viewCertificate" as="span" />
+                                            </Button>
+                                          )}
+                                        </div>
+                                     </div>
+                                   </>
+                                 ) : (
                                   <div className="d-flex flex-column gap-2">
                                     {quizRanks[quiz.quiz_id]?.totalParticipants > 0 && (
                                       <Button

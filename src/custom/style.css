@@ -175,6 +175,10 @@ padding: 0px !important;
  
   
 }
+.btn-size{
+  font-size:12px !important;
+  padding: 8px !important;
+}
 /* .responsive-box {
   height: 90px;
   width: 279px !important; 

@@ -20,16 +20,19 @@ const Login = () => {
   const { login } = useAuth();
 
   // More robust path detection
-  const isUnpaidPath = useMemo(() => 
-    location.pathname.toLowerCase().includes("/unpaid"), 
+  const isUnpaidPath = useMemo(() =>
+    location.pathname.toLowerCase().split('/').includes("unpaid"),
+  [location.pathname]);
+  const isPaidPath = useMemo(() =>
+    location.pathname.toLowerCase().includes("/paid"), 
   [location.pathname]);
   const isEmployeePath = useMemo(() => 
     location.pathname.toLowerCase().includes("/employee"), 
   [location.pathname]);
   
   // State management
-  const [role, setRole] = useState(location.state?.role || (isUnpaidPath ? "student-unpaid" : isEmployeePath ? "employee" : "admin"));
-  const [courseType, setCourseType] = useState(isUnpaidPath ? "unpaid" : "paid");
+  const [role, setRole] = useState(location.state?.role || (isPaidPath ? "student" : isEmployeePath ? "employee" : "student-unpaid"));
+  const [courseType, setCourseType] = useState(isPaidPath ? "paid" : "unpaid");
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -63,16 +66,16 @@ const Login = () => {
     });
 
     if (isEmployeePath) {
-      setCourseType("paid");
+      setCourseType("unpaid"); // Employee login can be on the default unpaid page
       setRole("employee");
-    } else if (isUnpaidPath) {
-      setCourseType("unpaid");
-      if (role === "student" || role === "employee") setRole("student-unpaid");
-    } else {
+    } else if (isPaidPath) {
       setCourseType("paid");
       if (role === "student-unpaid" || role === "employee") setRole("student");
+    } else { // Default to unpaid
+      setCourseType("unpaid");
+      if (role === "student" || role === "employee") setRole("student-unpaid");
     }
-  }, [isUnpaidPath, isEmployeePath]);
+  }, [isUnpaidPath, isEmployeePath, isPaidPath]);
 
   // Fetch courses with useCallback for optimization
   const fetchCourses = useCallback(async () => {
@@ -397,14 +400,14 @@ const Login = () => {
         {!isEmployeePath && (
         <Col lg={5} md={12} sm={12} className="course-marquee-container mb-4 mb-lg-0 order-last order-md-first">
   <div className="course-marquee-header">
-    <h3 className="text-center mb-3">Available Courses</h3>
-    <div className="header-underline mx-auto"></div>
+    <h3 className="text-center mb-3">Available Courses</h3> 
+    <div className="header-underline mx-auto"></div>       
     
     {/* Course Type Label - Locked based on URL path */}
     <div className="mb-4 text-center">
       <h5 className={isUnpaidPath ? "text-primary fw-bold" : "text-success fw-bold"}>
-        <i className={`bi bi-${isUnpaidPath ? "gift-fill" : "award-fill"} me-2`}></i>
-        {isUnpaidPath ? "Our Free Learning Programs" : "Professional Certificate Courses"}
+       
+        {isUnpaidPath ? "Our Free Learning Programs" : ""}
       </h5>
     </div>
   </div>
@@ -413,7 +416,7 @@ const Login = () => {
   <div className={`course-grid ${courseType === "unpaid" ? "banner-layout" : "two-column"}`}>
     {loading ? (
       renderLoadingSkeleton()
-    ) : filteredCourses.length > 0 ? (
+    ) : filteredCourses.length > 0 ? ( 
       courseType === "unpaid" ? (
         // Unpaid courses with banner image on left and courses on right
         <div className="unpaid-banner-layout">
@@ -423,20 +426,6 @@ const Login = () => {
               <img  src={BannerImg} alt="banner"
                 
               />
-              <div className="banner-overlay">
-                <div className="banner-content">
-                 
-                  <div className="banner-stats">
-                    <div className="stat-item">
-                      <i className="fas fa-book"></i>
-                    </div>
-                    <div className="stat-item">
-                      <i className="fas fa-users"></i>
-                     
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
           
@@ -469,7 +458,7 @@ const Login = () => {
                         </span> */}
                         {course.duration && (
                           <span className="duration-info">
-                                <i className="bi bi-clock"></i> {course.duration}
+                                {course.duration}
                           </span>
                         )}
                         <Badge bg="primary" className="free-badge">
@@ -531,10 +520,10 @@ const Login = () => {
                 <Form.Label className="mb-3 form-label-gov">Select User Type</Form.Label>
                 <div className="d-flex justify-content-around flex-wrap gap-2">
                   {[
-                    { value: "admin", label: "Administrator" },
-                    ...(isUnpaidPath 
-                      ? [{ value: "student-unpaid", label: "Student (Free)" }]
-                      : [{ value: "student", label: "Student (Paid)" }]
+                    { value: "admin", label: "Admin" },
+                    ...(isPaidPath 
+                      ? [{ value: "student", label: "Student (Paid)" }]
+                      : [{ value: "student-unpaid", label: "Student" }]
                     )
                   ].map(({ value, label }) => (
                     <div 

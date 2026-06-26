@@ -217,7 +217,7 @@ const UserTopNav = ({ onMenuToggle, isMobile }) => {
     if (isEmployee) {
       window.location.href = '/employee';
     } else if (isUnpaid) {
-      window.location.href = '/unpaid';
+      window.location.href = '/';
     } else {
       window.location.href = '/login';
     }

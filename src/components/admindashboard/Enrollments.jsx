@@ -12,7 +12,7 @@ const Enrollments = () => {
   const { accessToken } = useAuth()
   const location = useLocation()
   const navigate = useNavigate()
-  const [enrollmentType, setEnrollmentType] = useState(location.state?.enrollmentType || 'paid') // 'paid' or 'unpaid'
+  const [enrollmentType] = useState('unpaid') // 'unpaid'
   const [enrollments, setEnrollments] = useState([])
   const [filteredEnrollments, setFilteredEnrollments] = useState([])
   const [loading, setLoading] = useState(true)
@@ -28,7 +28,7 @@ const Enrollments = () => {
 
   useEffect(() => {
     fetchEnrollments()
-  }, [enrollmentType])
+  }, [])
 
   useEffect(() => {
     // Filter enrollments based on search term
@@ -37,25 +37,15 @@ const Enrollments = () => {
       setCurrentPage(1) // Reset to first page when search term is cleared
     } else {
       const filtered = enrollments.filter(enrollment => {
-        if (enrollmentType === 'paid') {
-          const nameField = enrollment.candidate_name || enrollment.applicant_id || ''
-          const phoneField = enrollment.mobile_no || ''
-          return nameField.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            enrollment.applicant_id?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            enrollment.student_id?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            phoneField.includes(searchTerm) ||
-            enrollment.email.toLowerCase().includes(searchTerm.toLowerCase())
-        } else {
-          return enrollment.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            enrollment.student_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            enrollment.phone.includes(searchTerm) ||
-            enrollment.email.toLowerCase().includes(searchTerm.toLowerCase())
-        }
+        return enrollment.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          enrollment.student_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          enrollment.phone.includes(searchTerm) ||
+          enrollment.email.toLowerCase().includes(searchTerm.toLowerCase())
       })
       setFilteredEnrollments(filtered)
       setCurrentPage(1) // Reset to first page when search term changes
     }
-  }, [searchTerm, enrollments, enrollmentType])
+  }, [searchTerm, enrollments])
 
     const fetchEnrollments = async () => {
      try {
@@ -69,18 +59,8 @@ const Enrollments = () => {
           config.headers['Authorization'] = `Bearer ${accessToken}`
         }
        
-       if (enrollmentType === 'paid') {
-         // Fetch paid enrollments from payment API
-         try {
-           response = await axios.get('https://brainrock.in/brainrock/backend/api/course-registration/', config)
-         } catch (error) {
-           // Fallback to girls_course API if payment API fails
-           response = await axios.get('https://brjobsedu.com/girls_course/girls_course_backend/api/all-registration/', config)
-         }
-       } else {
-         // Fetch unpaid enrollments
-         response = await axios.get('https://brjobsedu.com/girls_course/girls_course_backend/api/student-unpaid/', config)
-       }
+       // Fetch unpaid enrollments
+       response = await axios.get('https://brjobsedu.com/girls_course/girls_course_backend/api/student-unpaid/', config)
       
       if (response.data.success) {
         setEnrollments(response.data.data)
@@ -297,25 +277,11 @@ const Enrollments = () => {
                
 
                 <Card className="enrollments-table-card border">
-<Card.Header className="bg-light border-bottom py-2 px-3 overflow-auto">
-                      <Nav variant="tabs" activeKey={enrollmentType} onSelect={(eventKey) => setEnrollmentType(eventKey)} className="flex-nowrap">
-                       <Nav.Item>
-                         <Nav.Link eventKey="paid">
-                           Paid Enrollments
-                         </Nav.Link>
-                       </Nav.Item>
-                       <Nav.Item>
-                         <Nav.Link eventKey="unpaid">
-                           Unpaid Enrollments
-                         </Nav.Link>
-                       </Nav.Item>
-                     </Nav>
-                  </Card.Header>
-                  
+
                   <Card.Header className="bg-light border-bottom py-2 px-3 d-flex justify-content-between align-items-center">
                     <div className="d-flex align-items-center paid-btn  gap-2">
                       <h5 className="mb-0 fw-semibold text-secondary">
-                        {enrollmentType === 'paid' ? 'Paid' : 'Unpaid'} Enrollments
+                        {enrollmentType === 'paid' ? 'Paid' : 'Enrolled'} Enrollments
                       </h5>
                       {selectedEnrollments.length > 0 && (
                         <Button 
@@ -347,11 +313,9 @@ const Enrollments = () => {
                               />
                             </th>
                             <th className="ps-2">ID</th>
-                            <th>{enrollmentType === 'paid' ? 'Candidate Name' : 'Full Name'}</th>
-                            <th>{enrollmentType === 'paid' ? 'Phone' : 'Phone'}</th>
+                            <th>Full Name</th>
+                            <th>Phone</th>
                             <th>Email</th>
-                            {enrollmentType === 'paid' && <th>Course Fee</th>}
-                            {enrollmentType === 'paid' && <th>Payment Status</th>}
                             {enrollmentType === 'unpaid' && <th>District</th>}
                             {enrollmentType === 'unpaid' && <th>State</th>}
                             <th>Status</th>
@@ -371,24 +335,12 @@ const Enrollments = () => {
                               </td>
                               <td className="ps-2"><span className="text-muted small fw-medium">{enrollment.applicant_id || enrollment.student_id}</span></td>
                               <td className="fw-medium text-dark">
-                                {enrollmentType === 'paid' ? (enrollment.candidate_name || enrollment.applicant_id) : enrollment.full_name}
+                                {enrollment.full_name}
                               </td>
                               <td className="small">
-                                {enrollmentType === 'paid' ? (enrollment.mobile_no || '') : enrollment.phone}
+                                {enrollment.phone}
                               </td>
                               <td className="small text-muted">{enrollment.email}</td>
-                              {enrollmentType === 'paid' && (
-                                <td className="small fw-medium">
-                                  ₹{parseFloat(enrollment.course_fee || 0).toFixed(2)}
-                                </td>
-                              )}
-                              {enrollmentType === 'paid' && (
-                                <td>
-                                  <span className={`status-badge ${getPaymentStatusBadgeClass(enrollment.payment_status)}`}>
-                                    {enrollment.payment_status}
-                                  </span>
-                                </td>
-                              )}
                               {enrollmentType === 'unpaid' && <td className="small">{enrollment.district}</td>}
                               {enrollmentType === 'unpaid' && <td className="small">{enrollment.state}</td>}
                               <td>
@@ -440,7 +392,7 @@ const Enrollments = () => {
                             <div className="d-flex justify-content-between align-items-start mb-2">
                               <div>
                                 <h6 className="mb-1 fw-semibold">
-                                  {enrollmentType === 'paid' ? (enrollment.candidate_name || enrollment.applicant_id) : enrollment.full_name}
+                                  {enrollment.full_name}
                                 </h6>
                                 <small className="text-muted">ID: {enrollment.applicant_id || enrollment.student_id}</small>
                               </div>
@@ -455,7 +407,7 @@ const Enrollments = () => {
                             <div className="mb-2">
                               <small className="text-muted d-block">Phone:</small>
                               <span className="small fw-medium">
-                                {enrollmentType === 'paid' ? (enrollment.mobile_no || 'N/A') : enrollment.phone}
+                                {enrollment.phone}
                               </span>
                             </div>
 
@@ -484,21 +436,7 @@ const Enrollments = () => {
                               
                               {expandedCards[enrollment.id] && (
                                 <div className="mt-3 pt-3 border-top">
-                                  <Row className="g-2">
-                                    {enrollmentType === 'paid' && (
-                                      <>
-                                        <Col xs={6}>
-                                          <small className="text-muted d-block">Course Fee:</small>
-                                          <span className="small fw-medium">₹{parseFloat(enrollment.course_fee || 0).toFixed(2)}</span>
-                                        </Col>
-                                        <Col xs={6}>
-                                          <small className="text-muted d-block">Payment Status:</small>
-                                          <span className={`badge ${getPaymentStatusBadgeClass(enrollment.payment_status)} small`}>
-                                            {enrollment.payment_status}
-                                          </span>
-                                        </Col>
-                                      </>
-                                    )}
+                                  <Row className="g-2">                                    
                                     {enrollmentType === 'unpaid' && (
                                       <>
                                         <Col xs={6}>
@@ -551,39 +489,6 @@ const Enrollments = () => {
                     </div>
                   </Card.Body>
                   
-                  {/* Payment Summary Footer for Paid Enrollments */}
-                  {enrollmentType === 'paid' && filteredEnrollments.length > 0 && (
-                    <Card.Footer className="bg-light border-top py-3 px-3">
-                      <Row className="text-center">
-                        <Col md={6} className="mb-2 mb-md-0">
-                          <div className="d-flex justify-content-center align-items-center gap-3">
-                            <div>
-                              <h6 className="text-success fw-bold mb-1">Success Payments</h6>
-                              <p className="mb-0">
-                                <span className="badge bg-success">{filteredEnrollments.filter(e => e.payment_status === 'completed').length}</span>
-                              </p>
-                              <small className="text-muted">
-                                Total: ₹{filteredEnrollments.filter(e => e.payment_status === 'completed').reduce((sum, e) => sum + parseFloat(e.course_fee || 0), 0).toFixed(2)}
-                              </small>
-                            </div>
-                          </div>
-                        </Col>
-                        <Col md={6}>
-                          <div className="d-flex justify-content-center align-items-center gap-3">
-                            <div>
-                              <h6 className="text-warning fw-bold mb-1">Unsuccessful/Pending</h6>
-                              <p className="mb-0">
-                                <span className="badge bg-warning text-dark">{filteredEnrollments.filter(e => e.payment_status !== 'completed').length}</span>
-                              </p>
-                              <small className="text-muted">
-                                Total: ₹{filteredEnrollments.filter(e => e.payment_status !== 'completed').reduce((sum, e) => sum + parseFloat(e.course_fee || 0), 0).toFixed(2)}
-                              </small>
-                            </div>
-                          </div>
-                        </Col>
-                      </Row>
-                    </Card.Footer>
-                  )}
                    {/* Pagination */}
                    {totalPages > 1 && (
                      <Card.Footer className="bg-light border-top py-2 px-3">
@@ -659,91 +564,7 @@ const Enrollments = () => {
         <Modal.Body className="pt-2 px-3">
           {selectedEnrollment && (
             <div className="student-details-list">
-              {enrollmentType === 'paid' ? (
-                <>
-                  {/* Paid Student Fields */}
-                  <div className="detail-item">
-                    <span className="detail-label">Applicant ID</span>
-                    <span className="detail-value">{selectedEnrollment.applicant_id || selectedEnrollment.student_id}</span>
-                  </div>
-                  <div className="detail-item">
-                    <span className="detail-label">Candidate Name</span>
-                    <span className="detail-value">{selectedEnrollment.candidate_name || selectedEnrollment.applicant_id}</span>
-                  </div>
-                  <div className="detail-item">
-                    <span className="detail-label">Guardian Name</span>
-                    <span className="detail-value">{selectedEnrollment.guardian_name || 'N/A'}</span>
-                  </div>
-                  <div className="detail-item">
-                    <span className="detail-label">Course Applied</span>
-                    <span className="detail-value">
-                      {selectedEnrollment.application_for_course?.join(', ') || 'N/A'}
-                    </span>
-                  </div>
-                  <div className="detail-item">
-                    <span className="detail-label">Course Mode</span>
-                    <span className="detail-value">{selectedEnrollment.course_mode || 'N/A'}</span>
-                  </div>
-                  <div className="detail-item">
-                    <span className="detail-label">Address</span>
-                    <span className="detail-value text-break">{selectedEnrollment.address || 'N/A'}</span>
-                  </div>
-                  <div className="detail-item">
-                    <span className="detail-label">Date of Birth</span>
-                    <span className="detail-value">{selectedEnrollment.date_of_birth || 'N/A'}</span>
-                  </div>
-                  <div className="detail-item">
-                    <span className="detail-label">Mobile No</span>
-                    <span className="detail-value">{selectedEnrollment.mobile_no || 'N/A'}</span>
-                  </div>
-                  <div className="detail-item">
-                    <span className="detail-label">Email</span>
-                    <span className="detail-value text-break">{selectedEnrollment.email}</span>
-                  </div>
-                  <div className="detail-item">
-                    <span className="detail-label">Highest Education</span>
-                    <span className="detail-value">{selectedEnrollment.highest_education || 'N/A'}</span>
-                  </div>
-                  <div className="detail-item">
-                    <span className="detail-label">School/College</span>
-                    <span className="detail-value text-break">{selectedEnrollment.school_college_name || 'N/A'}</span>
-                  </div>
-                  <hr className="my-3" />
-                  <h6 className="fw-bold text-primary mb-3">Payment Information</h6>
-                  <div className="detail-item">
-                    <span className="detail-label">Course Fee</span>
-                    <span className="detail-value fw-bold">₹{parseFloat(selectedEnrollment.course_fee || 0).toFixed(2)}</span>
-                  </div>
-                  <div className="detail-item">
-                    <span className="detail-label">Payment Status</span>
-                    <span className="detail-value">
-                      <span className={`badge ${getPaymentStatusBadgeClass(selectedEnrollment.payment_status)}`}>
-                        {selectedEnrollment.payment_status}
-                      </span>
-                    </span>
-                  </div>
-                  <div className="detail-item">
-                    <span className="detail-label">Transaction ID</span>
-                    <span className="detail-value text-break">{selectedEnrollment.transaction_id || 'N/A'}</span>
-                  </div>
-                  <div className="detail-item">
-                    <span className="detail-label">PhonePe Order ID</span>
-                    <span className="detail-value text-break">{selectedEnrollment.phonepe_order_id || 'N/A'}</span>
-                  </div>
-                  <div className="detail-item">
-                    <span className="detail-label">Course Status</span>
-                    <span className="detail-value">
-                       <span className={`badge ${getCourseStatusBadgeClass(selectedEnrollment.course_status)}`}>
-                        {selectedEnrollment.course_status}
-                      </span>
-                    </span>
-                  </div>
-                  <div className="detail-item">
-                    <span className="detail-label">Registration Date</span>
-                    <span className="detail-value">{new Date(selectedEnrollment.created_at).toLocaleDateString()}</span>
-                  </div>
-                </>
-              ) : (
+              {enrollmentType === 'unpaid' && (
                 <>
                   {/* Unpaid Student Fields */}
                   <div className="detail-item">
@@ -795,7 +616,7 @@ const Enrollments = () => {
                     <span className="detail-value">{new Date(selectedEnrollment.created_at).toLocaleDateString()}</span>
                   </div>
                 </>
-              )}
+               )}
             </div>
           )}
         </Modal.Body>
@@ -816,7 +637,7 @@ const Enrollments = () => {
         <Modal.Body className="pt-2 px-3">
           {selectedEnrollment && (
             <p className="small">
-              Are you sure you want to delete <strong>{enrollmentType === 'paid' ? selectedEnrollment.candidate_name : selectedEnrollment.full_name}</strong>?<br/>
+              Are you sure you want to delete <strong>{selectedEnrollment.full_name}</strong>?<br/>
               <span className="text-muted small">This action cannot be undone.</span>
             </p>
           )}
