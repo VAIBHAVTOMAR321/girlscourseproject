@@ -10,7 +10,7 @@ import { FaArrowLeft, FaPlus, FaEdit, FaTrash, FaEye, FaTimes, FaTrophy, FaMedal
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, PieChart, Pie, Legend } from 'recharts'
 
 const API_URL = 'https://brjobsedu.com/girls_course/girls_course_backend/api/open-quiz-questions/'
-const RANKING_API_URL = 'https://brjobsedu.com/girls_course/girls_course_backend/api/workshop/rankings/'
+const RANKING_API_URL = 'https://brjobsedu.com/girls_course/girls_course_backend/api/open-quiz-ranking/'
 
 const StudentQuizManagement = () => {
   const { accessToken } = useAuth()
@@ -35,13 +35,15 @@ const StudentQuizManagement = () => {
   const [selectedQuestion, setSelectedQuestion] = useState(null) // For delete confirmation
 
   // State for Rankings and Analysis
-  const [rankings, setRankings] = useState([])
-  const [pendingCandidates, setPendingCandidates] = useState([])
+  const [batches, setBatches] = useState([]);
+  const [selectedBatch, setSelectedBatch] = useState(null);
   const [stats, setStats] = useState({
     avgScore: 0,
     completionRate: 0,
     totalRanked: 0,
-    totalPending: 0
+    totalPending: 0,
+    totalBatches: 0, // Added comma here
+    totalParticipants: 0
   })
 
   // Pagination and Analysis State
@@ -51,11 +53,15 @@ const StudentQuizManagement = () => {
   const [showOverallAnalysisModal, setShowOverallAnalysisModal] = useState(false)
   const [selectedCandidateAnalysis, setSelectedCandidateAnalysis] = useState(null)
 
+  // New state for batch view
+  const [showBatchView, setShowBatchView] = useState(false);
+
   useEffect(() => {
     if (activeTab === 'postQuestions') {
       fetchQuestions()
     } else if (activeTab === 'allTests') {
       fetchRankings()
+      setShowBatchView(false); // Reset to batch list view when tab is clicked
     }
   }, [activeTab, accessToken]) // Re-fetch when tab changes or token changes
 
@@ -89,30 +95,30 @@ const StudentQuizManagement = () => {
     try {
       const config = getAuthConfig()
       const response = await axios.get(RANKING_API_URL, config)
-      if (response.data && response.data.success) {
-        const rankData = response.data.rankings || []
-        const pendingData = response.data.pending_candidates || []
-        setRankings(rankData)
-        setPendingCandidates(pendingData)
+      if (response.data && response.data.success && response.data.batches) {
+        const batchData = response.data.batches || []
+        setBatches(batchData);
 
-        // Calculate simple stats
-        const totalRanked = rankData.length
-        const totalPending = pendingData.length
-        const totalAttempted = totalRanked + totalPending
+        // Calculate overall stats
+        const totalBatches = batchData.length;
+        const totalRanked = batchData.reduce((sum, b) => sum + (b.ranked_candidates_count || 0), 0);
+        const totalPending = batchData.reduce((sum, b) => sum + (b.pending_candidates_count || 0), 0);
+        const totalParticipants = totalRanked + totalPending;
         
-        const avgScore = totalRanked > 0 
-          ? (rankData.reduce((acc, curr) => acc + curr.score, 0) / totalRanked).toFixed(1) 
-          : 0
+        const allRankedCandidates = batchData.flatMap(b => b.rankings || []);
+        const avgScore = allRankedCandidates.length > 0 
+          ? (allRankedCandidates.reduce((acc, curr) => acc + curr.score, 0) / allRankedCandidates.length).toFixed(1) 
+          : 0;
         
-        const completionRate = totalAttempted > 0 
-          ? ((totalRanked / totalAttempted) * 100).toFixed(1) 
-          : 0
+        const completionRate = totalParticipants > 0 
+          ? ((totalRanked / totalParticipants) * 100).toFixed(1) 
+          : 0;
 
-        setStats({ avgScore, completionRate, totalRanked, totalPending })
+        setStats({ avgScore, completionRate, totalRanked, totalPending, totalBatches, totalParticipants });
       }
     } catch (error) {
       console.error('Error fetching rankings:', error)
-      setRankings([])
+      setBatches([])
     } finally {
       setLoading(false)
     }
@@ -250,33 +256,41 @@ const StudentQuizManagement = () => {
     }
   }
 
+  const handleViewBatch = (batch) => {
+    setSelectedBatch(batch);
+    setShowBatchView(true);
+    setCurrentPage(1); // Reset pagination for the new batch view
+  }
+
   const handleAnalyzeCandidate = (candidate) => {
     setSelectedCandidateAnalysis(candidate)
     setShowSingleAnalysisModal(true)
   }
 
   // Combined list for display: Ranked candidates followed by Pending candidates
-  const allDisplayRecords = [
-    ...rankings.map(r => ({ ...r, isPending: false })),
-    ...pendingCandidates.map(p => ({ ...p, isPending: true, rank: '-', score: 'In Progress', total_questions: '-', submitted_at: null }))
-  ];
+  const allDisplayRecords = selectedBatch ? [
+    ...(selectedBatch.rankings || []).map(r => ({ ...r, isPending: false })),
+    ...(selectedBatch.pending_candidates || []).map(p => ({ ...p, isPending: true, rank: '-', score: 'In Progress', total_questions: '-', submitted_at: null }))
+  ] : [];
 
   const totalPages = Math.ceil(allDisplayRecords.length / recordsPerPage)
   const currentRecords = allDisplayRecords.slice((currentPage - 1) * recordsPerPage, currentPage * recordsPerPage)
 
   // Data for Overall Batch Analysis Graphs
+  const allRanked = batches.flatMap(b => b.rankings || []);
+  const allPending = batches.flatMap(b => b.pending_candidates || []);
   const completionChartData = [
-    { name: 'Completed', value: rankings.length, color: '#28a745' },
-    { name: 'Pending', value: pendingCandidates.length, color: '#ffc107' }
+    { name: 'Completed', value: allRanked.length, color: '#28a745' },
+    { name: 'Pending', value: allPending.length, color: '#ffc107' }
   ];
 
   const performanceLevelsData = [
-    { name: 'High (>=75%)', value: rankings.filter(r => (r.score / (r.total_questions || 1)) >= 0.75).length, color: '#28a745' },
-    { name: 'Average (40-74%)', value: rankings.filter(r => {
+    { name: 'High (>=75%)', value: allRanked.filter(r => (r.score / (r.total_questions || 1)) >= 0.75).length, color: '#28a745' },
+    { name: 'Average (40-74%)', value: allRanked.filter(r => {
         const pct = (r.score / (r.total_questions || 1));
         return pct >= 0.4 && pct < 0.75;
       }).length, color: '#0dcaf0' },
-    { name: 'Low (<40%)', value: rankings.filter(r => (r.score / (r.total_questions || 1)) < 0.4).length, color: '#dc3545' }
+    { name: 'Low (<40%)', value: allRanked.filter(r => (r.score / (r.total_questions || 1)) < 0.4).length, color: '#dc3545' }
   ];
 
   const getRankColor = (rank) => {
@@ -396,7 +410,7 @@ const StudentQuizManagement = () => {
                       <div className="text-center py-5">
                         <Spinner animation="border" variant="primary" />
                         <p className="mt-2">Loading ranking data...</p>
-                      </div>
+                      </div> 
                     ) : (
                       <div className="ranking-dashboard">
                         <div className="d-flex justify-content-between align-items-center mb-4">
@@ -410,9 +424,9 @@ const StudentQuizManagement = () => {
                         <Row className="mb-4 g-3">
                           <Col md={3}>
                             <Card className="border-0 shadow-sm text-center py-3 bg-primary text-white">
-                              <FaUsers className="mb-2 fs-3" />
-                              <h6 className="small text-uppercase">Total Participated</h6>
-                              <h4>{stats.totalRanked}</h4>
+                              <FaList className="mb-2 fs-3" />
+                              <h6 className="small text-uppercase">Total Batches</h6>
+                              <h4>{stats.totalBatches}</h4>
                             </Card>
                           </Col>
                           <Col md={3}>
@@ -424,8 +438,8 @@ const StudentQuizManagement = () => {
                           </Col>
                           <Col md={3}>
                             <Card className="border-0 shadow-sm text-center py-3 bg-info text-white">
-                              <FaClock className="mb-2 fs-3" />
-                              <h6 className="small text-uppercase">Completion Rate</h6>
+                              <FaUsers className="mb-2 fs-3" />
+                              <h6 className="small text-uppercase">Total Participants</h6>
                               <h4>{stats.completionRate}%</h4>
                             </Card>
                           </Col>
@@ -438,132 +452,130 @@ const StudentQuizManagement = () => {
                           </Col>
                         </Row>
 
-                        {/* Top 3 Podium and Chart */}
-                        <Row className="mb-4 g-4">
-                          <Col lg={4}>
-                            <h5 className="mb-3 text-secondary"><FaTrophy className="text-warning me-2"/>Top Performers</h5>
-                            {rankings.slice(0, 3).map((candidate, idx) => (
-                              <Card key={candidate.candidate_id} className={`mb-3 border-0 shadow-sm border-start border-4 ${idx === 0 ? 'border-success' : idx === 1 ? 'border-primary' : 'border-warning'}`}>
-                                <Card.Body className="d-flex align-items-center py-3">
-                                  <div className="rank-badge me-3" style={{ fontSize: '1.5rem', fontWeight: 'bold', color: getRankColor(idx + 1) }}>
-                                    #{idx + 1}
-                                  </div>
-                                  <div className="flex-grow-1">
-                                    <h6 className="mb-0 fw-bold">{candidate.full_name}</h6>
-                                    <small className="text-muted">{candidate.candidate_id}</small>
-                                  </div>
-                                  <div className="text-end">
-                                    <h5 className="mb-0 text-primary">{candidate.score}</h5>
-                                    <small className="text-muted">/{candidate.total_questions} Pts</small>
-                                  </div>
-                                </Card.Body>
-                              </Card>
-                            ))}
-                            {rankings.length === 0 && <div className="text-center py-4 bg-light rounded text-muted">No data available yet</div>}
-                          </Col>
-                          <Col lg={8}>
-                            <Card className="h-100 border-0 shadow-sm">
-                              <Card.Header className="bg-white py-3 border-0">
-                                <h6 className="mb-0 text-secondary">Score Distribution (Top 10)</h6>
+                        {showBatchView && selectedBatch ? (
+                          <>
+                            <Button variant="outline-secondary" size="sm" onClick={() => setShowBatchView(false)} className="mb-3">
+                              <FaArrowLeft /> Back to Batches
+                            </Button>
+                            <h5 className="mb-3">Leaderboard for: <strong>{selectedBatch.batch}</strong></h5>
+                            {/* Full Rankings Table */}
+                            <Card className="border-0 shadow-sm overflow-hidden mb-4">
+                              <Card.Header className="bg-light py-3">
+                                <h6 className="mb-0 fw-semibold text-secondary">Full Leaderboard</h6>
                               </Card.Header>
-                              <Card.Body>
-                                <div style={{ width: '100%', height: 300 }}>
-                                  <ResponsiveContainer>
-                                    <BarChart data={rankings.slice(0, 10)} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
-                                      <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                                      <XAxis dataKey="full_name" hide />
-                                      <YAxis />
-                                      <Tooltip 
-                                        cursor={{fill: 'transparent'}}
-                                        contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
-                                      />
-                                      <Bar dataKey="score" radius={[4, 4, 0, 0]}>
-                                        {rankings.slice(0, 10).map((entry, index) => (
-                                          <Cell key={`cell-${index}`} fill={getRankColor(index + 1)} />
-                                        ))}
-                                      </Bar>
-                                    </BarChart>
-                                  </ResponsiveContainer>
-                                </div>
+                              <Card.Body className="p-0">
+                                <Table hover responsive className="mb-0">
+                                  <thead className="bg-light">
+                                    <tr>
+                                      <th className="ps-4">Rank</th>
+                                      <th>Student Name</th>
+                                      <th>Student ID</th>
+                                      <th>Score</th>
+                                      <th>Total Questions</th>
+                                      <th>Submitted At</th>
+                                      <th className="text-center">Action</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {currentRecords.length > 0 ? currentRecords.map((r, index) => (
+                                      <tr key={r.candidate_id || index} className={r.isPending ? 'table-danger' : ''}>
+                                        <td className="ps-4 fw-bold">
+                                          {renderRankIcon(r.rank)} {r.rank}
+                                        </td>
+                                        <td>{r.full_name}</td>
+                                        <td><Badge bg="light" text="dark" className="border">{r.candidate_id}</Badge></td>
+                                        <td className={r.isPending ? "text-danger fst-italic small" : "text-primary fw-semibold"}>{r.score}</td>
+                                        <td>{r.total_questions}</td>
+                                        <td><small className="text-muted">{formatTime(r.submitted_at)}</small></td>
+                                        <td className="text-center">
+                                          {!r.isPending && (
+                                            <Button variant="link" size="sm" onClick={() => handleAnalyzeCandidate(r)} className="text-decoration-none p-0">
+                                              <FaEye className="me-1" /> Analyze
+                                            </Button>
+                                          )}
+                                        </td>
+                                      </tr>
+                                    )) : (
+                                      <tr>
+                                        <td colSpan="7" className="text-center py-4 text-muted">No completed tests found for this batch.</td>
+                                      </tr>
+                                    )}
+                                  </tbody>
+                                </Table>
                               </Card.Body>
+                              {totalPages > 1 && (
+                                <Card.Footer className="bg-white border-top py-3 d-flex justify-content-center">
+                                  <Button 
+                                    variant="light" 
+                                    className="me-2" 
+                                    disabled={currentPage === 1}
+                                    onClick={() => setCurrentPage(prev => prev - 1)}
+                                  >
+                                    <FaChevronLeft />
+                                  </Button>
+                                  <div className="d-flex align-items-center px-3 fw-medium">
+                                    {currentPage} / {totalPages}
+                                  </div>
+                                  <Button 
+                                    variant="light" 
+                                    disabled={currentPage === totalPages}
+                                    onClick={() => setCurrentPage(prev => prev + 1)}
+                                  >
+                                    <FaChevronRight />
+                                  </Button>
+                                </Card.Footer>
+                              )}
                             </Card>
-                          </Col>
-                        </Row>
-
-                        {/* Full Rankings Table */}
-                        <Card className="border-0 shadow-sm overflow-hidden mb-4">
-                          <Card.Header className="bg-light py-3">
-                            <h6 className="mb-0 fw-semibold text-secondary">Full Leaderboard</h6>
-                          </Card.Header>
-                          <Card.Body className="p-0">
-                            <Table hover responsive className="mb-0">
-                              <thead className="bg-light">
-                                <tr>
-                                  <th className="ps-4">Rank</th>
-                                  <th>Candidate Name</th>
-                                  <th>Candidate ID</th>
-                                  <th>Score</th>
-                                  <th>Total Questions</th>
-                                  <th>Submitted At</th>
-                                  <th className="text-center">Action</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {currentRecords.length > 0 ? currentRecords.map((r, index) => (
-                                  <tr key={r.candidate_id || index} className={r.isPending ? 'table-danger' : ''}>
-                                    <td className="ps-4 fw-bold">
-                                      {renderRankIcon(r.rank)} {r.rank}
-                                    </td>
-                                    <td>{r.full_name}</td>
-                                    <td><Badge bg="light" text="dark" className="border">{r.candidate_id}</Badge></td>
-                                    <td className={r.isPending ? "text-danger fst-italic small" : "text-primary fw-semibold"}>{r.score}</td>
-                                    <td>{r.total_questions}</td>
-                                    <td><small className="text-muted">{formatTime(r.submitted_at)}</small></td>
-                                    <td className="text-center">
-                                      {!r.isPending && (
-                                        <Button variant="link" size="sm" onClick={() => handleAnalyzeCandidate(r)} className="text-decoration-none p-0">
-                                          <FaEye className="me-1" /> Analyze
-                                        </Button>
+                          </>
+                        ) : (
+                          /* Batch List View */
+                          <Card className="border-0 shadow-sm overflow-hidden mb-4">
+                            <Card.Header className="bg-light py-3">
+                              <h6 className="mb-0 fw-semibold text-secondary">All Batches</h6>
+                            </Card.Header>
+                            <Card.Body className="p-0">
+                              <Table hover responsive className="mb-0">
+                                <thead className="bg-light">
+                                  <tr>
+                                    <th className="ps-4">Batch Name</th>
+                                    <th>Ranked Students</th>
+                                  <th>Top Performer</th>
+                                    <th>Pending Students</th>
+                                    <th className="text-center">Action</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {batches.length > 0 ? batches.map((batch, index) => (
+                                    <tr key={index}>
+                                      <td className="ps-4 fw-bold">{batch.batch}</td>
+                                      <td><Badge bg="success">{batch.ranked_candidates_count}</Badge></td>
+                                    <td>
+                                      {batch.rankings && batch.rankings.length > 0 ? (
+                                        <div className="d-flex align-items-center">
+                                          <FaTrophy className="text-warning me-2" />
+                                          <span className="fw-semibold me-2">{batch.rankings[0].full_name}</span>
+                                          <Badge bg="primary">{batch.rankings[0].score} Pts</Badge>
+                                        </div>
+                                      ) : (
+                                        <span className="text-muted small">N/A</span>
                                       )}
                                     </td>
-                                  </tr>
-                                )) : (
-                                  <tr>
-                                    <td colSpan="7" className="text-center py-4 text-muted">No completed tests found.</td>
-                                  </tr>
-                                )}
-                              </tbody>
-                            </Table>
-                          </Card.Body>
-                          {totalPages > 1 && (
-                            <Card.Footer className="bg-white border-top py-3 d-flex justify-content-center">
-                              <Button 
-                                variant="light" 
-                                className="me-2" 
-                                disabled={currentPage === 1}
-                                onClick={() => setCurrentPage(prev => prev - 1)}
-                              >
-                                <FaChevronLeft />
-                              </Button>
-                              <div className="d-flex align-items-center px-3 fw-medium">
-                                {currentPage} / {totalPages}
-                              </div>
-                              <Button 
-                                variant="light" 
-                                disabled={currentPage === totalPages}
-                                onClick={() => setCurrentPage(prev => prev + 1)}
-                              >
-                                <FaChevronRight />
-                              </Button>
-                            </Card.Footer>
-                          )}
-                        </Card>
-
-                        {pendingCandidates.length > 0 && (
-                          <Alert variant="warning" className="border-0 shadow-sm d-flex align-items-center">
-                            <FaClock className="me-2" />
-                            Currently, there are <strong>{pendingCandidates.length}</strong> candidates with tests in progress.
-                          </Alert>
+                                      <td><Badge bg="warning" text="dark">{batch.pending_candidates_count}</Badge></td>
+                                      <td className="text-center">
+                                        <Button variant="outline-primary" size="sm" onClick={() => handleViewBatch(batch)}>
+                                          <FaEye className="me-1" /> View Leaderboard
+                                        </Button>
+                                      </td>
+                                    </tr>
+                                  )) : (
+                                    <tr>
+                                    <td colSpan="5" className="text-center py-4 text-muted">No batches found.</td>
+                                    </tr>
+                                  )}
+                                </tbody>
+                              </Table>
+                            </Card.Body>
+                          </Card>
                         )}
                       </div>
                     )}
@@ -578,7 +590,7 @@ const StudentQuizManagement = () => {
       {/* Single Student Analysis Modal */}
       <Modal show={showSingleAnalysisModal} onHide={() => setShowSingleAnalysisModal(false)} centered size="lg">
         <Modal.Header closeButton className="bg-light">
-          <Modal.Title className="fs-5">Candidate Performance Analysis</Modal.Title>
+          <Modal.Title className="fs-5">Student Performance Analysis</Modal.Title>
         </Modal.Header>
         <Modal.Body className="p-4">
           {selectedCandidateAnalysis && (
@@ -586,7 +598,7 @@ const StudentQuizManagement = () => {
               <Col md={6}>
                 <h6 className="text-primary border-bottom pb-2 mb-3">Basic Information</h6>
                 <p className="mb-2"><strong>Name:</strong> {selectedCandidateAnalysis.full_name}</p>
-                <p className="mb-2"><strong>Candidate ID:</strong> {selectedCandidateAnalysis.candidate_id}</p>
+                <p className="mb-2"><strong>Student ID:</strong> {selectedCandidateAnalysis.candidate_id}</p>
                 <p className="mb-2"><strong>Phone:</strong> {selectedCandidateAnalysis.phone}</p>
                 <p className="mb-2"><strong>Rank:</strong> <Badge bg="success">#{selectedCandidateAnalysis.rank}</Badge></p>
               </Col>
@@ -640,7 +652,7 @@ const StudentQuizManagement = () => {
                           <Row className="g-2 mt-1">
                             <Col sm={6}>
                               <div className="p-2 rounded bg-danger bg-opacity-10 border border-danger border-opacity-25">
-                                <small className="d-block text-muted" style={{ fontSize: '0.7rem' }}>Candidate Answer:</small>
+                                <small className="d-block text-muted" style={{ fontSize: '0.7rem' }}>Student Answer:</small>
                                 <span className="text-danger fw-bold small">
                                   {q.options[q.your_answer_index] || 'No Answer'}
                                 </span>
@@ -698,7 +710,7 @@ const StudentQuizManagement = () => {
 
               {( (!selectedCandidateAnalysis.correct_questions?.length) && (!selectedCandidateAnalysis.wrong_questions?.length) ) && (
                 <div className="text-center py-4 text-muted border rounded bg-light">
-                  No question breakdown available for this candidate.
+                  No question breakdown available for this student.
                 </div>
               )}
             </div>
@@ -732,13 +744,13 @@ const StudentQuizManagement = () => {
           `}
         </style>
         <Modal.Header closeButton className="bg-primary text-white border-0">
-          <Modal.Title className="fs-5">Workshop Batch Analysis</Modal.Title>
+          <Modal.Title className="fs-5">Student Quiz Batch Analysis</Modal.Title>
         </Modal.Header>
         <Modal.Body className="p-4 print-analysis-area">
           <Row className="g-4 text-center">
             <Col md={4}>
               <div className="p-3 bg-light rounded shadow-sm h-100">
-                <h3 className="text-primary fw-bold mb-1">{rankings.length}</h3>
+                <h3 className="text-primary fw-bold mb-1">{stats.totalRanked}</h3>
                 <small className="text-uppercase text-muted">Successful Submissions</small>
               </div>
             </Col>
@@ -815,14 +827,14 @@ const StudentQuizManagement = () => {
           <div className="mt-4">
             <h6 className="fw-bold mb-3 border-bottom pb-2">Insights & Observations</h6>
             <ul className="text-secondary">
-              <li className="mb-2">The highest score in this batch is <strong>{rankings[0]?.score || 0}</strong>.</li>
+              <li className="mb-2">The highest score across all batches is <strong>{allRanked[0]?.score || 0}</strong>.</li>
               <li className="mb-2">There are currently <strong>{stats.totalPending}</strong> tests in an incomplete state.</li>
-              <li className="mb-2">Based on current trends, the average participant is scoring approximately <strong>{((stats.avgScore / (rankings[0]?.total_questions || 1)) * 100).toFixed(1)}%</strong>.</li>
+              <li className="mb-2">Based on current trends, the average participant is scoring approximately <strong>{((stats.avgScore / (allRanked[0]?.total_questions || 1)) * 100).toFixed(1)}%</strong>.</li>
             </ul>
           </div>
           <div className="mt-3 bg-light p-3 rounded small text-muted">
             <FaInfoCircle className="me-2" />
-            Note: Rankings are updated in real-time as candidates submit their tests.
+            Note: Rankings are updated in real-time as students submit their tests.
           </div>
         </Modal.Body>
         <Modal.Footer>
