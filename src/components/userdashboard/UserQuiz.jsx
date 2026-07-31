@@ -1140,20 +1140,22 @@ const UserQuiz = () => {
                             return (
                               <div key={idx} className="mb-2">
                                 <Button 
-                                  className="w-100 text-start option-button"
-                                  onClick={() => handleAnswerSelect(idx)}
-                                  style={{ 
-                                    backgroundColor: isSelected ? '#0d6efd' : '#ffffff',
-                                    borderColor: isSelected ? '#0d6efd' : '#dee2e6',
-                                    color: isSelected ? '#ffffff' : '#212529',
-                                    fontWeight: '500',
-                                    padding: '12px 16px',
-                                    borderRadius: '8px',
-                                    borderWidth: '1px',
-                                    boxShadow: 'none'
-                                  }}
+                                   className="w-100 text-start option-button"
+                                   onClick={() => handleAnswerSelect(idx)}
+                                   style={{ 
+                                     backgroundColor: isSelected ? '#0d6efd' : '#ffffff',
+                                     borderColor: isSelected ? '#0d6efd' : '#dee2e6',
+                                     color: isSelected ? '#ffffff' : '#212529',
+                                     fontWeight: '500',
+                                     padding: '12px 16px',
+                                     borderRadius: '8px',
+                                     borderWidth: '1px',
+                                     boxShadow: 'none',
+                                     textAlign: 'left',
+                                     justifyContent: 'flex-start'
+                                   }}
                                 >
-                                  <span className="option-letter me-2" style={{ fontWeight: '600' }}>{String.fromCharCode(65 + idx)}.</span>
+                                  <span className=" me-2" style={{ fontWeight: '600' }}>{String.fromCharCode(65 + idx)}.</span>
                                   {option}
                                   {hindiOption && (
                                     <span className="ms-2" style={{ fontSize: '0.9em', color: isSelected ? '#ffffff' : '#212529' }}>({hindiOption})</span>
