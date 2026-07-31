@@ -71,7 +71,7 @@ function StudentQuiz() {
 
     try {
       const response = await fetch(
-        'https://brjobsedu.com/girls_course/girls_course_backend/api/workshop/start-test/',
+        'https://brjobsedu.com/girls_course/girls_course_backend/api/start-open-quiz/',
         {
           method: 'POST',
           headers: {
@@ -156,7 +156,7 @@ function StudentQuiz() {
         }));
 
         const response = await fetch(
-          'https://brjobsedu.com/girls_course/girls_course_backend/api/workshop/submit-test/',
+          'https://brjobsedu.com/girls_course/girls_course_backend/api/submit-open-quiz/',
           {
             method: 'POST',
             headers: {
