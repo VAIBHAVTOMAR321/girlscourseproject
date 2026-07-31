@@ -50,6 +50,7 @@ import AddSeminar from "./components/admindashboard/AddSeminar.jsx";
 import AddWorkshop from "./components/admindashboard/AddWorkshop.jsx";
 import GovtEmployee from "./components/home/GovtEmployee.jsx";
 import EmployeeQuiz from "./components/admindashboard/EmployeeQuiz.jsx";
+import StudentQuiz from "./components/home/StudentQuiz.jsx";
 import StudentAnalysis from "./components/admindashboard/StudentAnalysis.jsx"; // Import StudentAnalysis component
 
 function AppContent() {
@@ -96,6 +97,7 @@ function AppContent() {
           {/* <Route path="/UserDashboard" element={<UserDashboard />} /> */}
           <Route path="/Registration" element={<Registration />} />
           <Route path="/GovtEmployee" element={<GovtEmployee />} />
+          <Route path="/StudentQuiz" element={<StudentQuiz />} />
           
           {/* User Dashboard Routes - Accessible to all authenticated users */}
           <Route
