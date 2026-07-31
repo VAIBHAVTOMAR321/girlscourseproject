@@ -269,7 +269,7 @@ const UserTopNav = ({ onMenuToggle, isMobile }) => {
 
           {userRoleType !== 'student' && userRoleType !== 'employee' && (
             <>
-              <Button
+              {/* <Button
                 onClick={() => navigate('/GroomingClasses')}
                 className="me-3 d-flex align-items-center grooming-style"
               
@@ -277,7 +277,7 @@ const UserTopNav = ({ onMenuToggle, isMobile }) => {
               >
                 <i className="bi bi-mortarboard-fill me-2"></i>
                 {language === 'en' ? 'Grooming' : 'ग्रूमिंग'}
-              </Button>
+              </Button> */}
 
               <Dropdown 
                 show={showNotificationDropdown}
