@@ -124,7 +124,7 @@ const AdminLeftNav = ({ show, setShow }) => {
             </div>
 
             {/* Grooming Dropdown */}
-            <div className="dropdown-menu-wrapper">
+            {/* <div className="dropdown-menu-wrapper">
               <div 
                 className="nav-link-custom d-flex align-items-center justify-content-between"
                 onClick={() => setShowGroomingMenu(!showGroomingMenu)}
@@ -148,7 +148,7 @@ const AdminLeftNav = ({ show, setShow }) => {
                   </Nav.Link>
                 </div>
               )}
-            </div>
+            </div> */}
 
             {/* Jobs/Seminars/Workshops Dropdown */}
             <div className="dropdown-menu-wrapper">
