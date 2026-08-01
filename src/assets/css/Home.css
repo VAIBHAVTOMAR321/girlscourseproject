@@ -207,7 +207,7 @@ body {
 }
 
 .hero-text h1 {
-    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-size: 40px;
     color: var(--deep-purple);
     line-height: 1.2;
     margin-bottom: 1.5rem;
@@ -219,10 +219,11 @@ body {
 }
 
 .hero-text p {
-    font-size: 1.1rem;
+    font-size:16px;
     color: var(--text-light);
     margin-bottom: 2rem;
     max-width: 500px;
+    text-align:justify
 }
 
 .hero-cta {
@@ -245,6 +246,9 @@ body {
 .about-section {
     padding: var(--section-padding) 0;
 }
+.about-section h2{
+    font-size:40px;
+}
 
 .about-grid {
     display: grid;
@@ -259,6 +263,9 @@ body {
     text-align: center;
     border: 1px solid var(--border-color);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.about-card p{
+    text-align:center;
 }
 
 .about-card:hover {
@@ -285,6 +292,15 @@ body {
 .featured-courses-section {
     background-color: var(--soft-lavender);
     padding: var(--section-padding) 0;
+}
+.featured-courses-section h2{
+    font-size:40px;
+}
+.learning-journey-section h2{
+    font-size:40px;
+}
+.dashboard-text h2{
+    font-size:40px;
 }
 
 .course-card-link {
@@ -327,6 +343,7 @@ body {
 .course-card h3 {
     color: var(--deep-purple);
     margin-bottom: 1rem;
+    font-size:18px;
 }
 
 .course-intro {
@@ -407,6 +424,7 @@ body {
 .timeline-content h4 {
     color: var(--deep-purple);
     font-weight: 600;
+    font-size: 18px;
 }
 
 /* --- QUIZ SECTION --- */
@@ -794,13 +812,16 @@ body {
         width: 2px; 
         transform: none;
     }
-    .timeline-item { width: 100%; text-align: left; padding-left: 40px; padding-top: 0; }
+    .timeline-item { width: 100%; text-align: left; padding-left: 40px; padding-top: 0;  font-size:14px !important; }
     .timeline-icon { left: 10px; top: 0; transform: translateX(-50%); }
-    .timeline-content { margin-top: 0; }
+    .timeline-content { margin-top: 0;   }
     .testimonial-grid { grid-template-columns: 1fr; }
     .management-grid {
         grid-template-columns: 1fr;
     }
+.timeline-content p{
+font-size:14px;
+  } 
     .hero-cta {
         justify-content: center;
     }
