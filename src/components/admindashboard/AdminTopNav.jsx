@@ -19,8 +19,8 @@ const AdminTopNav = () => {
       <Navbar.Brand href="/AdminDashboard" className="ms-3 d-flex align-items-center">
         <img src={Logo} alt="BrainRock Logo" className="admin-logo-img me-3" />
         <div className="admin-logo-text">
-          <div className="admin-logo-main">Brainrock Consulting Services</div>
-          <div className="admin-logo-sub">I.S.O certified 9001:2015</div>
+          <div className="admin-logo-main">Digital Saksham Beti</div>
+<div className="admin-logo-sub">Empowering Girls Through Education</div> 
         </div>
       </Navbar.Brand>
       
