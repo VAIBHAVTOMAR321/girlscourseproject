@@ -921,75 +921,35 @@ const AdminDashboard = () => {
   // --- Render Helpers ---
 
   const renderDashboardView = () => (
-    <div className="fade-in">
-      <Row className="g-4 mob-top-view">
-        <Col xs={12} sm={6} md={4} lg={6}>
-          <Card className="stat-card h-100 shadow-sm border-0" onClick={() => handleEnrollmentsClick('unpaid')}>
-            <Card.Body className="d-flex align-items-center">
-              <div className="stat-icon-wrapper users me-3">
-                <FaUsers className="stat-icon" />
-              </div>
-              <div>
-                <h6 className="stat-label text-muted mb-1">Enrolled Enrollments</h6>
-                <h2 className="stat-value mb-0">{loading ? <Spinner size="sm" animation="border" /> : unpaidEnrollmentCount}</h2>
-              </div>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col xs={12} sm={6} md={4} lg={6}>
-          <Card className="stat-card h-100 shadow-sm border-0" onClick={() => handleCoursesClick('unpaid')}>
-            <Card.Body className="d-flex align-items-center">
-              <div className="stat-icon-wrapper courses me-3">
-                <FaBook className="stat-icon" />
-              </div>
-              <div>
-                <h6 className="stat-label text-muted mb-1">Total Courses</h6>
-                <h2 className="stat-value mb-0">{loading ? <Spinner size="sm" animation="border" /> : courses.filter(c => c.course_status === 'unpaid').length}</h2>
-              </div>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-      <Row className="g-4 mt-2">
-        <Col xs={12} sm={6} md={4} lg={4}>
-          <Card className="stat-card h-100 shadow-sm border-0" onClick={handleCounselingClick} style={{ cursor: 'pointer' }}>
-            <Card.Body className="d-flex align-items-center">
-              <div className="stat-icon-wrapper courses me-3">
-                <FaComments className="stat-icon" />
-              </div>
-              <div>
-                <h6 className="stat-label text-muted mb-1">Counseling Requests</h6>
-                <h2 className="stat-value mb-0">{loading ? <Spinner size="sm" animation="border" /> : counselingData.length}</h2>
-              </div>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col xs={12} sm={6} md={4} lg={4}>
-          <Card className="stat-card h-100 shadow-sm border-0" onClick={() => { handleNotificationsClick(); setShowNotificationsListModal(true) }} style={{ cursor: 'pointer' }}>
-            <Card.Body className="d-flex align-items-center">
-              <div className="stat-icon-wrapper courses me-3" style={{ backgroundColor: '#17a2b8' }}>
-                <FaBell className="stat-icon" />
-              </div>
-              <div>
-                <h6 className="stat-label text-muted mb-1">Notifications</h6>
-                <h2 className="stat-value mb-0">{loading ? <Spinner size="sm" animation="border" /> : adminNotificationCount}</h2>
-              </div>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col xs={12} sm={6} md={4} lg={4}>
-          <Card className="stat-card h-100 shadow-sm border-0" onClick={handleEventsClick} style={{ cursor: 'pointer' }}>
-            <Card.Body className="d-flex align-items-center">
-              <div className="stat-icon-wrapper courses me-3" style={{ backgroundColor: '#6f42c1' }}>
-                <FaCalendarAlt className="stat-icon" />
-              </div>
-              <div>
-                <h6 className="stat-label text-muted mb-1">Events</h6>
-                <h2 className="stat-value mb-0">{loading ? <Spinner size="sm" animation="border" /> : eventsCount}</h2>
-              </div>
-            </Card.Body>
-          </Card>
-        </Col>
+    <div className="fade-in mob-top-view">
+      <Row className="g-4">
+        {[
+          { title: 'Enrolled Students', count: unpaidEnrollmentCount, icon: <FaUsers />, bg: 'bg-c-blue', onClick: () => handleEnrollmentsClick('unpaid') },
+          { title: 'Total Courses', count: courses.filter(c => c.course_status === 'unpaid').length, icon: <FaBook />, bg: 'bg-c-green', onClick: () => handleCoursesClick('unpaid') },
+          { title: 'Counseling Requests', count: counselingData.length, icon: <FaComments />, bg: 'bg-c-yellow', onClick: handleCounselingClick },
+          { title: 'Notifications', count: adminNotificationCount, icon: <FaBell />, bg: 'bg-c-pink', onClick: () => { handleNotificationsClick(); setShowNotificationsListModal(true); } },
+          { title: 'Events', count: eventsCount, icon: <FaCalendarAlt />, bg: 'bg-c-purple', onClick: handleEventsClick },
+        ].map((item, index) => (
+          <Col key={index} xl={4} md={6}>
+            <Card className={`widget-stat-card ${item.bg}`} onClick={item.onClick} style={{ cursor: 'pointer' }}>
+              <Card.Body>
+                <Row className="align-items-center">
+                  <Col xs={8}>
+                    <h4 className="text-white">
+                      {loading ? <Spinner size="sm" animation="border" /> : item.count}
+                    </h4>
+                    <h6 className="text-white m-b-0">{item.title}</h6>
+                  </Col>
+                  <Col xs={4} className="text-end">
+                    <div className="widget-icon">
+                      {item.icon}
+                    </div>
+                  </Col>
+                </Row>
+              </Card.Body>
+            </Card>
+          </Col>
+        ))}
       </Row>
     </div>
   )
