@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { FaBook, FaLaptopCode, FaBullhorn, FaQuestionCircle, FaFacebook, FaTwitter, FaInstagram, FaLinkedin, FaShieldAlt, FaLightbulb, FaUserTie, FaDollarSign, FaChalkboardTeacher, FaCertificate, FaHandsHelping, FaUserGraduate, FaUserCheck, FaRocket, FaAward } from 'react-icons/fa';
+import { FaBook, FaLaptopCode, FaBullhorn, FaQuestionCircle, FaShieldAlt, FaLightbulb, FaUserTie, FaDollarSign, FaChalkboardTeacher, FaHandsHelping, FaUserGraduate, FaUserCheck, FaRocket, FaAward } from 'react-icons/fa';
+import axios from 'axios';
 import '../../assets/css/Home.css';
-import Footer from '../footer/Footer';
 
 // Online image URLs
 const heroIllustration = 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=2070&auto=format&fit=crop';
@@ -11,36 +11,84 @@ const adminPreview = 'https://images.unsplash.com/photo-1526628953301-3e589a6a8b
 const institutionPreview = 'https://images.unsplash.com/photo-1606857521015-7f9fcf423740?q=80&w=2070&auto=format&fit=crop';
 
 const Home = () => {
-  const [isMenuOpen, setMenuOpen] = useState(false);
+  const [stats, setStats] = useState({
+    students_enrolled: '0',
+    courses_available: '0',
+    certificates_issued: '0'
+  });
+  const [featuredCourses, setFeaturedCourses] = useState([]);
+  const [coursesLoading, setCoursesLoading] = useState(true);
 
   useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, {
-      threshold: 0.1
-    });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
 
     const elements = document.querySelectorAll('.animate-on-scroll');
-    elements.forEach(el => observer.observe(el));
+    elements.forEach((el) => observer.observe(el));
 
-    return () => elements.forEach(el => observer.unobserve(el));
+    return () => elements.forEach((el) => observer.unobserve(el));
+  }, [featuredCourses]); // Re-run when courses are loaded
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const response = await axios.get('https://brjobsedu.com/girls_course/girls_course_backend/api/home-count/');
+        if (response.data.success) {
+          setStats(response.data.data);
+        }
+      } catch (error) {
+        console.error("Error fetching home page stats:", error);
+      }
+    };
+
+    fetchStats();
   }, []);
 
-
-  const featuredCourses = [
-    { name: 'AI Tools', intro: 'Explore the world of Artificial Intelligence and learn to use powerful AI tools.', icon: <FaLaptopCode /> },
-    { name: 'Digital Marketing', intro: 'Master the fundamentals of online marketing, from SEO to social media.', icon: <FaBullhorn /> },
-    { name: 'Computer Basics', intro: 'Get started with the essential computer skills for today\'s digital world.', icon: <FaLaptopCode /> },
-    { name: 'Financial Literacy', intro: 'Learn to manage your finances, from budgeting to investing.', icon: <FaDollarSign /> },
-    { name: 'Communication Skills', intro: 'Enhance your verbal and written communication for personal and professional success.', icon: <FaLightbulb /> },
-    { name: 'Entrepreneurship', intro: 'Discover how to start and grow your own business from the ground up.', icon: <FaUserTie /> },
-    { name: 'Career Readiness', intro: 'Prepare for the job market with resume building, interview skills, and more.', icon: <FaBook /> },
-    { name: 'Cyber Security', intro: 'Understand the basics of cybersecurity and how to protect yourself online.', icon: <FaShieldAlt /> }
-  ];
+  useEffect(() => {
+    const fetchCourses = async () => {
+      setCoursesLoading(true);
+      try {
+        const response = await axios.get('https://brjobsedu.com/girls_course/girls_course_backend/api/courses-home/');
+        if (response.data.success) {
+          const iconMap = {
+            'AI Tools': <FaLaptopCode />,
+            'Digital Marketing': <FaBullhorn />,
+            'Computer Basics': <FaLaptopCode />,
+            'Financial Literacy': <FaDollarSign />,
+            'Communication Skills': <FaLightbulb />,
+            'Entrepreneurship': <FaUserTie />,
+            'Career Readiness': <FaBook />,
+            'Cyber Security': <FaShieldAlt />,
+            'Personality Development': <FaUserGraduate />,
+            'Computer Learning with AI Tools': <FaLaptopCode />,
+          };
+          const coursesWithIcons = response.data.data.map(course => ({
+            id: course.id,
+            name: course.course_name,
+            intro: course.cour_desc ? course.cour_desc : `Learn about ${course.course_name}.`,
+            icon: iconMap[course.course_name] || <FaBook />
+          }));
+          setFeaturedCourses(coursesWithIcons);
+        } else {
+          // Log an error if the API response was not successful
+          console.error("Failed to fetch courses:", response.data.message || "API returned success: false");
+        }
+      } catch (error) {
+        console.error("An error occurred while fetching featured courses:", error);
+      } finally {
+        setCoursesLoading(false);
+      }
+    };
+    fetchCourses();
+  }, []);
 
   const aboutCards = [
     { title: 'Digital Literacy', text: 'Providing foundational to advanced digital skills for all.', icon: <FaLaptopCode /> },
@@ -56,14 +104,9 @@ const Home = () => {
     { title: '4. Quiz', text: 'Test your understanding with interactive quizzes.', icon: <FaQuestionCircle /> },
     { title: '5. Certificate', text: 'Receive your digital certificate upon completion.', icon: <FaAward /> }
   ];
-  const toggleMenu = () => {
-    setMenuOpen(!isMenuOpen);
-  };
 
   return (
     <div className="home-page">
-    
-
       <main>
         {/* 1. Hero Section */}
         <section className="hero-section">
@@ -71,8 +114,8 @@ const Home = () => {
             <div className="hero-text animate-on-scroll">
               <h1 className=" ">Empowering Every Girl Through <span className="highlight">Digital Education</span></h1>
               <p className=" ">Join Digital Saksham Beti to unlock your potential with in-demand digital skills, from AI to financial literacy, and build a successful career.</p>
-              <div className="hero-cta  ">
-                <a href="#courses" className="btn btn-primary" onClick={() => setMenuOpen(false)}>Explore Courses</a>
+              <div className="hero-cta">
+                <a href="#courses" className="btn btn-primary">Explore Courses</a>
                 <Link to="/Registration" className="btn btn-outline-light">Register Now</Link>
               </div>
             </div>
@@ -102,15 +145,21 @@ const Home = () => {
           <div className="container">
             <h2 className="section-title animate-on-scroll">Featured Courses</h2>
             <div className="course-grid">
-              {featuredCourses.map((course, index) => (
-                <a href="#courses" className="course-card-link" key={course.name}>
-                  <div className="course-card animate-on-scroll" style={{ '--i': index + 1 }}>
-                    <div className="course-icon">{course.icon}</div>
-                    <h3>{course.name}</h3>
-                    <p className="course-intro">{course.intro}</p>
-                  </div>
-                </a>
-              ))}
+              {coursesLoading ? (
+                <p>Loading courses...</p>
+              ) : featuredCourses.length > 0 ? (
+                featuredCourses.map((course, index) => (
+                  <a href="#courses" className="course-card-link" key={course.id}>
+                    <div className="course-card animate-on-scroll" style={{ '--i': index + 1 }}>
+                      <div className="course-icon">{course.icon}</div>
+                      <h3>{course.name}</h3>
+                      <p className="course-intro">{course.intro}</p>
+                    </div>
+                  </a>
+                ))
+              ) : (
+                <p>Could not load courses at this time. Please try again later.</p>
+              )}
             </div>
           </div>
         </section>
@@ -179,19 +228,15 @@ const Home = () => {
           <div className="container">
             <div className="stats-grid">
               <div className="stat-item animate-on-scroll">
-                <h3>10,000+</h3>
+                <h3>{stats.students_enrolled}+</h3>
                 <p>Students Enrolled</p>
               </div>
               <div className="stat-item animate-on-scroll" style={{ '--i': 2 }}>
-                <h3>500+</h3>
-                <p>Institutions Registered</p>
-              </div>
-              <div className="stat-item animate-on-scroll" style={{ '--i': 3 }}>
-                <h3>50+</h3>
+                <h3>{stats.courses_available}+</h3>
                 <p>Courses Available</p>
               </div>
-              <div className="stat-item animate-on-scroll" style={{ '--i': 4 }}>
-                <h3>8,000+</h3>
+              <div className="stat-item animate-on-scroll" style={{ '--i': 3 }}>
+                <h3>{stats.certificates_issued}+</h3>
                 <p>Certificates Issued</p>
               </div>
             </div>
