@@ -206,7 +206,7 @@ function StudentQuiz() {
       <Container className="test-container">
         <div className="test-header">
           <div className="test-info">
-            <h2 className="test-title">Workshop Test</h2>
+            <h2 className="test-title"> Test</h2>
             <p className="candidate-info">Candidate ID: {candidateId}</p>
             <p className="candidate-name">Name: {name}</p>
           </div>
@@ -603,7 +603,7 @@ function StudentQuiz() {
     <div className="login-container">
       <div className="login-card">
         <div className="login-header">
-          <h1>Workshop Test Portal</h1>
+          <h1>Student Test Portal</h1>
           <p className="subtitle">Government Employee Training Program</p>
         </div>
 
