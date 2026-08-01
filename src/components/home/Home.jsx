@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FaBook, FaLaptopCode, FaBullhorn, FaQuestionCircle, FaShieldAlt, FaLightbulb, FaUserTie, FaDollarSign, FaChalkboardTeacher, FaHandsHelping, FaUserGraduate, FaUserCheck, FaRocket, FaAward } from 'react-icons/fa';
 import axios from 'axios';
+import digitalBetiLogo from '../../assets/image.png';
 import '../../assets/css/Home.css';
 
-// Online image URLs
-const heroIllustration = 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=2070&auto=format&fit=crop';
+const heroIllustration = digitalBetiLogo;
 const dashboardPreview = 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop';
 const adminPreview = 'https://images.unsplash.com/photo-1526628953301-3e589a6a8b74?q=80&w=2006&auto=format&fit=crop';
 const institutionPreview = 'https://images.unsplash.com/photo-1606857521015-7f9fcf423740?q=80&w=2070&auto=format&fit=crop';
