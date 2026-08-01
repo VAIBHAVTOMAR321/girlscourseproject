@@ -604,7 +604,7 @@ function StudentQuiz() {
       <div className="login-card">
         <div className="login-header">
           <h1>Student Test Portal</h1>
-          <p className="subtitle">Government Employee Training Program</p>
+         
         </div>
 
         <form onSubmit={handleStartTest} className="login-form">
