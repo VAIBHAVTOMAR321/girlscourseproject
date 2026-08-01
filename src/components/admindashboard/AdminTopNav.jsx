@@ -3,7 +3,7 @@ import { Navbar, Nav, Button } from 'react-bootstrap'
 import { useAuth } from '../../contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import '../../assets/css/AdminTopNav.css'
-import Logo from '../../assets/digitalbeti_logo.png'
+import Logo from '../../assets/digitalbeti_logo.jpeg'
 
 const AdminTopNav = () => {
   const { userRole, uniqueId, logout } = useAuth()

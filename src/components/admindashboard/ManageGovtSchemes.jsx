@@ -738,13 +738,15 @@ const ManageGovtSchemes = () => {
   }
 
   return (
-    <div className="d-flex">
+    <div className="admin-layout">
+      <div className="admin-wrapper d-flex">
       <AdminLeftNav show={showSidebar} setShow={setShowSidebar} />
-      <div className="flex-grow-1" style={{ marginLeft: showSidebar ? '250px' : '80px', transition: 'margin-left 0.3s' }}>
+        <div className={`admin-main-content flex-grow-1 ${!showSidebar ? 'sidebar-compact' : ''}`}>
         <AdminTopNav />
-        <Container fluid className="py-4">
-          {renderContent()}
-        </Container>
+          <div className="content-area">
+            <Container fluid className="py-4">{renderContent()}</Container>
+          </div>
+        </div>
       </div>
     </div>
   )

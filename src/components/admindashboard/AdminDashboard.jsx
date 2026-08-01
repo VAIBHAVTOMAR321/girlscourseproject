@@ -930,7 +930,7 @@ const AdminDashboard = () => {
           { title: 'Notifications', count: adminNotificationCount, icon: <FaBell />, bg: 'bg-c-pink', onClick: () => { handleNotificationsClick(); setShowNotificationsListModal(true); } },
           { title: 'Events', count: eventsCount, icon: <FaCalendarAlt />, bg: 'bg-c-purple', onClick: handleEventsClick },
         ].map((item, index) => (
-          <Col key={index} xl={4} md={6}>
+          <Col key={index} xl={3} lg={3} md={6}>
             <Card className={`widget-stat-card ${item.bg}`} onClick={item.onClick} style={{ cursor: 'pointer' }}>
               <Card.Body>
                 <Row className="align-items-center">

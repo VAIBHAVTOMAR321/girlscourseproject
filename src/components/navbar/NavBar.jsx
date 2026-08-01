@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './NavBar.css';
-import Logo from '../../assets/brainrock_logo.png';
+import Logo from '../../assets/digitalbeti_logo.jpeg';
 
 const NavBar = () => {
   const location = useLocation();
@@ -34,16 +34,18 @@ const NavBar = () => {
           <div className="navbar-logo" style={isEmployeePage || isUnpaidPage ? { cursor: 'default' } : {}}>
             <img src={Logo} alt="BrainRock Logo" className="navbar-logo-img" />
             <div className="navbar-logo-text">
-              <div className="navbar-logo-main">Brainrock Consulting Services</div>
-              <div className="navbar-logo-sub">I.S.O certified 9001:2015</div>
+              <div className="navbar-logo-main">Digital Saksham Beti
+
+</div>
+              <div className="navbar-logo-sub">Empowering Girls Through Education</div>
             </div>
           </div>
         ) : (
           <Link to="/" className="navbar-logo">
             <img src={Logo} alt="BrainRock Logo" className="navbar-logo-img" />
             <div className="navbar-logo-text">
-              <div className="navbar-logo-main">Brainrock Consulting Services</div>
-              <div className="navbar-logo-sub">I.S.O certified 9001:2015</div>
+              <div className="navbar-logo-main">Digital Saksham Beti</div>
+              <div className="navbar-logo-sub">Empowering Girls Through Education</div>
             </div>
           </Link>
         )}
