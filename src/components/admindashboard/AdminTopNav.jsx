@@ -26,7 +26,7 @@ const AdminTopNav = () => {
       
       {/* Logout button for mobile view - visible only on sm and smaller screens */}
       <Button 
-        variant="outline-danger" 
+        variant="primary" 
         onClick={handleLogout}
         className="logout-btn d-flex d-md-none align-items-center ms-3"
         size="sm"
@@ -38,7 +38,7 @@ const AdminTopNav = () => {
         <Nav className="align-items-center">
           {/* Logout button for desktop view - visible only on md and larger screens */}
           <Button 
-            variant="outline-danger" 
+            variant="primary" 
             onClick={handleLogout}
             className="logout-btn d-none d-md-flex align-items-center"
             size="sm"

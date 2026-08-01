@@ -1,12 +1,12 @@
 /* Admin Top Navigation */
 .admin-top-nav {
-  background: linear-gradient(90deg, #13539d 0%, #1d71ce) !important;
-  border-bottom: 1px solid #e0e0e0;
+  background: #ffffff !important;
+  border-bottom: 1px solid #e5e7eb;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
   position: sticky;
   top: 0;
   padding: 0px !important;
-  z-index: 1001;
+  z-index: 1010; /* Ensure it's above sidebar content but below modals */
   transition: all 0.3s ease;
 }
 .logout-btn {
@@ -34,12 +34,12 @@
 .admin-top-nav .admin-logo-main {
   font-size: 1rem;
   font-weight: bold;
-  color: #fff;
+  color: #111827;
 }
 
 .admin-top-nav .admin-logo-sub {
   font-size: 0.75rem;
-  color: #ccc;
+  color: #6b7280;
 }
 
 .admin-top-nav .user-dropdown {
@@ -50,14 +50,14 @@
   padding: 0.5rem 1rem;
   border-radius: 50px;
   border: 1px solid transparent;
-  transition: all 0.2s ease;
-  background: rgba(102, 126, 234, 0.1);
-  color: #667eea;
+  transition: all 0.3s ease;
+  background: #f3f4f6;
+  color: #1f2937;
 }
 
 .admin-top-nav .user-dropdown .dropdown-toggle:hover {
-  background: rgba(102, 126, 234, 0.2);
-  border-color: #667eea;
+  background: #e5e7eb;
+  border-color: #d1d5db;
   transform: translateY(-1px);
 }
 
@@ -127,8 +127,8 @@
 }
 
 .admin-top-nav .dropdown-item:hover {
-  background: #f8f9fa;
-  color: #667eea;
+  background: #f3f4f6;
+  color: #1f2937;
   transform: translateX(3px);
 }
 
@@ -156,14 +156,14 @@
 .admin-top-nav .mobile-menu-btn {
   margin-right: 0.5rem;
   padding: 0.5rem 0.75rem;
-  border-radius: 8px;
-  background: rgba(102, 126, 234, 0.1);
-  border: 1px solid rgba(102, 126, 234, 0.2);
-  color: #667eea;
+  border-radius: 50%;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  color: #374151;
   transition: all 0.2s ease;
 }
 .logout-btn{
-  margin-right: 12px;
+  margin-right: 1rem;
   font-size: 12px;
 }
 .admin-top-nav .mobile-menu-btn:hover {

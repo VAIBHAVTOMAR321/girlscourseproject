@@ -5,8 +5,8 @@
   left: 0;
   height: 100vh;
   width: 250px;
-  z-index: 1000;
-     background: linear-gradient(90deg, #13539d 0%, #1d71ce);
+  z-index: 1020; /* Ensure it's above other content */
+  background: #111827; /* Dark, modern background */
   box-shadow: 2px 0 10px rgba(0,0,0,0.1);
   transition: all 0.3s ease;
   border-right: 1px solid #dee2e6;
@@ -14,7 +14,7 @@
 
 .admin-left-nav .nav-header {
   padding: 0.75rem;
-  border-bottom: 1px solid #dee2e6;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   color: #495057;
   display: flex;
   justify-content: end;
@@ -32,29 +32,29 @@
 }
 
 .admin-left-nav .nav-menu .nav-link {
-  color: #ffffff;
+  color: #fff; /* Softer text color */
   padding: 0.5rem 1rem;
   margin: 0.125rem 0.5rem;
   border-radius: 4px;
   transition: all 0.2s ease;
   font-weight: 400;
-  font-size: 12px;
+  font-size: 14px; /* Slightly larger font */
 }
 
 .admin-left-nav .nav-menu .nav-link:hover {
-  background: #e9ecef;
-  color: #495057;
-  font-size: 12px;
+  background: #fff; /* Darker hover state */
+  color: #000;
 }
 
 .admin-left-nav .nav-menu .nav-link.active {
-  background: white;
-  color: #4f46e5;
-  border-left: 2px solid #4f46e5;
+  background: #374151; /* Active state background */
+  color: #ffffff;
+  font-weight: 500;
+  border-left: 3px solid #3b82f6; /* Accent color */
 }
 
 .admin-left-nav .nav-menu .nav-link.active .nav-icon {
-  color: #4f46e5;
+  color: #3b82f6; /* Accent color for icon */
 }
 
 .admin-left-nav .nav-menu .nav-link .nav-icon {
@@ -139,10 +139,10 @@
 
 /* Toggle button styling */
 .sidebar-toggle-btn {
-  background: #e9ecef;
-  border: 1px solid #dee2e6;
-  color: #495057;
-  font-size: 0.9rem;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #9ca3af;
+  font-size: 1rem;
   padding: 0.375rem;
   cursor: pointer;
   border-radius: 4px;
@@ -155,13 +155,13 @@
 }
 
 .sidebar-toggle-btn:hover {
-  background: #dee2e6;
-  border-color: #adb5bd;
+  background: #1f2937;
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
 .sidebar-toggle-btn:focus {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.25);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
 }
 
 /* Dropdown Menu Styles */
@@ -170,19 +170,20 @@
 }
 
 .dropdown-menu-wrapper .nav-link-custom {
-  color: #ffffff;
+  color: #fff;
   padding: 0.5rem 1rem;
   margin: 0.125rem 0.5rem;
   border-radius: 4px;
   transition: all 0.2s ease;
   font-weight: 400;
-  font-size: 12px;
+  font-size: 14px;
   display: flex;
   align-items: center;
 }
 
 .dropdown-menu-wrapper .nav-link-custom:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: #1f2937;
+  color: #ffffff;
 }
 
 .dropdown-menu-wrapper .bi-chevron-up,
@@ -193,12 +194,12 @@
 .dropdown-submenu {
   padding-left: 0.5rem;
   margin-left: 0.5rem;
-  border-left: 1px solid rgba(255, 255, 255, 0.3);
+  border-left: 1px solid #374151;
 }
 
 .dropdown-submenu .nav-link-custom {
   padding: 0.4rem 1rem;
-  font-size: 11px;
+  font-size: 13px;
 }
 
 .dropdown-submenu .nav-link-custom .nav-icon {
@@ -242,7 +243,7 @@
   position: absolute;
   left: 60px;
   top: 0;
-  background: linear-gradient(90deg, #13539d 0%, #1d71ce);
+  background: #1f2937;
   min-width: 160px;
   border-radius: 4px;
   padding: 0.5rem;
