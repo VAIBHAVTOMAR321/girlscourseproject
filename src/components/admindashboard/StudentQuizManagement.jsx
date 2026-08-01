@@ -56,6 +56,51 @@ const StudentQuizManagement = () => {
   // New state for batch view
   const [showBatchView, setShowBatchView] = useState(false);
 
+  // --- Helper Functions and Derived Data ---
+
+  const getRankColor = (rank) => {
+    if (rank === 1) return '#28a745'; // Green
+    if (rank === 2) return '#0d6efd'; // Blue
+    if (rank === 3) return '#ffc107'; // Yellow
+    return '#dc3545'; // Red
+  }
+
+  const formatTime = (isoString) => {
+    if (!isoString) return 'N/A'
+    const date = new Date(isoString)
+    return date.toLocaleString('en-IN', {
+      day: '2-digit',
+      month: 'short',
+      hour: '2-digit',
+      minute: '2-digit'
+    })
+  }
+
+  const calculateDuration = (start, end) => {
+    if (!start || !end) return 'N/A'
+    const duration = new Date(end) - new Date(start)
+    const minutes = Math.floor(duration / 60000)
+    const seconds = ((duration % 60000) / 1000).toFixed(0)
+    return `${minutes}m ${seconds}s`
+  }
+
+  // Data for Overall Batch Analysis Graphs
+  const allRanked = batches.flatMap(b => b.rankings || []);
+  const allPending = batches.flatMap(b => b.pending_candidates || []);
+  const completionChartData = [
+    { name: 'Completed', value: allRanked.length, color: '#28a745' },
+    { name: 'Pending', value: allPending.length, color: '#ffc107' }
+  ];
+
+  const performanceLevelsData = [
+    { name: 'High (>=75%)', value: allRanked.filter(r => (r.score / (r.total_questions || 1)) >= 0.75).length, color: '#28a745' },
+    { name: 'Average (40-74%)', value: allRanked.filter(r => {
+        const pct = (r.score / (r.total_questions || 1));
+        return pct >= 0.4 && pct < 0.75;
+      }).length, color: '#0dcaf0' },
+    { name: 'Low (<40%)', value: allRanked.filter(r => (r.score / (r.total_questions || 1)) < 0.4).length, color: '#dc3545' }
+  ];
+
   useEffect(() => {
     if (activeTab === 'postQuestions') {
       fetchQuestions()
@@ -267,6 +312,64 @@ const StudentQuizManagement = () => {
     setShowSingleAnalysisModal(true)
   }
 
+  const renderTopPerformersAndChart = (rankedList, chartTitle) => {
+    const topThree = (rankedList || []).slice(0, 3);
+    const topTen = (rankedList || []).slice(0, 10);
+
+    return (
+      <Row className="mb-4 g-4">
+        <Col lg={4}>
+          <h5 className="mb-3 text-secondary"><FaTrophy className="text-warning me-2"/>Top Performers</h5>
+          {topThree.map((candidate, idx) => (
+            <Card key={candidate.candidate_id} className={`mb-3 border-0 shadow-sm border-start border-4 ${idx === 0 ? 'border-success' : idx === 1 ? 'border-primary' : 'border-warning'}`}>
+              <Card.Body className="d-flex align-items-center py-3">
+                <div className="rank-badge me-3" style={{ fontSize: '1.5rem', fontWeight: 'bold', color: getRankColor(idx + 1) }}>
+                  #{idx + 1}
+                </div>
+                <div className="flex-grow-1">
+                  <h6 className="mb-0 fw-bold">{candidate.full_name}</h6>
+                  <small className="text-muted">{candidate.candidate_id}</small>
+                </div>
+                <div className="text-end">
+                  <h5 className="mb-0 text-primary">{candidate.score}</h5>
+                  <small className="text-muted">/{candidate.total_questions} Pts</small>
+                </div>
+              </Card.Body>
+            </Card>
+          ))}
+          {topThree.length === 0 && <div className="text-center py-4 bg-light rounded text-muted">No data available yet</div>}
+        </Col>
+        <Col lg={8}>
+          <Card className="h-100 border-0 shadow-sm">
+            <Card.Header className="bg-white py-3 border-0">
+              <h6 className="mb-0 text-secondary">{chartTitle}</h6>
+            </Card.Header>
+            <Card.Body>
+              <div style={{ width: '100%', height: 300 }}>
+                <ResponsiveContainer>
+                  <BarChart data={topTen} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                    <XAxis dataKey="full_name" hide />
+                    <YAxis />
+                    <Tooltip 
+                      cursor={{fill: 'transparent'}}
+                      contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
+                    />
+                    <Bar dataKey="score" radius={[4, 4, 0, 0]}>
+                      {topTen.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={getRankColor(index + 1)} />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    );
+  };
+
   // Combined list for display: Ranked candidates followed by Pending candidates
   const allDisplayRecords = selectedBatch ? [
     ...(selectedBatch.rankings || []).map(r => ({ ...r, isPending: false })),
@@ -276,48 +379,8 @@ const StudentQuizManagement = () => {
   const totalPages = Math.ceil(allDisplayRecords.length / recordsPerPage)
   const currentRecords = allDisplayRecords.slice((currentPage - 1) * recordsPerPage, currentPage * recordsPerPage)
 
-  // Data for Overall Batch Analysis Graphs
-  const allRanked = batches.flatMap(b => b.rankings || []);
-  const allPending = batches.flatMap(b => b.pending_candidates || []);
-  const completionChartData = [
-    { name: 'Completed', value: allRanked.length, color: '#28a745' },
-    { name: 'Pending', value: allPending.length, color: '#ffc107' }
-  ];
-
-  const performanceLevelsData = [
-    { name: 'High (>=75%)', value: allRanked.filter(r => (r.score / (r.total_questions || 1)) >= 0.75).length, color: '#28a745' },
-    { name: 'Average (40-74%)', value: allRanked.filter(r => {
-        const pct = (r.score / (r.total_questions || 1));
-        return pct >= 0.4 && pct < 0.75;
-      }).length, color: '#0dcaf0' },
-    { name: 'Low (<40%)', value: allRanked.filter(r => (r.score / (r.total_questions || 1)) < 0.4).length, color: '#dc3545' }
-  ];
-
-  const getRankColor = (rank) => {
-    if (rank === 1) return '#28a745'; // Green
-    if (rank === 2) return '#0d6efd'; // Blue
-    if (rank === 3) return '#ffc107'; // Yellow
-    return '#dc3545'; // Red
-  }
-
-  const formatTime = (isoString) => {
-    if (!isoString) return 'N/A'
-    const date = new Date(isoString)
-    return date.toLocaleString('en-IN', {
-      day: '2-digit',
-      month: 'short',
-      hour: '2-digit',
-      minute: '2-digit'
-    })
-  }
-
-  const calculateDuration = (start, end) => {
-    if (!start || !end) return 'N/A'
-    const duration = new Date(end) - new Date(start)
-    const minutes = Math.floor(duration / 60000)
-    const seconds = ((duration % 60000) / 1000).toFixed(0)
-    return `${minutes}m ${seconds}s`
-  }
+  // Sorted overall rankings (by score descending) for overall Top Performers & Score Distribution
+  const sortedAllRanked = [...allRanked].sort((a, b) => (b.score || 0) - (a.score || 0));
 
   return (
     <div className="admin-layout">
@@ -401,9 +464,10 @@ const StudentQuizManagement = () => {
                               </tbody>
                             </Table>
                           )}
-                        </Card.Body>
-                      </Card>
-                    )}
+                             </Card.Body>
+                           </Card>
+                           
+                         )}
                   </Tab.Pane>
                   <Tab.Pane eventKey="allTests">
                     {loading ? (
@@ -458,7 +522,8 @@ const StudentQuizManagement = () => {
                               <FaArrowLeft /> Back to Batches
                             </Button>
                             <h5 className="mb-3">Leaderboard for: <strong>{selectedBatch.batch}</strong></h5>
-                            {/* Full Rankings Table */}
+                            {renderTopPerformersAndChart(selectedBatch.rankings, 'Score Distribution (Top 10) - ' + selectedBatch.batch)}
+                             {/* Full Rankings Table */}
                             <Card className="border-0 shadow-sm overflow-hidden mb-4">
                               <Card.Header className="bg-light py-3">
                                 <h6 className="mb-0 fw-semibold text-secondary">Full Leaderboard</h6>
@@ -527,9 +592,11 @@ const StudentQuizManagement = () => {
                               )}
                             </Card>
                           </>
-                        ) : (
-                          /* Batch List View */
-                          <Card className="border-0 shadow-sm overflow-hidden mb-4">
+                          ) : (
+                           /* Batch List View */
+                           <>
+                             {renderTopPerformersAndChart(sortedAllRanked, 'Overall Score Distribution (Top 10)')}
+                             <Card className="border-0 shadow-sm overflow-hidden mb-4">
                             <Card.Header className="bg-light py-3">
                               <h6 className="mb-0 fw-semibold text-secondary">All Batches</h6>
                             </Card.Header>
@@ -574,10 +641,11 @@ const StudentQuizManagement = () => {
                                   )}
                                 </tbody>
                               </Table>
-                            </Card.Body>
-                          </Card>
-                        )}
-                      </div>
+                             </Card.Body>
+                           </Card>
+                           </>
+                         )}
+                       </div>
                     )}
                   </Tab.Pane>
                 </Tab.Content>
