@@ -317,7 +317,7 @@ function StudentQuiz() {
     const certificateUrl = testResults.certificate 
       ? `https://brjobsedu.com/girls_course/girls_course_backend${testResults.certificate}` 
       : null;
-    const shareText = `I completed the Workshop Test - Government Employee Program with a score of ${testResults.percentage.toFixed(1)}%!`;
+    const shareText = `I completed the Workshop Test - Student e Program with a score of ${testResults.percentage.toFixed(1)}%!`;
 
     if (showWrongAnswers) {
       return (
@@ -436,7 +436,7 @@ function StudentQuiz() {
           <div className="result-header">
             <div className="result-title">
               <h1>Test Results</h1>
-              <p className="subtitle">Workshop Test - Government Employee Program</p>
+              <p className="subtitle">Student Program</p>
             </div>
             <button
               className="language-toggle-result"
