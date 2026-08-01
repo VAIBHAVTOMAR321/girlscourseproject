@@ -1,12 +1,17 @@
 .navbar {
-  background: linear-gradient(90deg, #13539d 0%, #1d71ce);
-  padding: 0.8rem 1.5rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: #F5F0FF; /* --soft-lavender from the theme */
+  padding: 1rem 1.5rem;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 1000;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.navbar.scrolled {
+  background-color: #b1a3cb; /* --soft-lavender from the theme */
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
 }
 
 .navbar-container {
@@ -21,7 +26,7 @@
 
 .navbar-logo {
   flex-shrink: 0;
-  color: #fff;
+  color: #5B2D90;
   text-decoration: none;
   font-family: 'Arial', sans-serif;
   display: flex;
@@ -44,12 +49,12 @@
 .navbar-logo-main {
   font-size: 1rem;
   font-weight: bold;
-  color: #fff;
+  color: #5B2D90;
 }
 
 .navbar-logo-sub {
   font-size: 0.75rem;
-  color: #ccc;
+  color: #666;
 }
 
 .navbar-center {
@@ -59,11 +64,15 @@
 }
 
 .navbar-center-heading {
-  color: #fff;
+  color: #5B2D90;
   font-size: 18px;
   font-weight: bold;
   margin: 0;
   font-family: 'Arial', sans-serif;
+}
+
+.navbar.scrolled .navbar-center-heading {
+  color: #5B2D90;
 }
 
 .navbar-menu {
@@ -74,35 +83,38 @@
 }
 
 .navbar-link {
-  color: #fff;
+  color: #5B2D90;
   text-decoration: none;
   font-size: 0.95rem;
-  font-family: 'Arial', sans-serif;
-  transition: color 0.3s ease;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  transition: color 0.3s ease, transform 0.3s ease;
   padding: 0.4rem 0.8rem;
   border-radius: 4px;
 }
 
 .navbar-link:hover {
-  color: #fff;
-
+  color: #E91E63;
+  transform: translateY(-2px);
 }
 
 .navbar-button {
-  background-color: #ffaa18;
-  padding: 0.4rem 1.2rem;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
-  color: #fff;
+  background-color: #E91E63;
+  color: #FFFFFF;
+  padding: 10px 24px;
+  border-radius: 50px;
   font-weight: bold;
   font-size: 12px;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
 }
 
 .navbar-button:hover {
-  background-color: #ff9900;
-  color: #fff;
+  background-color: #d81357;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 15px rgba(233, 30, 99, 0.4);
+  color: #FFFFFF;
 }
-
 /* Mobile menu toggle */
 .navbar-toggle {
   display: none;
@@ -120,7 +132,7 @@
   display: block;
   width: 100%;
   height: 3px;
-  background-color: #fff;
+  background-color: #5B2D90;
   border-radius: 2px;
   transition: transform 0.3s ease, opacity 0.3s ease;
 }
@@ -132,7 +144,7 @@
   top: 100%;
   left: 0;
   right: 0;
-  background: linear-gradient(90deg, #13539d 0%, #1d71ce);
+  background: #FFFFFF;
   padding: 1rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   flex-direction: column;

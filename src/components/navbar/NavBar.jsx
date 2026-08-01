@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './NavBar.css';
 import Logo from '../../assets/brainrock_logo.png';
@@ -14,9 +14,21 @@ const NavBar = () => {
   const isEmployeePage = location.pathname === '/employee' || location.pathname === '/employee/';
   const isUnpaidPage = location.pathname === '/unpaid' || location.pathname === '/unpaid/';
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   return (
-    <nav className="navbar">
+    <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
       <div className="navbar-container">
         {isGovtEmployeePage || isEmployeePage || isUnpaidPage ? (
           <div className="navbar-logo" style={isEmployeePage || isUnpaidPage ? { cursor: 'default' } : {}}>
