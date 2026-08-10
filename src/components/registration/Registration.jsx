@@ -470,14 +470,7 @@ const Registration = () => {
               <h3 className="text-center mb-3">Available Courses</h3>
               <div className="header-underline mx-auto"></div>
               
-              {/* Course Type Tabs */}
-              <div className="course-tabs mb-4 justify-content-center">
-                <div 
-                  className={`course-tab active`}
-                >
-                  Unpaid Courses
-                </div>
-              </div>
+             
             </div>
             
             {/* Courses in grid layout - paid in 2 columns, unpaid in banner layout */}
@@ -913,7 +906,7 @@ const Registration = () => {
 
               <div className="text-center account-style mt-4">
                 <small className="register-text">
-                  Already have an account? <Link to="/unpaid" className="register-link">Login Here</Link>
+                  Already have an account? <Link to="/Login" className="register-link">Login Here</Link>
                 </small>
               </div>
               
