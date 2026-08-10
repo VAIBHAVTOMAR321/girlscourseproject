@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaBook, FaLaptopCode, FaBullhorn, FaQuestionCircle, FaShieldAlt, FaLightbulb, FaUserTie, FaDollarSign, FaChalkboardTeacher, FaHandsHelping, FaUserGraduate, FaUserCheck, FaRocket, FaAward } from 'react-icons/fa';
 import axios from 'axios';
 import digitalBetiLogo from '../../assets/image.png';
@@ -11,6 +11,13 @@ const adminPreview = 'https://images.unsplash.com/photo-1526628953301-3e589a6a8b
 const institutionPreview = 'https://images.unsplash.com/photo-1606857521015-7f9fcf423740?q=80&w=2070&auto=format&fit=crop';
 
 const Home = () => {
+  const navigate = useNavigate();
+
+  const handleCardClick = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    navigate('/login');
+  };
+
   const [stats, setStats] = useState({
     students_enrolled: '0',
     courses_available: '0',
@@ -131,7 +138,7 @@ const Home = () => {
           <p className="section-subtitle animate-on-scroll">Our mission is to equip every girl with the digital tools and knowledge to thrive in the modern world.</p>
           <div className="about-grid">
             {aboutCards.map((card, index) => (
-              <div className="about-card animate-on-scroll" key={index} style={{ '--i': index + 1 }}>
+              <div className="about-card animate-on-scroll" key={index} style={{ '--i': index + 1 }} onClick={handleCardClick}>
                 <div className="about-icon">{card.icon}</div>
                 <h3>{card.title}</h3>
                 <p>{card.text}</p>
@@ -149,13 +156,13 @@ const Home = () => {
                 <p>Loading courses...</p>
               ) : featuredCourses.length > 0 ? (
                 featuredCourses.map((course, index) => (
-                  <a href="#courses" className="course-card-link" key={course.id}>
-                    <div className="course-card animate-on-scroll" style={{ '--i': index + 1 }}>
+                  <div key={course.id}>
+                    <div className="course-card animate-on-scroll" style={{ '--i': index + 1 }} onClick={handleCardClick}>
                       <div className="course-icon">{course.icon}</div>
                       <h3>{course.name}</h3>
                       <p className="course-intro">{course.intro}</p>
                     </div>
-                  </a>
+                  </div>
                 ))
               ) : (
                 <p>Could not load courses at this time. Please try again later.</p>
@@ -169,7 +176,7 @@ const Home = () => {
           <h2 className="section-title animate-on-scroll">Your Learning Journey</h2>
           <div className="timeline">
             {timelineItems.map((item, index) => (
-              <div className="timeline-item animate-on-scroll" key={index}>
+              <div className="timeline-item animate-on-scroll" key={index} onClick={handleCardClick}>
                 <div className="timeline-icon">{item.icon}</div>
                 <div className="timeline-content">
                   <h4>{item.title}</h4>
@@ -200,7 +207,7 @@ const Home = () => {
           <div className="container">
             <div className="management-grid">
               {/* Institution Card */}
-              <div className="management-card animate-on-scroll">
+              <div className="management-card animate-on-scroll" onClick={handleCardClick}>
                 <div className="management-text">
                   <h3>For Institutions</h3>
                   <p>Manage student registrations, monitor progress, and access detailed analytics through a dedicated dashboard for coordinators.</p>
@@ -210,7 +217,7 @@ const Home = () => {
                 </div>
               </div>
               {/* Admin Panel Card */}
-              <div className="management-card admin-card animate-on-scroll" style={{ '--i': 2 }}>
+              <div className="management-card admin-card animate-on-scroll" style={{ '--i': 2 }} onClick={handleCardClick}>
                 <div className="management-text">
                   <h3>Powerful Admin Panel</h3>
                   <p>A centralized system for complete oversight and management of the entire platform ecosystem, from courses to real-time analytics.</p>
@@ -227,15 +234,15 @@ const Home = () => {
         <section className="stats-section">
           <div className="container">
             <div className="stats-grid">
-              <div className="stat-item animate-on-scroll">
+              <div className="stat-item animate-on-scroll" onClick={handleCardClick}>
                 <h3>{stats.students_enrolled}+</h3>
                 <p>Students Enrolled</p>
               </div>
-              <div className="stat-item animate-on-scroll" style={{ '--i': 2 }}>
+              <div className="stat-item animate-on-scroll" style={{ '--i': 2 }} onClick={handleCardClick}>
                 <h3>{stats.courses_available}+</h3>
                 <p>Courses Available</p>
               </div>
-              <div className="stat-item animate-on-scroll" style={{ '--i': 3 }}>
+              <div className="stat-item animate-on-scroll" style={{ '--i': 3 }} onClick={handleCardClick}>
                 <h3>{stats.certificates_issued}+</h3>
                 <p>Certificates Issued</p>
               </div>
@@ -247,12 +254,12 @@ const Home = () => {
         <section className="testimonials-section container">
           <h2 className="section-title animate-on-scroll">Success Stories</h2>
           <div className="testimonial-grid">
-            <div className="testimonial-card animate-on-scroll">
+            <div className="testimonial-card animate-on-scroll" onClick={handleCardClick}>
               <p>"Digital Saksham Beti transformed my career. The digital marketing course helped me get a great job!"</p>
               <h4>Priya Sharma</h4>
               <span>Student</span>
             </div>
-            <div className="testimonial-card animate-on-scroll" style={{ '--i': 2 }}>
+            <div className="testimonial-card animate-on-scroll" style={{ '--i': 2 }} onClick={handleCardClick}>
               <p>"The platform is so easy to use, and the content is top-notch. I feel much more confident now."</p>
               <h4>Anjali Verma</h4>
               <span>Student</span>
