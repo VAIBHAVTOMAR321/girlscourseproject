@@ -14,7 +14,7 @@ export const translations = {
     "header.language": "Language",
 
     // Dashboard
-    "dashboard.title": "My Dashboard",
+    "dashboard.title": "My Courses",
     "dashboard.welcome": "Welcome",
     "dashboard.myCourses": "My Courses",
     "dashboard.allCourses": "All Courses",
@@ -1311,7 +1311,7 @@ export const translations = {
     "header.language": "भाषा",
 
     // Dashboard
-    "dashboard.title": "मेरा डैशबोर्ड",
+    "dashboard.title": "मेरा कोर्स",
     "dashboard.welcome": "स्वागत है",
     "dashboard.myCourses": "मेरे पाठ्यक्रम",
     "dashboard.allCourses": "सभी पाठ्यक्रम",
