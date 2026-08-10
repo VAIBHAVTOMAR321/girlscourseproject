@@ -5,7 +5,7 @@ import { useAuth } from '../../contexts/AuthContext'
 import { useLanguage } from '../../contexts/LanguageContext'
 import { useNavigate } from 'react-router-dom'
 import '../../assets/css/UserTopNav.css'
-import Logo from '../../assets/brainrock_logo.png'
+import Logo from '../../assets/digitalbeti_logo.jpeg'
 
 const UserTopNav = ({ onMenuToggle, isMobile }) => {
   const { userRole, userRoleType, uniqueId, logout, isAuthenticated, accessToken, profilePhoto, updateProfilePhoto } = useAuth()
@@ -246,8 +246,8 @@ const UserTopNav = ({ onMenuToggle, isMobile }) => {
       <Navbar.Brand href="/UserDashboard" className="ms-3 d-flex align-items-center">
         <img src={Logo} alt="BrainRock Logo" className="user-logo-img me-3" />
         <div className="user-logo-text">
-          <div className="user-logo-main">Brainrock Consulting Services</div>
-          <div className="user-logo-sub">I.S.O certified 9001:2015</div>
+          <div className="user-logo-main">Digital Saksham Beti</div>
+          <div className="user-logo-sub">Empowering Girls Through Education</div>
         </div>
       </Navbar.Brand>
       
