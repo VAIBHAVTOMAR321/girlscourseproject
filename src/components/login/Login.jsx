@@ -509,7 +509,7 @@ const Login = () => {
                 <h2 className="text-center mb-4">
                   {isEmployeePath ? "Employee Login" : 
                    role === "admin" ? "Admin Login" : 
-                   role === "student" ? "Student Login" : "Free Student Login"}
+                   role === "student" ? "Student Login" : "Student Login"}
                 </h2>
                 <div className="header-underline"></div>
               </div>
