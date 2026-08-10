@@ -92,7 +92,6 @@ function AppContent() {
       {!hideNavBar && <NavBar />}
       <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/unpaid" element={<Login />} />
           <Route path="/login" element={<Login />} />
           <Route path="/employee" element={<Login />} />
           {/* <Route path="/UserDashboard" element={<UserDashboard />} /> */}

@@ -12,7 +12,6 @@ const NavBar = () => {
   const isGovtEmployeePage = location.pathname === '/GovtEmployee' || location.pathname === '/GovtEmployee/';
   // Check specifically for the employee login path
   const isEmployeePage = location.pathname === '/employee' || location.pathname === '/employee/';
-  const isUnpaidPage = location.pathname === '/unpaid' || location.pathname === '/unpaid/';
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -30,8 +29,8 @@ const NavBar = () => {
   return (
     <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
       <div className="navbar-container">
-        {isGovtEmployeePage || isEmployeePage || isUnpaidPage ? (
-          <div className="navbar-logo" style={isEmployeePage || isUnpaidPage ? { cursor: 'default' } : {}}>
+        {isGovtEmployeePage || isEmployeePage ? (
+          <div className="navbar-logo" style={isEmployeePage ? { cursor: 'default' } : {}}>
             <img src={Logo} alt="BrainRock Logo" className="navbar-logo-img" />
             <div className="navbar-logo-text">
               <div className="navbar-logo-main">Digital Saksham Beti
@@ -67,15 +66,15 @@ const NavBar = () => {
         
         {/* Desktop menu */}
         <div className="navbar-menu">
-          {/* Hide Home on GovtEmployee, Employee login, and Unpaid pages */}
-          {!isGovtEmployeePage && !isEmployeePage && !isUnpaidPage && !isRegisterPage && (
+          {/* Hide Home on GovtEmployee, Employee login pages */}
+          {!isGovtEmployeePage && !isEmployeePage && !isRegisterPage && (
             <Link to="/" className="navbar-link">Home</Link>
           )}
           
           {/* Show Login button if not on a login page; redirect logic */}
-          {!isLoginPage && !isUnpaidPage && (
+          {!isLoginPage && (
             <Link 
-              to={isRegisterPage ? "/unpaid" : isEmployeePage ? "/GovtEmployee" : (isGovtEmployeePage ? "/employee" : "/login")} 
+              to={isRegisterPage ? "/login" : isEmployeePage ? "/GovtEmployee" : (isGovtEmployeePage ? "/employee" : "/login")} 
               className="navbar-link navbar-button"
             >
               {isEmployeePage ? "Test" : "Login"}
@@ -88,8 +87,8 @@ const NavBar = () => {
         
         {/* Mobile menu */}
         <div className={`navbar-mobile-menu ${menuOpen ? 'active' : ''}`}>
-          {/* Hide Home on GovtEmployee, Employee login, and Unpaid pages */}
-          {!isGovtEmployeePage && !isEmployeePage && !isUnpaidPage && !isRegisterPage && (
+          {/* Hide Home on GovtEmployee, Employee login pages */}
+          {!isGovtEmployeePage && !isEmployeePage && !isRegisterPage && (
             <Link 
               to="/" 
               className="navbar-link" 
@@ -99,9 +98,9 @@ const NavBar = () => {
             </Link>
           )}
           
-          {!isLoginPage && !isUnpaidPage && (
+          {!isLoginPage && (
             <Link 
-              to={isRegisterPage ? "/unpaid" : isEmployeePage ? "/GovtEmployee" : (isGovtEmployeePage ? "/employee" : "/login")} 
+              to={isRegisterPage ? "/login" : isEmployeePage ? "/GovtEmployee" : (isGovtEmployeePage ? "/employee" : "/login")} 
               className="navbar-link navbar-button" 
               onClick={() => setMenuOpen(false)}
             >
