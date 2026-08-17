@@ -156,10 +156,8 @@ const Login = () => {
     }
 
     if (role === "student-unpaid") {
-      if (!formData.aadhaar_no.trim()) {
-        errors.aadhaar_no = "Aadhaar number is required";
-      } else if (!/^\d{12}$/.test(formData.aadhaar_no.trim())) {
-        errors.aadhaar_no = "Aadhaar number must be exactly 12 digits";
+      if (!formData.unique_id.trim()) {
+        errors.unique_id = "Student ID is required";
       }
     }
 
@@ -233,7 +231,7 @@ const Login = () => {
             role,
             ...(role === "admin" && { email_or_phone: formData.email_or_phone }),
             ...(role === "student" && { phone: formData.phone }),
-            ...(role === "student-unpaid" && { aadhaar_no: formData.aadhaar_no }),
+            ...(role === "student-unpaid" && { unique_id: formData.unique_id }),
             password: formData.password,
           };
 
@@ -582,19 +580,18 @@ const Login = () => {
 
                 {role === "student-unpaid" && (
                   <Form.Group className="mb-3">
-                    <Form.Label className="form-label-gov">Aadhaar Number</Form.Label>
+                    <Form.Label className="form-label-gov">Student ID</Form.Label>
                     <Form.Control
                       type="text"
-                      name="aadhaar_no"
-                      value={formData.aadhaar_no}
+                      name="unique_id"
+                      value={formData.unique_id || ""}
                       onChange={handleChange}
-                      maxLength={12}
-                      placeholder="Enter 12-digit Aadhaar number"
+                      placeholder="Enter your Student ID"
                       className="form-control-gov"
-                      isInvalid={!!fieldErrors.aadhaar_no}
+                      isInvalid={!!fieldErrors.unique_id}
                     />
                     <Form.Control.Feedback type="invalid">
-                      {fieldErrors.aadhaar_no}
+                      {fieldErrors.unique_id}
                     </Form.Control.Feedback>
                   </Form.Group>
                 )}
