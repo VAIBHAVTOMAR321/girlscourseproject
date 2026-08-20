@@ -221,9 +221,9 @@ const AdminLeftNav = ({ show, setShow }) => {
             <Nav.Link as={Link} to="/QuizManagement" className="nav-link-custom" onClick={() => setShowOffcanvas(false)}>
               <i className="bi bi-question-circle nav-icon me-2"></i> Quiz Management
             </Nav.Link>
-            <Nav.Link as={Link} to="/EmployeeQuiz" className="nav-link-custom" onClick={() => setShowOffcanvas(false)}>
+            {/* <Nav.Link as={Link} to="/EmployeeQuiz" className="nav-link-custom" onClick={() => setShowOffcanvas(false)}>
               <i className="bi bi-person-workspace nav-icon me-2"></i> Employee Quiz
-            </Nav.Link>
+            </Nav.Link> */}
             <Nav.Link as={Link} to="/StudentQuizManagement" className="nav-link-custom" onClick={() => setShowOffcanvas(false)}>
               <i className="bi bi-person-check nav-icon me-2"></i> Student Quiz
             </Nav.Link>
