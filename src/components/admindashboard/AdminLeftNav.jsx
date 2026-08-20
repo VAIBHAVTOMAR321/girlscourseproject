@@ -87,10 +87,10 @@ const AdminLeftNav = ({ show, setShow }) => {
               <i className="bi bi-question-circle nav-icon"></i>
               <span className="nav-text">Quiz Management</span>
             </Nav.Link>
-            <Nav.Link as={Link} to="/EmployeeQuiz" className="nav-link-custom ">
-              <i className="bi bi-person-workspace nav-icon"></i> {/* Using a suitable icon */}
+            {/* <Nav.Link as={Link} to="/EmployeeQuiz" className="nav-link-custom ">
+              <i className="bi bi-person-workspace nav-icon"></i>
               <span className="nav-text">Employee Quiz</span>
-            </Nav.Link>
+            </Nav.Link> */}
             <Nav.Link as={Link} to="/StudentQuizManagement" className="nav-link-custom ">
               <i className="bi bi-person-check nav-icon"></i>
               <span className="nav-text">Student Quiz</span>
