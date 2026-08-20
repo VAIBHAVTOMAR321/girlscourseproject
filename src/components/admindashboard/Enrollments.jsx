@@ -318,7 +318,7 @@ const Enrollments = () => {
                             <th>Email</th>
                             {enrollmentType === 'unpaid' && <th>District</th>}
                             {enrollmentType === 'unpaid' && <th>State</th>}
-                            <th>Status</th>
+                            {/* <th>Status</th> */}
                             <th className="text-end pe-3">Actions</th>
                           </tr>
                         </thead>
@@ -343,11 +343,11 @@ const Enrollments = () => {
                               <td className="small text-muted">{enrollment.email}</td>
                               {enrollmentType === 'unpaid' && <td className="small">{enrollment.district}</td>}
                               {enrollmentType === 'unpaid' && <td className="small">{enrollment.state}</td>}
-                              <td>
+                              {/* <td>
                                 <span className={`status-badge ${getCourseStatusBadgeClass(enrollment.course_status || enrollment.status)}`}>
                                   {enrollment.course_status || enrollment.status}
                                 </span>
-                              </td>
+                              </td> */}
                               <td className="text-end pe-3">
                                 <div className="action-buttons justify-content-end gap-1 d-none d-md-flex">
                                   <Button 

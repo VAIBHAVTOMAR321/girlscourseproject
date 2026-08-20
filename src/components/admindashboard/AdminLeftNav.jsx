@@ -75,10 +75,10 @@ const AdminLeftNav = ({ show, setShow }) => {
               <i className="bi bi-exclamation-circle nav-icon"></i>
               <span className="nav-text">Student Issues</span>
             </Nav.Link>
-            <Nav.Link as={Link} to="/EmployeeIssues" className="nav-link-custom ">
+            {/* <Nav.Link as={Link} to="/EmployeeIssues" className="nav-link-custom ">
               <i className="bi bi-person-badge nav-icon"></i>
               <span className="nav-text">Employee Issues</span>
-            </Nav.Link>
+            </Nav.Link> */}
             <Nav.Link as={Link} to="/StudentAnalysis" className="nav-link-custom ">
               <i className="bi bi-bar-chart-line nav-icon"></i>
               <span className="nav-text">Student Analysis</span>

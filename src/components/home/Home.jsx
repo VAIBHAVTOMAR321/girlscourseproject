@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FaBook, FaLaptopCode, FaBullhorn, FaQuestionCircle, FaShieldAlt, FaLightbulb, FaUserTie, FaDollarSign, FaChalkboardTeacher, FaHandsHelping, FaUserGraduate, FaUserCheck, FaRocket, FaAward } from 'react-icons/fa';
 import axios from 'axios';
 import digitalBetiLogo from '../../assets/image.png';
+import proBar from '../../assets/pro_bar.jpeg';
 import '../../assets/css/Home.css';
 
 const heroIllustration = digitalBetiLogo;
@@ -197,7 +198,7 @@ const Home = () => {
               <p className="section-subtitle">Our intuitive dashboard helps you monitor your learning journey, stay on top of deadlines, and visualize your achievements.</p>
             </div>
             <div className="dashboard-image-wrapper">
-              <img src={dashboardPreview} alt="Student Progress Dashboard" className="dashboard-image" />
+              <img src={proBar} alt="Student Progress Dashboard" className="dashboard-image" />
             </div>
           </div>
         </section>
