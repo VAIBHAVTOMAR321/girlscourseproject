@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaBook, FaLaptopCode, FaBullhorn, FaQuestionCircle, FaShieldAlt, FaLightbulb, FaUserTie, FaDollarSign, FaChalkboardTeacher, FaHandsHelping, FaUserGraduate, FaUserCheck, FaRocket, FaAward, FaChevronLeft, FaChevronRight, FaMapMarkerAlt } from 'react-icons/fa';
 import axios from 'axios';
-import digitalBetiLogo from '../../assets/image.png';
+import digitalBetiLogo from '../../assets/digital_saksham_banner.jpeg';
 import proBar from '../../assets/pro_bar.jpeg';
 import institutionImg from '../../assets/ins_img.jpeg';
 import adminImg from '../../assets/admin_img.jpeg';
