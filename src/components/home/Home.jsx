@@ -1,48 +1,24 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaBook, FaLaptopCode, FaBullhorn, FaQuestionCircle, FaShieldAlt, FaLightbulb, FaUserTie, FaDollarSign, FaChalkboardTeacher, FaHandsHelping, FaUserGraduate, FaUserCheck, FaRocket, FaAward, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FaBook, FaLaptopCode, FaBullhorn, FaQuestionCircle, FaShieldAlt, FaLightbulb, FaUserTie, FaDollarSign, FaChalkboardTeacher, FaHandsHelping, FaUserGraduate, FaUserCheck, FaRocket, FaAward, FaChevronLeft, FaChevronRight, FaMapMarkerAlt } from 'react-icons/fa';
 import axios from 'axios';
 import digitalBetiLogo from '../../assets/image.png';
 import proBar from '../../assets/pro_bar.jpeg';
-import student1 from '../../assets/image1.jpeg';
-import student2 from '../../assets/image1.jpeg';
-import student3 from '../../assets/image1.jpeg';
-import student4 from '../../assets/image1.jpeg';
-import student5 from '../../assets/image1.jpeg';
-import student6 from '../../assets/image1.jpeg';
-import student7 from '../../assets/image1.jpeg';
-import student8 from '../../assets/image1.jpeg';
-import student9 from '../../assets/image1.jpeg';
-import student10 from '../../assets/image1.jpeg';
-import student11 from '../../assets/image1.jpeg';
-import student12 from '../../assets/image1.jpeg';
 import institutionImg from '../../assets/ins_img.jpeg';
 import '../../assets/css/Home.css';
 
 const heroIllustration = digitalBetiLogo;
 const adminPreview = 'https://images.unsplash.com/photo-1526628953301-3e589a6a8b74?q=80&w=2006&auto=format&fit=crop';
 const institutionPreview = institutionImg;
+const API_URL = 'https://brjobsedu.com/girls_course/girls_course_backend/api/meet-our-learner/';
+const BASE_URL = 'https://brjobsedu.com/girls_course/girls_course_backend';
 
-const studentSlides = [
-  [
-    { name: 'Aarohi Singh', course: 'Digital Marketing', location: 'New Delhi', image: student1 },
-    { name: 'Meera Patel', course: 'AI Tools', location: 'Mumbai', image: student2 },
-    { name: 'Kavya Sharma', course: 'Financial Literacy', location: 'Jaipur', image: student3 },
-    { name: 'Ishita Gupta', course: 'Cyber Security', location: 'Lucknow', image: student4 }
-  ],
-  [
-    { name: 'Riya Verma', course: 'Computer Basics', location: 'Pune', image: student5 },
-    { name: 'Ananya Joshi', course: 'Entrepreneurship', location: 'Bangalore', image: student6 },
-    { name: 'Diya Reddy', course: 'Communication Skills', location: 'Hyderabad', image: student7 },
-    { name: 'Sneha Nair', course: 'Career Readiness', location: 'Chennai', image: student8 }
-  ],
-  [
-    { name: 'Pooja Mehta', course: 'Digital Marketing', location: 'Ahmedabad', image: student9 },
-    { name: 'Kriti Agarwal', course: 'AI Tools', location: 'Kolkata', image: student10 },
-    { name: 'Tanvi Desai', course: 'Personality Development', location: 'Surat', image: student11 },
-    { name: 'Neha Kapoor', course: 'Computer Learning with AI Tools', location: 'Chandigarh', image: student12 }
-  ]
-];
+const getLearnerImageUrl = (img) => {
+  if (!img) return null;
+  if (img.startsWith('http')) return img;
+  if (img.startsWith('/media')) return BASE_URL + img;
+  return img;
+};
 
 const Home = () => {
   const navigate = useNavigate();
@@ -58,10 +34,18 @@ const Home = () => {
   });
   const [featuredCourses, setFeaturedCourses] = useState([]);
   const [coursesLoading, setCoursesLoading] = useState(true);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [learners, setLearners] = useState([]);
+  const [learnersLoading, setLearnersLoading] = useState(true);
 
   const handleCardClick = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     navigate('/login');
+  };
+
+  const handleImageClick = (e, imageSrc) => {
+    e.stopPropagation();
+    setSelectedImage(imageSrc);
   };
 
   const goToSlide = (index) => {
@@ -122,7 +106,7 @@ const Home = () => {
     elements.forEach((el) => observer.observe(el));
 
     return () => elements.forEach((el) => observer.unobserve(el));
-  }, [featuredCourses]);
+  }, [featuredCourses, learners, learnersLoading]);
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -175,6 +159,36 @@ const Home = () => {
     };
     fetchCourses();
   }, []);
+
+  useEffect(() => {
+    const fetchLearners = async () => {
+      setLearnersLoading(true);
+      try {
+        const response = await axios.get(API_URL);
+        if (response.data && response.data.success && Array.isArray(response.data.data)) {
+          setLearners(response.data.data);
+        } else {
+          setLearners([]);
+        }
+      } catch (error) {
+        console.error('Error fetching learners for home carousel:', error);
+        setLearners([]);
+      } finally {
+        setLearnersLoading(false);
+      }
+    };
+
+    fetchLearners();
+  }, []);
+
+  const studentSlides = useMemo(() => {
+    const slides = [];
+    const learnersPerSlide = 4;
+    for (let i = 0; i < learners.length; i += learnersPerSlide) {
+      slides.push(learners.slice(i, i + learnersPerSlide));
+    }
+    return slides.length > 0 ? slides : [[]];
+  }, [learners]);
 
   const aboutCards = [
     { title: 'Digital Literacy', text: 'Providing foundational to advanced digital skills for all.', icon: <FaLaptopCode /> },
@@ -241,29 +255,40 @@ const Home = () => {
                   {studentSlides.map((slide, slideIndex) => (
                     <div className="carousel-slide" key={slideIndex}>
                       <div className="student-cards-grid">
-                        {slide.map((student, cardIndex) => (
-                          <div
-                            className="student-card animate-on-scroll"
-                            key={cardIndex}
-                            style={{ '--i': cardIndex + 1 }}
-                            onClick={handleCardClick}
-                          >
-                            <div className="student-card-image-wrapper">
-                              <img
-                                src={student.image}
-                                alt={student.name}
-                                className="student-card-image"
-                              />
-                              <div className="student-card-badge">
+                        {slide.map((learner, cardIndex) => {
+                          const learnerImage = getLearnerImageUrl(learner.img);
+                          const displayName = learner.sch_name || `Learner #${learner.id}`
+                          return (
+                            <div
+                              className="student-card animate-on-scroll"
+                              key={learner.id || cardIndex}
+                              style={{ '--i': cardIndex + 1 }}
+                              onClick={handleCardClick}
+                            >
+                              <div className="student-card-image-wrapper">
+                                {learnerImage ? (
+                                  <img
+                                    src={learnerImage}
+                                    alt={displayName}
+                                    className="student-card-image"
+                                    onClick={(e) => handleImageClick(e, learnerImage)}
+                                  />
+                                ) : (
+                                  <div className="student-card-image student-card-image-fallback">
+                                    <FaUserGraduate />
+                                  </div>
+                                )}
+                                <div className="student-card-badge">
+                                </div>
+                              </div>
+                              <div className="student-card-content">
+                                <h4 className="student-card-name">{displayName}</h4>
+                                <p className="student-card-course">{learner.cour_name}</p>
+                                <span className="student-card-location"><FaMapMarkerAlt style={{ marginRight: 4 }} />{learner.address}</span>
                               </div>
                             </div>
-                            <div className="student-card-content">
-                              <h4 className="student-card-name">{student.name}</h4>
-                              <p className="student-card-course">{student.course}</p>
-                              <span className="student-card-location">{student.location}</span>
-                            </div>
-                          </div>
-                        ))}
+                          );
+                        })}
                       </div>
                     </div>
                   ))}
@@ -425,6 +450,17 @@ const Home = () => {
           </div>
         </section>
       </main>
+
+      {selectedImage && (
+        <div className="image-modal-overlay" onClick={() => setSelectedImage(null)}>
+          <div className="image-modal-content" onClick={(e) => e.stopPropagation()}>
+            <button className="image-modal-close" onClick={() => setSelectedImage(null)} aria-label="Close modal">
+              ×
+            </button>
+            <img src={selectedImage} alt="Preview" className="image-modal-img" />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -368,7 +368,35 @@
   background-color: #2c3e50;
   color: #fff;
 }
+/* --- Image Preview in Modal --- */
+.image-preview-wrapper {
+  position: relative;
+  display: inline-block;
+  margin-top: 0.75rem;
+}
 
+.image-preview {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 2px solid #e0e0e0;
+}
+
+.image-remove-btn {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
 /* Page header mobile fixes */
 @media (max-width: 767px) {
   .page-header {

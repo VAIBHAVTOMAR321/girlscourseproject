@@ -313,6 +313,17 @@ body {
     transition: transform 0.4s ease;
 }
 
+.student-card-image-fallback {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--soft-lavender), #ede4f7);
+    color: var(--deep-purple);
+    font-size: 3rem;
+}
+
 .student-card:hover .student-card-image {
     transform: scale(1.08);
 }
@@ -1227,4 +1238,51 @@ body {
 
 .student-cards-grid .animate-on-scroll {
     transition-delay: calc(0.1s * var(--i, 1));
+}
+
+.image-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    padding: 1rem;
+}
+
+.image-modal-content {
+    position: relative;
+    background: var(--white);
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    max-width: 90vw;
+    max-height: 90vh;
+    box-shadow: var(--shadow-lg);
+}
+
+.image-modal-img {
+    display: block;
+    max-width: 100%;
+    max-height: 80vh;
+    border-radius: 12px;
+    object-fit: contain;
+}
+
+.image-modal-close {
+    position: absolute;
+    top: -12px;
+    right: -12px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: var(--pink);
+    color: var(--white);
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
 }
