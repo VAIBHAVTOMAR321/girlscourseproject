@@ -5,10 +5,11 @@ import axios from 'axios';
 import digitalBetiLogo from '../../assets/image.png';
 import proBar from '../../assets/pro_bar.jpeg';
 import institutionImg from '../../assets/ins_img.jpeg';
+import adminImg from '../../assets/admin_img.jpeg';
 import '../../assets/css/Home.css';
 
 const heroIllustration = digitalBetiLogo;
-const adminPreview = 'https://images.unsplash.com/photo-1526628953301-3e589a6a8b74?q=80&w=2006&auto=format&fit=crop';
+const adminPreview = adminImg;
 const institutionPreview = institutionImg;
 const API_URL = 'https://brjobsedu.com/girls_course/girls_course_backend/api/meet-our-learner/';
 const BASE_URL = 'https://brjobsedu.com/girls_course/girls_course_backend';
@@ -229,7 +230,7 @@ const Home = () => {
         <section className="student-carousel-section">
           <div className="container">
             <h2 className="section-title animate-on-scroll">Meet Our Learners</h2>
-            <p className="section-subtitle animate-on-scroll">Thousands of girls across India are transforming their futures with Digital Saksham Beti</p>
+            <p className="section-subtitle animate-on-scroll">Thousands of girls across Uttarakhand are transforming their futures with Digital Saksham Beti</p>
             <div
               className="carousel-wrapper"
               ref={carouselRef}

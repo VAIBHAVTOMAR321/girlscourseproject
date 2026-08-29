@@ -22,7 +22,7 @@ function Footer() {
         <div className="footer-contact">
           <h4>Contact Us</h4>
           <p>Email: contact@digitalsakshambeti.org</p>
-          <p>Phone: +91 12345 67890</p>
+          <p>Phone: +91 8193991148</p>
         </div>
         <div className="footer-social">
           <h4>Follow Us</h4>
