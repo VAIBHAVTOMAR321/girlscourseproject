@@ -1,23 +1,54 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaBook, FaLaptopCode, FaBullhorn, FaQuestionCircle, FaShieldAlt, FaLightbulb, FaUserTie, FaDollarSign, FaChalkboardTeacher, FaHandsHelping, FaUserGraduate, FaUserCheck, FaRocket, FaAward } from 'react-icons/fa';
+import { FaBook, FaLaptopCode, FaBullhorn, FaQuestionCircle, FaShieldAlt, FaLightbulb, FaUserTie, FaDollarSign, FaChalkboardTeacher, FaHandsHelping, FaUserGraduate, FaUserCheck, FaRocket, FaAward, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import axios from 'axios';
 import digitalBetiLogo from '../../assets/image.png';
 import proBar from '../../assets/pro_bar.jpeg';
+import student1 from '../../assets/image1.jpeg';
+import student2 from '../../assets/image1.jpeg';
+import student3 from '../../assets/image1.jpeg';
+import student4 from '../../assets/image1.jpeg';
+import student5 from '../../assets/image1.jpeg';
+import student6 from '../../assets/image1.jpeg';
+import student7 from '../../assets/image1.jpeg';
+import student8 from '../../assets/image1.jpeg';
+import student9 from '../../assets/image1.jpeg';
+import student10 from '../../assets/image1.jpeg';
+import student11 from '../../assets/image1.jpeg';
+import student12 from '../../assets/image1.jpeg';
 import '../../assets/css/Home.css';
 
 const heroIllustration = digitalBetiLogo;
-const dashboardPreview = 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop';
 const adminPreview = 'https://images.unsplash.com/photo-1526628953301-3e589a6a8b74?q=80&w=2006&auto=format&fit=crop';
 const institutionPreview = 'https://images.unsplash.com/photo-1606857521015-7f9fcf423740?q=80&w=2070&auto=format&fit=crop';
 
+const studentSlides = [
+  [
+    { name: 'Aarohi Singh', course: 'Digital Marketing', location: 'New Delhi', image: student1 },
+    { name: 'Meera Patel', course: 'AI Tools', location: 'Mumbai', image: student2 },
+    { name: 'Kavya Sharma', course: 'Financial Literacy', location: 'Jaipur', image: student3 },
+    { name: 'Ishita Gupta', course: 'Cyber Security', location: 'Lucknow', image: student4 }
+  ],
+  [
+    { name: 'Riya Verma', course: 'Computer Basics', location: 'Pune', image: student5 },
+    { name: 'Ananya Joshi', course: 'Entrepreneurship', location: 'Bangalore', image: student6 },
+    { name: 'Diya Reddy', course: 'Communication Skills', location: 'Hyderabad', image: student7 },
+    { name: 'Sneha Nair', course: 'Career Readiness', location: 'Chennai', image: student8 }
+  ],
+  [
+    { name: 'Pooja Mehta', course: 'Digital Marketing', location: 'Ahmedabad', image: student9 },
+    { name: 'Kriti Agarwal', course: 'AI Tools', location: 'Kolkata', image: student10 },
+    { name: 'Tanvi Desai', course: 'Personality Development', location: 'Surat', image: student11 },
+    { name: 'Neha Kapoor', course: 'Computer Learning with AI Tools', location: 'Chandigarh', image: student12 }
+  ]
+];
+
 const Home = () => {
   const navigate = useNavigate();
-
-  const handleCardClick = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    navigate('/login');
-  };
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const carouselRef = useRef(null);
+  const autoPlayRef = useRef(null);
 
   const [stats, setStats] = useState({
     students_enrolled: '0',
@@ -26,6 +57,53 @@ const Home = () => {
   });
   const [featuredCourses, setFeaturedCourses] = useState([]);
   const [coursesLoading, setCoursesLoading] = useState(true);
+
+  const handleCardClick = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    navigate('/login');
+  };
+
+  const goToSlide = (index) => {
+    if (isTransitioning) return;
+    setIsTransitioning(true);
+    if (index < 0) {
+      setCurrentSlide(studentSlides.length - 1);
+    } else if (index >= studentSlides.length) {
+      setCurrentSlide(0);
+    } else {
+      setCurrentSlide(index);
+    }
+    setTimeout(() => {
+      setIsTransitioning(false);
+    }, 500);
+  };
+
+  const nextSlide = () => {
+    goToSlide(currentSlide + 1);
+  };
+
+  const prevSlide = () => {
+    goToSlide(currentSlide - 1);
+  };
+
+  const startAutoPlay = () => {
+    stopAutoPlay();
+    autoPlayRef.current = setInterval(() => {
+      nextSlide();
+    }, 4000);
+  };
+
+  const stopAutoPlay = () => {
+    if (autoPlayRef.current) {
+      clearInterval(autoPlayRef.current);
+      autoPlayRef.current = null;
+    }
+  };
+
+  useEffect(() => {
+    startAutoPlay();
+    return () => stopAutoPlay();
+  }, [currentSlide]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -43,7 +121,7 @@ const Home = () => {
     elements.forEach((el) => observer.observe(el));
 
     return () => elements.forEach((el) => observer.unobserve(el));
-  }, [featuredCourses]); // Re-run when courses are loaded
+  }, [featuredCourses]);
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -86,7 +164,6 @@ const Home = () => {
           }));
           setFeaturedCourses(coursesWithIcons);
         } else {
-          // Log an error if the API response was not successful
           console.error("Failed to fetch courses:", response.data.message || "API returned success: false");
         }
       } catch (error) {
@@ -129,6 +206,89 @@ const Home = () => {
             </div>
             <div className="hero-image  ">
               <img src={heroIllustration} alt="Girls learning on digital devices" />
+            </div>
+          </div>
+        </section>
+
+        {/* Student Carousel Section */}
+        <section className="student-carousel-section">
+          <div className="container">
+            <h2 className="section-title animate-on-scroll">Meet Our Learners</h2>
+            <p className="section-subtitle animate-on-scroll">Thousands of girls across India are transforming their futures with Digital Saksham Beti</p>
+            <div
+              className="carousel-wrapper"
+              ref={carouselRef}
+              onMouseEnter={stopAutoPlay}
+              onMouseLeave={startAutoPlay}
+            >
+              <button
+                className="carousel-arrow carousel-arrow-prev"
+                onClick={prevSlide}
+                aria-label="Previous slide"
+                type="button"
+              >
+                <FaChevronLeft />
+              </button>
+
+              <div className="carousel-viewport">
+                <div
+                  className="carousel-track"
+                  style={{
+                    transform: `translateX(-${currentSlide * 100}%)`
+                  }}
+                >
+                  {studentSlides.map((slide, slideIndex) => (
+                    <div className="carousel-slide" key={slideIndex}>
+                      <div className="student-cards-grid">
+                        {slide.map((student, cardIndex) => (
+                          <div
+                            className="student-card animate-on-scroll"
+                            key={cardIndex}
+                            style={{ '--i': cardIndex + 1 }}
+                            onClick={handleCardClick}
+                          >
+                            <div className="student-card-image-wrapper">
+                              <img
+                                src={student.image}
+                                alt={student.name}
+                                className="student-card-image"
+                              />
+                              <div className="student-card-badge">
+                              </div>
+                            </div>
+                            <div className="student-card-content">
+                              <h4 className="student-card-name">{student.name}</h4>
+                              <p className="student-card-course">{student.course}</p>
+                              <span className="student-card-location">{student.location}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <button
+                className="carousel-arrow carousel-arrow-next"
+                onClick={nextSlide}
+                aria-label="Next slide"
+                type="button"
+              >
+                <FaChevronRight />
+              </button>
+            </div>
+
+            <div className="carousel-dots">
+              {studentSlides.map((_, index) => (
+                <button
+                  key={index}
+                  className={`carousel-dot ${currentSlide === index ? 'carousel-dot-active' : ''}`}
+                  onClick={() => goToSlide(index)}
+                  aria-label={`Go to slide ${index + 1}`}
+                  type="button"
+                />
+              ))}
             </div>
           </div>
         </section>
@@ -188,8 +348,6 @@ const Home = () => {
           </div>
         </section>
 
-
-
         {/* 7. Student Progress Dashboard Preview */}
         <section className="dashboard-preview-section animate-on-scroll">
           <div className="container dashboard-preview-content">
@@ -207,7 +365,6 @@ const Home = () => {
         <section className="management-section">
           <div className="container">
             <div className="management-grid">
-              {/* Institution Card */}
               <div className="management-card animate-on-scroll" onClick={handleCardClick}>
                 <div className="management-text">
                   <h3>For Institutions</h3>
@@ -217,7 +374,6 @@ const Home = () => {
                   <img src={institutionPreview} alt="Institution Dashboard" />
                 </div>
               </div>
-              {/* Admin Panel Card */}
               <div className="management-card admin-card animate-on-scroll" style={{ '--i': 2 }} onClick={handleCardClick}>
                 <div className="management-text">
                   <h3>Powerful Admin Panel</h3>
@@ -250,7 +406,7 @@ const Home = () => {
             </div>
           </div>
         </section>
-        
+
         {/* 11. Testimonials Section */}
         <section className="testimonials-section container">
           <h2 className="section-title animate-on-scroll">Success Stories</h2>
@@ -267,11 +423,7 @@ const Home = () => {
             </div>
           </div>
         </section>
-
-
-    
       </main>
-
     </div>
   );
 };

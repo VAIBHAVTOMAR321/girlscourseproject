@@ -327,13 +327,6 @@ const Feedback = () => {
                               <th>Student ID</th>
                               <th>Course Name</th>
                               <th>Course ID</th>
-                              <th>Overall Experience</th>
-                              <th>Easy to Understand</th>
-                              <th>Usefulness</th>
-                              <th>Content Quality</th>
-                              <th>Continue Learning</th>
-                              <th>Comment</th>
-                              <th>Date</th>
                               <th className="text-end pe-3">Actions</th>
                             </tr>
                           </thead>
@@ -345,25 +338,6 @@ const Feedback = () => {
                                 <td className="small">{feedback.student_id}</td>
                                 <td className="small">{feedback.course_name}</td>
                                 <td className="small">{feedback.course_id}</td>
-                                <td className="small">
-                                  {renderStars(feedback.question_1)}
-                                </td>
-                                <td className="small">
-                                  {renderStars(feedback.question_2)}
-                                </td>
-                                <td className="small">
-                                  {renderStars(feedback.question_3)}
-                                </td>
-                                <td className="small">
-                                  {renderStars(feedback.question_4)}
-                                </td>
-                                <td className="small">
-                                  {renderStars(feedback.question_5)}
-                                </td>
-                                <td className="small text-muted" style={{ maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                                  {feedback.comment || '-'}
-                                </td>
-                                <td className="small">{formatDate(feedback.created_at)}</td>
                                 <td className="text-end pe-3">
                                   <div className="action-buttons justify-content-end gap-1">
                                     <Button
@@ -373,14 +347,6 @@ const Feedback = () => {
                                       onClick={() => handleView(feedback)}
                                     >
                                       View
-                                    </Button>
-                                    <Button
-                                      variant="danger"
-                                      size="sm"
-                                      className="action-btn"
-                                      onClick={() => handleDelete(feedback)}
-                                    >
-                                      Delete
                                     </Button>
                                   </div>
                                 </td>
@@ -409,56 +375,6 @@ const Feedback = () => {
                                 <small className="text-muted ms-2">({feedback.course_id})</small>
                               </div>
 
-                              <div className="mb-2">
-                                <small className="text-muted d-block">Date:</small>
-                                <span className="small">{formatDate(feedback.created_at)}</span>
-                              </div>
-
-                              {/* Expandable Details */}
-                              <div className="mt-3">
-                                <Button 
-                                  variant="link" 
-                                  className="p-0 text-decoration-none d-flex align-items-center gap-1"
-                                  onClick={() => toggleCardExpansion(feedback.id)}
-                                >
-                                  {expandedCards[feedback.id] ? <FaChevronUp /> : <FaChevronDown />}
-                                  <small>{expandedCards[feedback.id] ? 'Hide Details' : 'Show Details'}</small>
-                                </Button>
-                                
-                                {expandedCards[feedback.id] && (
-                                  <div className="mt-3 pt-3 border-top">
-                                    <Row className="g-2">
-                                      <Col xs={6}>
-                                        <small className="text-muted d-block">Overall Experience:</small>
-                                        {renderStars(feedback.question_1)}
-                                      </Col>
-                                      <Col xs={6}>
-                                        <small className="text-muted d-block">Easy to Understand:</small>
-                                        {renderStars(feedback.question_2)}
-                                      </Col>
-                                      <Col xs={6}>
-                                        <small className="text-muted d-block">Usefulness:</small>
-                                        {renderStars(feedback.question_3)}
-                                      </Col>
-                                      <Col xs={6}>
-                                        <small className="text-muted d-block">Content Quality:</small>
-                                        {renderStars(feedback.question_4)}
-                                      </Col>
-                                      <Col xs={12}>
-                                        <small className="text-muted d-block">Continue Learning:</small>
-                                        {renderStars(feedback.question_5)}
-                                      </Col>
-                                      {feedback.comment && (
-                                        <Col xs={12}>
-                                          <small className="text-muted d-block">Comment:</small>
-                                          <p className="small mb-0 mt-1">{feedback.comment}</p>
-                                        </Col>
-                                      )}
-                                    </Row>
-                                  </div>
-                                )}
-                              </div>
-
                               {/* Action Buttons */}
                               <div className="d-flex gap-2 mt-3 pt-3 border-top">
                                 <Button
@@ -468,14 +384,6 @@ const Feedback = () => {
                                   onClick={() => handleView(feedback)}
                                 >
                                   <FaEye className="me-1" /> View
-                                </Button>
-                                <Button
-                                  variant="outline-danger"
-                                  size="sm"
-                                  className="flex-fill"
-                                  onClick={() => handleDelete(feedback)}
-                                >
-                                  <FaTrash className="me-1" /> Delete
                                 </Button>
                               </div>
                             </Card.Body>

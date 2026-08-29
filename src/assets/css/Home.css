@@ -22,7 +22,6 @@ body {
     color: var(--text-dark);
 }
 
-
 .container {
     width: 90%;
     max-width: 1200px;
@@ -36,7 +35,6 @@ body {
     text-align: center;
     margin-bottom: 1rem;
 }
-
 
 .section-subtitle {
     text-align: center;
@@ -139,7 +137,8 @@ body {
     position: relative;
 }
 
-.nav-links a:hover, .nav-links a.active {
+.nav-links a:hover,
+.nav-links a.active {
     color: var(--pink);
     transform: translateY(-2px);
 }
@@ -186,16 +185,14 @@ body {
 }
 
 .mobile-nav {
-    display: none; /* Initially hidden */
-    /* Further styling for the overlay menu will be added */
+    display: none;
 }
 
 /* --- HERO SECTION --- */
 .hero-section {
     background: linear-gradient(135deg, var(--soft-lavender) 0%, var(--white) 100%);
-    padding-top: clamp(100px, 15vh, 150px);
-    padding-bottom: var(--section-padding);
-    min-height: 100vh;
+   margin-top:100px;
+    /* min-height: 100vh; */
     display: flex;
     align-items: center;
 }
@@ -220,11 +217,11 @@ body {
 }
 
 .hero-text p {
-    font-size:16px;
+    font-size: 16px;
     color: var(--text-light);
     margin-bottom: 2rem;
     max-width: 500px;
-    text-align:justify
+    text-align: justify;
 }
 
 .hero-cta {
@@ -235,6 +232,7 @@ body {
 .hero-image img {
     width: 100%;
     max-width: 550px;
+    margin-top:30px;
     animation: float 4s ease-in-out infinite;
 }
 
@@ -243,12 +241,195 @@ body {
     50% { transform: translateY(-20px); }
 }
 
+/* --- STUDENT CAROUSEL SECTION --- */
+.student-carousel-section {
+    padding: var(--section-padding) 0;
+    background-color: var(--white);
+    overflow: hidden;
+}
+
+.student-carousel-section .section-title {
+    font-size: 40px;
+}
+
+.carousel-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0;
+}
+
+.carousel-viewport {
+    overflow: hidden;
+    width: 100%;
+    border-radius: var(--border-radius);
+}
+
+.carousel-track {
+    display: flex;
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    will-change: transform;
+}
+
+.carousel-slide {
+    min-width: 100%;
+    flex-shrink: 0;
+}
+
+.student-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    padding: 0.5rem;
+}
+
+.student-card {
+    background: var(--white);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.student-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(91, 45, 144, 0.18);
+    border-color: var(--pink);
+}
+
+.student-card-image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 220px;
+    overflow: hidden;
+}
+
+.student-card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.student-card:hover .student-card-image {
+    transform: scale(1.08);
+}
+
+.student-card-badge {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    /* background: linear-gradient(135deg, var(--deep-purple), #864dd1); */
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    box-shadow: 0 4px 12px rgba(91, 45, 144, 0.4);
+}
+
+.student-card-content {
+    padding: 1.25rem 1.25rem 1.5rem 1.25rem;
+    text-align: center;
+}
+
+.student-card-name {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--deep-purple);
+    margin-bottom: 0.35rem;
+}
+
+.student-card-course {
+    font-size: 0.85rem;
+    color: var(--pink);
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.student-card-location {
+    font-size: 0.8rem;
+    color: var(--text-light);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.carousel-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 2px solid var(--deep-purple);
+    background: var(--white);
+    color: var(--deep-purple);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
+}
+
+.carousel-arrow:hover {
+    background: var(--deep-purple);
+    color: var(--white);
+    box-shadow: 0 6px 20px rgba(91, 45, 144, 0.35);
+}
+
+.carousel-arrow-prev {
+    left: -22px;
+}
+
+.carousel-arrow-next {
+    right: -22px;
+}
+
+.carousel-dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 2rem;
+}
+
+.carousel-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid var(--deep-purple);
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+}
+
+.carousel-dot:hover {
+    background: var(--soft-lavender);
+}
+
+.carousel-dot-active {
+    background: var(--deep-purple);
+    transform: scale(1.15);
+}
+
 /* --- ABOUT SECTION --- */
 .about-section {
     padding: var(--section-padding) 0;
 }
-.about-section h2{
-    font-size:40px;
+
+.about-section h2 {
+    font-size: 40px;
 }
 
 .about-grid {
@@ -267,8 +448,9 @@ body {
     transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
     cursor: pointer;
 }
-.about-card p{
-    text-align:center;
+
+.about-card p {
+    text-align: center;
 }
 
 .about-card:hover {
@@ -296,17 +478,21 @@ body {
     background-color: var(--soft-lavender);
     padding: var(--section-padding) 0;
 }
-.featured-courses-section h2{
-    font-size:40px;
+
+.featured-courses-section h2 {
+    font-size: 40px;
 }
-.learning-journey-section h2{
-    font-size:40px;
+
+.learning-journey-section h2 {
+    font-size: 40px;
 }
-.dashboard-text h2{
-    font-size:40px;
+
+.dashboard-text h2 {
+    font-size: 40px;
 }
-.testimonials-section h2{
-    font-size:40px;
+
+.testimonials-section h2 {
+    font-size: 40px;
 }
 
 .course-card-link {
@@ -351,7 +537,7 @@ body {
 .course-card h3 {
     color: var(--deep-purple);
     margin-bottom: 1rem;
-    font-size:18px;
+    font-size: 18px;
 }
 
 .course-intro {
@@ -508,7 +694,8 @@ body {
 }
 
 /* --- DASHBOARD & MANAGEMENT SECTIONS --- */
-.dashboard-preview-section, .management-section {
+.dashboard-preview-section,
+.management-section {
     background-color: #f9f7ff;
     padding: var(--section-padding) 0;
 }
@@ -527,14 +714,14 @@ body {
     margin-right: 0;
 }
 
-.dashboard-image, .management-image img {
+.dashboard-image,
+.management-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
 }
-
 
 .management-grid {
     display: grid;
@@ -556,7 +743,7 @@ body {
 }
 
 .management-image {
-    height: 250px; /* Or any other fixed height */
+    height: 250px;
     width: 100%;
 }
 
@@ -566,7 +753,7 @@ body {
 }
 
 .management-card.admin-card {
-    grid-template-columns: 1fr 1fr; /* Re-order for admin section */
+    grid-template-columns: 1fr 1fr;
 }
 
 .management-text h3 {
@@ -802,77 +989,211 @@ body {
         box-shadow: var(--shadow);
         padding: 1rem 0;
     }
+
     .nav-links.open {
         display: flex;
     }
+
     .nav-links li {
         text-align: center;
         margin: 0.5rem 0;
     }
-    .nav-buttons { 
-        display: none; 
+
+    .nav-buttons {
+        display: none;
     }
-    .hamburger-menu { 
-        display: block; 
+
+    .hamburger-menu {
+        display: block;
     }
+
     .hamburger-menu.open span:nth-child(1) {
         transform: rotate(45deg) translate(5px, 5px);
     }
+
     .hamburger-menu.open span:nth-child(2) {
         opacity: 0;
     }
+
     .hamburger-menu.open span:nth-child(3) {
         transform: rotate(-45deg) translate(7px, -6px);
     }
+
     .hero-text h1 {
         font-size: clamp(2.2rem, 8vw, 3.5rem);
     }
+
     .course-grid {
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     }
+
+    .student-cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .carousel-arrow {
+        width: 38px;
+        height: 38px;
+        font-size: 0.9rem;
+    }
+
+    .carousel-arrow-prev {
+        left: -16px;
+    }
+
+    .carousel-arrow-next {
+        right: -16px;
+    }
 }
 
-/* Further adjustments for smaller screens */
 @media (max-width: 768px) {
     .dashboard-preview-content {
         grid-template-columns: 1fr;
     }
 
-    .hero-content, .showcase-content { grid-template-columns: 1fr; text-align: center; }
-    .hero-text p { margin: 0 auto 2rem auto; }
-    .hero-image { order: -1; }
-    .timeline { 
+    .hero-content,
+    .showcase-content {
         grid-template-columns: 1fr;
-        gap: 2rem; 
+        text-align: center;
     }
-    .timeline::before { 
-        left: 10px; 
+
+    .hero-text p {
+        margin: 0 auto 2rem auto;
+    }
+
+    .hero-image {
+        order: -1;
+    }
+
+    .timeline {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .timeline::before {
+        left: 10px;
         top: 0;
-        height: 100%; 
-        width: 2px; 
+        height: 100%;
+        width: 2px;
         transform: none;
     }
-    .timeline-item { width: 100%; text-align: left; padding-left: 40px; padding-top: 0;  font-size:14px !important; }
-    .timeline-icon { left: 10px; top: 0; transform: translateX(-50%); }
-    .timeline-content { margin-top: 0;   }
-    .testimonial-grid { grid-template-columns: 1fr; }
+
+    .timeline-item {
+        width: 100%;
+        text-align: left;
+        padding-left: 40px;
+        padding-top: 0;
+        font-size: 14px !important;
+    }
+
+    .timeline-icon {
+        left: 10px;
+        top: 0;
+        transform: translateX(-50%);
+    }
+
+    .timeline-content {
+        margin-top: 0;
+    }
+
+    .timeline-content p {
+        font-size: 14px;
+    }
+
+    .testimonial-grid {
+        grid-template-columns: 1fr;
+    }
+
     .management-grid {
         grid-template-columns: 1fr;
     }
-.timeline-content p{
-font-size:14px;
-  } 
+
     .hero-cta {
         justify-content: center;
     }
+
     .footer-grid {
         text-align: center;
     }
+
     .social-icons {
         justify-content: center;
     }
+
     .footer-bottom {
         flex-direction: column;
+    }
+
+    .student-cards-grid {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+    }
+
+    .carousel-arrow {
+        width: 34px;
+        height: 34px;
+        font-size: 0.8rem;
+    }
+
+    .carousel-arrow-prev {
+        left: -10px;
+    }
+
+    .carousel-arrow-next {
+        right: -10px;
+    }
+
+    .student-card-image-wrapper {
+        height: 200px;
+    }
+
+    .carousel-wrapper {
+        margin: 0 -10px;
+    }
+
+    .carousel-dots {
+        gap: 8px;
+    }
+
+    .carousel-dot {
+        width: 10px;
+        height: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .student-card-image-wrapper {
+        height: 180px;
+    }
+
+    .student-card-content {
+        padding: 1rem 1rem 1.25rem 1rem;
+    }
+
+    .student-card-name {
+        font-size: 0.95rem;
+    }
+
+    .student-card-course {
+        font-size: 0.8rem;
+    }
+
+    .student-card-location {
+        font-size: 0.75rem;
+    }
+
+    .carousel-arrow {
+        width: 30px;
+        height: 30px;
+        font-size: 0.75rem;
+    }
+
+    .carousel-arrow-prev {
+        left: -8px;
+    }
+
+    .carousel-arrow-next {
+        right: -8px;
     }
 }
 
@@ -884,13 +1205,26 @@ font-size:14px;
 }
 
 .animate-on-scroll.visible {
-  opacity: 1;
-  transform: translateY(0);
+    opacity: 1;
+    transform: translateY(0);
 }
 
-/* Add staggered delay for child elements */
-.about-grid .animate-on-scroll { transition-delay: calc(0.1s * var(--i, 1)); }
-.timeline .animate-on-scroll { transition-delay: calc(0.1s * var(--i, 1)); }
-.stats-grid .animate-on-scroll { transition-delay: calc(0.1s * var(--i, 1)); }
+.about-grid .animate-on-scroll {
+    transition-delay: calc(0.1s * var(--i, 1));
+}
 
-.course-grid .animate-on-scroll { transition-delay: calc(0.1s * var(--i, 1)); }
+.timeline .animate-on-scroll {
+    transition-delay: calc(0.1s * var(--i, 1));
+}
+
+.stats-grid .animate-on-scroll {
+    transition-delay: calc(0.1s * var(--i, 1));
+}
+
+.course-grid .animate-on-scroll {
+    transition-delay: calc(0.1s * var(--i, 1));
+}
+
+.student-cards-grid .animate-on-scroll {
+    transition-delay: calc(0.1s * var(--i, 1));
+}
