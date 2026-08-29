@@ -16,11 +16,12 @@ import student9 from '../../assets/image1.jpeg';
 import student10 from '../../assets/image1.jpeg';
 import student11 from '../../assets/image1.jpeg';
 import student12 from '../../assets/image1.jpeg';
+import institutionImg from '../../assets/ins_img.jpeg';
 import '../../assets/css/Home.css';
 
 const heroIllustration = digitalBetiLogo;
 const adminPreview = 'https://images.unsplash.com/photo-1526628953301-3e589a6a8b74?q=80&w=2006&auto=format&fit=crop';
-const institutionPreview = 'https://images.unsplash.com/photo-1606857521015-7f9fcf423740?q=80&w=2070&auto=format&fit=crop';
+const institutionPreview = institutionImg;
 
 const studentSlides = [
   [
