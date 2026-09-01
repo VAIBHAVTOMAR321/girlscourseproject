@@ -84,7 +84,7 @@ function Gallery() {
   return (
     <section className="gallery-section">
       <div className="gallery-header">
-        <h2 className="gallery-title">Gallery</h2>
+        <h2 className="gallery-title">Our Gallery</h2>
         <p className="gallery-subtitle">Explore the beautiful moments captured in our gallery</p>
       </div>
 

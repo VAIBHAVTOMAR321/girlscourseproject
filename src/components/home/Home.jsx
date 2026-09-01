@@ -5,13 +5,12 @@ import axios from 'axios';
 import digitalBetiLogo from '../../assets/digital_saksham_banner.jpeg';
 import proBar from '../../assets/pro_bar.jpeg';
 import institutionImg from '../../assets/ins_img.jpeg';
-import adminImg from '../../assets/admin_img.jpeg';
 import '../../assets/css/Home.css';
 import Gallery from './Gallery.jsx';
 import HeroGalleryCarousel from './HeroGalleryCarousel.jsx';
 
 const heroIllustration = digitalBetiLogo;
-const adminPreview = adminImg;
+const adminPreview = 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop';
 const institutionPreview = institutionImg;
 const API_URL = 'https://brjobsedu.com/girls_course/girls_course_backend/api/meet-our-learner/';
 const TOP_STUDENTS_API = 'https://brjobsedu.com/girls_course/girls_course_backend/api/course-batch-top-students/';

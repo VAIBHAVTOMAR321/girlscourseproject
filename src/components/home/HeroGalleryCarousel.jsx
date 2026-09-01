@@ -32,7 +32,7 @@ const DEFAULT_SLIDES = [
 
 const HeroGalleryCarousel = ({
   slides: propSlides,
-  autoplayInterval = 3000,
+  autoplayInterval = 2000,
 }) => {
   const [slides, setSlides] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);

@@ -4,6 +4,7 @@
 :root {
     --deep-purple: #5B2D90;
     --pink: #E91E63;
+    margin-top: -18px;
     --white: #FFFFFF;
     --soft-lavender: #F5F0FF;
     --accent-gold: #FFC107;
@@ -1315,6 +1316,9 @@ body {
 .top-students-section {
     padding: var(--section-padding) 0;
     background-color: var(--white);
+}
+.top-students-section h2{
+    font-size:30px;
 }
 
 .top-students-spinner {

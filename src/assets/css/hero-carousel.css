@@ -65,9 +65,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: var(--glass);
-
-  -webkit-backdrop-filter: blur(6px);
+  background: linear-gradient(to top, rgba(11,23,38,0.75) 0%, rgba(11,23,38,0.35) 50%, rgba(11,23,38,0.15) 100%);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -75,24 +73,6 @@
   text-align: center;
   padding: 20px;
   color: #fff;
-}
-
-/* ---- Bottom gradient for extra depth ---- */
-
-.carousel-overlay::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 220px;
-  background: linear-gradient(
-    to top,
-    rgba(11, 23, 38, 0.65) 0%,
-    rgba(11, 23, 38, 0.15) 50%,
-    transparent 100%
-  );
-  pointer-events: none;
 }
 
 /* ---- Heading ---- */
