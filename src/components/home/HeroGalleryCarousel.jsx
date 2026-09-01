@@ -15,18 +15,15 @@ const getImageUrl = (img) => {
 const DEFAULT_SLIDES = [
   {
     id: 'fallback-1',
-    src: 'https://picsum.photos/id/1015/1920/1080',
-   
+    src: 'https://picsum.photos/id/1015/1200/900',
   },
   {
     id: 'fallback-2',
-    src: 'https://picsum.photos/id/1016/1920/1080',
- 
+    src: 'https://picsum.photos/id/1016/1200/900',
   },
   {
     id: 'fallback-3',
-    src: 'https://picsum.photos/id/1018/1920/1080',
-   
+    src: 'https://picsum.photos/id/1018/1200/900',
   },
 ];
 
@@ -47,10 +44,8 @@ const HeroGalleryCarousel = ({
     const fetchGalleryImages = async () => {
       try {
         setIsLoading(true);
-        console.log('🎨 Fetching gallery images from:', GALLERY_API);
         const response = await axios.get(GALLERY_API);
-        console.log('📸 API Response:', response.data);
-        
+
         if (
           response.data &&
           response.data.success &&
@@ -62,32 +57,23 @@ const HeroGalleryCarousel = ({
             .map((item, index) => ({
               id: item.id || `api-${index}`,
               src: getImageUrl(item.img),
-              heading: DEFAULT_SLIDES[index % DEFAULT_SLIDES.length].heading,
-              description:
-                DEFAULT_SLIDES[index % DEFAULT_SLIDES.length].description,
-              btnText: DEFAULT_SLIDES[index % DEFAULT_SLIDES.length].btnText,
             }));
-          console.log('✅ Gallery Images Loaded:', galleryImages.length, galleryImages);
           if (galleryImages.length > 0) {
             setSlides(galleryImages);
             setIsLoading(false);
             return;
           }
         }
-        // Fallback to default slides if API fails or returns empty
-        console.warn('⚠️ No gallery images found, using default slides');
         setSlides(propSlides && propSlides.length > 0 ? propSlides : DEFAULT_SLIDES);
         setIsLoading(false);
       } catch (error) {
-        console.error('❌ Error fetching gallery images:', error);
-        // Fallback to default slides on error
+        console.error('Error fetching gallery images:', error);
         setSlides(propSlides && propSlides.length > 0 ? propSlides : DEFAULT_SLIDES);
         setIsLoading(false);
       }
     };
 
     if (propSlides && propSlides.length > 0) {
-      console.log('📋 Using provided slides:', propSlides.length);
       setSlides(propSlides);
       setIsLoading(false);
     } else {
@@ -161,60 +147,78 @@ const HeroGalleryCarousel = ({
   }, [goToPrev, goToNext]);
 
   if (slides.length === 0) {
-    console.warn('⚠️ No slides available');
     return null;
   }
+
+  const currentSrc = slides[currentIndex]?.src;
 
   return (
     <div
       id="heroCarousel"
-      className="hero-carousel"
+      className="hero-split-carousel"
       onMouseEnter={stopAutoPlay}
       onMouseLeave={startAutoPlay}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      {/* ---- Slides ---- */}
-      <div className="carousel-inner">
-        {slides.map((slide, index) => (
-          <div
-            key={slide.id}
-            className={`carousel-item ${index === currentIndex ? 'active' : ''}`}
-            style={{ backgroundImage: `url('${slide.src}')` }}
-          >
-            <div className="carousel-overlay">
-              <h1 className="carousel-heading">{slide.heading}</h1>
-              <p className="carousel-description">{slide.description}</p>
-             
-            </div>
+      {/* Left side: dynamic image background with text */}
+      <div className="hero-split-left">
+        <div
+          className="hero-split-bg"
+          style={{ backgroundImage: `url('${currentSrc}')` }}
+        />
+        <div className="hero-split-overlay-left" />
+        <div className="hero-split-content">
+          <span className="carousel-badge">Digital Saksham Beti</span>
+          <h1 className="carousel-heading">
+            Empowering Every Girl Through
+            <span className="carousel-heading-highlight"> Digital Education</span>
+          </h1>
+          <p className="carousel-description">
+            Join Digital Saksham Beti to unlock your potential with in-demand
+            digital skills, from AI to financial literacy, and build a
+            successful career.
+          </p>
+          <div className="carousel-buttons">
+            <button className="btn-glass" type="button">
+              Enroll Now
+            </button>
+            <button className="btn-glass-outline" type="button">
+              Learn More
+            </button>
           </div>
-        ))}
+        </div>
       </div>
 
-      {/* ---- Glass Controls ---- */}
-      {slides.length > 1 && (
-        <>
-          <button
-            className="glass-control prev"
-            type="button"
-            onClick={goToPrev}
-            aria-label="Previous slide"
-          >
-            &#10094;
-          </button>
-          <button
-            className="glass-control next"
-            type="button"
-            onClick={goToNext}
-            aria-label="Next slide"
-          >
-            &#10095;
-          </button>
-        </>
-      )}
+      {/* Right side: dynamic image background */}
+      <div className="hero-split-right">
+        <div
+          className="hero-split-bg"
+          style={{ backgroundImage: `url('${currentSrc}')` }}
+        />
+        <div className="hero-split-overlay-right" />
 
-      {/* ---- Dot Indicators ---- */}
-      {slides.length > 1 && (
+        {slides.length > 1 && (
+          <>
+            <button
+              className="glass-control prev"
+              type="button"
+              onClick={goToPrev}
+              aria-label="Previous slide"
+            >
+              &#10094;
+            </button>
+            <button
+              className="glass-control next"
+              type="button"
+              onClick={goToNext}
+              aria-label="Next slide"
+            >
+              &#10095;
+            </button>
+          </>
+        )}
+
         <div className="carousel-indicators-custom">
           {slides.map((_, index) => (
             <button
@@ -226,17 +230,6 @@ const HeroGalleryCarousel = ({
             />
           ))}
         </div>
-      )}
-
-      {/* ---- Slide Counter ---- */}
-      <div className="slide-counter">
-        <span className="counter-current">
-          {String(currentIndex + 1).padStart(2, '0')}
-        </span>
-        <span className="counter-sep">/</span>
-        <span className="counter-total">
-          {String(slides.length).padStart(2, '0')}
-        </span>
       </div>
     </div>
   );

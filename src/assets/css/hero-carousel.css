@@ -1,116 +1,106 @@
 /* ============================================
-   HERO GALLERY CAROUSEL — FULL WIDTH DARK GLASS
+   HERO SPLIT CAROUSEL
    ============================================ */
 
-:root {
-  --bg: #0b1726;
-  --glass: rgba(255, 255, 255, 0.03);
-  --glass-hover: rgba(255, 255, 255, 0.05);
-  --text: #eef4ff;
-  --placeholder: rgba(255, 255, 255, 0.6);
-  --blue-1: #173b6d;
-  --blue-2: #1d4f91;
-  --blue-3: #2563b8;
-}
-
-/* ============================================
-   CAROUSEL WRAPPER
-   ============================================ */
-
-.hero-carousel {
-  width: 100vw;
-  margin-left: calc(-50vw + 50%);
-  position: relative;
+.hero-split-carousel {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100vh;
+  width: 100%;
   overflow: hidden;
-  line-height: 0;
 }
 
 /* ============================================
-   CAROUSEL INNER & SLIDES
+   LEFT SIDE - IMAGE BACKGROUND + TEXT
    ============================================ */
 
-.carousel-inner {
+.hero-split-left {
   position: relative;
-  width: 100%;
-  height: 100vh;
-  min-height: 400px;
+  display: flex;
+  align-items: center;
+  min-height: 100vh;
+  overflow: hidden;
 }
 
-.carousel-item {
+.hero-split-bg {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.7s ease-in-out, visibility 0.7s ease-in-out;
+  transition: opacity 0.8s ease-in-out;
   z-index: 0;
 }
 
-.carousel-item.active {
-  opacity: 1;
-  visibility: visible;
-  z-index: 1;
-}
-
-/* ---- Glass Overlay ---- */
-
-.carousel-overlay {
+.hero-split-overlay-left {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(to top, rgba(11,23,38,0.75) 0%, rgba(11,23,38,0.35) 50%, rgba(11,23,38,0.15) 100%);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  text-align: center;
-  padding: 20px;
-  color: #fff;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    rgba(11, 23, 38, 0.75) 0%,
+    rgba(11, 23, 38, 0.55) 60%,
+    rgba(11, 23, 38, 0.35) 100%
+  );
+  z-index: 1;
+  pointer-events: none;
 }
 
-/* ---- Heading ---- */
+.hero-split-content {
+  position: relative;
+  z-index: 2;
+  padding: 60px 50px;
+  color: #fff;
+  max-width: 600px;
+}
+
+.carousel-badge {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
 
 .carousel-heading {
   font-size: 3.2rem;
-  font-weight: 700;
-  margin: 0 0 20px 0;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.4);
-  position: relative;
-  z-index: 2;
-  animation: fadeSlideUp 0.8s ease-out both;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  margin: 0 0 22px 0;
+  color: #fff;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
 }
 
-.carousel-item.active .carousel-heading {
-  animation: fadeSlideUp 0.8s ease-out 0.15s both;
+.carousel-heading-highlight {
+  display: block;
+  background: linear-gradient(135deg, #60a5fa, #a78bfa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
-
-/* ---- Description ---- */
 
 .carousel-description {
   font-size: 1.15rem;
   line-height: 1.7;
+  color: rgba(255, 255, 255, 0.85);
   margin: 0 0 32px 0;
-  max-width: 620px;
-  color: var(--placeholder);
-  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.3);
-  position: relative;
-  z-index: 2;
+  max-width: 520px;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.4);
 }
 
-.carousel-item.active .carousel-description {
-  animation: fadeSlideUp 0.8s ease-out 0.35s both;
+.carousel-buttons {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
 }
-
-/* ---- Glass CTA Button ---- */
 
 .btn-glass {
   border: none;
@@ -119,35 +109,80 @@
   padding: 14px 32px;
   font-size: 1rem;
   color: #fff;
-  background: linear-gradient(145deg, var(--blue-1), var(--blue-2), var(--blue-3));
+  background: linear-gradient(145deg, #173b6d, #1d4f91, #2563b8);
   box-shadow:
-    0 8px 18px rgba(0, 0, 0, 0.25),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    0 8px 18px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
   transition: 0.2s ease, transform 0.2s ease;
   cursor: pointer;
-  position: relative;
-  z-index: 2;
   letter-spacing: 0.01em;
-}
-
-.carousel-item.active .btn-glass {
-  animation: fadeSlideUp 0.8s ease-out 0.55s both;
 }
 
 .btn-glass:hover {
   transform: translateY(-2px);
-  filter: brightness(1.1);
+  filter: brightness(1.15);
   box-shadow:
-    0 12px 28px rgba(0, 0, 0, 0.35),
-    0 0 16px rgba(37, 99, 184, 0.3);
+    0 12px 28px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(37, 99, 184, 0.35);
 }
 
 .btn-glass:active {
   transform: scale(0.97);
 }
 
+.btn-glass-outline {
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  border-radius: 12px;
+  font-weight: 600;
+  padding: 14px 32px;
+  font-size: 1rem;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  transition: 0.2s ease, transform 0.2s ease;
+  cursor: pointer;
+  letter-spacing: 0.01em;
+}
+
+.btn-glass-outline:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.7);
+}
+
+.btn-glass-outline:active {
+  transform: scale(0.97);
+}
+
 /* ============================================
-   GLASS CONTROL BUTTONS
+   RIGHT SIDE - IMAGE BACKGROUND
+   ============================================ */
+
+.hero-split-right {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  min-height: 500px;
+  overflow: hidden;
+}
+
+.hero-split-overlay-right {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(11, 23, 38, 0.25) 0%,
+    rgba(11, 23, 38, 0.1) 40%,
+    rgba(11, 23, 38, 0.02) 100%
+  );
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* ============================================
+   CONTROLS
    ============================================ */
 
 .glass-control {
@@ -156,17 +191,17 @@
   transform: translateY(-50%);
   width: 56px;
   height: 56px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 22px;
   color: #fff;
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
   cursor: pointer;
   transition: 0.25s ease;
   z-index: 10;
@@ -175,9 +210,9 @@
 }
 
 .glass-control:hover {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.15);
-  transform: translateY(-50%) scale(1.08);
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.35);
+  transform: translateY(-50%) scale(1.1);
 }
 
 .glass-control:active {
@@ -191,10 +226,6 @@
 .glass-control.next {
   right: 24px;
 }
-
-/* ============================================
-   DOT INDICATORS
-   ============================================ */
 
 .carousel-indicators-custom {
   position: absolute;
@@ -210,15 +241,15 @@
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.2);
-  border: 2px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.6);
   cursor: pointer;
   transition: all 0.35s ease;
   padding: 0;
 }
 
 .indicator-dot:hover {
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.6);
   transform: scale(1.2);
 }
 
@@ -226,61 +257,7 @@
   background: #fff;
   border-color: #fff;
   transform: scale(1.4);
-  box-shadow: 0 0 14px rgba(255, 255, 255, 0.45);
-}
-
-/* ============================================
-   SLIDE COUNTER
-   ============================================ */
-
-.slide-counter {
-  position: absolute;
-  bottom: 32px;
-  right: 32px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  z-index: 10;
-  background: rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  padding: 8px 16px;
-  border-radius: 9999px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.counter-current {
-  font-size: 14px;
-  font-weight: 700;
-  color: #fff;
-  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
-}
-
-.counter-sep {
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.4);
-  font-weight: 500;
-}
-
-.counter-total {
-  font-size: 12px;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.5);
-}
-
-/* ============================================
-   ANIMATIONS
-   ============================================ */
-
-@keyframes fadeSlideUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  box-shadow: 0 0 16px rgba(255, 255, 255, 0.6);
 }
 
 /* ============================================
@@ -288,32 +265,54 @@
    ============================================ */
 
 @media (max-width: 1024px) {
-  .carousel-inner {
-    height: 85vh;
-    min-height: 500px;
+  .hero-split-carousel {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-split-left {
+    min-height: 70vh;
+  }
+
+  .hero-split-right {
+    height: 50vh;
+    min-height: 360px;
+  }
+
+  .hero-split-content {
+    padding: 40px 32px;
+    text-align: center;
+    align-items: center;
+    max-width: 100%;
+  }
+
+  .carousel-badge {
+    margin: 0 auto 20px auto;
   }
 
   .carousel-heading {
-    font-size: 2.5rem;
+    font-size: 2.2rem;
   }
 
   .carousel-description {
-    font-size: 1.05rem;
-    max-width: 520px;
+    max-width: 100%;
+  }
+
+  .carousel-buttons {
+    justify-content: center;
   }
 
   .glass-control {
-    width: 50px;
-    height: 50px;
+    width: 48px;
+    height: 48px;
     font-size: 20px;
   }
 
   .glass-control.prev {
-    left: 18px;
+    left: 14px;
   }
 
   .glass-control.next {
-    right: 18px;
+    right: 14px;
   }
 }
 
@@ -322,51 +321,50 @@
    ============================================ */
 
 @media (max-width: 640px) {
-  .carousel-inner {
-    height: 80vh;
-    min-height: 420px;
+  .hero-split-left {
+    min-height: 60vh;
   }
 
-  .carousel-overlay {
-    padding: 16px;
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
+  .hero-split-right {
+    height: 45vh;
+    min-height: 300px;
+  }
+
+  .hero-split-content {
+    padding: 32px 20px;
   }
 
   .carousel-heading {
-    font-size: 1.75rem;
-    margin-bottom: 14px;
+    font-size: 1.8rem;
   }
 
   .carousel-description {
     font-size: 0.95rem;
-    margin-bottom: 24px;
-    max-width: 90%;
   }
 
-  .btn-glass {
-    padding: 12px 26px;
+  .btn-glass,
+  .btn-glass-outline {
+    padding: 12px 22px;
     font-size: 0.9rem;
-    border-radius: 10px;
   }
 
   .glass-control {
-    width: 42px;
-    height: 42px;
+    width: 40px;
+    height: 40px;
     font-size: 16px;
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(0, 0, 0, 0.4);
   }
 
   .glass-control.prev {
-    left: 12px;
+    left: 10px;
   }
 
   .glass-control.next {
-    right: 12px;
+    right: 10px;
   }
 
   .carousel-indicators-custom {
-    bottom: 24px;
+    bottom: 22px;
     gap: 8px;
   }
 
@@ -374,45 +372,29 @@
     width: 10px;
     height: 10px;
   }
-
-  .slide-counter {
-    bottom: 20px;
-    right: 16px;
-    padding: 6px 12px;
-  }
-
-  .counter-current {
-    font-size: 12px;
-  }
-
-  .counter-total {
-    font-size: 10px;
-  }
 }
 
 @media (max-width: 400px) {
-  .carousel-inner {
-    height: 75vh;
-    min-height: 360px;
+  .hero-split-left {
+    min-height: 55vh;
+  }
+
+  .hero-split-right {
+    height: 40vh;
+    min-height: 260px;
   }
 
   .carousel-heading {
-    font-size: 1.45rem;
+    font-size: 1.5rem;
   }
 
   .carousel-description {
-    font-size: 0.85rem;
-    margin-bottom: 18px;
-  }
-
-  .btn-glass {
-    padding: 10px 22px;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
   }
 
   .glass-control {
-    width: 36px;
-    height: 36px;
+    width: 34px;
+    height: 34px;
     font-size: 14px;
   }
 
@@ -422,11 +404,6 @@
 
   .glass-control.next {
     right: 8px;
-  }
-
-  .carousel-indicators-custom {
-    bottom: 18px;
-    gap: 6px;
   }
 
   .indicator-dot {
