@@ -2,55 +2,50 @@
    HERO SPLIT CAROUSEL
    ============================================ */
 
-.hero-split-carousel {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  min-height: 100vh;
-  width: 100%;
-  overflow: hidden;
-}
-
-/* ============================================
-   LEFT SIDE - IMAGE BACKGROUND + TEXT
-   ============================================ */
-
-.hero-split-left {
+.hero-fullwidth-carousel {
   position: relative;
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   min-height: 100vh;
+  width: 100%;
+  background-color: #0b1726;
   overflow: hidden;
 }
 
-.hero-split-bg {
+.hero-full-bg {
   position: absolute;
   inset: 0;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  opacity: 0.7;
   transition: opacity 0.8s ease-in-out;
   z-index: 0;
 }
 
-.hero-split-overlay-left {
+.hero-full-overlay {
   position: absolute;
   inset: 0;
   background: linear-gradient(
-    to right,
-    rgba(11, 23, 38, 0.75) 0%,
-    rgba(11, 23, 38, 0.55) 60%,
-    rgba(11, 23, 38, 0.35) 100%
+    to bottom,
+    rgba(11, 23, 38, 0.45) 0%,
+    rgba(11, 23, 38, 0.35) 60%,
+    rgba(11, 23, 38, 0.55) 100%
   );
   z-index: 1;
   pointer-events: none;
 }
 
-.hero-split-content {
+.hero-full-content {
   position: relative;
   z-index: 2;
-  padding: 60px 50px;
+ padding-left: 60px;
+padding-top:0px !important;
   color: #fff;
-  max-width: 600px;
+  max-width: 800px;
+  margin-top:0px !important;
+  text-align: left;
 }
 
 .carousel-badge {
@@ -72,6 +67,7 @@
 .carousel-heading {
   font-size: 3.2rem;
   font-weight: 800;
+  padding-left:28px;
   line-height: 1.1;
   letter-spacing: -0.03em;
   margin: 0 0 22px 0;
@@ -90,9 +86,10 @@
 .carousel-description {
   font-size: 1.15rem;
   line-height: 1.7;
+  padding-left:28px;
   color: rgba(255, 255, 255, 0.85);
   margin: 0 0 32px 0;
-  max-width: 520px;
+  max-width: 700px;
   text-shadow: 0 1px 10px rgba(0, 0, 0, 0.4);
 }
 
@@ -100,6 +97,8 @@
   display: flex;
   gap: 14px;
   flex-wrap: wrap;
+  justify-content: flex-start;
+  padding-left:28px;
 }
 
 .btn-glass {
@@ -154,31 +153,6 @@
 
 .btn-glass-outline:active {
   transform: scale(0.97);
-}
-
-/* ============================================
-   RIGHT SIDE - IMAGE BACKGROUND
-   ============================================ */
-
-.hero-split-right {
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  min-height: 500px;
-  overflow: hidden;
-}
-
-.hero-split-overlay-right {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to top,
-    rgba(11, 23, 38, 0.25) 0%,
-    rgba(11, 23, 38, 0.1) 40%,
-    rgba(11, 23, 38, 0.02) 100%
-  );
-  z-index: 2;
-  pointer-events: none;
 }
 
 /* ============================================
@@ -265,28 +239,17 @@
    ============================================ */
 
 @media (max-width: 1024px) {
-  .hero-split-carousel {
-    grid-template-columns: 1fr;
+  .hero-fullwidth-carousel {
+    min-height: auto;
   }
 
-  .hero-split-left {
-    min-height: 70vh;
+  .hero-full-bg {
+    min-height: 80vh;
   }
 
-  .hero-split-right {
-    height: 50vh;
-    min-height: 360px;
-  }
-
-  .hero-split-content {
+  .hero-full-content {
     padding: 40px 32px;
-    text-align: center;
-    align-items: center;
     max-width: 100%;
-  }
-
-  .carousel-badge {
-    margin: 0 auto 20px auto;
   }
 
   .carousel-heading {
@@ -295,10 +258,6 @@
 
   .carousel-description {
     max-width: 100%;
-  }
-
-  .carousel-buttons {
-    justify-content: center;
   }
 
   .glass-control {
@@ -321,16 +280,11 @@
    ============================================ */
 
 @media (max-width: 640px) {
-  .hero-split-left {
-    min-height: 60vh;
+  .hero-full-bg {
+    min-height: 70vh;
   }
 
-  .hero-split-right {
-    height: 45vh;
-    min-height: 300px;
-  }
-
-  .hero-split-content {
+  .hero-full-content {
     padding: 32px 20px;
   }
 
@@ -375,13 +329,8 @@
 }
 
 @media (max-width: 400px) {
-  .hero-split-left {
-    min-height: 55vh;
-  }
-
-  .hero-split-right {
-    height: 40vh;
-    min-height: 260px;
+  .hero-full-bg {
+    min-height: 60vh;
   }
 
   .carousel-heading {

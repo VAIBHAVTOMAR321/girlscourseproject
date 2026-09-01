@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import "../../assets/css/hero-carousel.css";
 
 const GALLERY_API = 'https://brjobsedu.com/girls_course/girls_course_backend/api/our-gallery/';
@@ -31,6 +32,7 @@ const HeroGalleryCarousel = ({
   slides: propSlides,
   autoplayInterval = 2000,
 }) => {
+  const navigate = useNavigate();
   const [slides, setSlides] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -146,6 +148,10 @@ const HeroGalleryCarousel = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [goToPrev, goToNext]);
 
+  const handleEnroll = () => {
+    navigate('/login');
+  };
+
   if (slides.length === 0) {
     return null;
   }
@@ -155,81 +161,70 @@ const HeroGalleryCarousel = ({
   return (
     <div
       id="heroCarousel"
-      className="hero-split-carousel"
+      className="hero-fullwidth-carousel"
       onMouseEnter={stopAutoPlay}
       onMouseLeave={startAutoPlay}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      {/* Left side: dynamic image background with text */}
-      <div className="hero-split-left">
-        <div
-          className="hero-split-bg"
-          style={{ backgroundImage: `url('${currentSrc}')` }}
-        />
-        <div className="hero-split-overlay-left" />
-        <div className="hero-split-content">
-          <span className="carousel-badge">Digital Saksham Beti</span>
-          <h1 className="carousel-heading">
-            Empowering Every Girl Through
-            <span className="carousel-heading-highlight"> Digital Education</span>
-          </h1>
-          <p className="carousel-description">
-            Join Digital Saksham Beti to unlock your potential with in-demand
-            digital skills, from AI to financial literacy, and build a
-            successful career.
-          </p>
+      <div
+        className="hero-full-bg"
+        style={{ backgroundImage: `url('${currentSrc}')` }}
+      />
+      <div className="hero-full-overlay" />
+
+      <div className="hero-full-content">
+        <span className="carousel-badge">Digital Saksham Beti</span>
+        <h1 className="carousel-heading">
+          Empowering Every Girl Through
+          <span className="carousel-heading-highlight"> Digital Education</span>
+        </h1>
+        <p className="carousel-description">
+          Join Digital Saksham Beti to unlock your potential with in-demand
+          digital skills, from AI to financial literacy, and build a
+          successful career.
+        </p>
           <div className="carousel-buttons">
-            <button className="btn-glass" type="button">
+            <button className="btn-glass" type="button" onClick={handleEnroll}>
               Enroll Now
             </button>
             <button className="btn-glass-outline" type="button">
               Learn More
             </button>
           </div>
-        </div>
       </div>
 
-      {/* Right side: dynamic image background */}
-      <div className="hero-split-right">
-        <div
-          className="hero-split-bg"
-          style={{ backgroundImage: `url('${currentSrc}')` }}
-        />
-        <div className="hero-split-overlay-right" />
+      {slides.length > 1 && (
+        <>
+          <button
+            className="glass-control prev"
+            type="button"
+            onClick={goToPrev}
+            aria-label="Previous slide"
+          >
+            &#10094;
+          </button>
+          <button
+            className="glass-control next"
+            type="button"
+            onClick={goToNext}
+            aria-label="Next slide"
+          >
+            &#10095;
+          </button>
+        </>
+      )}
 
-        {slides.length > 1 && (
-          <>
-            <button
-              className="glass-control prev"
-              type="button"
-              onClick={goToPrev}
-              aria-label="Previous slide"
-            >
-              &#10094;
-            </button>
-            <button
-              className="glass-control next"
-              type="button"
-              onClick={goToNext}
-              aria-label="Next slide"
-            >
-              &#10095;
-            </button>
-          </>
-        )}
-
-        <div className="carousel-indicators-custom">
-          {slides.map((_, index) => (
-            <button
-              key={index}
-              type="button"
-              className={`indicator-dot ${index === currentIndex ? 'active' : ''}`}
-              onClick={() => goToSlide(index)}
-              aria-label={`Go to slide ${index + 1}`}
-            />
-          ))}
-        </div>
+      <div className="carousel-indicators-custom">
+        {slides.map((_, index) => (
+          <button
+            key={index}
+            type="button"
+            className={`indicator-dot ${index === currentIndex ? 'active' : ''}`}
+            onClick={() => goToSlide(index)}
+            aria-label={`Go to slide ${index + 1}`}
+          />
+        ))}
       </div>
     </div>
   );
