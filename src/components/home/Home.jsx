@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaBook, FaLaptopCode, FaBullhorn, FaQuestionCircle, FaShieldAlt, FaLightbulb, FaUserTie, FaDollarSign, FaChalkboardTeacher, FaHandsHelping, FaUserGraduate, FaUserCheck, FaRocket, FaAward, FaChevronLeft, FaChevronRight, FaMapMarkerAlt } from 'react-icons/fa';
 import axios from 'axios';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import digitalBetiLogo from '../../assets/digital_saksham_banner.jpeg';
 import proBar from '../../assets/pro_bar.jpeg';
 import institutionImg from '../../assets/ins_img.jpeg';
@@ -42,6 +43,29 @@ const Home = () => {
   const [learnersLoading, setLearnersLoading] = useState(true);
   const [topStudentsData, setTopStudentsData] = useState([]);
   const [topStudentsLoading, setTopStudentsLoading] = useState(true);
+
+  const aiCourseChartData = useMemo(() => {
+    if (!topStudentsData.length) return [];
+    const aiCourse = topStudentsData.find(
+      (course) => course.course_name === 'Computer Learning with AI Tools'
+    );
+    if (!aiCourse || !Array.isArray(aiCourse.batches)) return [];
+    const students = [];
+    aiCourse.batches.forEach((batch) => {
+      const batchName = (batch.student_batch || '').trim();
+      if (batchName.toLowerCase().includes('uttarkashi')) return;
+      if (Array.isArray(batch.top_5_students)) {
+        batch.top_5_students.forEach((student) => {
+          students.push({
+            name: student.student_name || `Student ${student.student_id}`,
+            score: Number(student.average_score) || 0,
+            batch: batchName,
+          });
+        });
+      }
+    });
+    return students.slice(0, 10);
+  }, [topStudentsData]);
 
   const handleCardClick = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -236,7 +260,7 @@ const Home = () => {
       <main>
         {/* 1. Hero Section */}
         <section className="hero-section">
-          <HeroGalleryCarousel />
+          <HeroGalleryCarousel aiTopStudents={aiCourseChartData} />
         </section>
 
         {/* Student Carousel Section */}
@@ -372,6 +396,8 @@ const Home = () => {
           </div>
         </section>
 
+      
+
         {/* Gallery Section */}
         <Gallery />
 
@@ -394,7 +420,7 @@ const Home = () => {
                 .map((course) => ({
                   ...course,
                   batches: (course.batches || []).filter(
-                    (batch) => Array.isArray(batch.top_5_students) && batch.top_5_students.length > 0 && !batch.student_batch.includes('Uttarkashi')
+                    (batch) => Array.isArray(batch.top_5_students) && batch.top_5_students.length > 0 && !(batch.student_batch || '').trim().toLowerCase().includes('uttarkashi')
                   )
                 }))
                 .filter((course) => course.batches.length > 0)
@@ -403,6 +429,11 @@ const Home = () => {
                     <h4 className="course-batch-title">{course.course_name}</h4>
                     {course.batches.map((batch, batchIndex) => {
                       const topStudents = batch.top_5_students || [];
+                      const chartData = topStudents.map((student, idx) => ({
+                        name: student.student_name || `Student ${idx + 1}`,
+                        score: Number(student.average_score) || 0,
+                        rank: idx + 1,
+                      }));
                       return (
                         <div key={batchIndex} className="batch-chart-card">
                           <div className="batch-header">
@@ -411,30 +442,59 @@ const Home = () => {
                               Enrolled: {batch.total_enrolled} | Completed: {batch.total_completed}
                             </span>
                           </div>
-                          <div className="leaderboard-cards">
-                            {topStudents.map((student, idx) => {
-                              const getMedalEmoji = (rank) => {
-                                if (rank === 0) return '🥇';
-                                if (rank === 1) return '🥈';
-                                if (rank === 2) return '🥉';
-                                return '';
-                              };
-                              return (
-                                <div key={student.student_id || idx} className={`leaderboard-card rank-${idx + 1}`}>
-                                  <div className="card-rank">
-                                    <span className="medal">{getMedalEmoji(idx)}</span>
-                                    <span className="rank-number">#{idx + 1}</span>
-                                  </div>
-                                  <div className="card-content">
-                                    <h6 className="student-name">{student.student_name}</h6>
-                                    <div className="score-display">
-                                      <span className="score-label">Score:</span>
-                                      <span className="score-value">{student.average_score}</span>
-                                    </div>
-                                  </div>
-                                </div>
-                              );
-                            })}
+                          <div className="batch-bar-chart">
+                            <ResponsiveContainer width="100%" height={280}>
+                              <BarChart
+                                data={chartData}
+                                margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
+                              >
+                                <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)" />
+                                <XAxis
+                                  dataKey="name"
+                                  tick={{ fill: '#64748B', fontSize: 12 }}
+                                  axisLine={{ stroke: '#e2e8f0' }}
+                                  tickLine={{ stroke: '#e2e8f0' }}
+                                  angle={-25}
+                                  textAnchor="end"
+                                  interval={0}
+                                />
+                                <YAxis
+                                  tick={{ fill: '#64748B', fontSize: 12 }}
+                                  axisLine={{ stroke: '#e2e8f0' }}
+                                  tickLine={{ stroke: '#e2e8f0' }}
+                                  domain={[0, 100]}
+                                />
+                                <Tooltip
+                                  contentStyle={{
+                                    backgroundColor: 'rgba(255, 255, 255, 0.98)',
+                                    border: '1px solid #e2e8f0',
+                                    borderRadius: '12px',
+                                    color: '#0F172A',
+                                    boxShadow: '0 10px 30px rgba(0,0,0,0.12)',
+                                  }}
+                                  itemStyle={{ color: '#0F172A', fontWeight: 600 }}
+                                  labelStyle={{ color: '#64748B', marginBottom: 4 }}
+                                  cursor={{ fill: 'rgba(99, 102, 241, 0.06)' }}
+                                  formatter={(value) => [`${value}%`, 'Average Score']}
+                                />
+                                <Bar dataKey="score" radius={[10, 10, 0, 0]} maxBarSize={56}>
+                                  {chartData.map((entry) => (
+                                    <Cell
+                                      key={entry.name}
+                                      fill={
+                                        entry.rank === 1
+                                          ? '#FFD700'
+                                          : entry.rank === 2
+                                            ? '#C0C0C0'
+                                            : entry.rank === 3
+                                              ? '#CD7F32'
+                                              : '#6366f1'
+                                      }
+                                    />
+                                  ))}
+                                </Bar>
+                              </BarChart>
+                            </ResponsiveContainer>
                           </div>
                         </div>
                       );
