@@ -191,17 +191,23 @@ body {
 /* --- HERO SECTION --- */
 .hero-section {
     background: linear-gradient(135deg, var(--soft-lavender) 0%, var(--white) 100%);
-   margin-top:100px;
-    /* min-height: 100vh; */
+    margin-top: 100px;
     display: flex;
     align-items: center;
+    padding: 0;
+    overflow: hidden;
 }
 
 .hero-content {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: 1fr;
     align-items: center;
     gap: 2rem;
+    width: 100%;
+}
+
+.hero-text {
+    display: none;
 }
 
 .hero-text h1 {
@@ -229,16 +235,31 @@ body {
     gap: 1rem;
 }
 
+.hero-image {
+    width: 100%;
+    height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .hero-image img {
     width: 100%;
     max-width: 550px;
-    margin-top:30px;
+    margin-top: 30px;
     animation: float 4s ease-in-out infinite;
 }
 
 @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-20px); }
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-20px);
+    }
 }
 
 /* --- STUDENT CAROUSEL SECTION --- */
@@ -1285,4 +1306,302 @@ body {
     align-items: center;
     justify-content: center;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+/* ============================================
+   TOP STUDENTS CHART SECTION
+   ============================================ */
+
+.top-students-section {
+    padding: var(--section-padding) 0;
+    background-color: var(--white);
+}
+
+.top-students-spinner {
+    width: 44px;
+    height: 44px;
+    border: 3px solid var(--border-color);
+    border-top-color: var(--deep-purple);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.course-batch-group {
+    margin-bottom: 3rem;
+}
+
+.course-batch-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--deep-purple);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--soft-lavender);
+}
+
+.batch-chart-card {
+    background: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.batch-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.batch-header h5 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--deep-purple);
+}
+
+.batch-stats {
+    font-size: 0.85rem;
+    color: #64748B;
+    font-weight: 500;
+}
+
+.batch-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.bar-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.bar-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 180px;
+    flex-shrink: 0;
+}
+
+.rank-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    font-size: 0.75rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.rank-1 {
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: #fff;
+}
+
+.rank-2 {
+    background: linear-gradient(135deg, #C0C0C0, #A0A0A0);
+    color: #fff;
+}
+
+.rank-3 {
+    background: linear-gradient(135deg, #CD7F32, #B87333);
+    color: #fff;
+}
+
+.rank-4,
+.rank-5 {
+    background: var(--soft-lavender);
+    color: var(--deep-purple);
+}
+
+.student-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #0F172A;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.bar-track {
+    flex: 1;
+    height: 24px;
+    background: #F1F5F9;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+}
+
+.bar-fill {
+    height: 100%;
+    border-radius: 12px;
+    background: linear-gradient(90deg, var(--deep-purple), var(--pink));
+    transition: width 0.6s ease;
+    min-width: 2px;
+}
+
+.bar-value {
+    min-width: 45px;
+    text-align: right;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--deep-purple);
+}
+
+/* Leaderboard Cards Layout */
+.leaderboard-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.leaderboard-card {
+    background: linear-gradient(135deg, #f5f7fa 0%, #ffffff 100%);
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+.leaderboard-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+    border-color: var(--pink);
+}
+
+.leaderboard-card.rank-1 {
+    background: linear-gradient(135deg, #FFF8E1 0%, #FFEB3B 50%, #FFC107 100%);
+    border-color: #FFD700;
+    transform: scale(1.05);
+}
+
+.leaderboard-card.rank-1:hover {
+    transform: scale(1.08) translateY(-8px);
+}
+
+.leaderboard-card.rank-2 {
+    background: linear-gradient(135deg, #F5F5F5 0%, #E8E8E8 50%, #D0D0D0 100%);
+    border-color: #C0C0C0;
+}
+
+.leaderboard-card.rank-3 {
+    background: linear-gradient(135deg, #FFE8D6 0%, #E8DAAE 50%, #CD7F32 100%);
+    border-color: #CD7F32;
+}
+
+.card-rank {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.card-rank .medal {
+    font-size: 2.5rem;
+    display: block;
+}
+
+.card-rank .rank-number {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--deep-purple);
+}
+
+.card-content {
+    flex: 1;
+    margin-bottom: 1rem;
+}
+
+.card-content .student-name {
+    display: block;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--deep-purple);
+    margin-bottom: 0.75rem;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+}
+
+.score-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.score-label {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    font-weight: 500;
+}
+
+.score-value {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--pink);
+}
+
+@media (max-width: 768px) {
+    .leaderboard-cards {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .leaderboard-card.rank-1 {
+        transform: scale(1.02);
+    }
+
+    .leaderboard-card.rank-1:hover {
+        transform: scale(1.04) translateY(-4px);
+    }
+
+    .bar-row {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .bar-label {
+        min-width: 100%;
+    }
+
+    .bar-track {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .bar-value {
+        min-width: auto;
+    }
+
+    .batch-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
 }

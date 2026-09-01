@@ -70,7 +70,7 @@ const NavBar = () => {
           {!isGovtEmployeePage && !isEmployeePage && !isRegisterPage && (
             <Link to="/" className="navbar-link">Home</Link>
           )}
-          
+           <Link to="/Gallery" className="navbar-link">Gallery</Link>
           {/* Show Login button if not on a login page; redirect logic */}
           {!isLoginPage && (
             <Link 

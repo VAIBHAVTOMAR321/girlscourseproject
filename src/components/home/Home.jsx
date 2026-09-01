@@ -7,11 +7,14 @@ import proBar from '../../assets/pro_bar.jpeg';
 import institutionImg from '../../assets/ins_img.jpeg';
 import adminImg from '../../assets/admin_img.jpeg';
 import '../../assets/css/Home.css';
+import Gallery from './Gallery.jsx';
+import HeroGalleryCarousel from './HeroGalleryCarousel.jsx';
 
 const heroIllustration = digitalBetiLogo;
 const adminPreview = adminImg;
 const institutionPreview = institutionImg;
 const API_URL = 'https://brjobsedu.com/girls_course/girls_course_backend/api/meet-our-learner/';
+const TOP_STUDENTS_API = 'https://brjobsedu.com/girls_course/girls_course_backend/api/course-batch-top-students/';
 const BASE_URL = 'https://brjobsedu.com/girls_course/girls_course_backend';
 
 const getLearnerImageUrl = (img) => {
@@ -38,6 +41,8 @@ const Home = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [learners, setLearners] = useState([]);
   const [learnersLoading, setLearnersLoading] = useState(true);
+  const [topStudentsData, setTopStudentsData] = useState([]);
+  const [topStudentsLoading, setTopStudentsLoading] = useState(true);
 
   const handleCardClick = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -182,6 +187,27 @@ const Home = () => {
     fetchLearners();
   }, []);
 
+  useEffect(() => {
+    const fetchTopStudents = async () => {
+      setTopStudentsLoading(true);
+      try {
+        const response = await axios.get(TOP_STUDENTS_API);
+        if (response.data && response.data.success && Array.isArray(response.data.data)) {
+          setTopStudentsData(response.data.data);
+        } else {
+          setTopStudentsData([]);
+        }
+      } catch (error) {
+        console.error('Error fetching top students:', error);
+        setTopStudentsData([]);
+      } finally {
+        setTopStudentsLoading(false);
+      }
+    };
+
+    fetchTopStudents();
+  }, []);
+
   const studentSlides = useMemo(() => {
     const slides = [];
     const learnersPerSlide = 4;
@@ -211,19 +237,7 @@ const Home = () => {
       <main>
         {/* 1. Hero Section */}
         <section className="hero-section">
-          <div className="container hero-content">
-            <div className="hero-text animate-on-scroll">
-              <h1 className=" ">Empowering Every Girl Through <span className="highlight">Digital Education</span></h1>
-              <p className=" ">Join Digital Saksham Beti to unlock your potential with in-demand digital skills, from AI to financial literacy, and build a successful career.</p>
-              <div className="hero-cta">
-                <a href="#courses" className="btn btn-primary">Explore Courses</a>
-                <Link to="/Registration" className="btn btn-outline-light">Register Now</Link>
-              </div>
-            </div>
-            <div className="hero-image  ">
-              <img src={heroIllustration} alt="Girls learning on digital devices" />
-            </div>
-          </div>
+          <HeroGalleryCarousel />
         </section>
 
         {/* Student Carousel Section */}
@@ -357,6 +371,79 @@ const Home = () => {
               )}
             </div>
           </div>
+        </section>
+
+        {/* Gallery Section */}
+        <Gallery />
+
+        {/* Top Students Chart Section */}
+        <section className="top-students-section container">
+          <h2 className="section-title animate-on-scroll">Top Students by Batch</h2>
+          <p className="section-subtitle animate-on-scroll">Batch-wise top 5 students based on average score</p>
+          {topStudentsLoading ? (
+            <div className="text-center py-5">
+              <div className="top-students-spinner"></div>
+              <p className="mt-2 text-muted">Loading top students...</p>
+            </div>
+          ) : topStudentsData.length === 0 ? (
+            <div className="text-center py-5">
+              <p className="text-muted mb-0">No top student data available at this time.</p>
+            </div>
+          ) : (
+            <div className="top-students-charts">
+              {topStudentsData
+                .map((course) => ({
+                  ...course,
+                  batches: (course.batches || []).filter(
+                    (batch) => Array.isArray(batch.top_5_students) && batch.top_5_students.length > 0 && !batch.student_batch.includes('Uttarkashi')
+                  )
+                }))
+                .filter((course) => course.batches.length > 0)
+                .map((course) => (
+                  <div key={course.course_id} className="course-batch-group mb-5">
+                    <h4 className="course-batch-title">{course.course_name}</h4>
+                    {course.batches.map((batch, batchIndex) => {
+                      const topStudents = batch.top_5_students || [];
+                      return (
+                        <div key={batchIndex} className="batch-chart-card">
+                          <div className="batch-header">
+                            <h5>{batch.student_batch}</h5>
+                            <span className="batch-stats">
+                              Enrolled: {batch.total_enrolled} | Completed: {batch.total_completed}
+                            </span>
+                          </div>
+                          <div className="leaderboard-cards">
+                            {topStudents.map((student, idx) => {
+                              const getMedalEmoji = (rank) => {
+                                if (rank === 0) return '🥇';
+                                if (rank === 1) return '🥈';
+                                if (rank === 2) return '🥉';
+                                return '';
+                              };
+                              return (
+                                <div key={student.student_id || idx} className={`leaderboard-card rank-${idx + 1}`}>
+                                  <div className="card-rank">
+                                    <span className="medal">{getMedalEmoji(idx)}</span>
+                                    <span className="rank-number">#{idx + 1}</span>
+                                  </div>
+                                  <div className="card-content">
+                                    <h6 className="student-name">{student.student_name}</h6>
+                                    <div className="score-display">
+                                      <span className="score-label">Score:</span>
+                                      <span className="score-value">{student.average_score}</span>
+                                    </div>
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ))}
+            </div>
+          )}
         </section>
 
         {/* 4. Learning Journey Section */}

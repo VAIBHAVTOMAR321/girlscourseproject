@@ -99,6 +99,10 @@ const AdminLeftNav = ({ show, setShow }) => {
               <i className="bi bi-mortarboard nav-icon"></i>
               <span className="nav-text">Learners Management</span>
             </Nav.Link>
+            <Nav.Link as={Link} to="/GalleryManagement" className="nav-link-custom ">
+              <i className="bi bi-images nav-icon"></i>
+              <span className="nav-text">Gallery Management</span>
+            </Nav.Link>
 
             {/* Schemes Dropdown */}
             <div className="dropdown-menu-wrapper">
@@ -233,6 +237,9 @@ const AdminLeftNav = ({ show, setShow }) => {
             </Nav.Link>
             <Nav.Link as={Link} to="/LearnersManagement" className="nav-link-custom" onClick={() => setShowOffcanvas(false)}>
               <i className="bi bi-mortarboard nav-icon me-2"></i> Learners Management
+            </Nav.Link>
+            <Nav.Link as={Link} to="/GalleryManagement" className="nav-link-custom" onClick={() => setShowOffcanvas(false)}>
+              <i className="bi bi-images nav-icon me-2"></i> Gallery Management
             </Nav.Link>
             <Nav.Link as={Link} to="/ManageGovtSchemes" className="nav-link-custom" onClick={() => setShowOffcanvas(false)}>
               <i className="bi bi-file-earmark-text nav-icon me-2"></i> Manage Schemes
